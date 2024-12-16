@@ -6,10 +6,10 @@ import { ParallelTeam } from './team.ts';
 describe('Parallel Team', () => {
   it('should handle 4 tasks', () => {
     const backlog = Backlog.init()
-      .addTask({ name: 'task1', complexity: 1, state: State.TODO })
-      .addTask({ name: 'task2', complexity: 1, state: State.TODO })
-      .addTask({ name: 'task3', complexity: 1, state: State.TODO })
       .addTask({ name: 'task4', complexity: 1, state: State.TODO })
+      .addTask({ name: 'task3', complexity: 1, state: State.TODO })
+      .addTask({ name: 'task2', complexity: 1, state: State.TODO })
+      .addTask({ name: 'task1', complexity: 1, state: State.TODO })
       .build();
 
     const events = ParallelTeam.init().withDevCount(4).build().run(backlog);

@@ -8,3 +8,9 @@ export type Task = {
   complexity: number;
   state: State;
 };
+
+export const idle: Task = {
+  name: 'idle',
+  complexity: 0,
+  state: State.DONE,
+};
