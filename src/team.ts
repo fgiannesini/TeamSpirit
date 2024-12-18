@@ -16,15 +16,16 @@ export class ParallelTeam implements Team {
 
   run(backlog: Backlog): TimeEvent[] {
     const events: TimeEvent[] = [];
+    
     for (let i = 0; i < this._devCount; i++) {
-      let next = backlog.next(State.TODO);
+      let next = backlog.next();
       next.state = State.DONE;
       events.push({
         time: 0,
         taskName: next.name,
         thread: i,
       });
-      backlog.setOnTop(next);
+      backlog.add(next);
     }
     return events;
   }

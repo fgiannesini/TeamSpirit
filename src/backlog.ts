@@ -2,7 +2,6 @@ import { idle, State, Task } from './task.ts';
 
 class BacklogBuilder {
   private tasks: Task[] = [];
-
   public addTask = (task: Task): BacklogBuilder => {
     this.tasks.push(task);
     return this;
@@ -15,22 +14,30 @@ class BacklogBuilder {
 
 export class Backlog {
   private _tasks: Task[];
+  private _dones : Task[] = [];
   constructor(tasks: Task[]) {
     this._tasks = tasks;
   }
 
   public static init = (): BacklogBuilder => new BacklogBuilder();
 
-  next(state: State): Task {
-    for (let i = this._tasks.length - 1; i >= 0; i--) {
-      if (this._tasks[i].state === state) {
-        return this._tasks.splice(i, 1)[0];
-      }
-    }
-    return idle;
+  next(): Task {
+    return this._tasks.pop() ?? idle;
   }
 
-  setOnTop(task: Task) {
-    this._tasks.push(task);
+  add(task: Task) {
+    if(task.state == State.DONE) {
+      this._dones.push(task);
+    } else {
+      this._tasks.push(task);  
+    }
+  }
+
+  dones(): Task[] {
+    return this._dones;
+  }
+
+  remainings() {
+    return this._tasks;
   }
 }
