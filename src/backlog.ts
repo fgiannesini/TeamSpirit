@@ -13,7 +13,7 @@ class BacklogBuilder {
 }
 
 export class Backlog {
-  private _tasks: Task[];
+  private readonly _tasks: Task[];
   private _dones : Task[] = [];
   constructor(tasks: Task[]) {
     this._tasks = tasks;
@@ -39,5 +39,9 @@ export class Backlog {
 
   remainings() {
     return this._tasks;
+  }
+
+  hasMoreTasks() {
+    return this._tasks.length > 0;
   }
 }
