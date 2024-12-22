@@ -1,13 +1,9 @@
 import './style.scss';
-import { setupCounter } from './counter.ts';
+import { render } from './render.ts';
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div>
-    <h1>Vite + TypeScript</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-  </div>
-`;
-
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!);
+render(document, [
+  { time: 0, taskName: 'task1', thread: 0 },
+  { time: 0, taskName: 'task2', thread: 1 },
+  { time: 1, taskName: 'task3', thread: 0 },
+  { time: 1, taskName: 'idle', thread: 1 },
+]);
