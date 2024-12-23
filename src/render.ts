@@ -19,20 +19,10 @@ const addThreads = (events: TimeEvent[]) => {
   }
 };
 
-export const render = (events: TimeEvent[]) => {
-  let body = querySelector('body');
-  body.innerHTML = `
-<h3>Team Spirit</h3>
-<div id="backlog" class="backlog"></div>
-<div id="threads" class="threads"></div>
-`;
-  addThreads(events);
-
-  let backlogContainer = document.querySelector<HTMLDivElement>('#backlog');
-  if (!backlogContainer) throw new Error('div avec id #backlog non trouvé');
-  const backlog = events.map((event) => event.taskName);
-  for (let i = 0; i < backlog.length; i++) {
-    let taskName = backlog[i];
+const addTasks = (events: TimeEvent[]) => {
+  let backlogContainer = querySelector<HTMLDivElement>('#backlog');
+  const taskNames = events.map((event) => event.taskName);
+  for (let taskName of taskNames) {
     let taskHtmlElement = document.createElement('div');
     taskHtmlElement.id = taskName;
     taskHtmlElement.className = 'task';
@@ -41,10 +31,20 @@ export const render = (events: TimeEvent[]) => {
   }
 
   setTimeout(() => {
-    document
-      .querySelectorAll('.task')
-      .forEach(
-        (task, index) => ((task as HTMLElement).style.left = 6 * index + 'rem')
-      );
+    document.querySelectorAll('.task').forEach((task, index) => {
+      let htmlElement = task as HTMLElement;
+      return (htmlElement.style.left = 6 * index + 'rem');
+    });
   });
+};
+
+export const render = (events: TimeEvent[]) => {
+  let body = querySelector('body');
+  body.innerHTML = `
+<h3>Team Spirit</h3>
+<div id="backlog" class="backlog"></div>
+<div id="threads" class="threads"></div>
+`;
+  addThreads(events);
+  addTasks(events);
 };
