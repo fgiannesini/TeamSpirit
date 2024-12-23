@@ -1,9 +1,14 @@
 import { TimeEvent } from './events.ts';
 
-export const render = (document: Document, events: TimeEvent[]) => {
-  let threadsContainer = document.querySelector<HTMLDivElement>('#threads');
-  if (!threadsContainer) throw new Error('div avec id #threads non trouvé');
+export const querySelector = <T extends Element>(selector: string): T => {
+  let element = document.querySelector<T>(selector);
+  if (!element)
+    throw new Error(`element avec sélecteur ${selector} non trouvé`);
+  return element;
+};
 
+const addThreads = (events: TimeEvent[]) => {
+  let threadsContainer = querySelector<HTMLDivElement>('#threads');
   const threads = Array.from(new Set(events.map((event) => event.thread)));
   for (let threadNumber of threads) {
     let threadHtmlElement = document.createElement('div');
@@ -12,6 +17,16 @@ export const render = (document: Document, events: TimeEvent[]) => {
     threadHtmlElement.textContent = `thread ${threadNumber}`;
     threadsContainer.append(threadHtmlElement);
   }
+};
+
+export const render = (events: TimeEvent[]) => {
+  let body = querySelector('body');
+  body.innerHTML = `
+<h3>Team Spirit</h3>
+<div id="backlog" class="backlog"></div>
+<div id="threads" class="threads"></div>
+`;
+  addThreads(events);
 
   let backlogContainer = document.querySelector<HTMLDivElement>('#backlog');
   if (!backlogContainer) throw new Error('div avec id #backlog non trouvé');
