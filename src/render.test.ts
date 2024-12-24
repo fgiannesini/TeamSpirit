@@ -13,9 +13,9 @@ describe('Render', () => {
 
   it('Should render the page with 2 threads', () => {
     render([
-      { time: 0, taskName: 'task1', thread: 0 },
-      { time: 0, taskName: 'task2', thread: 1 },
       { time: 1, taskName: 'task1', thread: 0 },
+      { time: 1, taskName: 'task2', thread: 1 },
+      { time: 2, taskName: 'task1', thread: 0 },
     ]);
     let thread0 = querySelector('#thread0');
     expect(thread0.className).toEqual('thread');
@@ -28,21 +28,38 @@ describe('Render', () => {
 
   it('Should render the page with 2 tasks', () => {
     render([
-      { time: 0, taskName: 'task1', thread: 0 },
-      { time: 0, taskName: 'task2', thread: 1 },
+      { time: 1, taskName: 'task1', thread: 0 },
+      { time: 1, taskName: 'task2', thread: 1 },
     ]);
     let task1 = querySelector<HTMLDivElement>('#task1');
     expect(task1.className).toEqual('task');
     expect(task1.textContent).toEqual('task1');
     expect(task1.style.left).toEqual('');
+    expect(task1.style.top).toEqual('0px');
 
     let task2 = querySelector<HTMLDivElement>('#task2');
     expect(task2.className).toEqual('task');
     expect(task2.textContent).toEqual('task2');
     expect(task2.style.left).toEqual('');
+    expect(task2.style.top).toEqual('0px');
 
     vi.advanceTimersByTime(1000);
-    expect(task1.style.left).toEqual('0rem');
-    expect(task2.style.left).toEqual('6rem');
+    expect(task1.style.left).toEqual('0px');
+    expect(task2.style.left).toEqual('50px');
+  });
+
+  it('Should move tasks to the corresponding thread', () => {
+    render([
+      { time: 1, taskName: 'task1', thread: 0 },
+      { time: 1, taskName: 'task2', thread: 1 },
+    ]);
+    querySelector<HTMLButtonElement>('#compute').click();
+    let task1Style = querySelector<HTMLDivElement>('#task1').style;
+    expect(task1Style.left).toEqual('3px');
+    expect(task1Style.top).toEqual('0px');
+
+    let task2Style = querySelector<HTMLDivElement>('#task2').style;
+    expect(task2Style.left).toEqual('3px');
+    expect(task2Style.top).toEqual('0px');
   });
 });

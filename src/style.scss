@@ -67,7 +67,8 @@ button {
     border: aliceblue solid 1px;
     position: absolute;
     left: 0;
-    transition: left 1s ease;
+    top: 0;
+    transition: left 1s ease, top 1s ease;
   }
 }
 
