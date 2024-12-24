@@ -120,4 +120,44 @@ describe('Render', () => {
     expect(task2Style.left).toEqual('463px');
     expect(task2Style.top).toEqual('100px');
   });
+
+  it('Should move tasks to the done area', () => {
+    render([
+      {
+        time: 1,
+        taskName: 'task1',
+        thread: 0,
+        previousState: State.TODO,
+        newState: State.DONE,
+      },
+      {
+        time: 1,
+        taskName: 'task2',
+        thread: 1,
+        previousState: State.TODO,
+        newState: State.DONE,
+      },
+    ]);
+
+    let doneElement = querySelector<HTMLElement>('#done');
+    vi.spyOn(doneElement, 'getBoundingClientRect').mockImplementation(() => ({
+      width: 200,
+      height: 100,
+      top: 50,
+      left: 30,
+      bottom: 150,
+      right: 230,
+      x: 30,
+      y: 50,
+      toJSON: () => {},
+    }));
+    querySelector<HTMLButtonElement>('#compute').click();
+    let task1Style = querySelector<HTMLDivElement>('#task1').style;
+    expect(task1Style.left).toEqual('33px');
+    expect(task1Style.top).toEqual('50px');
+
+    let task2Style = querySelector<HTMLDivElement>('#task2').style;
+    expect(task2Style.left).toEqual('86px');
+    expect(task2Style.top).toEqual('50px');
+  });
 });
