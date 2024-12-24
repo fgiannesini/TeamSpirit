@@ -24,8 +24,19 @@ export class ParallelTeam implements Team {
     let time = 1;
     while (backlog.hasMoreTasks()) {
       for (let dev of this.devs) {
-        let next = backlog.next(dev);
-        next.progression++;
+        let task = backlog.next(dev);
+        if (task == idle) {
+          events.push({
+            time: time,
+            taskName: task.name,
+            thread: dev.id,
+            previousState: task.state,
+            newState: task.state,
+          });
+          continue;
+        }
+        const next = { ...task };
+        next.progression = task.progression + 1;
         if (next.complexity == next.progression) {
           next.state = State.DONE;
         } else {
@@ -35,12 +46,12 @@ export class ParallelTeam implements Team {
 
         events.push({
           time: time,
-          taskName: next.name,
+          taskName: task.name,
           thread: dev.id,
+          previousState: task.state,
+          newState: next.state,
         });
-        if (next != idle) {
-          backlog.add(next);
-        }
+        backlog.add(next);
       }
       time++;
     }
