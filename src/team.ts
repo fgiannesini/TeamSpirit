@@ -21,7 +21,7 @@ export class ParallelTeam implements Team {
 
   run(backlog: Backlog): TimeEvent[] {
     const events: TimeEvent[] = [];
-    let time = 0;
+    let time = 1;
     while (backlog.hasMoreTasks()) {
       for (let dev of this.devs) {
         let next = backlog.next(dev);

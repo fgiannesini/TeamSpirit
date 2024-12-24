@@ -39,10 +39,10 @@ describe('Parallel Team', () => {
     const events = ParallelTeam.init().withDevCount(4).build().run(backlog);
 
     expect(events).toEqual([
-      { time: 0, taskName: 'task1', thread: 0 },
-      { time: 0, taskName: 'task2', thread: 1 },
-      { time: 0, taskName: 'task3', thread: 2 },
-      { time: 0, taskName: 'task4', thread: 3 },
+      { time: 1, taskName: 'task1', thread: 0 },
+      { time: 1, taskName: 'task2', thread: 1 },
+      { time: 1, taskName: 'task3', thread: 2 },
+      { time: 1, taskName: 'task4', thread: 3 },
     ]);
 
     expect(backlog.dones()).toHaveLength(4);
@@ -77,10 +77,10 @@ describe('Parallel Team', () => {
     const events = ParallelTeam.init().withDevCount(2).build().run(backlog);
 
     expect(events).toEqual([
-      { time: 0, taskName: 'task1', thread: 0 },
-      { time: 0, taskName: 'task2', thread: 1 },
-      { time: 1, taskName: 'task3', thread: 0 },
-      { time: 1, taskName: 'idle', thread: 1 },
+      { time: 1, taskName: 'task1', thread: 0 },
+      { time: 1, taskName: 'task2', thread: 1 },
+      { time: 2, taskName: 'task3', thread: 0 },
+      { time: 2, taskName: 'idle', thread: 1 },
     ]);
 
     expect(backlog.dones()).toHaveLength(3);
@@ -108,10 +108,10 @@ describe('Parallel Team', () => {
     const events = ParallelTeam.init().withDevCount(2).build().run(backlog);
 
     expect(events).toEqual([
-      { time: 0, taskName: 'task1', thread: 0 },
-      { time: 0, taskName: 'task2', thread: 1 },
       { time: 1, taskName: 'task1', thread: 0 },
       { time: 1, taskName: 'task2', thread: 1 },
+      { time: 2, taskName: 'task1', thread: 0 },
+      { time: 2, taskName: 'task2', thread: 1 },
     ]);
 
     expect(backlog.dones()).toHaveLength(2);
