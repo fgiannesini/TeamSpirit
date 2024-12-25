@@ -25,7 +25,7 @@ describe('Render', () => {
         time: 1,
         taskName: 'task2',
         thread: 1,
-        previousState: State.TODO,
+        previousState: State.IN_PROGRESS,
         newState: State.DONE,
       },
       {
@@ -127,14 +127,14 @@ describe('Render', () => {
         time: 1,
         taskName: 'task1',
         thread: 0,
-        previousState: State.TODO,
+        previousState: State.IN_PROGRESS,
         newState: State.DONE,
       },
       {
         time: 1,
         taskName: 'task2',
         thread: 1,
-        previousState: State.TODO,
+        previousState: State.IN_PROGRESS,
         newState: State.DONE,
       },
     ]);

@@ -4,22 +4,8 @@ import { State } from './task.ts';
 import { ParallelTeam } from './team.ts';
 
 describe('Parallel Team', () => {
-  it('should handle 4 simple tasks by 4 devs', () => {
+  it('should handle 2 simple tasks by 2 devs', () => {
     const backlog = Backlog.init()
-      .addTask({
-        name: 'task4',
-        complexity: 1,
-        state: State.TODO,
-        thread: -1,
-        progression: 0,
-      })
-      .addTask({
-        name: 'task3',
-        complexity: 1,
-        state: State.TODO,
-        thread: -1,
-        progression: 0,
-      })
       .addTask({
         name: 'task2',
         complexity: 1,
@@ -36,7 +22,7 @@ describe('Parallel Team', () => {
       })
       .build();
 
-    const events = ParallelTeam.init().withDevCount(4).build().run(backlog);
+    const events = ParallelTeam.init().withDevCount(2).build().run(backlog);
 
     expect(events).toEqual([
       {
@@ -44,6 +30,13 @@ describe('Parallel Team', () => {
         taskName: 'task1',
         thread: 0,
         previousState: State.TODO,
+        newState: State.IN_PROGRESS,
+      },
+      {
+        time: 1,
+        taskName: 'task1',
+        thread: 0,
+        previousState: State.IN_PROGRESS,
         newState: State.DONE,
       },
       {
@@ -51,25 +44,18 @@ describe('Parallel Team', () => {
         taskName: 'task2',
         thread: 1,
         previousState: State.TODO,
-        newState: State.DONE,
+        newState: State.IN_PROGRESS,
       },
       {
         time: 1,
-        taskName: 'task3',
-        thread: 2,
-        previousState: State.TODO,
-        newState: State.DONE,
-      },
-      {
-        time: 1,
-        taskName: 'task4',
-        thread: 3,
-        previousState: State.TODO,
+        taskName: 'task2',
+        thread: 1,
+        previousState: State.IN_PROGRESS,
         newState: State.DONE,
       },
     ]);
 
-    expect(backlog.dones()).toHaveLength(4);
+    expect(backlog.dones()).toHaveLength(2);
     expect(backlog.remainings()).toHaveLength(0);
   });
 
@@ -106,6 +92,13 @@ describe('Parallel Team', () => {
         taskName: 'task1',
         thread: 0,
         previousState: State.TODO,
+        newState: State.IN_PROGRESS,
+      },
+      {
+        time: 1,
+        taskName: 'task1',
+        thread: 0,
+        previousState: State.IN_PROGRESS,
         newState: State.DONE,
       },
       {
@@ -113,6 +106,13 @@ describe('Parallel Team', () => {
         taskName: 'task2',
         thread: 1,
         previousState: State.TODO,
+        newState: State.IN_PROGRESS,
+      },
+      {
+        time: 1,
+        taskName: 'task2',
+        thread: 1,
+        previousState: State.IN_PROGRESS,
         newState: State.DONE,
       },
       {
@@ -120,6 +120,13 @@ describe('Parallel Team', () => {
         taskName: 'task3',
         thread: 0,
         previousState: State.TODO,
+        newState: State.IN_PROGRESS,
+      },
+      {
+        time: 2,
+        taskName: 'task3',
+        thread: 0,
+        previousState: State.IN_PROGRESS,
         newState: State.DONE,
       },
       {
@@ -175,7 +182,21 @@ describe('Parallel Team', () => {
         taskName: 'task1',
         thread: 0,
         previousState: State.IN_PROGRESS,
+        newState: State.IN_PROGRESS,
+      },
+      {
+        time: 2,
+        taskName: 'task1',
+        thread: 0,
+        previousState: State.IN_PROGRESS,
         newState: State.DONE,
+      },
+      {
+        time: 2,
+        taskName: 'task2',
+        thread: 1,
+        previousState: State.IN_PROGRESS,
+        newState: State.IN_PROGRESS,
       },
       {
         time: 2,

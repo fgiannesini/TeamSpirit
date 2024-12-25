@@ -1,6 +1,6 @@
 import { Backlog } from './backlog.ts';
 import { TimeEvent } from './events.ts';
-import { idle, State } from './task.ts';
+import { idle, State, Task } from './task.ts';
 
 export interface Team {}
 
@@ -24,7 +24,7 @@ export class ParallelTeam implements Team {
     let time = 1;
     while (backlog.hasMoreTasks()) {
       for (let dev of this.devs) {
-        let task = backlog.next(dev);
+        let task: Task = backlog.next(dev);
         if (task == idle) {
           events.push({
             time: time,
@@ -35,23 +35,32 @@ export class ParallelTeam implements Team {
           });
           continue;
         }
-        const next = { ...task };
-        next.progression = task.progression + 1;
-        if (next.complexity == next.progression) {
-          next.state = State.DONE;
-        } else {
-          next.state = State.IN_PROGRESS;
-        }
-        next.thread = dev.id;
-
+        let inProgress: Task = { ...task };
+        inProgress.progression = task.progression + 1;
+        inProgress.thread = dev.id;
+        inProgress.state = State.IN_PROGRESS;
         events.push({
           time: time,
           taskName: task.name,
-          thread: dev.id,
+          thread: inProgress.thread,
           previousState: task.state,
-          newState: next.state,
+          newState: inProgress.state,
         });
-        backlog.add(next);
+        if (inProgress.complexity == inProgress.progression) {
+          let done: Task = { ...inProgress };
+          done.state = State.DONE;
+          done.thread = dev.id;
+          events.push({
+            time: time,
+            taskName: task.name,
+            thread: done.thread,
+            previousState: inProgress.state,
+            newState: done.state,
+          });
+          backlog.add(done);
+        } else {
+          backlog.add(inProgress);
+        }
       }
       time++;
     }
