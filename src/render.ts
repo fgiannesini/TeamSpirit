@@ -23,7 +23,7 @@ const addThreads = (events: TimeEvent[]) => {
 const addTasks = (events: TimeEvent[]) => {
   let backlogContainer = querySelector<HTMLDivElement>('#backlog');
   const top = backlogContainer.getBoundingClientRect().top;
-  const taskNames = events.map((event) => event.taskName);
+  const taskNames = Array.from(new Set(events.map((event) => event.taskName)));
   for (let taskName of taskNames) {
     let taskHtmlElement = document.createElement('div');
     taskHtmlElement.id = taskName;
