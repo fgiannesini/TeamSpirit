@@ -1,4 +1,5 @@
 import { TimeEvent } from './events.ts';
+import { State } from './task.ts';
 
 export const querySelector = <T extends Element>(selector: string): T => {
   let element = document.querySelector<T>(selector);
@@ -47,6 +48,7 @@ export const render = (events: TimeEvent[]) => {
 <button id="compute">Compute</button>
 <div id="backlog" class="backlog"></div>
 <div id="threads" class="threads"></div>
+<div id="done" class="done"></div>
 `;
   addThreads(events);
   addTasks(events);
@@ -55,13 +57,22 @@ export const render = (events: TimeEvent[]) => {
   htmlButtonElement.addEventListener('click', () => {
     time++;
     let currentEvents = events.filter((event) => event.time == time);
+    let done = 0;
     for (const currentEvent of currentEvents) {
       let taskElement = querySelector<HTMLElement>(`#${currentEvent.taskName}`);
-      let threadRect = querySelector<HTMLElement>(
-        `#thread${currentEvent.thread}`
-      ).getBoundingClientRect();
-      taskElement.style.top = `${threadRect.top}px`;
-      taskElement.style.left = `${threadRect.right + 3}px`;
+      if (currentEvent.newState == State.IN_PROGRESS) {
+        const threadRect = querySelector<HTMLElement>(
+          `#thread${currentEvent.thread}`
+        ).getBoundingClientRect();
+        taskElement.style.top = `${threadRect.top}px`;
+        taskElement.style.left = `${threadRect.right + 3}px`;
+      } else {
+        done++;
+        let threadRect =
+          querySelector<HTMLElement>(`#done`).getBoundingClientRect();
+        taskElement.style.top = `${threadRect.top}px`;
+        taskElement.style.left = `${threadRect.left + 50 * (done - 1) + 3 * done}px`;
+      }
     }
   });
 };

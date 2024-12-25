@@ -12,7 +12,7 @@ describe('Render', () => {
     expect(backlog).not.toBeNull();
   });
 
-  it('Should render the page with 2 threads', () => {
+  it('Should create 2 thread elements', () => {
     render([
       {
         time: 1,
@@ -45,7 +45,7 @@ describe('Render', () => {
     expect(thread1.textContent).toEqual('thread 1');
   });
 
-  it('Should render the page with 2 tasks', () => {
+  it('Should create 2 task elements', () => {
     render([
       {
         time: 1,

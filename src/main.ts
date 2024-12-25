@@ -26,7 +26,7 @@ render([
   },
   {
     time: 2,
-    taskName: 'task3',
+    taskName: 'task1',
     thread: 0,
     previousState: State.IN_PROGRESS,
     newState: State.DONE,
