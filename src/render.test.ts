@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { querySelector, render } from './render.ts';
 import { State } from './task.ts';
+import { render } from './render.ts';
+import { getCompute, getDone, getTask, getThread } from './selector.ts';
 
 describe('Render', () => {
   vi.useFakeTimers();
@@ -36,11 +37,11 @@ describe('Render', () => {
         newState: State.DONE,
       },
     ]);
-    let thread0 = querySelector('#thread0');
+    let thread0 = getThread(0);
     expect(thread0.className).toEqual('thread');
     expect(thread0.textContent).toEqual('thread 0');
 
-    let thread1 = querySelector('#thread1');
+    let thread1 = getThread(1);
     expect(thread1.className).toEqual('thread');
     expect(thread1.textContent).toEqual('thread 1');
   });
@@ -69,13 +70,13 @@ describe('Render', () => {
         newState: State.DONE,
       },
     ]);
-    let task1 = querySelector<HTMLDivElement>('#task1');
+    let task1 = getTask('task1');
     expect(task1.className).toEqual('task');
     expect(task1.textContent).toEqual('task1');
     expect(task1.style.left).toEqual('');
     expect(task1.style.top).toEqual('0px');
 
-    let task2 = querySelector<HTMLDivElement>('#task2');
+    let task2 = getTask('task2');
     expect(task2.className).toEqual('task');
     expect(task2.textContent).toEqual('task2');
     expect(task2.style.left).toEqual('');
@@ -118,12 +119,16 @@ describe('Render', () => {
           toJSON: () => {},
         }));
       });
-    querySelector<HTMLButtonElement>('#compute').click();
-    let task1Style = querySelector<HTMLDivElement>('#task1').style;
+    getCompute().click();
+    const task1 = getTask('task1');
+    task1.dispatchEvent(new Event('transitionend'));
+    let task1Style = task1.style;
     expect(task1Style.left).toEqual('233px');
     expect(task1Style.top).toEqual('50px');
 
-    let task2Style = querySelector<HTMLDivElement>('#task2').style;
+    const task2 = getTask('task2');
+    task2.dispatchEvent(new Event('transitionend'));
+    let task2Style = task2.style;
     expect(task2Style.left).toEqual('463px');
     expect(task2Style.top).toEqual('100px');
   });
@@ -146,7 +151,7 @@ describe('Render', () => {
       },
     ]);
 
-    let doneElement = querySelector<HTMLElement>('#done');
+    let doneElement = getDone();
     vi.spyOn(doneElement, 'getBoundingClientRect').mockImplementation(() => ({
       width: 200,
       height: 100,
@@ -158,12 +163,12 @@ describe('Render', () => {
       y: 50,
       toJSON: () => {},
     }));
-    querySelector<HTMLButtonElement>('#compute').click();
-    let task1Style = querySelector<HTMLDivElement>('#task1').style;
+    getCompute().click();
+    let task1Style = getTask('task1').style;
     expect(task1Style.left).toEqual('33px');
     expect(task1Style.top).toEqual('50px');
 
-    let task2Style = querySelector<HTMLDivElement>('#task2').style;
+    let task2Style = getTask('task2').style;
     expect(task2Style.left).toEqual('86px');
     expect(task2Style.top).toEqual('50px');
   });
