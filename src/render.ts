@@ -5,11 +5,10 @@ import {
   getBody,
   getCompute,
   getDone,
-  getTask,
   getThread,
   getThreads,
 } from './selector.ts';
-import { addTasks } from './render-task.ts';
+import { addTasks, moveTask, moveTaskOrdered } from './render-task.ts';
 import { addThreads } from './render-thread.ts';
 
 export const render = (events: TimeEvent[]) => {
@@ -35,18 +34,11 @@ export const render = (events: TimeEvent[]) => {
     let currentEvents = events.filter((event) => event.time == time);
     let done = 0;
     for (const currentEvent of currentEvents) {
-      let taskElement = getTask(currentEvent.taskName);
       if (currentEvent.newState == State.IN_PROGRESS) {
-        const threadRect = getThread(
-          currentEvent.thread
-        ).getBoundingClientRect();
-        taskElement.style.top = `${threadRect.top}px`;
-        taskElement.style.left = `${threadRect.right + 3}px`;
+        moveTask(getThread(currentEvent.thread), currentEvent.taskName);
       } else {
         done++;
-        let threadRect = getDone().getBoundingClientRect();
-        taskElement.style.top = `${threadRect.top}px`;
-        taskElement.style.left = `${threadRect.left + 50 * (done - 1) + 3 * done}px`;
+        moveTaskOrdered(getDone(), currentEvent.taskName, done);
       }
     }
   });
