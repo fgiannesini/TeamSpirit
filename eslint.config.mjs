@@ -9,7 +9,7 @@ export default [
     ignores: ['node_modules', 'dist'],
     languageOptions: {
       parser: tsParser,
-      ecmaVersion: 2022,
+      ecmaVersion: 'latest',
       sourceType: 'module',
     },
     plugins: {
