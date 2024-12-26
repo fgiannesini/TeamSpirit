@@ -1,6 +1,8 @@
 import { TimeEvent } from './events.ts';
 
 const tasks: HTMLDivElement[] = [];
+const tasksInAnimation: boolean[] = [];
+
 const createTask = (taskName: string) => {
   let taskHtmlElement = document.createElement('div');
   taskHtmlElement.id = taskName;
@@ -18,5 +20,6 @@ export const addTasks = (parent: Element, events: TimeEvent[]) => {
       taskElement.style.top = `${top}px`;
       parent.append(taskElement);
       tasks.push(taskElement);
+      tasksInAnimation.push(false);
     });
 };

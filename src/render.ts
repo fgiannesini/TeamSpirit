@@ -10,21 +10,7 @@ import {
   getThreads,
 } from './selector.ts';
 import { addTasks } from './render-task.ts';
-
-const addThread = (parent: Element, threadNumber: number) => {
-  const threadHtmlElement = document.createElement('div');
-  threadHtmlElement.id = `thread${threadNumber}`;
-  threadHtmlElement.className = 'thread';
-  threadHtmlElement.textContent = `thread ${threadNumber}`;
-  parent.append(threadHtmlElement);
-};
-
-const addThreads = (events: TimeEvent[]) => {
-  const threads = getThreads();
-  Array.from(new Set(events.map((event) => event.thread))).forEach(
-    (threadNumber) => addThread(threads, threadNumber)
-  );
-};
+import { addThreads } from './render-thread.ts';
 
 export const render = (events: TimeEvent[]) => {
   getBody().innerHTML = `
@@ -34,7 +20,7 @@ export const render = (events: TimeEvent[]) => {
 <div id="threads" class="threads"></div>
 <div id="done" class="done"></div>
 `;
-  addThreads(events);
+  addThreads(getThreads(), events);
   addTasks(getBacklog(), events);
 
   setTimeout(() => {
@@ -62,7 +48,6 @@ export const render = (events: TimeEvent[]) => {
         taskElement.style.top = `${threadRect.top}px`;
         taskElement.style.left = `${threadRect.left + 50 * (done - 1) + 3 * done}px`;
       }
-      // await waitForTransitionEnd(taskElement);
     }
   });
 };
