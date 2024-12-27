@@ -8,7 +8,12 @@ import {
   getThread,
   getThreads,
 } from './selector.ts';
-import { addTasks, moveTask, moveTaskOrdered } from './render-task.ts';
+import {
+  addTasks,
+  moveTask,
+  moveTaskOrdered,
+  waitForAnimations,
+} from './render-task.ts';
 import { addThreads } from './render-thread.ts';
 
 export const render = (events: TimeEvent[]) => {
@@ -29,7 +34,7 @@ export const render = (events: TimeEvent[]) => {
   });
   let time = 0;
   let htmlButtonElement = getCompute();
-  htmlButtonElement.addEventListener('click', () => {
+  htmlButtonElement.addEventListener('click', async () => {
     time++;
     let currentEvents = events.filter((event) => event.time == time);
     let done = 0;
@@ -40,6 +45,7 @@ export const render = (events: TimeEvent[]) => {
         done++;
         moveTaskOrdered(getDone(), currentEvent.taskName, done);
       }
+      await waitForAnimations();
     }
   });
 };

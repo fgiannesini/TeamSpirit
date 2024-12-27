@@ -11,6 +11,8 @@ describe('Render', () => {
     expect(threads).not.toBeNull();
     let backlog = document.querySelector('#backlog');
     expect(backlog).not.toBeNull();
+    let done = document.querySelector('#done');
+    expect(done).not.toBeNull();
   });
 
   it('Should create 2 thread elements', () => {
@@ -82,12 +84,12 @@ describe('Render', () => {
     expect(task2.style.left).toEqual('');
     expect(task2.style.top).toEqual('0px');
 
-    vi.advanceTimersByTime(1000);
+    vi.advanceTimersToNextTimer();
     expect(task1.style.left).toEqual('0px');
     expect(task2.style.left).toEqual('50px');
   });
 
-  it('Should move tasks to the corresponding thread', () => {
+  it('Should move tasks to the corresponding thread', async () => {
     render([
       {
         time: 1,
@@ -107,33 +109,19 @@ describe('Render', () => {
     document
       .querySelectorAll<HTMLElement>('.thread')
       .forEach((element, index) => {
-        vi.spyOn(element, 'getBoundingClientRect').mockImplementation(() => ({
-          width: 200 * (index + 1),
-          height: 100 * (index + 1),
+        mockPosition(element, {
           top: 50 * (index + 1),
-          left: 30 * (index + 1),
-          bottom: 150 * (index + 1),
           right: 230 * (index + 1),
-          x: 30 * (index + 1),
-          y: 50 * (index + 1),
-          toJSON: () => {},
-        }));
+        });
       });
+    vi.advanceTimersToNextTimer();
     getCompute().click();
-    const task1 = getTask('task1');
-    task1.dispatchEvent(new Event('transitionend'));
-    let task1Style = task1.style;
-    expect(task1Style.left).toEqual('233px');
-    expect(task1Style.top).toEqual('50px');
 
-    const task2 = getTask('task2');
-    task2.dispatchEvent(new Event('transitionend'));
-    let task2Style = task2.style;
-    expect(task2Style.left).toEqual('463px');
-    expect(task2Style.top).toEqual('100px');
+    await expectTaskAt('task1', '50px', '233px');
+    await expectTaskAt('task2', '100px', '463px');
   });
 
-  it('Should move tasks to the done area', () => {
+  it('Should move tasks to the done area', async () => {
     render([
       {
         time: 1,
@@ -152,24 +140,46 @@ describe('Render', () => {
     ]);
 
     let doneElement = getDone();
-    vi.spyOn(doneElement, 'getBoundingClientRect').mockImplementation(() => ({
+    mockPosition(doneElement, { top: 50, left: 30 });
+    vi.advanceTimersToNextTimer();
+    getCompute().click();
+
+    await expectTaskAt('task1', '50px', '33px');
+    await expectTaskAt('task2', '50px', '86px');
+  });
+
+  const expectTaskAt = async (taskName: string, top: string, left: string) => {
+    const task = getTask(taskName);
+    task.dispatchEvent(new Event('transitionend'));
+    await vi.advanceTimersToNextTimerAsync();
+
+    let task1Style = task.style;
+    expect(task1Style.left).toEqual(left);
+    expect(task1Style.top).toEqual(top);
+  };
+
+  const mockPosition = (
+    element: HTMLElement,
+    {
+      top = 50,
+      left = 30,
+      right = 230,
+    }: {
+      top?: number;
+      left?: number;
+      right?: number;
+    } = {}
+  ) => {
+    vi.spyOn(element, 'getBoundingClientRect').mockImplementation(() => ({
       width: 200,
       height: 100,
-      top: 50,
-      left: 30,
+      top: top,
+      left: left,
       bottom: 150,
-      right: 230,
+      right: right,
       x: 30,
       y: 50,
       toJSON: () => {},
     }));
-    getCompute().click();
-    let task1Style = getTask('task1').style;
-    expect(task1Style.left).toEqual('33px');
-    expect(task1Style.top).toEqual('50px');
-
-    let task2Style = getTask('task2').style;
-    expect(task2Style.left).toEqual('86px');
-    expect(task2Style.top).toEqual('50px');
-  });
+  };
 });
