@@ -39,7 +39,7 @@ export const render = (events: TimeEvent[]) => {
     let currentEvents = events.filter((event) => event.time == time);
     let done = 0;
     for (const currentEvent of currentEvents) {
-      if (currentEvent.newState == State.IN_PROGRESS) {
+      if (currentEvent.state == State.IN_PROGRESS) {
         moveTask(getThread(currentEvent.thread), currentEvent.taskName);
       } else {
         done++;

@@ -30,8 +30,7 @@ export class ParallelTeam implements Team {
             time: time,
             taskName: task.name,
             thread: dev.id,
-            previousState: task.state,
-            newState: task.state,
+            state: task.state,
           });
           continue;
         }
@@ -43,8 +42,7 @@ export class ParallelTeam implements Team {
           time: time,
           taskName: task.name,
           thread: inProgress.thread,
-          previousState: task.state,
-          newState: inProgress.state,
+          state: inProgress.state,
         });
         if (inProgress.complexity == inProgress.progression) {
           let done: Task = { ...inProgress };
@@ -54,8 +52,7 @@ export class ParallelTeam implements Team {
             time: time,
             taskName: task.name,
             thread: done.thread,
-            previousState: inProgress.state,
-            newState: done.state,
+            state: done.state,
           });
           backlog.add(done);
         } else {

@@ -21,22 +21,19 @@ describe('Render', () => {
         time: 1,
         taskName: 'task1',
         thread: 0,
-        previousState: State.TODO,
-        newState: State.IN_PROGRESS,
+        state: State.IN_PROGRESS,
       },
       {
         time: 1,
         taskName: 'task2',
         thread: 1,
-        previousState: State.IN_PROGRESS,
-        newState: State.DONE,
+        state: State.DONE,
       },
       {
         time: 2,
         taskName: 'task1',
         thread: 0,
-        previousState: State.IN_PROGRESS,
-        newState: State.DONE,
+        state: State.DONE,
       },
     ]);
     let thread0 = getThread(0);
@@ -54,22 +51,19 @@ describe('Render', () => {
         time: 1,
         taskName: 'task1',
         thread: 0,
-        previousState: State.TODO,
-        newState: State.IN_PROGRESS,
+        state: State.IN_PROGRESS,
       },
       {
         time: 1,
         taskName: 'task1',
         thread: 0,
-        previousState: State.IN_PROGRESS,
-        newState: State.DONE,
+        state: State.DONE,
       },
       {
         time: 1,
         taskName: 'task2',
         thread: 1,
-        previousState: State.IN_PROGRESS,
-        newState: State.DONE,
+        state: State.DONE,
       },
     ]);
     let task1 = getTask('task1');
@@ -95,15 +89,13 @@ describe('Render', () => {
         time: 1,
         taskName: 'task1',
         thread: 0,
-        previousState: State.TODO,
-        newState: State.IN_PROGRESS,
+        state: State.IN_PROGRESS,
       },
       {
         time: 1,
         taskName: 'task2',
         thread: 1,
-        previousState: State.TODO,
-        newState: State.IN_PROGRESS,
+        state: State.IN_PROGRESS,
       },
     ]);
     document
@@ -127,15 +119,13 @@ describe('Render', () => {
         time: 1,
         taskName: 'task1',
         thread: 0,
-        previousState: State.IN_PROGRESS,
-        newState: State.DONE,
+        state: State.DONE,
       },
       {
         time: 1,
         taskName: 'task2',
         thread: 1,
-        previousState: State.IN_PROGRESS,
-        newState: State.DONE,
+        state: State.DONE,
       },
     ]);
 
