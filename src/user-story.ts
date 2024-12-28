@@ -1,9 +1,11 @@
 export enum State {
   TODO,
   IN_PROGRESS,
+  TO_REVIEW,
+  REVIEW,
   DONE,
 }
-export type Task = {
+export type UserStory = {
   name: string;
   complexity: number;
   progression: number;
@@ -11,7 +13,7 @@ export type Task = {
   state: State;
 };
 
-export const idle: Task = {
+export const idle: UserStory = {
   name: 'idle',
   complexity: 0,
   progression: 0,

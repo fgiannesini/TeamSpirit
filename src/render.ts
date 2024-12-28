@@ -1,5 +1,5 @@
 import { TimeEvent } from './events.ts';
-import { State } from './task.ts';
+import { State } from './user-story.ts';
 import {
   getBacklog,
   getBody,
@@ -9,11 +9,11 @@ import {
   getThreads,
 } from './selector.ts';
 import {
-  addTasks,
-  moveTask,
-  moveTaskOrdered,
+  addUserStories,
+  moveUserStory,
+  moveUserStoryOrdered,
   waitForAnimations,
-} from './render-task.ts';
+} from './render-user-story.ts';
 import { addThreads } from './render-thread.ts';
 
 export const render = (events: TimeEvent[]) => {
@@ -25,12 +25,14 @@ export const render = (events: TimeEvent[]) => {
 <div id="done" class="done"></div>
 `;
   addThreads(getThreads(), events);
-  addTasks(getBacklog(), events);
+  addUserStories(getBacklog(), events);
 
   setTimeout(() => {
     document
-      .querySelectorAll<HTMLElement>('.task')
-      .forEach((task, index) => (task.style.left = 50 * index + 'px'));
+      .querySelectorAll<HTMLElement>('.userStory')
+      .forEach(
+        (userStory, index) => (userStory.style.left = 50 * index + 'px')
+      );
   });
   let time = 0;
   let htmlButtonElement = getCompute();
@@ -40,10 +42,13 @@ export const render = (events: TimeEvent[]) => {
     let done = 0;
     for (const currentEvent of currentEvents) {
       if (currentEvent.state == State.IN_PROGRESS) {
-        moveTask(getThread(currentEvent.thread), currentEvent.taskName);
+        moveUserStory(
+          getThread(currentEvent.thread),
+          currentEvent.userStoryName
+        );
       } else {
         done++;
-        moveTaskOrdered(getDone(), currentEvent.taskName, done);
+        moveUserStoryOrdered(getDone(), currentEvent.userStoryName, done);
       }
       await waitForAnimations();
     }

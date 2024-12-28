@@ -1,6 +1,6 @@
 import { Backlog } from './backlog.ts';
 import { TimeEvent } from './events.ts';
-import { idle, State, Task } from './task.ts';
+import { idle, State, UserStory } from './user-story.ts';
 
 export interface Team {}
 
@@ -22,35 +22,35 @@ export class ParallelTeam implements Team {
   run(backlog: Backlog): TimeEvent[] {
     const events: TimeEvent[] = [];
     let time = 1;
-    while (backlog.hasMoreTasks()) {
+    while (backlog.hasMoreUserStories()) {
       for (let dev of this.devs) {
-        let task: Task = backlog.next(dev);
-        if (task == idle) {
+        let userStory: UserStory = backlog.next(dev);
+        if (userStory == idle) {
           events.push({
             time: time,
-            taskName: task.name,
+            userStoryName: userStory.name,
             thread: dev.id,
-            state: task.state,
+            state: userStory.state,
           });
           continue;
         }
-        let inProgress: Task = { ...task };
-        inProgress.progression = task.progression + 1;
+        let inProgress: UserStory = { ...userStory };
+        inProgress.progression = userStory.progression + 1;
         inProgress.thread = dev.id;
         inProgress.state = State.IN_PROGRESS;
         events.push({
           time: time,
-          taskName: task.name,
+          userStoryName: userStory.name,
           thread: inProgress.thread,
           state: inProgress.state,
         });
         if (inProgress.complexity == inProgress.progression) {
-          let done: Task = { ...inProgress };
+          let done: UserStory = { ...inProgress };
           done.state = State.DONE;
           done.thread = dev.id;
           events.push({
             time: time,
-            taskName: task.name,
+            userStoryName: userStory.name,
             thread: done.thread,
             state: done.state,
           });

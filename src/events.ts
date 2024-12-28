@@ -1,8 +1,8 @@
-import { State } from './task.ts';
+import { State } from './user-story.ts';
 
 export interface TimeEvent {
   time: number;
-  taskName: string;
+  userStoryName: string;
   state: State;
   thread: number;
 }

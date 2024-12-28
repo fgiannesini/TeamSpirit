@@ -1,57 +1,59 @@
-import { idle, State, Task } from './task.ts';
+import { idle, State, UserStory } from './user-story.ts';
 import { Thread } from './team.ts';
 
 class BacklogBuilder {
-  private tasks: Task[] = [];
-  public addTask = (task: Task): BacklogBuilder => {
-    this.tasks.push(task);
+  private userStories: UserStory[] = [];
+  public addUserStory = (userStory: UserStory): BacklogBuilder => {
+    this.userStories.push(userStory);
     return this;
   };
 
   public build(): Backlog {
-    return new Backlog(this.tasks);
+    return new Backlog(this.userStories);
   }
 }
 
 export class Backlog {
-  private readonly _tasks: Task[];
-  private _dones: Task[] = [];
-  constructor(tasks: Task[]) {
-    this._tasks = tasks;
+  private readonly _userStories: UserStory[];
+  private _dones: UserStory[] = [];
+  constructor(userStories: UserStory[]) {
+    this._userStories = userStories;
   }
 
   public static init = (): BacklogBuilder => new BacklogBuilder();
 
-  next(thread: Thread): Task {
-    let threadTaskIndex = this._tasks.findLastIndex(
-      (task) => task.thread === thread.id
+  next(thread: Thread): UserStory {
+    let threadUserStoryIndex = this._userStories.findLastIndex(
+      (userStory) => userStory.thread === thread.id
     );
-    if (threadTaskIndex == -1) {
-      threadTaskIndex = this._tasks.findLastIndex((task) => task.thread === -1);
+    if (threadUserStoryIndex == -1) {
+      threadUserStoryIndex = this._userStories.findLastIndex(
+        (userStory) => userStory.thread === -1
+      );
     }
-    if (threadTaskIndex != -1) {
-      return this._tasks.splice(threadTaskIndex, 1)[0];
+    if (threadUserStoryIndex != -1) {
+      return this._userStories.splice(threadUserStoryIndex, 1)[0];
     }
     return idle;
   }
 
-  add(task: Task) {
-    if (task.state == State.DONE) {
-      this._dones.push(task);
+  add(userStory: UserStory) {
+    if (userStory.state == State.DONE) {
+      this._dones.push(userStory);
     } else {
-      this._tasks.push(task);
+      this._userStories.push(userStory);
     }
   }
 
-  dones(): Task[] {
+  dones(): UserStory[] {
     return this._dones;
   }
 
-  remainings(): Task[] {
-    return this._tasks;
+  remainings(): UserStory[] {
+    return this._userStories;
   }
 
-  hasMoreTasks() {
-    return this._tasks.length > 0;
+  hasMoreUserStories() {
+    return this._userStories.length > 0;
   }
 }

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { State } from './task.ts';
+import { State } from './user-story.ts';
 import { render } from './render.ts';
-import { getCompute, getDone, getTask, getThread } from './selector.ts';
+import { getCompute, getDone, getUserStory, getThread } from './selector.ts';
 
 describe('Render', () => {
   vi.useFakeTimers();
@@ -19,19 +19,19 @@ describe('Render', () => {
     render([
       {
         time: 1,
-        taskName: 'task1',
+        userStoryName: 'userStory1',
         thread: 0,
         state: State.IN_PROGRESS,
       },
       {
         time: 1,
-        taskName: 'task2',
+        userStoryName: 'userStory2',
         thread: 1,
         state: State.DONE,
       },
       {
         time: 2,
-        taskName: 'task1',
+        userStoryName: 'userStory1',
         thread: 0,
         state: State.DONE,
       },
@@ -45,55 +45,55 @@ describe('Render', () => {
     expect(thread1.textContent).toEqual('thread 1');
   });
 
-  it('Should create 2 task elements', () => {
+  it('Should create 2 userStory elements', () => {
     render([
       {
         time: 1,
-        taskName: 'task1',
+        userStoryName: 'userStory1',
         thread: 0,
         state: State.IN_PROGRESS,
       },
       {
         time: 1,
-        taskName: 'task1',
+        userStoryName: 'userStory1',
         thread: 0,
         state: State.DONE,
       },
       {
         time: 1,
-        taskName: 'task2',
+        userStoryName: 'userStory2',
         thread: 1,
         state: State.DONE,
       },
     ]);
-    let task1 = getTask('task1');
-    expect(task1.className).toEqual('task');
-    expect(task1.textContent).toEqual('task1');
-    expect(task1.style.left).toEqual('');
-    expect(task1.style.top).toEqual('0px');
+    let userStory1 = getUserStory('userStory1');
+    expect(userStory1.className).toEqual('userStory');
+    expect(userStory1.textContent).toEqual('userStory1');
+    expect(userStory1.style.left).toEqual('');
+    expect(userStory1.style.top).toEqual('0px');
 
-    let task2 = getTask('task2');
-    expect(task2.className).toEqual('task');
-    expect(task2.textContent).toEqual('task2');
-    expect(task2.style.left).toEqual('');
-    expect(task2.style.top).toEqual('0px');
+    let userStory2 = getUserStory('userStory2');
+    expect(userStory2.className).toEqual('userStory');
+    expect(userStory2.textContent).toEqual('userStory2');
+    expect(userStory2.style.left).toEqual('');
+    expect(userStory2.style.top).toEqual('0px');
 
     vi.advanceTimersToNextTimer();
-    expect(task1.style.left).toEqual('0px');
-    expect(task2.style.left).toEqual('50px');
+    expect(userStory1.style.left).toEqual('0px');
+    expect(userStory2.style.left).toEqual('50px');
   });
 
-  it('Should move tasks to the corresponding thread', async () => {
+  it('Should move userStories to the corresponding thread', async () => {
     render([
       {
         time: 1,
-        taskName: 'task1',
+        userStoryName: 'userStory1',
         thread: 0,
         state: State.IN_PROGRESS,
       },
       {
         time: 1,
-        taskName: 'task2',
+        userStoryName: 'userStory2',
         thread: 1,
         state: State.IN_PROGRESS,
       },
@@ -109,21 +109,21 @@ describe('Render', () => {
     vi.advanceTimersToNextTimer();
     getCompute().click();
 
-    await expectTaskAt('task1', '50px', '233px');
-    await expectTaskAt('task2', '100px', '463px');
+    await expectUserStoryAt('userStory1', '50px', '233px');
+    await expectUserStoryAt('userStory2', '100px', '463px');
   });
 
-  it('Should move tasks to the done area', async () => {
+  it('Should move userStories to the done area', async () => {
     render([
       {
         time: 1,
-        taskName: 'task1',
+        userStoryName: 'userStory1',
         thread: 0,
         state: State.DONE,
       },
       {
         time: 1,
-        taskName: 'task2',
+        userStoryName: 'userStory2',
         thread: 1,
         state: State.DONE,
       },
@@ -134,18 +134,22 @@ describe('Render', () => {
     vi.advanceTimersToNextTimer();
     getCompute().click();
 
-    await expectTaskAt('task1', '50px', '33px');
-    await expectTaskAt('task2', '50px', '86px');
+    await expectUserStoryAt('userStory1', '50px', '33px');
+    await expectUserStoryAt('userStory2', '50px', '86px');
   });
 
-  const expectTaskAt = async (taskName: string, top: string, left: string) => {
-    const task = getTask(taskName);
-    task.dispatchEvent(new Event('transitionend'));
+  const expectUserStoryAt = async (
+    userStoryName: string,
+    top: string,
+    left: string
+  ) => {
+    const userStory = getUserStory(userStoryName);
+    userStory.dispatchEvent(new Event('transitionend'));
     await vi.advanceTimersToNextTimerAsync();
 
-    let task1Style = task.style;
-    expect(task1Style.left).toEqual(left);
-    expect(task1Style.top).toEqual(top);
+    let userStory1Style = userStory.style;
+    expect(userStory1Style.left).toEqual(left);
+    expect(userStory1Style.top).toEqual(top);
   };
 
   const mockPosition = (

@@ -19,8 +19,8 @@ export const getDone = (): HTMLDivElement =>
 
 export const getBody = (): Element => querySelector<Element>('body');
 
-export const getTask = (taskName: string): HTMLDivElement =>
-  querySelector<HTMLDivElement>(`#${taskName}`);
+export const getUserStory = (userStoryName: string): HTMLDivElement =>
+  querySelector<HTMLDivElement>(`#${userStoryName}`);
 
 export const getCompute = (): HTMLButtonElement =>
   querySelector<HTMLButtonElement>('#compute');
