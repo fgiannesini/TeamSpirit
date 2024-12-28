@@ -1,4 +1,11 @@
-import { idle, State, UserStory } from './user-story.ts';
+import {
+  idle,
+  isInProgressBy,
+  State,
+  toDo,
+  toReviewBy,
+  UserStory,
+} from './user-story.ts';
 import { Thread } from './team.ts';
 
 class BacklogBuilder {
@@ -23,21 +30,19 @@ export class Backlog {
   public static init = (): BacklogBuilder => new BacklogBuilder();
 
   next(thread: Thread): UserStory {
-    let threadUserStoryIndex = this._userStories.findLastIndex(
-      (userStory) =>
-        userStory.state === State.TO_REVIEW && userStory.thread !== thread.id
+    let threadUserStoryIndex = this._userStories.findLastIndex((userStory) =>
+      toReviewBy(userStory, thread)
     );
 
     if (threadUserStoryIndex == -1) {
-      threadUserStoryIndex = this._userStories.findLastIndex(
-        (userStory) =>
-          userStory.state === State.IN_PROGRESS &&
-          userStory.thread === thread.id
+      threadUserStoryIndex = this._userStories.findLastIndex((userStory) =>
+        isInProgressBy(userStory, thread)
       );
     }
+
     if (threadUserStoryIndex == -1) {
-      threadUserStoryIndex = this._userStories.findLastIndex(
-        (userStory) => userStory.thread === -1
+      threadUserStoryIndex = this._userStories.findLastIndex((userStory) =>
+        toDo(userStory)
       );
     }
     if (threadUserStoryIndex != -1) {

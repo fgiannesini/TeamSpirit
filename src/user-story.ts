@@ -47,3 +47,16 @@ export const setReview = (userStory: UserStory, dev: Thread): UserStory => {
 export const isDeveloped = (userStory: UserStory): boolean => {
   return userStory.progression == userStory.complexity;
 };
+
+export const toReviewBy = (userStory: UserStory, thread: Thread): boolean => {
+  return userStory.state === State.TO_REVIEW && userStory.thread !== thread.id;
+};
+
+export const isInProgressBy: (
+  userStory: UserStory,
+  thread: Thread
+) => boolean = (userStory: UserStory, thread: Thread) =>
+  userStory.state === State.IN_PROGRESS && userStory.thread === thread.id;
+
+export const toDo: (userStory: UserStory) => boolean = (userStory: UserStory) =>
+  userStory.thread === -1;
