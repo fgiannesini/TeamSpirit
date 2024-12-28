@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { State } from './user-story.ts';
+import { State } from '../compute/user-story.ts';
 import { render } from './render.ts';
 import { getCompute, getDone, getUserStory, getThread } from './selector.ts';
 

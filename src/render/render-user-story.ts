@@ -1,4 +1,4 @@
-import { TimeEvent } from './events.ts';
+import { TimeEvent } from '../compute/events.ts';
 import { getUserStory } from './selector.ts';
 
 const userStories: HTMLDivElement[] = [];

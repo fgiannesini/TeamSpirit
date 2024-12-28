@@ -1,5 +1,5 @@
-import { TimeEvent } from './events.ts';
-import { State } from './user-story.ts';
+import { TimeEvent } from '../compute/events.ts';
+import { State } from '../compute/user-story.ts';
 import {
   getBacklog,
   getBody,

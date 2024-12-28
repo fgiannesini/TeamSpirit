@@ -1,4 +1,4 @@
-import { TimeEvent } from './events.ts';
+import { TimeEvent } from '../compute/events.ts';
 
 const addThread = (threadNumber: number) => {
   const threadHtmlElement = document.createElement('div');
