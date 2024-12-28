@@ -10,7 +10,7 @@ import {
 } from './selector.ts';
 import {
   addUserStories,
-  moveUserStory,
+  moveUserStoryToThread,
   moveUserStoryOrdered,
   waitForAnimations,
 } from './render-user-story.ts';
@@ -41,12 +41,17 @@ export const render = (events: TimeEvent[]) => {
     let currentEvents = events.filter((event) => event.time == time);
     let done = 0;
     for (const currentEvent of currentEvents) {
-      if (currentEvent.state == State.IN_PROGRESS) {
-        moveUserStory(
+      if (
+        currentEvent.state == State.IN_PROGRESS ||
+        currentEvent.state == State.REVIEW
+      ) {
+        moveUserStoryToThread(
           getThread(currentEvent.thread),
           currentEvent.userStoryName
         );
-      } else {
+      } else if (currentEvent.state == State.TO_REVIEW) {
+        moveUserStoryOrdered(getBacklog(), currentEvent.userStoryName, 1);
+      } else if (currentEvent.state == State.DONE) {
         done++;
         moveUserStoryOrdered(getDone(), currentEvent.userStoryName, done);
       }

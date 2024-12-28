@@ -33,9 +33,12 @@ export const addUserStories = (parent: Element, events: TimeEvent[]) => {
     });
 };
 
-export const moveUserStory = (parent: Element, userStoryName: string) => {
+export const moveUserStoryToThread = (
+  thread: Element,
+  userStoryName: string
+) => {
   const userStoryElement = getUserStory(userStoryName);
-  const threadRect = parent.getBoundingClientRect();
+  const threadRect = thread.getBoundingClientRect();
   userStoryElement.style.top = `${threadRect.top}px`;
   userStoryElement.style.left = `${threadRect.right + 3}px`;
   userStoriesInAnimation[userStories.indexOf(userStoryElement)] = true;
@@ -47,9 +50,9 @@ export const moveUserStoryOrdered = (
   number: number
 ) => {
   const userStoryElement = getUserStory(userStoryName);
-  const threadRect = parent.getBoundingClientRect();
-  userStoryElement.style.top = `${threadRect.top}px`;
-  userStoryElement.style.left = `${threadRect.left + 50 * (number - 1) + 3 * number}px`;
+  const parentRect = parent.getBoundingClientRect();
+  userStoryElement.style.top = `${parentRect.top}px`;
+  userStoryElement.style.left = `${parentRect.left + 50 * (number - 1) + 3 * number}px`;
   userStoriesInAnimation[userStories.indexOf(userStoryElement)] = true;
 };
 

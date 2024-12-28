@@ -1,7 +1,13 @@
 import { describe, expect, it, vi } from 'vitest';
 import { State } from '../compute/user-story.ts';
 import { render } from './render.ts';
-import { getCompute, getDone, getUserStory, getThread } from './selector.ts';
+import {
+  getBacklog,
+  getCompute,
+  getDone,
+  getThread,
+  getUserStory,
+} from './selector.ts';
 
 describe('Render', () => {
   vi.useFakeTimers();
@@ -45,7 +51,7 @@ describe('Render', () => {
     expect(thread1.textContent).toEqual('thread 1');
   });
 
-  it('Should create 2 userStory elements', () => {
+  it('Should create 2 userStories elements', () => {
     render([
       {
         time: 1,
@@ -83,7 +89,7 @@ describe('Render', () => {
     expect(userStory2.style.left).toEqual('50px');
   });
 
-  it('Should move userStories to the corresponding thread', async () => {
+  it('Should move userStories to the corresponding thread when in progress', async () => {
     render([
       {
         time: 1,
@@ -136,6 +142,40 @@ describe('Render', () => {
 
     await expectUserStoryAt('userStory1', '50px', '33px');
     await expectUserStoryAt('userStory2', '50px', '86px');
+  });
+
+  it('Should move userStories to the backlog area when to review', async () => {
+    render([
+      {
+        time: 1,
+        userStoryName: 'userStory1',
+        thread: 0,
+        state: State.TO_REVIEW,
+      },
+    ]);
+
+    mockPosition(getBacklog(), { top: 50, left: 30 });
+    vi.advanceTimersToNextTimer();
+    getCompute().click();
+
+    await expectUserStoryAt('userStory1', '50px', '33px');
+  });
+
+  it('Should move userStories to the corresponding thread when reviewed', async () => {
+    render([
+      {
+        time: 1,
+        userStoryName: 'userStory1',
+        thread: 0,
+        state: State.REVIEW,
+      },
+    ]);
+
+    mockPosition(getThread(0), { top: 50, right: 230 });
+    vi.advanceTimersToNextTimer();
+    getCompute().click();
+
+    await expectUserStoryAt('userStory1', '50px', '233px');
   });
 
   const expectUserStoryAt = async (
