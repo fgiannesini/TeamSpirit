@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { State } from '../compute/user-story.ts';
 import { render } from './render.ts';
 import {
@@ -10,9 +10,17 @@ import {
 } from './selector.ts';
 
 describe('Render', () => {
-  vi.useFakeTimers();
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+  afterEach(() => {
+    expect(vi.getTimerCount()).toEqual(0);
+    vi.clearAllTimers();
+  });
+
   it('Should render the page without events', () => {
     render([]);
+    vi.advanceTimersToNextTimer();
     let threads = document.querySelector('#threads');
     expect(threads).not.toBeNull();
     let backlog = document.querySelector('#backlog');
@@ -42,6 +50,7 @@ describe('Render', () => {
         state: State.DONE,
       },
     ]);
+    vi.advanceTimersToNextTimer();
     let thread0 = getThread(0);
     expect(thread0.className).toEqual('thread');
     expect(thread0.textContent).toEqual('thread 0');
@@ -117,6 +126,35 @@ describe('Render', () => {
 
     await expectUserStoryAt('userStory1', '50px', '233px');
     await expectUserStoryAt('userStory2', '100px', '463px');
+  });
+
+  it('Should not move user story in progress twice', async () => {
+    render([
+      {
+        time: 1,
+        userStoryName: 'userStory1',
+        thread: 0,
+        state: State.IN_PROGRESS,
+      },
+      {
+        time: 2,
+        userStoryName: 'userStory1',
+        thread: 0,
+        state: State.IN_PROGRESS,
+      },
+    ]);
+    mockPosition(getThread(0), {
+      top: 50,
+      right: 230,
+    });
+    vi.advanceTimersToNextTimer();
+    getCompute().click();
+    await expectUserStoryAt('userStory1', '50px', '233px');
+    getCompute().click();
+    const userStory = getUserStory('userStory1');
+    let userStory1Style = userStory.style;
+    expect(userStory1Style.left).toEqual('233px');
+    expect(userStory1Style.top).toEqual('50px');
   });
 
   it('Should move userStories to the done area', async () => {

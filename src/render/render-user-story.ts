@@ -1,11 +1,11 @@
 import { TimeEvent } from '../compute/events.ts';
 import { getUserStory } from './selector.ts';
 
-const userStories: HTMLDivElement[] = [];
-const userStoriesInAnimation: boolean[] = [];
+const _userStories: HTMLDivElement[] = [];
+const _userStoriesInAnimation: boolean[] = [];
 
 const createUserStory = (userStoryName: string) => {
-  let userStoryHtmlElement = document.createElement('div');
+  const userStoryHtmlElement = document.createElement('div');
   userStoryHtmlElement.id = userStoryName;
   userStoryHtmlElement.className = 'userStory';
   userStoryHtmlElement.textContent = userStoryName;
@@ -22,42 +22,57 @@ export const addUserStories = (parent: Element, events: TimeEvent[]) => {
     .forEach((userStoryElement) => {
       userStoryElement.style.top = `${top}px`;
       userStoryElement.addEventListener('transitionend', (event) => {
-        const index = userStories.findIndex(
+        const index = _userStories.findIndex(
           (element) => element == event.target
         );
-        userStoriesInAnimation[index] = false;
+        _userStoriesInAnimation[index] = false;
       });
       parent.append(userStoryElement);
-      userStories.push(userStoryElement);
-      userStoriesInAnimation.push(false);
+      _userStories.push(userStoryElement);
+      _userStoriesInAnimation.push(false);
     });
 };
 
 export const moveUserStoryToThread = (
   thread: Element,
   userStoryName: string
-) => {
-  const userStoryElement = getUserStory(userStoryName);
+): boolean => {
   const threadRect = thread.getBoundingClientRect();
-  userStoryElement.style.top = `${threadRect.top}px`;
-  userStoryElement.style.left = `${threadRect.right + 3}px`;
-  userStoriesInAnimation[userStories.indexOf(userStoryElement)] = true;
+  const newTop = `${threadRect.top}px`;
+  const newLeft = `${threadRect.right + 3}px`;
+  return moveTo(getUserStory(userStoryName), newTop, newLeft);
 };
 
 export const moveUserStoryOrdered = (
   parent: Element,
   userStoryName: string,
   number: number
-) => {
-  const userStoryElement = getUserStory(userStoryName);
+): boolean => {
   const parentRect = parent.getBoundingClientRect();
-  userStoryElement.style.top = `${parentRect.top}px`;
-  userStoryElement.style.left = `${parentRect.left + 50 * (number - 1) + 3 * number}px`;
-  userStoriesInAnimation[userStories.indexOf(userStoryElement)] = true;
+  const newTop = `${parentRect.top}px`;
+  const newLeft = `${parentRect.left + 50 * (number - 1) + 3 * number}px`;
+  return moveTo(getUserStory(userStoryName), newTop, newLeft);
+};
+
+const moveTo = (
+  userStoryElement: HTMLDivElement,
+  newTop: string,
+  newLeft: string
+) => {
+  if (
+    newTop == userStoryElement.style.top &&
+    newLeft == userStoryElement.style.left
+  ) {
+    return false;
+  }
+  userStoryElement.style.top = newTop;
+  userStoryElement.style.left = newLeft;
+  _userStoriesInAnimation[_userStories.indexOf(userStoryElement)] = true;
+  return true;
 };
 
 export const waitForAnimations = async () => {
-  while (!userStoriesInAnimation.every((isInAnimation) => !isInAnimation)) {
+  while (!_userStoriesInAnimation.every((isInAnimation) => !isInAnimation)) {
     await sleep(100);
   }
 };

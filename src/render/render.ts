@@ -41,21 +41,32 @@ export const render = (events: TimeEvent[]) => {
     let currentEvents = events.filter((event) => event.time == time);
     let done = 0;
     for (const currentEvent of currentEvents) {
+      let isMoving: boolean = false;
       if (
         currentEvent.state == State.IN_PROGRESS ||
         currentEvent.state == State.REVIEW
       ) {
-        moveUserStoryToThread(
+        isMoving = moveUserStoryToThread(
           getThread(currentEvent.thread),
           currentEvent.userStoryName
         );
       } else if (currentEvent.state == State.TO_REVIEW) {
-        moveUserStoryOrdered(getBacklog(), currentEvent.userStoryName, 1);
+        isMoving = moveUserStoryOrdered(
+          getBacklog(),
+          currentEvent.userStoryName,
+          1
+        );
       } else if (currentEvent.state == State.DONE) {
         done++;
-        moveUserStoryOrdered(getDone(), currentEvent.userStoryName, done);
+        isMoving = moveUserStoryOrdered(
+          getDone(),
+          currentEvent.userStoryName,
+          done
+        );
       }
-      await waitForAnimations();
+      if (isMoving) {
+        await waitForAnimations();
+      }
     }
   });
 };
