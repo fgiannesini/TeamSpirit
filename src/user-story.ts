@@ -32,6 +32,18 @@ export const setInProgress = (userStory: UserStory, dev: Thread): UserStory => {
   };
 };
 
-export const setDone = (inProgress: UserStory, dev: Thread): UserStory => {
-  return { ...inProgress, state: State.DONE, thread: dev.id };
+export const setDone = (userStory: UserStory, dev: Thread): UserStory => {
+  return { ...userStory, state: State.DONE, thread: dev.id };
+};
+
+export const setToReview = (userStory: UserStory, dev: Thread): UserStory => {
+  return { ...userStory, state: State.TO_REVIEW, thread: dev.id };
+};
+
+export const setReview = (userStory: UserStory, dev: Thread): UserStory => {
+  return { ...userStory, state: State.REVIEW, thread: dev.id };
+};
+
+export const isDeveloped = (userStory: UserStory): boolean => {
+  return userStory.progression == userStory.complexity;
 };

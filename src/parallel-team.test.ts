@@ -195,7 +195,7 @@ describe('Parallel Team', () => {
     expect(backlog.remainings()).toHaveLength(0);
   });
 
-  it.skip('should handle 1 simple userStory and review', () => {
+  it('should handle 1 simple userStory and review', () => {
     const backlog = Backlog.init()
       .addUserStory({
         name: 'userStory1',

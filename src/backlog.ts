@@ -24,8 +24,17 @@ export class Backlog {
 
   next(thread: Thread): UserStory {
     let threadUserStoryIndex = this._userStories.findLastIndex(
-      (userStory) => userStory.thread === thread.id
+      (userStory) =>
+        userStory.state === State.TO_REVIEW && userStory.thread !== thread.id
     );
+
+    if (threadUserStoryIndex == -1) {
+      threadUserStoryIndex = this._userStories.findLastIndex(
+        (userStory) =>
+          userStory.state === State.IN_PROGRESS &&
+          userStory.thread === thread.id
+      );
+    }
     if (threadUserStoryIndex == -1) {
       threadUserStoryIndex = this._userStories.findLastIndex(
         (userStory) => userStory.thread === -1

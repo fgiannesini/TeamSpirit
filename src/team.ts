@@ -1,6 +1,15 @@
 import { Backlog } from './backlog.ts';
 import { createEvent, TimeEvent } from './events.ts';
-import { idle, setDone, setInProgress, UserStory } from './user-story.ts';
+import {
+  idle,
+  isDeveloped,
+  setDone,
+  setInProgress,
+  setReview,
+  setToReview,
+  State,
+  UserStory,
+} from './user-story.ts';
 
 export interface Team {}
 
@@ -27,6 +36,7 @@ export class ParallelTeam implements Team {
     const events: TimeEvent[] = [];
     let time = 1;
     while (backlog.hasMoreUserStories()) {
+      const toAddBacklog: UserStory[] = [];
       for (let dev of this._devs) {
         let userStory: UserStory = backlog.next(dev);
         if (userStory == idle) {
@@ -34,18 +44,36 @@ export class ParallelTeam implements Team {
           events.push(createEvent(time, idle));
           continue;
         }
-        const inProgress = setInProgress(userStory, dev);
-        events.push(createEvent(time, inProgress));
-        if (!this._review) {
-          if (inProgress.complexity == inProgress.progression) {
-            const done = setDone(inProgress, dev);
-            events.push(createEvent(time, done));
-            backlog.add(done);
+        if (userStory.state == State.TO_REVIEW) {
+          const review = setReview(userStory, dev);
+          events.push(createEvent(time, review));
+          const done = setDone(userStory, dev);
+          events.push(createEvent(time, done));
+          toAddBacklog.push(done);
+        }
+
+        if (
+          userStory.state == State.TODO ||
+          userStory.state == State.IN_PROGRESS
+        ) {
+          const inProgress = setInProgress(userStory, dev);
+          events.push(createEvent(time, inProgress));
+          if (isDeveloped(inProgress)) {
+            if (this._review) {
+              const toReview = setToReview(inProgress, dev);
+              events.push(createEvent(time, toReview));
+              toAddBacklog.push(toReview);
+            } else {
+              const done = setDone(inProgress, dev);
+              events.push(createEvent(time, done));
+              toAddBacklog.push(done);
+            }
           } else {
-            backlog.add(inProgress);
+            toAddBacklog.push(inProgress);
           }
         }
       }
+      toAddBacklog.forEach((userStory) => backlog.add(userStory));
       time++;
     }
 
