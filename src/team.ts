@@ -1,12 +1,13 @@
 import { Backlog } from './backlog.ts';
 import { createEvent, TimeEvent } from './events.ts';
-import { idle, State, UserStory } from './user-story.ts';
+import { idle, setDone, setInProgress, UserStory } from './user-story.ts';
 
 export interface Team {}
 
 export type Thread = {
   id: number;
 };
+
 export class ParallelTeam implements Team {
   private readonly _devs: Thread[] = [];
   private readonly _review: boolean;
@@ -29,24 +30,15 @@ export class ParallelTeam implements Team {
       for (let dev of this._devs) {
         let userStory: UserStory = backlog.next(dev);
         if (userStory == idle) {
-          events.push({
-            time: time,
-            userStoryName: userStory.name,
-            thread: dev.id,
-            state: userStory.state,
-          });
+          idle.thread = dev.id;
+          events.push(createEvent(time, idle));
           continue;
         }
-        let inProgress: UserStory = { ...userStory };
-        inProgress.progression = userStory.progression + 1;
-        inProgress.thread = dev.id;
-        inProgress.state = State.IN_PROGRESS;
+        const inProgress = setInProgress(userStory, dev);
         events.push(createEvent(time, inProgress));
         if (!this._review) {
           if (inProgress.complexity == inProgress.progression) {
-            let done: UserStory = { ...inProgress };
-            done.state = State.DONE;
-            done.thread = dev.id;
+            const done = setDone(inProgress, dev);
             events.push(createEvent(time, done));
             backlog.add(done);
           } else {

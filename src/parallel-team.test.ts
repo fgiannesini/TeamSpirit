@@ -206,7 +206,11 @@ describe('Parallel Team', () => {
       })
       .build();
 
-    const events = ParallelTeam.init().withDevCount(2).build().run(backlog);
+    const events = ParallelTeam.init()
+      .withDevCount(2)
+      .withReview()
+      .build()
+      .run(backlog);
 
     expect(events).toEqual([
       {
