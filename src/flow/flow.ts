@@ -1,4 +1,4 @@
-import './../style.scss';
+import './flow.scss';
 import { render } from './render.ts';
 import { State } from '../compute/user-story.ts';
 

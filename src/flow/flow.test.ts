@@ -8,9 +8,13 @@ import {
   getThread,
   getUserStory,
 } from './selector.ts';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
 
 describe('Render', () => {
   beforeEach(() => {
+    const htmlPath = resolve(__dirname, './flow.html');
+    document.body.innerHTML = readFileSync(htmlPath, 'utf-8');
     vi.useFakeTimers();
   });
   afterEach(() => {
