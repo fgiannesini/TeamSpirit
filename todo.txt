@@ -1,7 +1,5 @@
-vérifier qu'il y a besoin de mock et d'envoi d'events dans les tests
-remplacer le parent des éléments déplacés
-build et déploiement github pages
 formulaire de configuration
+build et déploiement github pages
 images sur les threads pour indiquer ce qu'il fait ?
 team mob
 team binome

@@ -154,6 +154,11 @@ describe('Render', () => {
     vi.advanceTimersToNextTimer();
     getCompute().click();
     await moveAndExpectUserStoryAt('userStory1', '50px', '233px');
+
+    mockPosition(getThread(0), {
+      top: 50.01,
+      right: 230.01,
+    });
     getCompute().click();
     expectUserStoryAt('userStory1', '50px', '233px');
   });

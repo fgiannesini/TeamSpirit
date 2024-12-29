@@ -54,14 +54,17 @@ export const moveUserStoryOrdered = (
   return moveTo(getUserStory(userStoryName), newTop, newLeft);
 };
 
+const arePixelsEqual = (pixel1: string, pixel2: string) =>
+  Math.abs(parseFloat(pixel1) - parseFloat(pixel2)) <= 0.01;
+
 const moveTo = (
   userStoryElement: HTMLDivElement,
   newTop: string,
   newLeft: string
 ) => {
   if (
-    newTop == userStoryElement.style.top &&
-    newLeft == userStoryElement.style.left
+    arePixelsEqual(newTop, userStoryElement.style.top) &&
+    arePixelsEqual(newLeft, userStoryElement.style.left)
   ) {
     return false;
   }
