@@ -6,7 +6,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: './src/index.html',
-        flow: './src/render/flow.html',
+        flow: './src/flow/flow.html',
       },
     },
   },
