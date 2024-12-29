@@ -128,8 +128,8 @@ describe('Render', () => {
     vi.advanceTimersToNextTimer();
     getCompute().click();
 
-    await expectUserStoryAt('userStory1', '50px', '233px');
-    await expectUserStoryAt('userStory2', '100px', '463px');
+    await moveAndExpectUserStoryAt('userStory1', '50px', '233px');
+    await moveAndExpectUserStoryAt('userStory2', '100px', '463px');
   });
 
   it('Should not move user story in progress twice', async () => {
@@ -153,12 +153,9 @@ describe('Render', () => {
     });
     vi.advanceTimersToNextTimer();
     getCompute().click();
-    await expectUserStoryAt('userStory1', '50px', '233px');
+    await moveAndExpectUserStoryAt('userStory1', '50px', '233px');
     getCompute().click();
-    const userStory = getUserStory('userStory1');
-    let userStory1Style = userStory.style;
-    expect(userStory1Style.left).toEqual('233px');
-    expect(userStory1Style.top).toEqual('50px');
+    expectUserStoryAt('userStory1', '50px', '233px');
   });
 
   it('Should move userStories to the done area', async () => {
@@ -182,8 +179,8 @@ describe('Render', () => {
     vi.advanceTimersToNextTimer();
     getCompute().click();
 
-    await expectUserStoryAt('userStory1', '50px', '33px');
-    await expectUserStoryAt('userStory2', '50px', '86px');
+    await moveAndExpectUserStoryAt('userStory1', '50px', '33px');
+    await moveAndExpectUserStoryAt('userStory2', '50px', '86px');
   });
 
   it('Should move userStories to the backlog area when to review', async () => {
@@ -200,7 +197,7 @@ describe('Render', () => {
     vi.advanceTimersToNextTimer();
     getCompute().click();
 
-    await expectUserStoryAt('userStory1', '50px', '33px');
+    await moveAndExpectUserStoryAt('userStory1', '50px', '33px');
   });
 
   it('Should move userStories to the corresponding thread when reviewed', async () => {
@@ -217,10 +214,10 @@ describe('Render', () => {
     vi.advanceTimersToNextTimer();
     getCompute().click();
 
-    await expectUserStoryAt('userStory1', '50px', '233px');
+    await moveAndExpectUserStoryAt('userStory1', '50px', '233px');
   });
 
-  const expectUserStoryAt = async (
+  const moveAndExpectUserStoryAt = async (
     userStoryName: string,
     top: string,
     left: string
@@ -229,7 +226,18 @@ describe('Render', () => {
     userStory.dispatchEvent(new Event('transitionend'));
     await vi.advanceTimersToNextTimerAsync();
 
-    let userStory1Style = userStory.style;
+    const userStory1Style = userStory.style;
+    expect(userStory1Style.left).toEqual(left);
+    expect(userStory1Style.top).toEqual(top);
+  };
+
+  const expectUserStoryAt = (
+    userStoryName: string,
+    top: string,
+    left: string
+  ) => {
+    const userStory = getUserStory(userStoryName);
+    const userStory1Style = userStory.style;
     expect(userStory1Style.left).toEqual(left);
     expect(userStory1Style.top).toEqual(top);
   };
