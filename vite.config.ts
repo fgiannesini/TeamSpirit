@@ -9,6 +9,7 @@ export default defineConfig({
         flow: './src/flow/flow.html',
       },
     },
+    outDir: '../dist',
   },
   test: {
     globals: true,
