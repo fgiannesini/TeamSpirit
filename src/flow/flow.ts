@@ -1,42 +1,8 @@
 import './flow.scss';
 import { render } from './render.ts';
-import { State } from '../compute/user-story.ts';
+import { TimeEvent } from '../compute/events.ts';
 
-render([
-  {
-    time: 1,
-    userStoryName: 'userStory1',
-    thread: 0,
-    state: State.IN_PROGRESS,
-  },
-  {
-    time: 1,
-    userStoryName: 'userStory1',
-    thread: 0,
-    state: State.TO_REVIEW,
-  },
-  {
-    time: 1,
-    userStoryName: 'idle',
-    thread: 1,
-    state: State.DONE,
-  },
-  {
-    time: 2,
-    userStoryName: 'idle',
-    thread: 0,
-    state: State.DONE,
-  },
-  {
-    time: 2,
-    userStoryName: 'userStory1',
-    thread: 1,
-    state: State.REVIEW,
-  },
-  {
-    time: 2,
-    userStoryName: 'userStory1',
-    thread: 1,
-    state: State.DONE,
-  },
-]);
+const events = JSON.parse(
+  sessionStorage.getItem('computation')!
+) as TimeEvent[];
+render(events);

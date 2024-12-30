@@ -1,5 +1,7 @@
-formulaire de configuration
 build et déploiement github pages
+importer le fichier ts dans le test pour le simplifier ?
+implémenter statistiques
+bloquer le bouton d'avancement unitaire tant que le traitement n'est pas terminé
 images sur les threads pour indiquer ce qu'il fait ?
 team mob
 team binome

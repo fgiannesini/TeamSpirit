@@ -90,8 +90,8 @@ class ParallelTeamBuilder {
     return this;
   }
 
-  public withReview(): ParallelTeamBuilder {
-    this.review = true;
+  public withReview(review: boolean = true): ParallelTeamBuilder {
+    this.review = review;
     return this;
   }
 

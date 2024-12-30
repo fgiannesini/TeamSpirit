@@ -1,13 +1,25 @@
 <!doctype html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Team Spirit</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Team Spirit</title>
 </head>
 <body>
 <h3>Team Spirit</h3>
-<button>Calculate</button>
+<div>
+  <label for="task-count-input">Tasks count</label>
+  <input id="task-count-input" type="number" min="1" />
+</div>
+<div>
+  <label for="dev-count-input">Developers count</label>
+  <input id="dev-count-input" type="number" min="1" />
+</div>
+<div>
+  <label for="review-checkbox">Review</label>
+  <input id="review-checkbox" type="checkbox" />
+</div>
+<button id="calculate-button">Calculate</button>
 </body>
 <script type="module" src="main.ts"></script>
 </html>
