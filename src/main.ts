@@ -42,6 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const parallelTeam = buildParallelTeam();
       const timeEvents = parallelTeam.run(backlog);
       sessionStorage.setItem('computation', JSON.stringify(timeEvents));
-      window.location.href = '/flow/flow.html';
+      window.location.href = '/TeamSpirit/flow/flow.html';
     });
 });
