@@ -1,8 +1,6 @@
 import './flow.scss';
 import { render } from './render.ts';
-import { TimeEvent } from '../compute/events.ts';
+import { loadTimeEvents } from './session-storage.ts';
 
-const events = JSON.parse(
-  sessionStorage.getItem('computation')!
-) as TimeEvent[];
+const events = loadTimeEvents();
 render(events);

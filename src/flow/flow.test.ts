@@ -1,6 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { State } from '../compute/user-story.ts';
-import { render } from './render.ts';
 import {
   getBacklog,
   getCompute,
@@ -10,9 +9,11 @@ import {
 } from './selector.ts';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
+import { saveTimeEvents } from './session-storage.ts';
 
-describe('Render', () => {
-  beforeEach(() => {
+describe('Flow', () => {
+  beforeEach(async () => {
+    vi.resetModules();
     const htmlPath = resolve(__dirname, './flow.html');
     document.body.innerHTML = readFileSync(htmlPath, 'utf-8');
     vi.useFakeTimers();
@@ -22,8 +23,10 @@ describe('Render', () => {
     vi.clearAllTimers();
   });
 
-  it('Should render the page without events', () => {
-    render([]);
+  it('Should render the page without events', async () => {
+    saveTimeEvents([]);
+    await import('./flow.ts');
+
     vi.advanceTimersToNextTimer();
     let threads = document.querySelector('#threads');
     expect(threads).not.toBeNull();
@@ -33,8 +36,8 @@ describe('Render', () => {
     expect(done).not.toBeNull();
   });
 
-  it('Should create 2 thread elements', () => {
-    render([
+  it('Should create 2 thread elements', async () => {
+    saveTimeEvents([
       {
         time: 1,
         userStoryName: 'userStory1',
@@ -54,6 +57,7 @@ describe('Render', () => {
         state: State.DONE,
       },
     ]);
+    await import('./flow.ts');
     vi.advanceTimersToNextTimer();
     let thread0 = getThread(0);
     expect(thread0.className).toEqual('thread');
@@ -64,8 +68,8 @@ describe('Render', () => {
     expect(thread1.textContent).toEqual('thread 1');
   });
 
-  it('Should create 2 userStories elements', () => {
-    render([
+  it('Should create 2 userStories elements', async () => {
+    saveTimeEvents([
       {
         time: 1,
         userStoryName: 'userStory1',
@@ -85,6 +89,7 @@ describe('Render', () => {
         state: State.DONE,
       },
     ]);
+    await import('./flow.ts');
     let userStory1 = getUserStory('userStory1');
     expect(userStory1.className).toEqual('userStory');
     expect(userStory1.textContent).toEqual('userStory1');
@@ -103,7 +108,7 @@ describe('Render', () => {
   });
 
   it('Should move userStories to the corresponding thread when in progress', async () => {
-    render([
+    saveTimeEvents([
       {
         time: 1,
         userStoryName: 'userStory1',
@@ -117,6 +122,7 @@ describe('Render', () => {
         state: State.IN_PROGRESS,
       },
     ]);
+    await import('./flow.ts');
     document
       .querySelectorAll<HTMLElement>('.thread')
       .forEach((element, index) => {
@@ -133,7 +139,7 @@ describe('Render', () => {
   });
 
   it('Should not move user story in progress twice', async () => {
-    render([
+    saveTimeEvents([
       {
         time: 1,
         userStoryName: 'userStory1',
@@ -147,6 +153,7 @@ describe('Render', () => {
         state: State.IN_PROGRESS,
       },
     ]);
+    await import('./flow.ts');
     mockPosition(getThread(0), {
       top: 50,
       right: 230,
@@ -164,7 +171,7 @@ describe('Render', () => {
   });
 
   it('Should move userStories to the done area', async () => {
-    render([
+    saveTimeEvents([
       {
         time: 1,
         userStoryName: 'userStory1',
@@ -178,6 +185,7 @@ describe('Render', () => {
         state: State.DONE,
       },
     ]);
+    await import('./flow.ts');
 
     let doneElement = getDone();
     mockPosition(doneElement, { top: 50, left: 30 });
@@ -189,7 +197,7 @@ describe('Render', () => {
   });
 
   it('Should move userStories to the backlog area when to review', async () => {
-    render([
+    saveTimeEvents([
       {
         time: 1,
         userStoryName: 'userStory1',
@@ -197,6 +205,7 @@ describe('Render', () => {
         state: State.TO_REVIEW,
       },
     ]);
+    await import('./flow.ts');
 
     mockPosition(getBacklog(), { top: 50, left: 30 });
     vi.advanceTimersToNextTimer();
@@ -206,7 +215,7 @@ describe('Render', () => {
   });
 
   it('Should move userStories to the corresponding thread when reviewed', async () => {
-    render([
+    saveTimeEvents([
       {
         time: 1,
         userStoryName: 'userStory1',
@@ -214,6 +223,7 @@ describe('Render', () => {
         state: State.REVIEW,
       },
     ]);
+    await import('./flow.ts');
 
     mockPosition(getThread(0), { top: 50, right: 230 });
     vi.advanceTimersToNextTimer();
