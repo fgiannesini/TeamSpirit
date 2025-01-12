@@ -56,6 +56,56 @@ describe('Parallel Team', () => {
     expect(backlog.remainings()).toHaveLength(0);
   });
 
+  it('should handle 1 simple userStory by an efficient dev', () => {
+    const backlog = Backlog.init()
+      .addUserStory({
+        name: 'userStory1',
+        complexity: 5,
+        state: State.TODO,
+        thread: -1,
+        progression: 0,
+      })
+      .build();
+
+    const events = ParallelTeam.init()
+      .withDev({
+        id: 0,
+        power: 2,
+      })
+      .build()
+      .run(backlog);
+
+    expect(events).toEqual<TimeEvent[]>([
+      {
+        time: 1,
+        userStoryName: 'userStory1',
+        thread: 0,
+        state: State.IN_PROGRESS,
+      },
+      {
+        time: 2,
+        userStoryName: 'userStory1',
+        thread: 0,
+        state: State.IN_PROGRESS,
+      },
+      {
+        time: 3,
+        userStoryName: 'userStory1',
+        thread: 0,
+        state: State.IN_PROGRESS,
+      },
+      {
+        time: 3,
+        userStoryName: 'userStory1',
+        thread: 0,
+        state: State.DONE,
+      },
+    ]);
+
+    expect(backlog.dones()).toHaveLength(1);
+    expect(backlog.remainings()).toHaveLength(0);
+  });
+
   it('should handle 3 simple userStories by 2 devs', () => {
     const backlog = Backlog.init()
       .addUserStory({

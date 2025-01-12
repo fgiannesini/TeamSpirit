@@ -26,7 +26,10 @@ export const idle: UserStory = {
 export const setInProgress = (userStory: UserStory, dev: Thread): UserStory => {
   return {
     ...userStory,
-    progression: userStory.progression + 1,
+    progression: Math.min(
+      userStory.progression + dev.power,
+      userStory.complexity
+    ),
     thread: dev.id,
     state: State.IN_PROGRESS,
   };

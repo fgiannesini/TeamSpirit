@@ -15,17 +15,16 @@ export interface Team {}
 
 export type Thread = {
   id: number;
+  power: number;
 };
 
 export class ParallelTeam implements Team {
   private readonly _devs: Thread[] = [];
   private readonly _review: boolean;
 
-  constructor(devCount: number, review: boolean) {
+  constructor(devs: Thread[], review: boolean) {
+    this._devs = devs;
     this._review = review;
-    for (let i = 0; i < devCount; i++) {
-      this._devs.push({ id: i });
-    }
   }
 
   public static init = (): ParallelTeamBuilder => {
@@ -82,20 +81,27 @@ export class ParallelTeam implements Team {
 }
 
 class ParallelTeamBuilder {
-  private devCount: number = 0;
-  private review: boolean = false;
+  private _devs: Thread[] = [];
+  private _review: boolean = false;
+
+  public withDev(dev: Thread) {
+    this._devs.push(dev);
+    return this;
+  }
 
   public withDevCount(devCount: number): ParallelTeamBuilder {
-    this.devCount = devCount;
+    for (let i = 0; i < devCount; i++) {
+      this._devs.push({ id: i, power: 1 });
+    }
     return this;
   }
 
   public withReview(review: boolean = true): ParallelTeamBuilder {
-    this.review = review;
+    this._review = review;
     return this;
   }
 
   public build(): ParallelTeam {
-    return new ParallelTeam(this.devCount, this.review);
+    return new ParallelTeam(this._devs, this._review);
   }
 }
