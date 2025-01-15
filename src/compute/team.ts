@@ -3,6 +3,7 @@ import { createEvent, TimeEvent } from './events.ts';
 import {
   idle,
   isDeveloped,
+  isReviewed,
   setDone,
   setInProgress,
   setReview,
@@ -43,12 +44,19 @@ export class ParallelTeam implements Team {
           events.push(createEvent(time, idle));
           continue;
         }
-        if (userStory.state == State.TO_REVIEW) {
+        if (
+          userStory.state == State.TO_REVIEW ||
+          userStory.state == State.REVIEW
+        ) {
           const review = setReview(userStory, dev);
           events.push(createEvent(time, review));
-          const done = setDone(userStory, dev);
-          events.push(createEvent(time, done));
-          toAddBacklog.push(done);
+          if (isReviewed(review)) {
+            const done = setDone(userStory, dev);
+            events.push(createEvent(time, done));
+            toAddBacklog.push(done);
+          } else {
+            toAddBacklog.push(review);
+          }
         }
 
         if (

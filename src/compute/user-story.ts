@@ -10,7 +10,9 @@ export enum State {
 export type UserStory = {
   name: string;
   complexity: number;
+  reviewComplexity: number;
   progression: number;
+  review: number;
   thread: number | undefined;
   state: State;
 };
@@ -19,6 +21,8 @@ export const idle: UserStory = {
   name: 'idle',
   complexity: 0,
   progression: 0,
+  reviewComplexity: 0,
+  review: 0,
   thread: undefined,
   state: State.DONE,
 };
@@ -40,15 +44,28 @@ export const setDone = (userStory: UserStory, dev: Thread): UserStory => {
 };
 
 export const setToReview = (userStory: UserStory, dev: Thread): UserStory => {
-  return { ...userStory, state: State.TO_REVIEW, thread: dev.id };
+  return {
+    ...userStory,
+    state: State.TO_REVIEW,
+    thread: dev.id,
+  };
 };
 
 export const setReview = (userStory: UserStory, dev: Thread): UserStory => {
-  return { ...userStory, state: State.REVIEW, thread: dev.id };
+  return {
+    ...userStory,
+    state: State.REVIEW,
+    thread: dev.id,
+    review: Math.min(userStory.review + dev.power, userStory.reviewComplexity),
+  };
 };
 
 export const isDeveloped = (userStory: UserStory): boolean => {
   return userStory.progression == userStory.complexity;
+};
+
+export const isReviewed = (userStory: UserStory): boolean => {
+  return userStory.reviewComplexity == userStory.review;
 };
 
 export const toReviewBy = (userStory: UserStory, thread: Thread): boolean => {
@@ -60,6 +77,11 @@ export const isInProgressBy: (
   thread: Thread
 ) => boolean = (userStory: UserStory, thread: Thread) =>
   userStory.state === State.IN_PROGRESS && userStory.thread === thread.id;
+
+export const isInReviewBy: (userStory: UserStory, thread: Thread) => boolean = (
+  userStory: UserStory,
+  thread: Thread
+) => userStory.state === State.REVIEW && userStory.thread === thread.id;
 
 export const toDo: (userStory: UserStory) => boolean = (userStory: UserStory) =>
   userStory.thread === -1;

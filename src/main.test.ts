@@ -7,7 +7,7 @@ import { buildBacklog, buildParallelTeam } from './main.ts';
 import { State } from './compute/user-story.ts';
 import { ParallelTeam } from './compute/team.ts';
 
-describe('Render', () => {
+describe('Main', () => {
   beforeEach(async () => {
     vi.spyOn(window, 'location', 'get').mockReturnValue({
       assign: vi.fn(),
@@ -46,6 +46,8 @@ describe('Render', () => {
         .addUserStory({
           name: `US0`,
           complexity: 1,
+          review: 0,
+          reviewComplexity: 1,
           state: State.TODO,
           thread: -1,
           progression: 0,
