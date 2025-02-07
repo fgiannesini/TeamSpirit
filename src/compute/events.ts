@@ -7,9 +7,13 @@ export interface TimeEvent {
   thread: number;
 }
 
-export const createEvent = (time: number, userStory: UserStory): TimeEvent => ({
+export const createEvent = (
+  time: number,
+  userStory: UserStory,
+  threadId: number
+): TimeEvent => ({
   time: time,
   userStoryName: userStory.name,
-  thread: userStory.thread!,
+  thread: threadId,
   state: userStory.state,
 });

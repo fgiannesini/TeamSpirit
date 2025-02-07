@@ -35,6 +35,7 @@ export class Backlog {
       isInReviewBy(userStory, thread)
     );
     if (threadUserStoryIndex == -1) {
+      //TODO à supprimer
       threadUserStoryIndex = this._userStories.findLastIndex((userStory) =>
         toReviewBy(userStory, thread)
       );

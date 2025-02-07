@@ -6,6 +6,7 @@ import { Backlog } from './compute/backlog.ts';
 import { buildBacklog, buildParallelTeam } from './main.ts';
 import { State } from './compute/user-story.ts';
 import { ParallelTeam } from './compute/team.ts';
+import {noReview} from "./compute/review.ts";
 
 describe('Main', () => {
   beforeEach(async () => {
@@ -46,7 +47,7 @@ describe('Main', () => {
         .addUserStory({
           name: `US0`,
           complexity: 1,
-          review: 0,
+          review: noReview,
           reviewComplexity: 1,
           state: State.TODO,
           thread: -1,

@@ -5,6 +5,7 @@ import {
   isDeveloped,
   isReviewed,
   setDone,
+  setDoneBy,
   setInProgress,
   setReview,
   setToReview,
@@ -41,7 +42,7 @@ export class ParallelTeam implements Team {
         let userStory: UserStory = backlog.next(dev);
         if (userStory == idle) {
           idle.thread = dev.id;
-          events.push(createEvent(time, idle));
+          events.push(createEvent(time, idle, dev.id));
           continue;
         }
         if (
@@ -49,13 +50,13 @@ export class ParallelTeam implements Team {
           userStory.state == State.REVIEW
         ) {
           const review = setReview(userStory, dev);
-          events.push(createEvent(time, review));
+          events.push(createEvent(time, review, dev.id));
           if (isReviewed(review)) {
-            const done = setDone(userStory, dev);
-            events.push(createEvent(time, done));
+            const done = setDoneBy(userStory, review.thread!);
+            events.push(createEvent(time, done, done.thread!));
             toAddBacklog.push(done);
           } else {
-            toAddBacklog.push(review);
+            backlog.add(review);
           }
         }
 
@@ -64,15 +65,15 @@ export class ParallelTeam implements Team {
           userStory.state == State.IN_PROGRESS
         ) {
           const inProgress = setInProgress(userStory, dev);
-          events.push(createEvent(time, inProgress));
+          events.push(createEvent(time, inProgress, dev.id));
           if (isDeveloped(inProgress)) {
             if (this._review) {
               const toReview = setToReview(inProgress, dev);
-              events.push(createEvent(time, toReview));
+              events.push(createEvent(time, toReview, dev.id));
               toAddBacklog.push(toReview);
             } else {
-              const done = setDone(inProgress, dev);
-              events.push(createEvent(time, done));
+              const done = setDone(inProgress);
+              events.push(createEvent(time, done, dev.id));
               toAddBacklog.push(done);
             }
           } else {

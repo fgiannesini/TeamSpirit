@@ -1,4 +1,11 @@
 import { Thread } from './team.ts';
+import {
+  getReviewPoints,
+  hasAllReviews,
+  needReview,
+  noReview,
+  Review,
+} from './review.ts';
 
 export enum State {
   TODO,
@@ -7,12 +14,13 @@ export enum State {
   REVIEW,
   DONE,
 }
+
 export type UserStory = {
   name: string;
   complexity: number;
   reviewComplexity: number;
   progression: number;
-  review: number;
+  review: Review;
   thread: number | undefined;
   state: State;
 };
@@ -22,7 +30,7 @@ export const idle: UserStory = {
   complexity: 0,
   progression: 0,
   reviewComplexity: 0,
-  review: 0,
+  review: noReview,
   thread: undefined,
   state: State.DONE,
 };
@@ -39,8 +47,12 @@ export const setInProgress = (userStory: UserStory, dev: Thread): UserStory => {
   };
 };
 
-export const setDone = (userStory: UserStory, dev: Thread): UserStory => {
-  return { ...userStory, state: State.DONE, thread: dev.id };
+export const setDoneBy = (userStory: UserStory, devId: number): UserStory => {
+  return { ...userStory, state: State.DONE, thread: devId };
+};
+
+export const setDone = (userStory: UserStory): UserStory => {
+  return { ...userStory, state: State.DONE };
 };
 
 export const setToReview = (userStory: UserStory, dev: Thread): UserStory => {
@@ -51,12 +63,34 @@ export const setToReview = (userStory: UserStory, dev: Thread): UserStory => {
   };
 };
 
+const updateReviewPoints = (
+  review: Review,
+  dev: Thread,
+  newReviewPoints: number
+): Review => {
+  const newReviewers = new Map<number, number>(review.reviewers).set(
+    dev.id,
+    newReviewPoints
+  );
+  return {
+    ...review,
+    reviewers: newReviewers,
+  };
+};
+
 export const setReview = (userStory: UserStory, dev: Thread): UserStory => {
+  const currentReview = userStory.review;
+  const currentReviewPoints = getReviewPoints(currentReview, dev);
+  const newReviewPoints = Math.min(
+    currentReviewPoints + dev.power,
+    userStory.reviewComplexity
+  );
+  const newReview = updateReviewPoints(currentReview, dev, newReviewPoints);
+
   return {
     ...userStory,
     state: State.REVIEW,
-    thread: dev.id,
-    review: Math.min(userStory.review + dev.power, userStory.reviewComplexity),
+    review: newReview,
   };
 };
 
@@ -65,7 +99,7 @@ export const isDeveloped = (userStory: UserStory): boolean => {
 };
 
 export const isReviewed = (userStory: UserStory): boolean => {
-  return userStory.reviewComplexity == userStory.review;
+  return hasAllReviews(userStory.review, userStory.reviewComplexity);
 };
 
 export const toReviewBy = (userStory: UserStory, thread: Thread): boolean => {
@@ -81,7 +115,10 @@ export const isInProgressBy: (
 export const isInReviewBy: (userStory: UserStory, thread: Thread) => boolean = (
   userStory: UserStory,
   thread: Thread
-) => userStory.state === State.REVIEW && userStory.thread === thread.id;
+) =>
+  (userStory.state === State.REVIEW || userStory.state === State.TO_REVIEW) &&
+  userStory.thread !== thread.id &&
+  needReview(userStory.review, thread, userStory.reviewComplexity);
 
 export const toDo: (userStory: UserStory) => boolean = (userStory: UserStory) =>
   userStory.thread === -1;

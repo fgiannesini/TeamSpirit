@@ -3,6 +3,7 @@ import { Backlog } from './backlog.ts';
 import { State } from './user-story.ts';
 import { ParallelTeam } from './team.ts';
 import { TimeEvent } from './events.ts';
+import { noReview } from './review.ts';
 
 describe('Parallel Team', () => {
   it('should handle 2 simple userStories by 2 devs', () => {
@@ -11,7 +12,7 @@ describe('Parallel Team', () => {
         name: 'userStory2',
         complexity: 1,
         reviewComplexity: 0,
-        review: 0,
+        review: noReview,
         state: State.TODO,
         thread: -1,
         progression: 0,
@@ -20,7 +21,7 @@ describe('Parallel Team', () => {
         name: 'userStory1',
         complexity: 1,
         reviewComplexity: 0,
-        review: 0,
+        review: noReview,
         state: State.TODO,
         thread: -1,
         progression: 0,
@@ -66,7 +67,7 @@ describe('Parallel Team', () => {
         name: 'userStory1',
         complexity: 5,
         reviewComplexity: 0,
-        review: 0,
+        review: noReview,
         state: State.TODO,
         thread: -1,
         progression: 0,
@@ -118,7 +119,7 @@ describe('Parallel Team', () => {
         name: 'userStory3',
         complexity: 1,
         reviewComplexity: 0,
-        review: 0,
+        review: noReview,
         state: State.TODO,
         thread: -1,
         progression: 0,
@@ -127,7 +128,7 @@ describe('Parallel Team', () => {
         name: 'userStory2',
         complexity: 1,
         reviewComplexity: 0,
-        review: 0,
+        review: noReview,
         state: State.TODO,
         thread: -1,
         progression: 0,
@@ -136,7 +137,7 @@ describe('Parallel Team', () => {
         name: 'userStory1',
         complexity: 1,
         reviewComplexity: 0,
-        review: 0,
+        review: noReview,
         state: State.TODO,
         thread: -1,
         progression: 0,
@@ -200,7 +201,7 @@ describe('Parallel Team', () => {
         name: 'userStory2',
         complexity: 2,
         reviewComplexity: 0,
-        review: 0,
+        review: noReview,
         state: State.TODO,
         thread: -1,
         progression: 0,
@@ -209,7 +210,7 @@ describe('Parallel Team', () => {
         name: 'userStory1',
         complexity: 2,
         reviewComplexity: 0,
-        review: 0,
+        review: noReview,
         state: State.TODO,
         thread: -1,
         progression: 0,
@@ -267,7 +268,10 @@ describe('Parallel Team', () => {
         name: 'userStory1',
         complexity: 1,
         reviewComplexity: 1,
-        review: 0,
+        review: {
+          reviewersNeeded: 1,
+          reviewers: new Map<number, number>(),
+        },
         state: State.TODO,
         thread: -1,
         progression: 0,
@@ -314,7 +318,7 @@ describe('Parallel Team', () => {
       {
         time: 2,
         userStoryName: 'userStory1',
-        thread: 1,
+        thread: 0,
         state: State.DONE,
       },
     ]);
@@ -329,7 +333,10 @@ describe('Parallel Team', () => {
         name: 'userStory1',
         complexity: 20,
         reviewComplexity: 2,
-        review: 0,
+        review: {
+          reviewersNeeded: 1,
+          reviewers: new Map<number, number>(),
+        },
         state: State.TODO,
         thread: -1,
         progression: 0,
@@ -395,7 +402,113 @@ describe('Parallel Team', () => {
       {
         time: 3,
         userStoryName: 'userStory1',
+        thread: 0,
+        state: State.DONE,
+      },
+    ]);
+
+    expect(backlog.dones()).toHaveLength(1);
+    expect(backlog.remainings()).toHaveLength(0);
+  });
+
+  it('should handle 1 simple userStory and review by two devs', () => {
+    const backlog = Backlog.init()
+      .addUserStory({
+        name: 'userStory1',
+        complexity: 20,
+        reviewComplexity: 2,
+        review: {
+          reviewersNeeded: 2,
+          reviewers: new Map<number, number>(),
+        },
+        state: State.TODO,
+        thread: -1,
+        progression: 0,
+      })
+      .build();
+
+    const events = ParallelTeam.init()
+      .withDev({
+        id: 0,
+        power: 20,
+      })
+      .withDev({
+        id: 1,
+        power: 1,
+      })
+      .withDev({
+        id: 2,
+        power: 1,
+      })
+      .withReview()
+      .build()
+      .run(backlog);
+
+    expect(events).toEqual([
+      {
+        time: 1,
+        userStoryName: 'userStory1',
+        thread: 0,
+        state: State.IN_PROGRESS,
+      },
+      {
+        time: 1,
+        userStoryName: 'userStory1',
+        thread: 0,
+        state: State.TO_REVIEW,
+      },
+      {
+        time: 1,
+        userStoryName: 'idle',
         thread: 1,
+        state: State.DONE,
+      },
+      {
+        time: 1,
+        userStoryName: 'idle',
+        thread: 2,
+        state: State.DONE,
+      },
+      {
+        time: 2,
+        userStoryName: 'idle',
+        thread: 0,
+        state: State.DONE,
+      },
+      {
+        time: 2,
+        userStoryName: 'userStory1',
+        thread: 1,
+        state: State.REVIEW,
+      },
+      {
+        time: 2,
+        userStoryName: 'userStory1',
+        thread: 2,
+        state: State.REVIEW,
+      },
+      {
+        time: 3,
+        userStoryName: 'idle',
+        thread: 0,
+        state: State.DONE,
+      },
+      {
+        time: 3,
+        userStoryName: 'userStory1',
+        thread: 1,
+        state: State.REVIEW,
+      },
+      {
+        time: 3,
+        userStoryName: 'userStory1',
+        thread: 2,
+        state: State.REVIEW,
+      },
+      {
+        time: 3,
+        userStoryName: 'userStory1',
+        thread: 0,
         state: State.DONE,
       },
     ]);
