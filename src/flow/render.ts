@@ -11,7 +11,6 @@ import {
   addUserStories,
   moveUserStoryOrdered,
   moveUserStoryToThread,
-  waitForAnimations,
 } from './render-user-story.ts';
 import { addThreads } from './render-thread.ts';
 
@@ -19,46 +18,28 @@ export const render = (events: TimeEvent[]) => {
   addThreads(getThreads(), events);
   addUserStories(getBacklog(), events);
 
-  setTimeout(() => {
-    document
-      .querySelectorAll<HTMLElement>('.userStory')
-      .forEach(
-        (userStory, index) => (userStory.style.left = 50 * index + 'px')
-      );
-  });
   let time = 0;
   let htmlButtonElement = getCompute();
   htmlButtonElement.addEventListener('click', async () => {
     time++;
     let currentEvents = events.filter((event) => event.time == time);
-    let done = 0;
     for (const currentEvent of currentEvents) {
-      let isMoving: boolean = false;
       if (
         currentEvent.state == State.IN_PROGRESS ||
         currentEvent.state == State.REVIEW
       ) {
-        isMoving = moveUserStoryToThread(
+        moveUserStoryToThread(
           getThread(currentEvent.thread),
           currentEvent.userStoryName
         );
       } else if (currentEvent.state == State.TO_REVIEW) {
-        isMoving = moveUserStoryOrdered(
-          getBacklog(),
-          currentEvent.userStoryName,
-          1
-        );
+        moveUserStoryOrdered(getBacklog(), currentEvent.userStoryName);
       } else if (currentEvent.state == State.DONE) {
-        done++;
-        isMoving = moveUserStoryOrdered(
-          getDone(),
-          currentEvent.userStoryName,
-          done
-        );
+        moveUserStoryOrdered(getDone(), currentEvent.userStoryName);
       }
-      if (isMoving) {
-        await waitForAnimations();
-      }
+      await sleep(500);
     }
   });
 };
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
