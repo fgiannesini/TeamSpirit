@@ -6,7 +6,7 @@ import { Backlog } from './compute/backlog.ts';
 import { buildBacklog, buildParallelTeam } from './main.ts';
 import { State } from './compute/user-story.ts';
 import { ParallelTeam } from './compute/team.ts';
-import {noReview} from "./compute/review.ts";
+import { noReview } from './compute/review.ts';
 
 describe('Main', () => {
   beforeEach(async () => {
@@ -29,8 +29,8 @@ describe('Main', () => {
       document.querySelector<HTMLInputElement>('#dev-count-input')!;
     devCountInput.value = '2';
     const reviewCheckbox =
-      document.querySelector<HTMLInputElement>('#review-checkbox')!;
-    reviewCheckbox.checked = true;
+      document.querySelector<HTMLInputElement>('#reviewers-input')!;
+    reviewCheckbox.value = '';
     const calculateButton =
       document.querySelector<HTMLButtonElement>('#calculate-button')!;
     calculateButton.click();
@@ -40,7 +40,7 @@ describe('Main', () => {
     expect(actual.length).greaterThan(0);
   });
 
-  it('Should build the backlog', () => {
+  it('Should build the backlog without review', () => {
     document.querySelector<HTMLInputElement>('#task-count-input')!.value = '1';
     expect(buildBacklog()).toEqual(
       Backlog.init()
@@ -57,12 +57,49 @@ describe('Main', () => {
     );
   });
 
-  it('Should build the team', () => {
-    document.querySelector<HTMLInputElement>('#dev-count-input')!.value = '2';
-    document.querySelector<HTMLInputElement>('#review-checkbox')!.checked =
-      true;
-    expect(buildParallelTeam()).toEqual(
-      ParallelTeam.init().withDevCount(2).withReview(true).build()
+  it('Should build the backlog with reviewers', () => {
+    document.querySelector<HTMLInputElement>('#task-count-input')!.value = '1';
+    document.querySelector<HTMLInputElement>('#reviewers-input')!.value = '1';
+
+    expect(buildBacklog()).toEqual(
+      Backlog.init()
+        .addUserStory({
+          name: `US0`,
+          complexity: 1,
+          review: {
+            reviewersNeeded: 1,
+            reviewers: new Map<number, number>(),
+          },
+          reviewComplexity: 1,
+          state: State.TODO,
+          thread: -1,
+          progression: 0,
+        })
+        .build()
     );
   });
+
+  it.each(['1', '2'])(
+    'Should build the team with %s reviewers',
+    (reviewersInput) => {
+      document.querySelector<HTMLInputElement>('#dev-count-input')!.value = '2';
+      document.querySelector<HTMLInputElement>('#reviewers-input')!.value =
+        reviewersInput;
+      expect(buildParallelTeam()).toEqual(
+        ParallelTeam.init().withDevCount(2).withReview(true).build()
+      );
+    }
+  );
+
+  it.each(['0', '', ' '])(
+    'Should build the team without reviewers (value %s)',
+    (reviewersInput) => {
+      document.querySelector<HTMLInputElement>('#dev-count-input')!.value = '2';
+      document.querySelector<HTMLInputElement>('#reviewers-input')!.value =
+        reviewersInput;
+      expect(buildParallelTeam()).toEqual(
+        ParallelTeam.init().withDevCount(2).withReview(false).build()
+      );
+    }
+  );
 });
