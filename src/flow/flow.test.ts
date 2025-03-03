@@ -242,4 +242,48 @@ describe('Flow', () => {
     expect(document.querySelector('#thread1 #userStory1_1')).toBeNull();
     expect(document.querySelector('#thread2 #userStory1_2')).toBeNull();
   });
+
+  it('Should keep two reviews', async () => {
+    saveTimeEvents([
+      {
+        time: 1,
+        userStoryName: 'userStory1',
+        thread: 1,
+        state: State.REVIEW,
+      },
+      {
+        time: 1,
+        userStoryName: 'userStory1',
+        thread: 2,
+        state: State.REVIEW,
+      },
+      {
+        time: 2,
+        userStoryName: 'userStory1',
+        thread: 1,
+        state: State.REVIEW,
+      },
+      {
+        time: 2,
+        userStoryName: 'userStory1',
+        thread: 2,
+        state: State.REVIEW,
+      },
+    ]);
+    await import('./flow.ts');
+
+    getCompute()!.click();
+    await vi.runAllTimersAsync();
+
+    getCompute()!.click();
+    await vi.runAllTimersAsync();
+
+    expect(document.querySelectorAll('#thread1 #userStory1_1').length).toEqual(
+      1
+    );
+    expect(document.querySelectorAll('#thread2 #userStory1_2').length).toEqual(
+      1
+    );
+    expect(document.querySelector('#userStory1')).toBeNull();
+  });
 });

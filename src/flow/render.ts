@@ -44,7 +44,9 @@ export const render = (events: TimeEvent[]) => {
         if (duplicates.indexOf(currentEvent.userStoryName) != -1) {
           getUserStory(currentEvent.userStoryName)?.remove();
           let id = `${currentEvent.userStoryName}_${currentEvent.thread}`;
-          getThread(currentEvent.thread)!.appendChild(createUserStory(id));
+          getThread(currentEvent.thread)!.appendChild(
+            getUserStory(id) ?? createUserStory(id)
+          );
         } else {
           getDuplicatedUserStories(currentEvent.userStoryName).forEach((el) =>
             el.remove()
