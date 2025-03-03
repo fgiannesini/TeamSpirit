@@ -4,16 +4,12 @@ import {
   getBacklog,
   getCompute,
   getDone,
+  getDuplicatedUserStories,
   getThread,
   getThreads,
   getUserStory,
 } from './selector.ts';
-import {
-  addUserStories,
-  createUserStory,
-  moveUserStoryOrdered,
-  moveUserStoryToThread,
-} from './render-user-story.ts';
+import { addUserStories, createUserStory } from './render-user-story.ts';
 import { addThreads } from './render-thread.ts';
 
 const getDuplicates = (arr: TimeEvent[]): string[] => {
@@ -46,20 +42,27 @@ export const render = (events: TimeEvent[]) => {
         currentEvent.state == State.REVIEW
       ) {
         if (duplicates.indexOf(currentEvent.userStoryName) != -1) {
-          let id = `${currentEvent.userStoryName}_${currentEvent.thread}`;
-          const userStory = createUserStory(id);
-          getThread(currentEvent.thread)!.appendChild(userStory);
           getUserStory(currentEvent.userStoryName)?.remove();
+          let id = `${currentEvent.userStoryName}_${currentEvent.thread}`;
+          getThread(currentEvent.thread)!.appendChild(createUserStory(id));
         } else {
-          moveUserStoryToThread(
-            getThread(currentEvent.thread)!,
-            currentEvent.userStoryName
+          getThread(currentEvent.thread)!.appendChild(
+            getUserStory(currentEvent.userStoryName)!
           );
         }
-      } else if (currentEvent.state == State.TO_REVIEW) {
-        moveUserStoryOrdered(getBacklog()!, currentEvent.userStoryName);
-      } else if (currentEvent.state == State.DONE) {
-        moveUserStoryOrdered(getDone()!, currentEvent.userStoryName);
+      }
+      if (currentEvent.state == State.TO_REVIEW) {
+        getBacklog()!.appendChild(getUserStory(currentEvent.userStoryName)!);
+      }
+
+      if (currentEvent.state == State.DONE) {
+        getDuplicatedUserStories(currentEvent.userStoryName).forEach((el) =>
+          el.remove()
+        );
+        const userStory =
+          getUserStory(currentEvent.userStoryName) ??
+          createUserStory(currentEvent.userStoryName);
+        getDone()!.appendChild(userStory);
       }
       await sleep(500);
     }

@@ -116,7 +116,19 @@ describe('Flow', () => {
         time: 1,
         userStoryName: 'userStory1',
         thread: 0,
+        state: State.IN_PROGRESS,
+      },
+      {
+        time: 1,
+        userStoryName: 'userStory1',
+        thread: 0,
         state: State.DONE,
+      },
+      {
+        time: 1,
+        userStoryName: 'userStory2',
+        thread: 1,
+        state: State.REVIEW,
       },
       {
         time: 1,
@@ -131,6 +143,8 @@ describe('Flow', () => {
     await vi.runAllTimersAsync();
     expect(document.querySelector('#done #userStory1')).not.toBeNull();
     expect(document.querySelector('#done #userStory2')).not.toBeNull();
+    expect(document.querySelector('[id^="userStory1_"]')).toBeNull();
+    expect(document.querySelector('[id^="userStory2_"]')).toBeNull();
   });
 
   it('Should move userStories to the backlog area when to review', async () => {

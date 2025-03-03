@@ -13,5 +13,12 @@ export const getDone = (): HTMLDivElement | null =>
 export const getUserStory = (userStoryName: string): HTMLDivElement | null =>
   document.querySelector<HTMLDivElement>(`#${userStoryName}`);
 
+export const getDuplicatedUserStories = (
+  userStoryName: string
+): HTMLDivElement[] =>
+  Array.from(
+    document.querySelectorAll<HTMLDivElement>(`[id^="${userStoryName}_"]`)
+  );
+
 export const getCompute = (): HTMLButtonElement | null =>
   document.querySelector<HTMLButtonElement>('#compute');

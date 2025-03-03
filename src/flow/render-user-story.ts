@@ -1,11 +1,10 @@
 import { TimeEvent } from '../compute/events.ts';
-import { getUserStory } from './selector.ts';
 
-export const createUserStory = (userStoryName: string) => {
+export const createUserStory = (id: string) => {
   const userStoryHtmlElement = document.createElement('div');
-  userStoryHtmlElement.id = userStoryName;
+  userStoryHtmlElement.id = id;
   userStoryHtmlElement.className = 'userStory';
-  userStoryHtmlElement.textContent = userStoryName;
+  userStoryHtmlElement.textContent = id;
   return userStoryHtmlElement;
 };
 
@@ -18,19 +17,4 @@ export const addUserStories = (parent: Element, events: TimeEvent[]) => {
     .forEach((userStoryElement) => {
       parent.appendChild(userStoryElement);
     });
-};
-
-export const moveUserStoryToThread = (
-  thread: Element,
-  userStoryName: string
-): void => {
-  const userStory = getUserStory(userStoryName)!;
-  thread.appendChild(userStory);
-};
-
-export const moveUserStoryOrdered = (
-  parent: Element,
-  userStoryName: string
-): void => {
-  parent.appendChild(getUserStory(userStoryName)!);
 };
