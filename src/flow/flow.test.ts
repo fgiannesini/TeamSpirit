@@ -47,11 +47,11 @@ describe('Flow', () => {
       },
     ]);
     await import('./flow.ts');
-    let thread0 = getThread(0);
+    let thread0 = getThread(0)!;
     expect(thread0.className).toEqual('thread');
     expect(thread0.textContent).toEqual('thread 0');
 
-    let thread1 = getThread(1);
+    let thread1 = getThread(1)!;
     expect(thread1.className).toEqual('thread');
     expect(thread1.textContent).toEqual('thread 1');
   });
@@ -78,11 +78,11 @@ describe('Flow', () => {
       },
     ]);
     await import('./flow.ts');
-    let userStory1 = getUserStory('userStory1');
+    let userStory1 = getUserStory('userStory1')!;
     expect(userStory1.className).toEqual('userStory');
     expect(userStory1.textContent).toEqual('userStory1');
 
-    let userStory2 = getUserStory('userStory2');
+    let userStory2 = getUserStory('userStory2')!;
     expect(userStory2.className).toEqual('userStory');
     expect(userStory2.textContent).toEqual('userStory2');
   });
@@ -104,7 +104,7 @@ describe('Flow', () => {
     ]);
     await import('./flow.ts');
 
-    getCompute().click();
+    getCompute()!.click();
     await vi.runAllTimersAsync();
     expect(document.querySelector('#thread0 #userStory1')).not.toBeNull();
     expect(document.querySelector('#thread1 #userStory2')).not.toBeNull();
@@ -127,7 +127,7 @@ describe('Flow', () => {
     ]);
     await import('./flow.ts');
 
-    getCompute().click();
+    getCompute()!.click();
     await vi.runAllTimersAsync();
     expect(document.querySelector('#done #userStory1')).not.toBeNull();
     expect(document.querySelector('#done #userStory2')).not.toBeNull();
@@ -144,7 +144,7 @@ describe('Flow', () => {
     ]);
     await import('./flow.ts');
 
-    getCompute().click();
+    getCompute()!.click();
 
     expect(document.querySelector('#backlog #userStory1')).not.toBeNull();
   });
@@ -160,8 +160,32 @@ describe('Flow', () => {
     ]);
     await import('./flow.ts');
 
-    getCompute().click();
+    getCompute()!.click();
 
     expect(document.querySelector('#thread0 #userStory1')).not.toBeNull();
+  });
+
+  it('Should move userStories to the corresponding threads when reviewed by several threads', async () => {
+    saveTimeEvents([
+      {
+        time: 1,
+        userStoryName: 'userStory1',
+        thread: 1,
+        state: State.REVIEW,
+      },
+      {
+        time: 1,
+        userStoryName: 'userStory1',
+        thread: 2,
+        state: State.REVIEW,
+      },
+    ]);
+    await import('./flow.ts');
+
+    getCompute()!.click();
+    await vi.runAllTimersAsync();
+    expect(document.querySelector('#thread1 #userStory1_1')).not.toBeNull();
+    expect(document.querySelector('#thread2 #userStory1_2')).not.toBeNull();
+    expect(document.querySelector('#backlog #userStory1')).toBeNull();
   });
 });

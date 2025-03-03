@@ -1,7 +1,7 @@
 import { TimeEvent } from '../compute/events.ts';
 import { getUserStory } from './selector.ts';
 
-const createUserStory = (userStoryName: string) => {
+export const createUserStory = (userStoryName: string) => {
   const userStoryHtmlElement = document.createElement('div');
   userStoryHtmlElement.id = userStoryName;
   userStoryHtmlElement.className = 'userStory';
@@ -24,7 +24,7 @@ export const moveUserStoryToThread = (
   thread: Element,
   userStoryName: string
 ): void => {
-  const userStory = getUserStory(userStoryName);
+  const userStory = getUserStory(userStoryName)!;
   thread.appendChild(userStory);
 };
 
@@ -32,5 +32,5 @@ export const moveUserStoryOrdered = (
   parent: Element,
   userStoryName: string
 ): void => {
-  parent.appendChild(getUserStory(userStoryName));
+  parent.appendChild(getUserStory(userStoryName)!);
 };
