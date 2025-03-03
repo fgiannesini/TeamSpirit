@@ -46,8 +46,12 @@ export const render = (events: TimeEvent[]) => {
           let id = `${currentEvent.userStoryName}_${currentEvent.thread}`;
           getThread(currentEvent.thread)!.appendChild(createUserStory(id));
         } else {
+          getDuplicatedUserStories(currentEvent.userStoryName).forEach((el) =>
+            el.remove()
+          );
           getThread(currentEvent.thread)!.appendChild(
-            getUserStory(currentEvent.userStoryName)!
+            getUserStory(currentEvent.userStoryName) ??
+              createUserStory(currentEvent.userStoryName)
           );
         }
       }
