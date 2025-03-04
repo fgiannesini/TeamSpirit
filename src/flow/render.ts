@@ -31,7 +31,11 @@ const getDuplicatesInReview = (timeEvents: TimeEvent[]): string[] => {
   return Array.from(duplicates);
 };
 
-const renderTimeEvents = async (events: TimeEvent[], time: number) => {
+const renderTimeEvents = async (
+  events: TimeEvent[],
+  time: number,
+  animationTime: number,
+) => {
   const currentEvents = events.filter((event) => event.time == time);
   const duplicates = getDuplicatesInReview(currentEvents);
   for (const currentEvent of currentEvents) {
@@ -72,7 +76,7 @@ const renderTimeEvents = async (events: TimeEvent[], time: number) => {
         createUserStory(currentEvent.userStoryName);
       getDone()?.appendChild(userStory);
     }
-    await sleep(1000);
+    await sleep(animationTime);
   }
 };
 
@@ -99,7 +103,7 @@ export const render = (events: TimeEvent[], statEvents: StatEvent[]) => {
   const computeButton = getCompute();
   computeButton?.addEventListener('click', async () => {
     time++;
-    await renderTimeEvents(events, time);
+    await renderTimeEvents(events, time, 1000);
     renderStatEvents(statEvents, time);
     if (maxTime === time && computeButton) {
       computeButton.disabled = true;
@@ -110,7 +114,7 @@ export const render = (events: TimeEvent[], statEvents: StatEvent[]) => {
   computeButtonAll?.addEventListener('click', async () => {
     while (maxTime !== time) {
       time++;
-      await renderTimeEvents(events, time);
+      await renderTimeEvents(events, time, 300);
       renderStatEvents(statEvents, time);
     }
     if (computeButtonAll) computeButtonAll.disabled = true;
