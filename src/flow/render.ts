@@ -12,7 +12,7 @@ import {
 import { addUserStories, createUserStory } from './render-user-story.ts';
 import { addThreads } from './render-thread.ts';
 import { StatEvent } from '../compute/stats.ts';
-import { getLeadTime } from './render-stats.ts';
+import { getLeadTime, getTime } from './render-stats.ts';
 
 const getDuplicatesInReview = (timeEvents: TimeEvent[]): string[] => {
   const seen = new Set<string>();
@@ -76,7 +76,8 @@ const renderTimeEvents = async (events: TimeEvent[], time: number) => {
 const renderStatEvents = (events: StatEvent[], time: number) => {
   const currentEvents = events.filter((event) => event.time == time);
   if (currentEvents.length == 0) return;
-  getLeadTime()!.textContent = currentEvents[0].leadTime.toString();
+  getLeadTime()!.textContent = currentEvents[0].leadTime.toFixed(2);
+  getTime()!.textContent = currentEvents[0].time.toString();
 };
 
 export const render = (events: TimeEvent[], statEvents: StatEvent[]) => {

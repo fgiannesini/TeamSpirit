@@ -33,6 +33,10 @@ describe('Flow', () => {
     const leadTime = document.querySelector('#lead-time');
     expect(leadTime).not.toBeNull();
     expect(leadTime?.textContent).toEqual('');
+
+    const time = document.querySelector('#time');
+    expect(time).not.toBeNull();
+    expect(time?.textContent).toEqual('');
   });
 
   it('Should render the page without stat events', async () => {
@@ -40,7 +44,7 @@ describe('Flow', () => {
     saveStatEvents([
       {
         time: 1,
-        leadTime: 1.57,
+        leadTime: 1 / 3,
       },
     ]);
     await import('./flow.ts');
@@ -49,7 +53,10 @@ describe('Flow', () => {
     await vi.advanceTimersToNextTimerAsync();
 
     const leadTime = document.querySelector('#lead-time');
-    expect(leadTime?.textContent).toEqual('1.57');
+    expect(leadTime?.textContent).toEqual('0.33');
+
+    const time = document.querySelector('#time');
+    expect(time?.textContent).toEqual('1');
   });
 
   it('Should create 2 thread elements', async () => {
