@@ -7,5 +7,8 @@ export const loadTimeEvents = () =>
 export const saveTimeEvents = (timeEvents: TimeEvent[]) =>
   sessionStorage.setItem('computation', JSON.stringify(timeEvents));
 
+export const loadStatEvents = () =>
+  JSON.parse(sessionStorage.getItem('stats')!) as StatEvent[];
+
 export const saveStatEvents = (statEvents: StatEvent[]) =>
   sessionStorage.setItem('stats', JSON.stringify(statEvents));

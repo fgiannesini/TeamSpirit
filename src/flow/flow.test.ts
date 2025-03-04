@@ -3,7 +3,7 @@ import { State } from '../compute/user-story.ts';
 import { getCompute, getThread, getUserStory } from './selector.ts';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
-import { saveTimeEvents } from './session-storage.ts';
+import { saveStatEvents, saveTimeEvents } from './session-storage.ts';
 
 describe('Flow', () => {
   beforeEach(async () => {
@@ -13,7 +13,7 @@ describe('Flow', () => {
     vi.useFakeTimers();
   });
 
-  it('Should render the page without events', async () => {
+  it('Should render the page without time events', async () => {
     saveTimeEvents([]);
     await import('./flow.ts');
 
@@ -23,6 +23,33 @@ describe('Flow', () => {
     expect(backlog).not.toBeNull();
     let done = document.querySelector('#done');
     expect(done).not.toBeNull();
+  });
+
+  it('Should render the page without stat events', async () => {
+    saveTimeEvents([]);
+    saveStatEvents([]);
+    await import('./flow.ts');
+
+    const leadTime = document.querySelector('#lead-time');
+    expect(leadTime).not.toBeNull();
+    expect(leadTime?.textContent).toEqual('');
+  });
+
+  it('Should render the page without stat events', async () => {
+    saveTimeEvents([]);
+    saveStatEvents([
+      {
+        time: 1,
+        leadTime: 1.57,
+      },
+    ]);
+    await import('./flow.ts');
+
+    getCompute()!.click();
+    await vi.advanceTimersToNextTimerAsync();
+
+    const leadTime = document.querySelector('#lead-time');
+    expect(leadTime?.textContent).toEqual('1.57');
   });
 
   it('Should create 2 thread elements', async () => {
