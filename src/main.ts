@@ -14,7 +14,7 @@ const createUserStory = (i: number, reviewersCount: number) => ({
   },
   reviewComplexity: 1,
   state: State.TODO,
-  thread: -1,
+  thread: undefined,
   progression: 0,
 });
 

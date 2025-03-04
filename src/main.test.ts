@@ -52,7 +52,7 @@ describe('Main', () => {
   });
 
   test('Should build the backlog without review', () => {
-    setValueTo('#task-count-input', '1');
+    setValueTo('#task-count-input', '2');
     expect(buildBacklog()).toEqual(
       Backlog.init()
         .addUserStory({
@@ -61,7 +61,16 @@ describe('Main', () => {
           review: noReview,
           reviewComplexity: 1,
           state: State.TODO,
-          thread: -1,
+          thread: undefined,
+          progression: 0,
+        })
+        .addUserStory({
+          name: `US1`,
+          complexity: 1,
+          review: noReview,
+          reviewComplexity: 1,
+          state: State.TODO,
+          thread: undefined,
           progression: 0,
         })
         .build(),
@@ -83,7 +92,7 @@ describe('Main', () => {
           },
           reviewComplexity: 1,
           state: State.TODO,
-          thread: -1,
+          thread: undefined,
           progression: 0,
         })
         .build(),
