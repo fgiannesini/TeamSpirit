@@ -308,7 +308,7 @@ describe('Flow', () => {
         thread: 0,
         state: State.IN_PROGRESS,
       },
-      { time: 3, userStoryName: 'userStory1', thread: 0, state: State.DONE },
+      { time: 2, userStoryName: 'userStory1', thread: 0, state: State.DONE },
     ]);
 
     await import('./flow.ts');
@@ -317,5 +317,43 @@ describe('Flow', () => {
     await vi.runAllTimersAsync();
 
     expect(document.querySelector(' #done #userStory1')).not.toBeNull();
+  });
+
+  test('Should disabled "compute" button when finished', async () => {
+    saveTimeEvents([
+      {
+        time: 1,
+        userStoryName: 'userStory1',
+        thread: 0,
+        state: State.IN_PROGRESS,
+      },
+      { time: 1, userStoryName: 'userStory1', thread: 0, state: State.DONE },
+    ]);
+
+    await import('./flow.ts');
+
+    getCompute()?.click();
+    await vi.runAllTimersAsync();
+
+    expect(getCompute()?.disabled).toBeTruthy();
+  });
+
+  test('Should disabled "compute all" button when finished', async () => {
+    saveTimeEvents([
+      {
+        time: 1,
+        userStoryName: 'userStory1',
+        thread: 0,
+        state: State.IN_PROGRESS,
+      },
+      { time: 1, userStoryName: 'userStory1', thread: 0, state: State.DONE },
+    ]);
+
+    await import('./flow.ts');
+
+    getComputeAll()?.click();
+    await vi.runAllTimersAsync();
+
+    expect(getComputeAll()?.disabled).toBeTruthy();
   });
 });
