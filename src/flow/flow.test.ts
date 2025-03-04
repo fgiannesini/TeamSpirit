@@ -39,12 +39,6 @@ describe('Flow', () => {
         thread: 1,
         state: State.DONE,
       },
-      {
-        time: 2,
-        userStoryName: 'userStory1',
-        thread: 0,
-        state: State.DONE,
-      },
     ]);
     await import('./flow.ts');
     let thread0 = getThread(0)!;
@@ -66,15 +60,9 @@ describe('Flow', () => {
       },
       {
         time: 1,
-        userStoryName: 'userStory1',
-        thread: 0,
-        state: State.DONE,
-      },
-      {
-        time: 1,
         userStoryName: 'userStory2',
         thread: 1,
-        state: State.DONE,
+        state: State.IN_PROGRESS,
       },
     ]);
     await import('./flow.ts');
@@ -87,30 +75,7 @@ describe('Flow', () => {
     expect(userStory2.textContent).toEqual('userStory2');
   });
 
-  it('Should move userStories to the corresponding thread when in progress', async () => {
-    saveTimeEvents([
-      {
-        time: 1,
-        userStoryName: 'userStory1',
-        thread: 0,
-        state: State.IN_PROGRESS,
-      },
-      {
-        time: 1,
-        userStoryName: 'userStory2',
-        thread: 1,
-        state: State.IN_PROGRESS,
-      },
-    ]);
-    await import('./flow.ts');
-
-    getCompute()!.click();
-    await vi.runAllTimersAsync();
-    expect(document.querySelector('#thread0 #userStory1')).not.toBeNull();
-    expect(document.querySelector('#thread1 #userStory2')).not.toBeNull();
-  });
-
-  it('Should move userStories to the done area', async () => {
+  it('Should move userStories to thread when in progress, then done', async () => {
     saveTimeEvents([
       {
         time: 1,
@@ -124,27 +89,40 @@ describe('Flow', () => {
         thread: 0,
         state: State.DONE,
       },
+    ]);
+    await import('./flow.ts');
+
+    getCompute()!.click();
+    await vi.advanceTimersToNextTimerAsync();
+    expect(document.querySelector('#thread0 #userStory1')).not.toBeNull();
+
+    await vi.advanceTimersToNextTimerAsync();
+    expect(document.querySelector('#done #userStory1')).not.toBeNull();
+  });
+
+  it('Should move userStories to thread when in review, then done', async () => {
+    saveTimeEvents([
       {
         time: 1,
-        userStoryName: 'userStory2',
-        thread: 1,
+        userStoryName: 'userStory1',
+        thread: 0,
         state: State.REVIEW,
       },
       {
         time: 1,
-        userStoryName: 'userStory2',
-        thread: 1,
+        userStoryName: 'userStory1',
+        thread: 0,
         state: State.DONE,
       },
     ]);
     await import('./flow.ts');
 
     getCompute()!.click();
-    await vi.runAllTimersAsync();
+    await vi.advanceTimersToNextTimerAsync();
+    expect(document.querySelector('#thread0 #userStory1')).not.toBeNull();
+
+    await vi.advanceTimersToNextTimerAsync();
     expect(document.querySelector('#done #userStory1')).not.toBeNull();
-    expect(document.querySelector('#done #userStory2')).not.toBeNull();
-    expect(document.querySelector('[id^="userStory1_"]')).toBeNull();
-    expect(document.querySelector('[id^="userStory2_"]')).toBeNull();
   });
 
   it('Should move userStories to the backlog area when to review', async () => {
@@ -161,22 +139,6 @@ describe('Flow', () => {
     getCompute()!.click();
 
     expect(document.querySelector('#backlog #userStory1')).not.toBeNull();
-  });
-
-  it('Should move userStories to the corresponding thread when reviewed', async () => {
-    saveTimeEvents([
-      {
-        time: 1,
-        userStoryName: 'userStory1',
-        thread: 0,
-        state: State.REVIEW,
-      },
-    ]);
-    await import('./flow.ts');
-
-    getCompute()!.click();
-
-    expect(document.querySelector('#thread0 #userStory1')).not.toBeNull();
   });
 
   it('Should move userStories to the corresponding threads when reviewed by several threads', async () => {
@@ -243,7 +205,7 @@ describe('Flow', () => {
     expect(document.querySelector('#thread2 #userStory1_2')).toBeNull();
   });
 
-  it('Should keep two reviews', async () => {
+  it('Should keep two reviews when reviews last', async () => {
     saveTimeEvents([
       {
         time: 1,

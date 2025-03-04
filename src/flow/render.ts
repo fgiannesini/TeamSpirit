@@ -12,17 +12,19 @@ import {
 import { addUserStories, createUserStory } from './render-user-story.ts';
 import { addThreads } from './render-thread.ts';
 
-const getDuplicates = (arr: TimeEvent[]): string[] => {
+const getDuplicatesInReview = (timeEvents: TimeEvent[]): string[] => {
   const seen = new Set<string>();
   const duplicates = new Set<string>();
 
-  for (const item of arr) {
-    if (seen.has(item.userStoryName)) {
-      duplicates.add(item.userStoryName);
-    } else {
-      seen.add(item.userStoryName);
-    }
-  }
+  timeEvents
+    .filter((timeEvent) => timeEvent.state == State.REVIEW)
+    .forEach((item) => {
+      if (seen.has(item.userStoryName)) {
+        duplicates.add(item.userStoryName);
+      } else {
+        seen.add(item.userStoryName);
+      }
+    });
   return Array.from(duplicates);
 };
 
@@ -35,12 +37,14 @@ export const render = (events: TimeEvent[]) => {
   htmlButtonElement.addEventListener('click', async () => {
     time++;
     const currentEvents = events.filter((event) => event.time == time);
-    const duplicates = getDuplicates(currentEvents);
+    const duplicates = getDuplicatesInReview(currentEvents);
     for (const currentEvent of currentEvents) {
-      if (
-        currentEvent.state == State.IN_PROGRESS ||
-        currentEvent.state == State.REVIEW
-      ) {
+      if (currentEvent.state == State.IN_PROGRESS) {
+        getThread(currentEvent.thread)!.appendChild(
+          getUserStory(currentEvent.userStoryName)!
+        );
+      }
+      if (currentEvent.state == State.REVIEW) {
         if (duplicates.indexOf(currentEvent.userStoryName) != -1) {
           getUserStory(currentEvent.userStoryName)?.remove();
           let id = `${currentEvent.userStoryName}_${currentEvent.thread}`;
@@ -70,7 +74,7 @@ export const render = (events: TimeEvent[]) => {
           createUserStory(currentEvent.userStoryName);
         getDone()!.appendChild(userStory);
       }
-      await sleep(500);
+      await sleep(1000);
     }
   });
 };
