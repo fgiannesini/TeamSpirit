@@ -16,12 +16,12 @@ export const computeStatEvents = (timeEvents: TimeEvent[]): StatEvent[] => {
   let time = 1;
   while (true) {
     const currentEvents = timeEvents.filter(
-      (event: TimeEvent) => event.time == time
+      (event: TimeEvent) => event.time == time,
     );
     if (currentEvents.length === 0) break;
 
     const uniqueUserStoryNames = new Set(
-      currentEvents.map((event) => event.userStoryName)
+      currentEvents.map((event) => event.userStoryName),
     );
     for (const userStoryName of uniqueUserStoryNames) {
       const currentTime = timesByUserStoryName.get(userStoryName) ?? 0;

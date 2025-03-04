@@ -14,7 +14,7 @@ export const getReviewPoints = (review: Review, dev: Thread): number =>
 export const needReview = (
   review: Review,
   dev: Thread,
-  reviewComplexity: number
+  reviewComplexity: number,
 ): boolean => {
   return (
     review.reviewersNeeded != review.reviewers.size ||
@@ -23,7 +23,7 @@ export const needReview = (
 };
 export const hasAllReviews = (
   review: Review,
-  reviewComplexity: number
+  reviewComplexity: number,
 ): boolean =>
   review.reviewersNeeded == review.reviewers.size &&
   review.reviewers.values().every((review) => review == reviewComplexity);

@@ -32,24 +32,24 @@ export class Backlog {
 
   next(thread: Thread): UserStory {
     let threadUserStoryIndex = this._userStories.findLastIndex((userStory) =>
-      isInReviewBy(userStory, thread)
+      isInReviewBy(userStory, thread),
     );
     if (threadUserStoryIndex == -1) {
       //TODO à supprimer
       threadUserStoryIndex = this._userStories.findLastIndex((userStory) =>
-        toReviewBy(userStory, thread)
+        toReviewBy(userStory, thread),
       );
     }
 
     if (threadUserStoryIndex == -1) {
       threadUserStoryIndex = this._userStories.findLastIndex((userStory) =>
-        isInProgressBy(userStory, thread)
+        isInProgressBy(userStory, thread),
       );
     }
 
     if (threadUserStoryIndex == -1) {
       threadUserStoryIndex = this._userStories.findLastIndex((userStory) =>
-        toDo(userStory)
+        toDo(userStory),
       );
     }
     if (threadUserStoryIndex != -1) {

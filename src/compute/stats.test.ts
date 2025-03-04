@@ -24,7 +24,7 @@ describe('stats', () => {
           thread: 0,
           state: State.DONE,
         },
-      ])
+      ]),
     ).toEqual([
       { time: 1, leadTime: 1 },
       { time: 2, leadTime: 2 },
@@ -58,7 +58,7 @@ describe('stats', () => {
           thread: 1,
           state: State.DONE,
         },
-      ])
+      ]),
     ).toEqual([{ time: 1, leadTime: 1 }]);
   });
 });

@@ -10,7 +10,7 @@ export interface TimeEvent {
 export const createEvent = (
   time: number,
   userStory: UserStory,
-  threadId: number
+  threadId: number,
 ): TimeEvent => ({
   time: time,
   userStoryName: userStory.name,

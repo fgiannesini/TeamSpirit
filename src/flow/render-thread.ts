@@ -13,6 +13,6 @@ export const addThreads = (parent: Element, events: TimeEvent[]) => {
     (threadNumber) => {
       const threadHtmlElement = addThread(threadNumber);
       parent.append(threadHtmlElement);
-    }
+    },
   );
 };

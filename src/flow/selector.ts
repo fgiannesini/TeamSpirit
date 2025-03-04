@@ -14,10 +14,10 @@ export const getUserStory = (userStoryName: string): HTMLDivElement | null =>
   document.querySelector<HTMLDivElement>(`#${userStoryName}`);
 
 export const getDuplicatedUserStories = (
-  userStoryName: string
+  userStoryName: string,
 ): HTMLDivElement[] =>
   Array.from(
-    document.querySelectorAll<HTMLDivElement>(`[id^="${userStoryName}_"]`)
+    document.querySelectorAll<HTMLDivElement>(`[id^="${userStoryName}_"]`),
   );
 
 export const getCompute = (): HTMLButtonElement | null =>
