@@ -1,6 +1,11 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { State } from '../compute/user-story.ts';
-import { getCompute, getThread, getUserStory } from './selector.ts';
+import {
+  getCompute,
+  getComputeAll,
+  getThread,
+  getUserStory,
+} from './selector.ts';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { saveStatEvents, saveTimeEvents } from './session-storage.ts';
@@ -287,5 +292,30 @@ describe('Flow', () => {
       1,
     );
     expect(document.querySelector('#userStory1')).toBeNull();
+  });
+
+  test('Should compute all on click on compute All button', async () => {
+    saveTimeEvents([
+      {
+        time: 1,
+        userStoryName: 'userStory1',
+        thread: 0,
+        state: State.IN_PROGRESS,
+      },
+      {
+        time: 2,
+        userStoryName: 'userStory1',
+        thread: 0,
+        state: State.IN_PROGRESS,
+      },
+      { time: 3, userStoryName: 'userStory1', thread: 0, state: State.DONE },
+    ]);
+
+    await import('./flow.ts');
+
+    getComputeAll()?.click();
+    await vi.runAllTimersAsync();
+
+    expect(document.querySelector(' #done #userStory1')).not.toBeNull();
   });
 });

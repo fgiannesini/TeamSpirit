@@ -22,3 +22,6 @@ export const getDuplicatedUserStories = (
 
 export const getCompute = (): HTMLButtonElement | null =>
   document.querySelector<HTMLButtonElement>('#compute');
+
+export const getComputeAll = (): HTMLButtonElement | null =>
+  document.querySelector<HTMLButtonElement>('#compute-all');

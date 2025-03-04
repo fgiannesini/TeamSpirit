@@ -3,6 +3,7 @@ import { State } from '../compute/user-story.ts';
 import {
   getBacklog,
   getCompute,
+  getComputeAll,
   getDone,
   getDuplicatedUserStories,
   getThread,
@@ -93,12 +94,22 @@ export const render = (events: TimeEvent[], statEvents: StatEvent[]) => {
   const backlog = getBacklog();
   if (backlog) addUserStories(backlog, events);
 
+  const maxTime = Math.max(...events.map((event) => event.time));
   let time = 0;
-  const htmlButtonElement = getCompute();
-  htmlButtonElement?.addEventListener('click', async () => {
+  const computeButton = getCompute();
+  computeButton?.addEventListener('click', async () => {
     time++;
     await renderTimeEvents(events, time);
     renderStatEvents(statEvents, time);
+  });
+
+  const computeButtonAll = getComputeAll();
+  computeButtonAll?.addEventListener('click', async () => {
+    while (maxTime !== time) {
+      time++;
+      await renderTimeEvents(events, time);
+      renderStatEvents(statEvents, time);
+    }
   });
 };
 
