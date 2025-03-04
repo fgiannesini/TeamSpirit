@@ -356,4 +356,31 @@ describe('Flow', () => {
 
     expect(getComputeAll()?.disabled).toBeTruthy();
   });
+
+  test('Should not display "idle" user story', async () => {
+    saveTimeEvents([
+      {
+        time: 1,
+        userStoryName: 'userStory1',
+        thread: 0,
+        state: State.IN_PROGRESS,
+      },
+      { time: 1, userStoryName: 'idle', thread: 1, state: State.DONE },
+      {
+        time: 2,
+        userStoryName: 'userStory1',
+        thread: 0,
+        state: State.IN_PROGRESS,
+      },
+      { time: 2, userStoryName: 'userStory1', thread: 0, state: State.DONE },
+      { time: 2, userStoryName: 'idle', thread: 1, state: State.DONE },
+    ]);
+
+    await import('./flow.ts');
+
+    getComputeAll()?.click();
+    await vi.runAllTimersAsync();
+
+    expect(document.querySelector('#idle')).toBeNull();
+  });
 });

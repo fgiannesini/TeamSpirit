@@ -39,6 +39,7 @@ const renderTimeEvents = async (
   const currentEvents = events.filter((event) => event.time == time);
   const duplicates = getDuplicatesInReview(currentEvents);
   for (const currentEvent of currentEvents) {
+    if (currentEvent.userStoryName == 'idle') continue;
     if (currentEvent.state == State.IN_PROGRESS) {
       const userStory = getUserStory(currentEvent.userStoryName);
       if (userStory) {
