@@ -2,7 +2,8 @@ import './style.scss';
 import { ParallelTeam } from './compute/team.ts';
 import { Backlog } from './compute/backlog.ts';
 import { State } from './compute/user-story.ts';
-import { saveTimeEvents } from './flow/session-storage.ts';
+import { saveStatEvents, saveTimeEvents } from './flow/session-storage.ts';
+import { computeStatEvents } from './compute/stats.ts';
 
 const createUserStory = (i: number, reviewersCount: number) => ({
   name: `US${i}`,
@@ -51,6 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const parallelTeam = buildParallelTeam();
       const timeEvents = parallelTeam.run(backlog);
       saveTimeEvents(timeEvents);
+      const statEvents = computeStatEvents(timeEvents);
+      saveStatEvents(statEvents);
       window.location.href = '/TeamSpirit/flow/flow.html';
     });
 });

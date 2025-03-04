@@ -7,6 +7,7 @@ import { buildBacklog, buildParallelTeam } from './main.ts';
 import { State } from './compute/user-story.ts';
 import { ParallelTeam } from './compute/team.ts';
 import { noReview } from './compute/review.ts';
+import { StatEvent } from './compute/stats.ts';
 
 describe('Main', () => {
   beforeEach(async () => {
@@ -34,10 +35,16 @@ describe('Main', () => {
     const calculateButton =
       document.querySelector<HTMLButtonElement>('#calculate-button')!;
     calculateButton.click();
-    const actual = JSON.parse(
+
+    const timeEvents = JSON.parse(
       sessionStorage.getItem('computation')!
     ) as Array<TimeEvent>;
-    expect(actual.length).greaterThan(0);
+    expect(timeEvents.length).greaterThan(0);
+
+    const statEvents = JSON.parse(
+      sessionStorage.getItem('stats')!
+    ) as Array<StatEvent>;
+    expect(statEvents.length).greaterThan(0);
   });
 
   it('Should build the backlog without review', () => {
