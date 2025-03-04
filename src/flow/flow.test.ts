@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { State } from '../compute/user-story.ts';
 import { getCompute, getThread, getUserStory } from './selector.ts';
 import { readFileSync } from 'fs';
@@ -13,7 +13,7 @@ describe('Flow', () => {
     vi.useFakeTimers();
   });
 
-  it('Should render the page without time events', async () => {
+  test('Should render the page without time events', async () => {
     saveTimeEvents([]);
     await import('./flow.ts');
 
@@ -25,7 +25,7 @@ describe('Flow', () => {
     expect(done).not.toBeNull();
   });
 
-  it('Should render the page without stat events', async () => {
+  test('Should render the page without stat events', async () => {
     saveTimeEvents([]);
     saveStatEvents([]);
     await import('./flow.ts');
@@ -39,27 +39,33 @@ describe('Flow', () => {
     expect(time?.textContent).toEqual('');
   });
 
-  it('Should render the page without stat events', async () => {
-    saveTimeEvents([]);
-    saveStatEvents([
-      {
-        time: 1,
-        leadTime: 1 / 3,
-      },
-    ]);
-    await import('./flow.ts');
+  test.each([
+    [1 / 3, '0.33'],
+    [NaN, 'NaN'],
+  ])(
+    'Should render the page with a stat event',
+    async (leadTimeProvided, leadTimeDisplayed) => {
+      saveTimeEvents([]);
+      saveStatEvents([
+        {
+          time: 1,
+          leadTime: leadTimeProvided,
+        },
+      ]);
+      await import('./flow.ts');
 
-    getCompute()?.click();
-    await vi.advanceTimersToNextTimerAsync();
+      getCompute()?.click();
+      await vi.advanceTimersToNextTimerAsync();
 
-    const leadTime = document.querySelector('#lead-time');
-    expect(leadTime?.textContent).toEqual('0.33');
+      const leadTime = document.querySelector('#lead-time');
+      expect(leadTime?.textContent).toEqual(leadTimeDisplayed);
 
-    const time = document.querySelector('#time');
-    expect(time?.textContent).toEqual('1');
-  });
+      const time = document.querySelector('#time');
+      expect(time?.textContent).toEqual('1');
+    },
+  );
 
-  it('Should create 2 thread elements', async () => {
+  test('Should create 2 thread elements', async () => {
     saveTimeEvents([
       {
         time: 1,
@@ -84,7 +90,7 @@ describe('Flow', () => {
     expect(thread1?.textContent).toEqual('thread 1');
   });
 
-  it('Should create 2 userStories elements', async () => {
+  test('Should create 2 userStories elements', async () => {
     saveTimeEvents([
       {
         time: 1,
@@ -109,7 +115,7 @@ describe('Flow', () => {
     expect(userStory2?.textContent).toEqual('userStory2');
   });
 
-  it('Should move userStories to thread when in progress, then done', async () => {
+  test('Should move userStories to thread when in progress, then done', async () => {
     saveTimeEvents([
       {
         time: 1,
@@ -134,7 +140,7 @@ describe('Flow', () => {
     expect(document.querySelector('#done #userStory1')).not.toBeNull();
   });
 
-  it('Should move userStories to thread when in review, then done', async () => {
+  test('Should move userStories to thread when in review, then done', async () => {
     saveTimeEvents([
       {
         time: 1,
@@ -159,7 +165,7 @@ describe('Flow', () => {
     expect(document.querySelector('#done #userStory1')).not.toBeNull();
   });
 
-  it('Should move userStories to the backlog area when to review', async () => {
+  test('Should move userStories to the backlog area when to review', async () => {
     saveTimeEvents([
       {
         time: 1,
@@ -175,7 +181,7 @@ describe('Flow', () => {
     expect(document.querySelector('#backlog #userStory1')).not.toBeNull();
   });
 
-  it('Should move userStories to the corresponding threads when reviewed by several threads', async () => {
+  test('Should move userStories to the corresponding threads when reviewed by several threads', async () => {
     saveTimeEvents([
       {
         time: 1,
@@ -199,7 +205,7 @@ describe('Flow', () => {
     expect(document.querySelector('#backlog #userStory1')).toBeNull();
   });
 
-  it('Should keep only one review when the other one is completed', async () => {
+  test('Should keep only one review when the other one is completed', async () => {
     saveTimeEvents([
       {
         time: 1,
@@ -239,7 +245,7 @@ describe('Flow', () => {
     expect(document.querySelector('#thread2 #userStory1_2')).toBeNull();
   });
 
-  it('Should keep two reviews when reviews last', async () => {
+  test('Should keep two reviews when reviews last', async () => {
     saveTimeEvents([
       {
         time: 1,
