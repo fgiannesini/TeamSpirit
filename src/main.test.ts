@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { resolve } from 'path';
 import { readFileSync } from 'fs';
 import { TimeEvent } from './compute/events.ts';
@@ -22,33 +22,37 @@ describe('Main', () => {
     document.dispatchEvent(event);
   });
 
-  it('Should compute and store in sessionStorage', () => {
-    const taskCountInput =
-      document.querySelector<HTMLInputElement>('#task-count-input')!;
-    taskCountInput.value = '1';
-    const devCountInput =
-      document.querySelector<HTMLInputElement>('#dev-count-input')!;
-    devCountInput.value = '2';
-    const reviewCheckbox =
-      document.querySelector<HTMLInputElement>('#reviewers-input')!;
-    reviewCheckbox.value = '';
+  const setValueTo = (selectors: string, value: string) => {
+    const taskCountInput = document.querySelector<HTMLInputElement>(selectors);
+    if (taskCountInput) {
+      taskCountInput.value = value;
+    }
+  };
+  const clickOnCompute = () => {
     const calculateButton =
-      document.querySelector<HTMLButtonElement>('#calculate-button')!;
-    calculateButton.click();
+      document.querySelector<HTMLButtonElement>('#calculate-button');
+    if (calculateButton) calculateButton.click();
+  };
+
+  test('Should compute and store in sessionStorage', () => {
+    setValueTo('#task-count-input', '1');
+    setValueTo('#dev-count-input', '2');
+    setValueTo('#reviewers-input', '');
+    clickOnCompute();
 
     const timeEvents = JSON.parse(
-      sessionStorage.getItem('computation')!,
+      sessionStorage.getItem('computation') ?? '[]',
     ) as TimeEvent[];
     expect(timeEvents.length).greaterThan(0);
 
     const statEvents = JSON.parse(
-      sessionStorage.getItem('stats')!,
+      sessionStorage.getItem('stats') ?? '[]',
     ) as StatEvent[];
     expect(statEvents.length).greaterThan(0);
   });
 
-  it('Should build the backlog without review', () => {
-    document.querySelector<HTMLInputElement>('#task-count-input')!.value = '1';
+  test('Should build the backlog without review', () => {
+    setValueTo('#task-count-input', '1');
     expect(buildBacklog()).toEqual(
       Backlog.init()
         .addUserStory({
@@ -64,9 +68,9 @@ describe('Main', () => {
     );
   });
 
-  it('Should build the backlog with reviewers', () => {
-    document.querySelector<HTMLInputElement>('#task-count-input')!.value = '1';
-    document.querySelector<HTMLInputElement>('#reviewers-input')!.value = '1';
+  test('Should build the backlog with reviewers', () => {
+    setValueTo('#task-count-input', '1');
+    setValueTo('#reviewers-input', '1');
 
     expect(buildBacklog()).toEqual(
       Backlog.init()
@@ -86,24 +90,22 @@ describe('Main', () => {
     );
   });
 
-  it.each(['1', '2'])(
+  test.each(['1', '2'])(
     'Should build the team with %s reviewers',
     (reviewersInput) => {
-      document.querySelector<HTMLInputElement>('#dev-count-input')!.value = '2';
-      document.querySelector<HTMLInputElement>('#reviewers-input')!.value =
-        reviewersInput;
+      setValueTo('#dev-count-input', '2');
+      setValueTo('#reviewers-input', reviewersInput);
       expect(buildParallelTeam()).toEqual(
         ParallelTeam.init().withDevCount(2).withReview(true).build(),
       );
     },
   );
 
-  it.each(['0', '', ' '])(
+  test.each(['0', '', ' '])(
     'Should build the team without reviewers (value %s)',
     (reviewersInput) => {
-      document.querySelector<HTMLInputElement>('#dev-count-input')!.value = '2';
-      document.querySelector<HTMLInputElement>('#reviewers-input')!.value =
-        reviewersInput;
+      setValueTo('#dev-count-input', '2');
+      setValueTo('#reviewers-input', reviewersInput);
       expect(buildParallelTeam()).toEqual(
         ParallelTeam.init().withDevCount(2).withReview(false).build(),
       );

@@ -20,23 +20,23 @@ const createUserStory = (i: number, reviewersCount: number) => ({
 
 export const buildBacklog = () => {
   const taskCount = parseInt(
-    document.querySelector<HTMLInputElement>('#task-count-input')!.value
+    document.querySelector<HTMLInputElement>('#task-count-input')?.value ?? '0',
   );
   const reviewersCount =
-    document.querySelector<HTMLInputElement>('#reviewers-input')!.value;
+    document.querySelector<HTMLInputElement>('#reviewers-input')?.value;
   const backlogBuilder = Backlog.init();
   Array.from({ length: taskCount }, (_, i) =>
-    backlogBuilder.addUserStory(createUserStory(i, Number(reviewersCount)))
+    backlogBuilder.addUserStory(createUserStory(i, Number(reviewersCount))),
   );
   return backlogBuilder.build();
 };
 
 export const buildParallelTeam = () => {
   const devCount = parseInt(
-    document.querySelector<HTMLInputElement>('#dev-count-input')!.value
+    document.querySelector<HTMLInputElement>('#dev-count-input')?.value ?? '0',
   );
   const reviewersCount =
-    document.querySelector<HTMLInputElement>('#reviewers-input')!.value;
+    document.querySelector<HTMLInputElement>('#reviewers-input')?.value;
   const hasReview = !!reviewersCount && Number(reviewersCount) > 0;
   return ParallelTeam.init()
     .withDevCount(devCount)
@@ -46,8 +46,8 @@ export const buildParallelTeam = () => {
 
 document.addEventListener('DOMContentLoaded', () => {
   document
-    .querySelector<HTMLButtonElement>('#calculate-button')!
-    .addEventListener('click', () => {
+    .querySelector<HTMLButtonElement>('#calculate-button')
+    ?.addEventListener('click', () => {
       const backlog = buildBacklog();
       const parallelTeam = buildParallelTeam();
       const timeEvents = parallelTeam.run(backlog);

@@ -35,39 +35,41 @@ const renderTimeEvents = async (events: TimeEvent[], time: number) => {
   const duplicates = getDuplicatesInReview(currentEvents);
   for (const currentEvent of currentEvents) {
     if (currentEvent.state == State.IN_PROGRESS) {
-      getThread(currentEvent.thread)!.appendChild(
-        getUserStory(currentEvent.userStoryName)!
-      );
+      const userStory = getUserStory(currentEvent.userStoryName);
+      if (userStory) {
+        getThread(currentEvent.thread)?.appendChild(userStory);
+      }
     }
     if (currentEvent.state == State.REVIEW) {
       if (duplicates.indexOf(currentEvent.userStoryName) != -1) {
         getUserStory(currentEvent.userStoryName)?.remove();
         const id = `${currentEvent.userStoryName}_${currentEvent.thread}`;
-        getThread(currentEvent.thread)!.appendChild(
-          getUserStory(id) ?? createUserStory(id)
+        getThread(currentEvent.thread)?.appendChild(
+          getUserStory(id) ?? createUserStory(id),
         );
       } else {
         getDuplicatedUserStories(currentEvent.userStoryName).forEach((el) =>
-          el.remove()
+          el.remove(),
         );
-        getThread(currentEvent.thread)!.appendChild(
+        getThread(currentEvent.thread)?.appendChild(
           getUserStory(currentEvent.userStoryName) ??
-            createUserStory(currentEvent.userStoryName)
+            createUserStory(currentEvent.userStoryName),
         );
       }
     }
     if (currentEvent.state == State.TO_REVIEW) {
-      getBacklog()!.appendChild(getUserStory(currentEvent.userStoryName)!);
+      const userStory = getUserStory(currentEvent.userStoryName);
+      if (userStory) getBacklog()?.appendChild(userStory);
     }
 
     if (currentEvent.state == State.DONE) {
       getDuplicatedUserStories(currentEvent.userStoryName).forEach((el) =>
-        el.remove()
+        el.remove(),
       );
       const userStory =
         getUserStory(currentEvent.userStoryName) ??
         createUserStory(currentEvent.userStoryName);
-      getDone()!.appendChild(userStory);
+      getDone()?.appendChild(userStory);
     }
     await sleep(1000);
   }
@@ -76,17 +78,23 @@ const renderTimeEvents = async (events: TimeEvent[], time: number) => {
 const renderStatEvents = (events: StatEvent[], time: number) => {
   const currentEvents = events.filter((event) => event.time == time);
   if (currentEvents.length == 0) return;
-  getLeadTime()!.textContent = currentEvents[0].leadTime.toFixed(2);
-  getTime()!.textContent = currentEvents[0].time.toString();
+
+  const leadTime = getLeadTime();
+  if (leadTime) leadTime.textContent = currentEvents[0].leadTime.toFixed(2);
+
+  const timeElement = getTime();
+  if (timeElement) timeElement.textContent = currentEvents[0].time.toString();
 };
 
 export const render = (events: TimeEvent[], statEvents: StatEvent[]) => {
-  addThreads(getThreads()!, events);
-  addUserStories(getBacklog()!, events);
+  const threads = getThreads();
+  if (threads) addThreads(threads, events);
+  const backlog = getBacklog();
+  if (backlog) addUserStories(backlog, events);
 
   let time = 0;
-  const htmlButtonElement = getCompute()!;
-  htmlButtonElement.addEventListener('click', async () => {
+  const htmlButtonElement = getCompute();
+  htmlButtonElement?.addEventListener('click', async () => {
     time++;
     await renderTimeEvents(events, time);
     renderStatEvents(statEvents, time);

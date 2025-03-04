@@ -21,7 +21,7 @@ export interface UserStory {
   reviewComplexity: number;
   progression: number;
   review: Review;
-  thread: number | undefined;
+  thread?: number;
   state: State;
 }
 
@@ -40,7 +40,7 @@ export const setInProgress = (userStory: UserStory, dev: Thread): UserStory => {
     ...userStory,
     progression: Math.min(
       userStory.progression + dev.power,
-      userStory.complexity
+      userStory.complexity,
     ),
     thread: dev.id,
     state: State.IN_PROGRESS,
@@ -66,11 +66,11 @@ export const setToReview = (userStory: UserStory, dev: Thread): UserStory => {
 const updateReviewPoints = (
   review: Review,
   dev: Thread,
-  newReviewPoints: number
+  newReviewPoints: number,
 ): Review => {
   const newReviewers = new Map<number, number>(review.reviewers).set(
     dev.id,
-    newReviewPoints
+    newReviewPoints,
   );
   return {
     ...review,
@@ -83,7 +83,7 @@ export const setReview = (userStory: UserStory, dev: Thread): UserStory => {
   const currentReviewPoints = getReviewPoints(currentReview, dev);
   const newReviewPoints = Math.min(
     currentReviewPoints + dev.power,
-    userStory.reviewComplexity
+    userStory.reviewComplexity,
   );
   const newReview = updateReviewPoints(currentReview, dev, newReviewPoints);
 
@@ -108,13 +108,13 @@ export const toReviewBy = (userStory: UserStory, thread: Thread): boolean => {
 
 export const isInProgressBy: (
   userStory: UserStory,
-  thread: Thread
+  thread: Thread,
 ) => boolean = (userStory: UserStory, thread: Thread) =>
   userStory.state === State.IN_PROGRESS && userStory.thread === thread.id;
 
 export const isInReviewBy: (userStory: UserStory, thread: Thread) => boolean = (
   userStory: UserStory,
-  thread: Thread
+  thread: Thread,
 ) =>
   (userStory.state === State.REVIEW || userStory.state === State.TO_REVIEW) &&
   userStory.thread !== thread.id &&

@@ -52,8 +52,8 @@ export class ParallelTeam implements Team {
           const review = setReview(userStory, dev);
           events.push(createEvent(time, review, dev.id));
           if (isReviewed(review)) {
-            const done = setDoneBy(userStory, review.thread!);
-            events.push(createEvent(time, done, done.thread!));
+            const done = setDoneBy(userStory, review.thread as number);
+            events.push(createEvent(time, done, done.thread as number));
             toAddBacklog.push(done);
           } else {
             backlog.add(review);

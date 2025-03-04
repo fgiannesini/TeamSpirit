@@ -49,7 +49,7 @@ describe('Flow', () => {
     ]);
     await import('./flow.ts');
 
-    getCompute()!.click();
+    getCompute()?.click();
     await vi.advanceTimersToNextTimerAsync();
 
     const leadTime = document.querySelector('#lead-time');
@@ -75,13 +75,13 @@ describe('Flow', () => {
       },
     ]);
     await import('./flow.ts');
-    const thread0 = getThread(0)!;
-    expect(thread0.className).toEqual('thread');
-    expect(thread0.textContent).toEqual('thread 0');
+    const thread0 = getThread(0);
+    expect(thread0?.className).toEqual('thread');
+    expect(thread0?.textContent).toEqual('thread 0');
 
-    const thread1 = getThread(1)!;
-    expect(thread1.className).toEqual('thread');
-    expect(thread1.textContent).toEqual('thread 1');
+    const thread1 = getThread(1);
+    expect(thread1?.className).toEqual('thread');
+    expect(thread1?.textContent).toEqual('thread 1');
   });
 
   it('Should create 2 userStories elements', async () => {
@@ -100,13 +100,13 @@ describe('Flow', () => {
       },
     ]);
     await import('./flow.ts');
-    const userStory1 = getUserStory('userStory1')!;
-    expect(userStory1.className).toEqual('userStory');
-    expect(userStory1.textContent).toEqual('userStory1');
+    const userStory1 = getUserStory('userStory1');
+    expect(userStory1?.className).toEqual('userStory');
+    expect(userStory1?.textContent).toEqual('userStory1');
 
-    const userStory2 = getUserStory('userStory2')!;
-    expect(userStory2.className).toEqual('userStory');
-    expect(userStory2.textContent).toEqual('userStory2');
+    const userStory2 = getUserStory('userStory2');
+    expect(userStory2?.className).toEqual('userStory');
+    expect(userStory2?.textContent).toEqual('userStory2');
   });
 
   it('Should move userStories to thread when in progress, then done', async () => {
@@ -126,7 +126,7 @@ describe('Flow', () => {
     ]);
     await import('./flow.ts');
 
-    getCompute()!.click();
+    getCompute()?.click();
     await vi.advanceTimersToNextTimerAsync();
     expect(document.querySelector('#thread0 #userStory1')).not.toBeNull();
 
@@ -151,7 +151,7 @@ describe('Flow', () => {
     ]);
     await import('./flow.ts');
 
-    getCompute()!.click();
+    getCompute()?.click();
     await vi.advanceTimersToNextTimerAsync();
     expect(document.querySelector('#thread0 #userStory1')).not.toBeNull();
 
@@ -170,7 +170,7 @@ describe('Flow', () => {
     ]);
     await import('./flow.ts');
 
-    getCompute()!.click();
+    getCompute()?.click();
 
     expect(document.querySelector('#backlog #userStory1')).not.toBeNull();
   });
@@ -192,7 +192,7 @@ describe('Flow', () => {
     ]);
     await import('./flow.ts');
 
-    getCompute()!.click();
+    getCompute()?.click();
     await vi.runAllTimersAsync();
     expect(document.querySelector('#thread1 #userStory1_1')).not.toBeNull();
     expect(document.querySelector('#thread2 #userStory1_2')).not.toBeNull();
@@ -228,10 +228,10 @@ describe('Flow', () => {
     ]);
     await import('./flow.ts');
 
-    getCompute()!.click();
+    getCompute()?.click();
     await vi.runAllTimersAsync();
 
-    getCompute()!.click();
+    getCompute()?.click();
     await vi.runAllTimersAsync();
 
     expect(document.querySelector('#thread2 #userStory1')).not.toBeNull();
@@ -268,17 +268,17 @@ describe('Flow', () => {
     ]);
     await import('./flow.ts');
 
-    getCompute()!.click();
+    getCompute()?.click();
     await vi.runAllTimersAsync();
 
-    getCompute()!.click();
+    getCompute()?.click();
     await vi.runAllTimersAsync();
 
     expect(document.querySelectorAll('#thread1 #userStory1_1').length).toEqual(
-      1
+      1,
     );
     expect(document.querySelectorAll('#thread2 #userStory1_2').length).toEqual(
-      1
+      1,
     );
     expect(document.querySelector('#userStory1')).toBeNull();
   });
