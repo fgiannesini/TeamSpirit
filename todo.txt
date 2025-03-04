@@ -1,5 +1,5 @@
-implémenter statistiques
+Mettre un bouton compute all
 bloquer le bouton d'avancement unitaire tant que le traitement n'est pas terminé
-images sur les threads pour indiquer ce qu'il fait ?
 team mob
 team binome
+implémenter statistiques avec un graph qui se construit
