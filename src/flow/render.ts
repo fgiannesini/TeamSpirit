@@ -42,7 +42,7 @@ const renderTimeEvents = async (events: TimeEvent[], time: number) => {
     if (currentEvent.state == State.REVIEW) {
       if (duplicates.indexOf(currentEvent.userStoryName) != -1) {
         getUserStory(currentEvent.userStoryName)?.remove();
-        let id = `${currentEvent.userStoryName}_${currentEvent.thread}`;
+        const id = `${currentEvent.userStoryName}_${currentEvent.thread}`;
         getThread(currentEvent.thread)!.appendChild(
           getUserStory(id) ?? createUserStory(id)
         );
@@ -85,7 +85,7 @@ export const render = (events: TimeEvent[], statEvents: StatEvent[]) => {
   addUserStories(getBacklog()!, events);
 
   let time = 0;
-  let htmlButtonElement = getCompute()!;
+  const htmlButtonElement = getCompute()!;
   htmlButtonElement.addEventListener('click', async () => {
     time++;
     await renderTimeEvents(events, time);

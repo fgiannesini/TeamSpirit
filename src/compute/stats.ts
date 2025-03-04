@@ -1,9 +1,9 @@
 import { TimeEvent } from './events.ts';
 
-export type StatEvent = {
+export interface StatEvent {
   time: number;
   leadTime: number;
-};
+}
 
 const mean = (times: number[]) => {
   const somme = times.reduce((acc, val) => acc + val, 0);

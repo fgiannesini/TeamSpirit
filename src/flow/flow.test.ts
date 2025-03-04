@@ -17,11 +17,11 @@ describe('Flow', () => {
     saveTimeEvents([]);
     await import('./flow.ts');
 
-    let threads = document.querySelector('#threads');
+    const threads = document.querySelector('#threads');
     expect(threads).not.toBeNull();
-    let backlog = document.querySelector('#backlog');
+    const backlog = document.querySelector('#backlog');
     expect(backlog).not.toBeNull();
-    let done = document.querySelector('#done');
+    const done = document.querySelector('#done');
     expect(done).not.toBeNull();
   });
 
@@ -75,11 +75,11 @@ describe('Flow', () => {
       },
     ]);
     await import('./flow.ts');
-    let thread0 = getThread(0)!;
+    const thread0 = getThread(0)!;
     expect(thread0.className).toEqual('thread');
     expect(thread0.textContent).toEqual('thread 0');
 
-    let thread1 = getThread(1)!;
+    const thread1 = getThread(1)!;
     expect(thread1.className).toEqual('thread');
     expect(thread1.textContent).toEqual('thread 1');
   });
@@ -100,11 +100,11 @@ describe('Flow', () => {
       },
     ]);
     await import('./flow.ts');
-    let userStory1 = getUserStory('userStory1')!;
+    const userStory1 = getUserStory('userStory1')!;
     expect(userStory1.className).toEqual('userStory');
     expect(userStory1.textContent).toEqual('userStory1');
 
-    let userStory2 = getUserStory('userStory2')!;
+    const userStory2 = getUserStory('userStory2')!;
     expect(userStory2.className).toEqual('userStory');
     expect(userStory2.textContent).toEqual('userStory2');
   });

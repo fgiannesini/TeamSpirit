@@ -15,10 +15,10 @@ import {
 
 export interface Team {}
 
-export type Thread = {
+export interface Thread {
   id: number;
   power: number;
-};
+}
 
 export class ParallelTeam implements Team {
   private readonly _devs: Thread[] = [];
@@ -38,8 +38,8 @@ export class ParallelTeam implements Team {
     let time = 1;
     while (backlog.hasMoreUserStories()) {
       const toAddBacklog: UserStory[] = [];
-      for (let dev of this._devs) {
-        let userStory: UserStory = backlog.next(dev);
+      for (const dev of this._devs) {
+        const userStory: UserStory = backlog.next(dev);
         if (userStory == idle) {
           idle.thread = dev.id;
           events.push(createEvent(time, idle, dev.id));
@@ -91,7 +91,7 @@ export class ParallelTeam implements Team {
 
 class ParallelTeamBuilder {
   private _devs: Thread[] = [];
-  private _review: boolean = false;
+  private _review = false;
 
   public withDev(dev: Thread) {
     this._devs.push(dev);
@@ -105,7 +105,7 @@ class ParallelTeamBuilder {
     return this;
   }
 
-  public withReview(review: boolean = true): ParallelTeamBuilder {
+  public withReview(review = true): ParallelTeamBuilder {
     this._review = review;
     return this;
   }

@@ -37,13 +37,13 @@ describe('Main', () => {
     calculateButton.click();
 
     const timeEvents = JSON.parse(
-      sessionStorage.getItem('computation')!
-    ) as Array<TimeEvent>;
+      sessionStorage.getItem('computation')!,
+    ) as TimeEvent[];
     expect(timeEvents.length).greaterThan(0);
 
     const statEvents = JSON.parse(
-      sessionStorage.getItem('stats')!
-    ) as Array<StatEvent>;
+      sessionStorage.getItem('stats')!,
+    ) as StatEvent[];
     expect(statEvents.length).greaterThan(0);
   });
 
@@ -60,7 +60,7 @@ describe('Main', () => {
           thread: -1,
           progression: 0,
         })
-        .build()
+        .build(),
     );
   });
 
@@ -82,7 +82,7 @@ describe('Main', () => {
           thread: -1,
           progression: 0,
         })
-        .build()
+        .build(),
     );
   });
 
@@ -93,9 +93,9 @@ describe('Main', () => {
       document.querySelector<HTMLInputElement>('#reviewers-input')!.value =
         reviewersInput;
       expect(buildParallelTeam()).toEqual(
-        ParallelTeam.init().withDevCount(2).withReview(true).build()
+        ParallelTeam.init().withDevCount(2).withReview(true).build(),
       );
-    }
+    },
   );
 
   it.each(['0', '', ' '])(
@@ -105,8 +105,8 @@ describe('Main', () => {
       document.querySelector<HTMLInputElement>('#reviewers-input')!.value =
         reviewersInput;
       expect(buildParallelTeam()).toEqual(
-        ParallelTeam.init().withDevCount(2).withReview(false).build()
+        ParallelTeam.init().withDevCount(2).withReview(false).build(),
       );
-    }
+    },
   );
 });

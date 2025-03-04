@@ -15,7 +15,7 @@ export enum State {
   DONE,
 }
 
-export type UserStory = {
+export interface UserStory {
   name: string;
   complexity: number;
   reviewComplexity: number;
@@ -23,7 +23,7 @@ export type UserStory = {
   review: Review;
   thread: number | undefined;
   state: State;
-};
+}
 
 export const idle: UserStory = {
   name: 'idle',
