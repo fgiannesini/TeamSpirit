@@ -11,26 +11,8 @@ const mean = (times: number[]) => {
   return somme / times.length;
 };
 
-const incrementTimeOfReferencedUserStories = (
-  currentEvents: TimeEvent[],
-  timesOfRunningUserStoriesByName: Map<string, number>,
-) => {
-  const uniqueUserStoryNames = new Set(
-    currentEvents.map((event) => event.userStoryName),
-  );
-  const updatedTimesOfRunningUserStoriesByName = new Map<string, number>(
-    timesOfRunningUserStoriesByName,
-  );
-  for (const userStoryName of uniqueUserStoryNames) {
-    const currentTime =
-      updatedTimesOfRunningUserStoriesByName.get(userStoryName) ?? 0;
-    updatedTimesOfRunningUserStoriesByName.set(userStoryName, currentTime + 1);
-  }
-  return updatedTimesOfRunningUserStoriesByName;
-};
-
 export const computeStatEvents = (timeEvents: TimeEvent[]): StatEvent[] => {
-  let timesOfRunningUserStoriesByName = new Map<string, number>();
+  const timesOfRunningUserStoriesByName = new Map<string, number>();
   const dones: number[] = [];
   const statEvents = [];
   let time = 1;
@@ -41,10 +23,21 @@ export const computeStatEvents = (timeEvents: TimeEvent[]): StatEvent[] => {
     );
     if (currentEvents.length === 0) break;
 
-    timesOfRunningUserStoriesByName = incrementTimeOfReferencedUserStories(
-      currentEvents,
-      timesOfRunningUserStoriesByName,
+    const uniqueInProgressUserStoryNames = new Set(
+      currentEvents
+        .filter((event) => event.state === State.IN_PROGRESS)
+        .map((event) => event.userStoryName),
     );
+
+    for (const userStoryName of uniqueInProgressUserStoryNames) {
+      if (!timesOfRunningUserStoriesByName.has(userStoryName)) {
+        timesOfRunningUserStoriesByName.set(userStoryName, 0);
+      }
+    }
+
+    timesOfRunningUserStoriesByName.forEach((value, key) => {
+      timesOfRunningUserStoriesByName.set(key, value + 1);
+    });
 
     const uniqueUserStoryNamesDone = new Set(
       currentEvents
@@ -52,8 +45,8 @@ export const computeStatEvents = (timeEvents: TimeEvent[]): StatEvent[] => {
         .map((event) => event.userStoryName),
     );
     for (const userStoryName of uniqueUserStoryNamesDone) {
-      const items = timesOfRunningUserStoriesByName.get(userStoryName);
-      if (items) dones.push(items);
+      const doneTime = timesOfRunningUserStoriesByName.get(userStoryName);
+      if (doneTime) dones.push(doneTime);
       timesOfRunningUserStoriesByName.delete(userStoryName);
     }
     const leadTime = mean(dones);
