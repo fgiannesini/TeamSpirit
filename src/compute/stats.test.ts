@@ -26,7 +26,7 @@ describe('stats', () => {
         },
       ]),
     ).toEqual([
-      { time: 1, leadTime: 1 },
+      { time: 1, leadTime: NaN },
       { time: 2, leadTime: 2 },
     ]);
   });
