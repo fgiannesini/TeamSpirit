@@ -2,6 +2,7 @@ import {
   idle,
   isInProgressBy,
   isInReviewBy,
+  isToReviewBy,
   State,
   toDo,
   UserStory,
@@ -30,9 +31,15 @@ export class Backlog {
   public static init = (): BacklogBuilder => new BacklogBuilder();
 
   next(thread: Thread): UserStory {
-    let threadUserStoryIndex = this._userStories.findLastIndex((userStory) =>
+    let threadUserStoryIndex = this._userStories.findIndex((userStory) =>
       isInReviewBy(userStory, thread),
     );
+
+    if (threadUserStoryIndex == -1) {
+      threadUserStoryIndex = this._userStories.findIndex((userStory) =>
+        isToReviewBy(userStory, thread),
+      );
+    }
 
     if (threadUserStoryIndex == -1) {
       threadUserStoryIndex = this._userStories.findIndex((userStory) =>

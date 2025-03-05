@@ -112,9 +112,14 @@ export const isInReviewBy: (userStory: UserStory, thread: Thread) => boolean = (
   userStory: UserStory,
   thread: Thread,
 ) =>
-  (userStory.state === State.REVIEW || userStory.state === State.TO_REVIEW) &&
+  userStory.state === State.REVIEW &&
   userStory.thread !== thread.id &&
   needReview(userStory.review, thread, userStory.reviewComplexity);
+
+export const isToReviewBy: (userStory: UserStory, thread: Thread) => boolean = (
+  userStory: UserStory,
+  thread: Thread,
+) => userStory.state === State.TO_REVIEW && userStory.thread !== thread.id;
 
 export const toDo: (userStory: UserStory) => boolean = (userStory: UserStory) =>
   userStory.state === State.TODO;
