@@ -16,10 +16,14 @@ export const needReview = (
   dev: Thread,
   reviewComplexity: number,
 ): boolean => {
-  return (
-    review.reviewersNeeded != review.reviewers.size ||
-    review.reviewers.get(dev.id) != reviewComplexity
-  );
+  const { reviewers, reviewersNeeded } = review;
+  const currentComplexity = reviewers.get(dev.id);
+  const hasReviewed = reviewers.has(dev.id);
+  const isFull = reviewers.size === reviewersNeeded;
+
+  return !isFull
+    ? !hasReviewed || currentComplexity !== reviewComplexity
+    : hasReviewed && currentComplexity !== reviewComplexity;
 };
 export const hasAllReviews = (
   review: Review,

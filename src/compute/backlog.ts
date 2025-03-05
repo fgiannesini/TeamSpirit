@@ -32,18 +32,18 @@ export class Backlog {
 
   next(thread: Thread): UserStory {
     let threadUserStoryIndex = this._userStories.findIndex((userStory) =>
-      isInReviewBy(userStory, thread),
+      isInProgressBy(userStory, thread),
     );
 
     if (threadUserStoryIndex == -1) {
       threadUserStoryIndex = this._userStories.findIndex((userStory) =>
-        isToReviewBy(userStory, thread),
+        isInReviewBy(userStory, thread),
       );
     }
 
     if (threadUserStoryIndex == -1) {
       threadUserStoryIndex = this._userStories.findIndex((userStory) =>
-        isInProgressBy(userStory, thread),
+        isToReviewBy(userStory, thread),
       );
     }
 

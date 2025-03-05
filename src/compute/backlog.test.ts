@@ -23,41 +23,92 @@ describe('Backlog', () => {
   });
 
   test('Should get first TO_REVIEW', () => {
-    const backlog = new Backlog([
-      todo(),
-      inProgress(0),
-      toReview(1),
-      toReview(2),
-    ]);
+    const backlog = new Backlog([todo(), toReview(1), toReview(2)]);
     const userStory = backlog.next(thread(0));
     expect(userStory).toEqual(toReview(1));
   });
 
   test('Should get first IN_REVIEW', () => {
-    const backlog = new Backlog([
-      todo(),
-      inProgress(0),
-      toReview(1),
-      inReview(1, 1),
-    ]);
+    const backlog = new Backlog([todo(), toReview(1), inReview(1, [])]);
     const userStory = backlog.next(thread(0));
-    expect(userStory).toEqual(inReview(1, 1));
+    expect(userStory).toEqual(inReview(1, []));
   });
 
-  test('Should not get completed IN_REVIEW', () => {
-    const backlog = new Backlog([inReview(1, 1)]);
+  test('Should get first IN_PROGRESS', () => {
+    const backlog = new Backlog([
+      todo(),
+      toReview(1),
+      inReview(1, []),
+      inProgress(0),
+    ]);
+    const userStory = backlog.next(thread(0));
+    expect(userStory).toEqual(inProgress(0));
+  });
+
+  test('Should get IN_REVIEW with a missing review', () => {
+    const backlog = new Backlog([inReview(1, [[0, 2]])]);
+    const userStory = backlog.next(thread(2));
+    expect(userStory).toEqual(inReview(1, [[0, 2]]));
+  });
+
+  test('Should get IN_REVIEW with a running review', () => {
+    const backlog = new Backlog([
+      inReview(1, [
+        [0, 1],
+        [2, 2],
+      ]),
+    ]);
+    const userStory = backlog.next(thread(0));
+    expect(userStory).toEqual(
+      inReview(1, [
+        [0, 1],
+        [2, 2],
+      ]),
+    );
+  });
+
+  test('Should not get IN_REVIEW when review is done', () => {
+    const backlog = new Backlog([inReview(1, [[0, 2]])]);
+    const userStory = backlog.next(thread(0));
+    expect(userStory).toEqual(idle);
+  });
+
+  test('Should not get completed IN_REVIEW by a reviewer', () => {
+    const backlog = new Backlog([
+      inReview(1, [
+        [0, 2],
+        [2, 2],
+      ]),
+    ]);
+    const userStory = backlog.next(thread(0));
+    expect(userStory).toEqual(idle);
+  });
+
+  test('Should not get completed IN_REVIEW by an other dev', () => {
+    const backlog = new Backlog([
+      inReview(1, [
+        [0, 2],
+        [2, 2],
+      ]),
+    ]);
+    const userStory = backlog.next(thread(3));
+    expect(userStory).toEqual(idle);
+  });
+
+  test('Should not get self IN_REVIEW', () => {
+    const backlog = new Backlog([inReview(1, [])]);
     const userStory = backlog.next(thread(1));
     expect(userStory).toEqual(idle);
   });
 
-  const inReview = (thread: number, reviewComplexity: number) => {
+  const inReview = (thread: number, reviewers: [number, number][]) => {
     return {
       name: 'inReview',
-      complexity: 1,
-      reviewComplexity,
+      complexity: 4,
+      reviewComplexity: 2,
       review: {
         reviewersNeeded: 2,
-        reviewers: new Map([[thread, 1]]),
+        reviewers: new Map(reviewers),
       },
       state: State.REVIEW,
       thread: thread,
