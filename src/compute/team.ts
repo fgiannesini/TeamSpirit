@@ -13,14 +13,12 @@ import {
   UserStory,
 } from './user-story.ts';
 
-export interface Team {}
-
 export interface Thread {
   id: number;
   power: number;
 }
 
-export class ParallelTeam implements Team {
+export class Team {
   private readonly _devs: Thread[] = [];
   private readonly _review: boolean;
 
@@ -29,7 +27,7 @@ export class ParallelTeam implements Team {
     this._review = review;
   }
 
-  public static init = (): ParallelTeamBuilder => {
+  public static parallelTeam = (): ParallelTeamBuilder => {
     return new ParallelTeamBuilder();
   };
 
@@ -110,7 +108,7 @@ class ParallelTeamBuilder {
     return this;
   }
 
-  public build(): ParallelTeam {
-    return new ParallelTeam(this._devs, this._review);
+  public build(): Team {
+    return new Team(this._devs, this._review);
   }
 }

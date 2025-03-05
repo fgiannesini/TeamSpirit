@@ -1,5 +1,5 @@
 import './style.scss';
-import { ParallelTeam } from './compute/team.ts';
+import { Team } from './compute/team.ts';
 import { Backlog } from './compute/backlog.ts';
 import { State } from './compute/user-story.ts';
 import { saveStatEvents, saveTimeEvents } from './flow/session-storage.ts';
@@ -38,7 +38,7 @@ export const buildParallelTeam = () => {
   const reviewersCount =
     document.querySelector<HTMLInputElement>('#reviewers-input')?.value;
   const hasReview = !!reviewersCount && Number(reviewersCount) > 0;
-  return ParallelTeam.init()
+  return Team.parallelTeam()
     .withDevCount(devCount)
     .withReview(hasReview)
     .build();
@@ -49,8 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
     .querySelector<HTMLButtonElement>('#calculate-button')
     ?.addEventListener('click', () => {
       const backlog = buildBacklog();
-      const parallelTeam = buildParallelTeam();
-      const timeEvents = parallelTeam.run(backlog);
+      const team = buildParallelTeam();
+      const timeEvents = team.run(backlog);
       saveTimeEvents(timeEvents);
       const statEvents = computeStatEvents(timeEvents);
       saveStatEvents(statEvents);

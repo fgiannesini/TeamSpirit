@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { Backlog } from './backlog.ts';
 import { State } from './user-story.ts';
-import { ParallelTeam } from './team.ts';
+import { Team } from './team.ts';
 import { TimeEvent } from './events.ts';
 import { noReview } from './review.ts';
 
-describe('Parallel Team', () => {
+describe('Team', () => {
   it('should handle 2 simple userStories by 2 devs', () => {
     const backlog = Backlog.init()
       .addUserStory({
@@ -28,7 +28,7 @@ describe('Parallel Team', () => {
       })
       .build();
 
-    const events = ParallelTeam.init().withDevCount(2).build().run(backlog);
+    const events = Team.parallelTeam().withDevCount(2).build().run(backlog);
 
     expect(events).toEqual<TimeEvent[]>([
       {
@@ -74,7 +74,7 @@ describe('Parallel Team', () => {
       })
       .build();
 
-    const events = ParallelTeam.init()
+    const events = Team.parallelTeam()
       .withDev({
         id: 0,
         power: 2,
@@ -144,7 +144,7 @@ describe('Parallel Team', () => {
       })
       .build();
 
-    const events = ParallelTeam.init().withDevCount(2).build().run(backlog);
+    const events = Team.parallelTeam().withDevCount(2).build().run(backlog);
 
     expect(events).toEqual([
       {
@@ -217,7 +217,7 @@ describe('Parallel Team', () => {
       })
       .build();
 
-    const events = ParallelTeam.init().withDevCount(2).build().run(backlog);
+    const events = Team.parallelTeam().withDevCount(2).build().run(backlog);
 
     expect(events).toEqual([
       {
@@ -278,7 +278,7 @@ describe('Parallel Team', () => {
       })
       .build();
 
-    const events = ParallelTeam.init()
+    const events = Team.parallelTeam()
       .withDevCount(2)
       .withReview()
       .build()
@@ -343,7 +343,7 @@ describe('Parallel Team', () => {
       })
       .build();
 
-    const events = ParallelTeam.init()
+    const events = Team.parallelTeam()
       .withDev({
         id: 0,
         power: 20,
@@ -427,7 +427,7 @@ describe('Parallel Team', () => {
       })
       .build();
 
-    const events = ParallelTeam.init()
+    const events = Team.parallelTeam()
       .withDev({
         id: 0,
         power: 20,

@@ -5,7 +5,7 @@ import { TimeEvent } from './compute/events.ts';
 import { Backlog } from './compute/backlog.ts';
 import { buildBacklog, buildParallelTeam } from './main.ts';
 import { State } from './compute/user-story.ts';
-import { ParallelTeam } from './compute/team.ts';
+import { Team } from './compute/team.ts';
 import { noReview } from './compute/review.ts';
 import { StatEvent } from './compute/stats.ts';
 
@@ -105,7 +105,7 @@ describe('Main', () => {
       setValueTo('#dev-count-input', '2');
       setValueTo('#reviewers-input', reviewersInput);
       expect(buildParallelTeam()).toEqual(
-        ParallelTeam.init().withDevCount(2).withReview(true).build(),
+        Team.parallelTeam().withDevCount(2).withReview(true).build(),
       );
     },
   );
@@ -116,7 +116,7 @@ describe('Main', () => {
       setValueTo('#dev-count-input', '2');
       setValueTo('#reviewers-input', reviewersInput);
       expect(buildParallelTeam()).toEqual(
-        ParallelTeam.init().withDevCount(2).withReview(false).build(),
+        Team.parallelTeam().withDevCount(2).withReview(false).build(),
       );
     },
   );
