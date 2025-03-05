@@ -32,13 +32,17 @@ export const buildBacklog = () => {
 };
 
 export const buildParallelTeam = () => {
+  const teamBuilder = Team.parallelTeam();
   const devCount = getInputValueOf('#dev-count-input');
+  Array.from({ length: devCount }, (_, i) => {
+    return { id: i, power: getInputValueOf(`#power-input-${i}`) };
+  }).forEach((thread) => teamBuilder.withDev(thread));
+
   const reviewersCount = getInputValueOf('#reviewers-input');
-  const hasReview = !!reviewersCount && Number(reviewersCount) > 0;
-  return Team.parallelTeam()
-    .withDevCount(devCount)
-    .withReview(hasReview)
-    .build();
+  const hasReview = reviewersCount > 0;
+  teamBuilder.withReview(hasReview);
+
+  return teamBuilder.build();
 };
 
 const generateDevForm = (id: number) => {

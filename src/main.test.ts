@@ -36,6 +36,8 @@ describe('Main', () => {
   test('Should compute and store in sessionStorage', () => {
     setValueTo('#task-count-input', '1');
     setValueTo('#dev-count-input', '2');
+    clickOn('#generate-devs-button');
+
     setValueTo('#reviewers-input', '');
     clickOn('#calculate-button');
 
@@ -50,7 +52,7 @@ describe('Main', () => {
     expect(statEvents.length).greaterThan(0);
   });
 
-  test('Should build the backlog without review', () => {
+  test('Should build the backlog without reviewers', () => {
     setValueTo('#task-count-input', '2');
     expect(buildBacklog()).toEqual(
       Backlog.init()
@@ -102,6 +104,7 @@ describe('Main', () => {
     'Should build the team with %s reviewers',
     (reviewersInput) => {
       setValueTo('#dev-count-input', '2');
+      clickOn('#generate-devs-button');
       setValueTo('#reviewers-input', reviewersInput);
       expect(buildParallelTeam()).toEqual(
         Team.parallelTeam().withDevCount(2).withReview(true).build(),
@@ -113,12 +116,28 @@ describe('Main', () => {
     'Should build the team without reviewers (value %s)',
     (reviewersInput) => {
       setValueTo('#dev-count-input', '2');
+      clickOn('#generate-devs-button');
       setValueTo('#reviewers-input', reviewersInput);
       expect(buildParallelTeam()).toEqual(
         Team.parallelTeam().withDevCount(2).withReview(false).build(),
       );
     },
   );
+
+  test('Should build the team with 2 developers', () => {
+    setValueTo('#dev-count-input', '2');
+    clickOn('#generate-devs-button');
+    setValueTo('#power-input-0', '5');
+    setValueTo('#power-input-1', '10');
+    setValueTo('#task-count-input', '3');
+    expect(buildParallelTeam()).toEqual(
+      Team.parallelTeam()
+        .withDev({ id: 0, power: 5 })
+        .withDev({ id: 1, power: 10 })
+        .withReview(false)
+        .build(),
+    );
+  });
 
   test('Should generate developers', () => {
     setValueTo('#dev-count-input', '2');

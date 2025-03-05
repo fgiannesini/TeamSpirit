@@ -96,6 +96,11 @@ class ParallelTeamBuilder {
     return this;
   }
 
+  public withDevs(devs: Thread[]) {
+    this._devs.push(...devs);
+    return this;
+  }
+
   public withDevCount(devCount: number): ParallelTeamBuilder {
     for (let i = 0; i < devCount; i++) {
       this._devs.push({ id: i, power: 1 });
