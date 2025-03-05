@@ -28,17 +28,16 @@ describe('Main', () => {
       taskCountInput.value = value;
     }
   };
-  const clickOnCompute = () => {
-    const calculateButton =
-      document.querySelector<HTMLButtonElement>('#calculate-button');
-    if (calculateButton) calculateButton.click();
+  const clickOn = (buttonId: string) => {
+    const button = document.querySelector<HTMLButtonElement>(buttonId);
+    if (button) button.click();
   };
 
   test('Should compute and store in sessionStorage', () => {
     setValueTo('#task-count-input', '1');
     setValueTo('#dev-count-input', '2');
     setValueTo('#reviewers-input', '');
-    clickOnCompute();
+    clickOn('#calculate-button');
 
     const timeEvents = JSON.parse(
       sessionStorage.getItem('computation') ?? '[]',
@@ -120,4 +119,19 @@ describe('Main', () => {
       );
     },
   );
+
+  test('Should generate developers', () => {
+    setValueTo('#dev-count-input', '2');
+    clickOn('#generate-devs-button');
+    const devs = Array.from(document.querySelectorAll('#devs-container div'));
+    expect(devs.length).toEqual(2);
+  });
+
+  test('Should generate developers once', () => {
+    setValueTo('#dev-count-input', '2');
+    clickOn('#generate-devs-button');
+    clickOn('#generate-devs-button');
+    const devs = Array.from(document.querySelectorAll('#devs-container div'));
+    expect(devs.length).toEqual(2);
+  });
 });

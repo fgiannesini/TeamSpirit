@@ -56,4 +56,14 @@ document.addEventListener('DOMContentLoaded', () => {
       saveStatEvents(statEvents);
       window.location.href = '/TeamSpirit/flow/flow.html';
     });
+
+  document
+    .querySelector<HTMLButtonElement>('#generate-devs-button')
+    ?.addEventListener('click', () => {
+      const devsContainer = document.getElementById('devs-container');
+      devsContainer?.replaceChildren(
+        document.createElement('div'),
+        document.createElement('div'),
+      );
+    });
 });
