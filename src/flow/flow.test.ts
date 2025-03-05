@@ -319,7 +319,33 @@ describe('Flow', () => {
     expect(document.querySelector(' #done #userStory1')).not.toBeNull();
   });
 
-  test('Should disabled "compute" button when finished', async () => {
+  test('Should disable "compute" button during display', async () => {
+    saveTimeEvents([
+      {
+        time: 1,
+        userStoryName: 'userStory1',
+        thread: 0,
+        state: State.IN_PROGRESS,
+      },
+      {
+        time: 2,
+        userStoryName: 'userStory1',
+        thread: 0,
+        state: State.IN_PROGRESS,
+      },
+      { time: 2, userStoryName: 'userStory1', thread: 0, state: State.DONE },
+    ]);
+
+    await import('./flow.ts');
+
+    getCompute()?.click();
+    expect(getCompute()?.disabled).toBeTruthy();
+    await vi.runAllTimersAsync();
+
+    expect(getCompute()?.disabled).toBeFalsy();
+  });
+
+  test('Should disable "compute" button when finished', async () => {
     saveTimeEvents([
       {
         time: 1,
@@ -338,7 +364,7 @@ describe('Flow', () => {
     expect(getCompute()?.disabled).toBeTruthy();
   });
 
-  test('Should disabled "compute all" button when finished', async () => {
+  test('Should disable "compute all" button when finished', async () => {
     saveTimeEvents([
       {
         time: 1,

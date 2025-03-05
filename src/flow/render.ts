@@ -103,11 +103,12 @@ export const render = (events: TimeEvent[], statEvents: StatEvent[]) => {
   let time = 0;
   const computeButton = getCompute();
   computeButton?.addEventListener('click', async () => {
+    computeButton.disabled = true;
     time++;
     await renderTimeEvents(events, time, 1000);
     renderStatEvents(statEvents, time);
-    if (maxTime === time && computeButton) {
-      computeButton.disabled = true;
+    if (maxTime !== time && computeButton) {
+      computeButton.disabled = false;
     }
   });
 
