@@ -4,29 +4,29 @@ import { Backlog } from './compute/backlog.ts';
 import { State } from './compute/user-story.ts';
 import { saveStatEvents, saveTimeEvents } from './flow/session-storage.ts';
 import { computeStatEvents } from './compute/stats.ts';
-
-const createUserStory = (i: number, reviewersCount: number) => ({
-  name: `US${i}`,
-  complexity: 1,
-  review: {
-    reviewersNeeded: reviewersCount,
-    reviewers: new Map<number, number>(),
-  },
-  reviewComplexity: 1,
-  state: State.TODO,
-  thread: undefined,
-  progression: 0,
-});
+import { generateDevForm, generateUserStoriesForm } from './compute/form.ts';
 
 const getInputValueOf = (selector: string) =>
   parseInt(document.querySelector<HTMLInputElement>(selector)?.value ?? '0');
 
 export const buildBacklog = () => {
-  const taskCount = getInputValueOf('#task-count-input');
+  const userStoryCount = getInputValueOf('#user-story-count-input');
   const reviewersCount = getInputValueOf('#reviewers-input');
   const backlogBuilder = Backlog.init();
-  Array.from({ length: taskCount }, (_, i) =>
-    backlogBuilder.addUserStory(createUserStory(i, reviewersCount)),
+
+  Array.from({ length: userStoryCount }, (_, i) =>
+    backlogBuilder.addUserStory({
+      name: `US${i}`,
+      complexity: getInputValueOf(`#complexity-input-${i}`),
+      review: {
+        reviewersNeeded: reviewersCount,
+        reviewers: new Map<number, number>(),
+      },
+      reviewComplexity: getInputValueOf(`#review-complexity-input-${i}`),
+      state: State.TODO,
+      thread: undefined,
+      progression: 0,
+    }),
   );
   return backlogBuilder.build();
 };
@@ -43,27 +43,6 @@ export const buildParallelTeam = () => {
   teamBuilder.withReview(hasReview);
 
   return teamBuilder.build();
-};
-
-const generateDevForm = (id: number) => {
-  const identifierLabel = document.createElement('span');
-  identifierLabel.textContent = 'Id';
-  const identifier = document.createElement('span');
-  identifier.id = `identifier-${id}`;
-  identifier.textContent = id.toString();
-
-  const powerLabel = document.createElement('label');
-  powerLabel.textContent = 'Power';
-
-  const powerInput = document.createElement('input');
-  powerInput.id = `power-input-${id}`;
-  powerInput.type = 'number';
-  powerInput.min = '1';
-  powerInput.value = '1';
-
-  const dev = document.createElement('div');
-  dev.append(identifierLabel, identifier, powerLabel, powerInput);
-  return dev;
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -88,5 +67,18 @@ document.addEventListener('DOMContentLoaded', () => {
         generateDevForm(i),
       );
       devsContainer?.replaceChildren(...devs);
+    });
+
+  document
+    .querySelector<HTMLButtonElement>('#generate-user-stories-button')
+    ?.addEventListener('click', () => {
+      const userStoriesContainer = document.getElementById(
+        'user-stories-container',
+      );
+      const userStoriesCount = getInputValueOf('#user-story-count-input');
+      const userStories = Array.from({ length: userStoriesCount }, (_, i) =>
+        generateUserStoriesForm(i),
+      );
+      userStoriesContainer?.replaceChildren(...userStories);
     });
 });

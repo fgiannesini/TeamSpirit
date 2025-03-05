@@ -29,12 +29,11 @@ describe('Main', () => {
     }
   };
   const clickOn = (buttonId: string) => {
-    const button = document.querySelector<HTMLButtonElement>(buttonId);
-    if (button) button.click();
+    document.querySelector<HTMLButtonElement>(buttonId)?.click();
   };
 
   test('Should compute and store in sessionStorage', () => {
-    setValueTo('#task-count-input', '1');
+    setValueTo('#user-story-count-input', '1');
     setValueTo('#dev-count-input', '2');
     clickOn('#generate-devs-button');
 
@@ -53,23 +52,24 @@ describe('Main', () => {
   });
 
   test('Should build the backlog without reviewers', () => {
-    setValueTo('#task-count-input', '2');
+    setValueTo('#user-story-count-input', '2');
+    clickOn('#generate-user-stories-button');
     expect(buildBacklog()).toEqual(
       Backlog.init()
         .addUserStory({
           name: `US0`,
-          complexity: 1,
+          complexity: 5,
           review: noReview,
-          reviewComplexity: 1,
+          reviewComplexity: 2,
           state: State.TODO,
           thread: undefined,
           progression: 0,
         })
         .addUserStory({
           name: `US1`,
-          complexity: 1,
+          complexity: 5,
           review: noReview,
-          reviewComplexity: 1,
+          reviewComplexity: 2,
           state: State.TODO,
           thread: undefined,
           progression: 0,
@@ -79,19 +79,20 @@ describe('Main', () => {
   });
 
   test('Should build the backlog with reviewers', () => {
-    setValueTo('#task-count-input', '1');
+    setValueTo('#user-story-count-input', '1');
+    clickOn('#generate-user-stories-button');
     setValueTo('#reviewers-input', '1');
 
     expect(buildBacklog()).toEqual(
       Backlog.init()
         .addUserStory({
           name: `US0`,
-          complexity: 1,
+          complexity: 5,
           review: {
             reviewersNeeded: 1,
             reviewers: new Map<number, number>(),
           },
-          reviewComplexity: 1,
+          reviewComplexity: 2,
           state: State.TODO,
           thread: undefined,
           progression: 0,
@@ -124,35 +125,20 @@ describe('Main', () => {
     },
   );
 
-  test('Should build the team with 2 developers', () => {
-    setValueTo('#dev-count-input', '2');
-    clickOn('#generate-devs-button');
-    setValueTo('#power-input-0', '5');
-    setValueTo('#power-input-1', '10');
-    setValueTo('#task-count-input', '3');
-    expect(buildParallelTeam()).toEqual(
-      Team.parallelTeam()
-        .withDev({ id: 0, power: 5 })
-        .withDev({ id: 1, power: 10 })
-        .withReview(false)
-        .build(),
-    );
-  });
-
   test('Should generate developers', () => {
     setValueTo('#dev-count-input', '2');
     clickOn('#generate-devs-button');
     const devs = Array.from(document.querySelectorAll('#devs-container div'));
     expect(devs.length).toEqual(2);
     expect(
-      document.querySelector('#devs-container #identifier-0')?.textContent,
+      document.querySelector('#devs-container #dev-identifier-0')?.textContent,
     ).toEqual('0');
     expect(
       document.querySelector<HTMLInputElement>('#devs-container #power-input-0')
         ?.value,
     ).toEqual('1');
     expect(
-      document.querySelector('#devs-container #identifier-1')?.textContent,
+      document.querySelector('#devs-container #dev-identifier-1')?.textContent,
     ).toEqual('1');
     expect(
       document.querySelector<HTMLInputElement>('#devs-container #power-input-1')
@@ -166,5 +152,88 @@ describe('Main', () => {
     clickOn('#generate-devs-button');
     const devs = Array.from(document.querySelectorAll('#devs-container div'));
     expect(devs.length).toEqual(2);
+  });
+
+  test('Should build the team with 2 developers', () => {
+    setValueTo('#dev-count-input', '2');
+    clickOn('#generate-devs-button');
+    setValueTo('#power-input-0', '5');
+    setValueTo('#power-input-1', '10');
+    setValueTo('#user-story-count-input', '3');
+    expect(buildParallelTeam()).toEqual(
+      Team.parallelTeam()
+        .withDev({ id: 0, power: 5 })
+        .withDev({ id: 1, power: 10 })
+        .withReview(false)
+        .build(),
+    );
+  });
+
+  test('Should generate user stories', () => {
+    setValueTo('#user-story-count-input', '2');
+    clickOn('#generate-user-stories-button');
+    const userStories = Array.from(
+      document.querySelectorAll('#user-stories-container div'),
+    );
+    expect(userStories.length).toEqual(2);
+    expect(
+      document.querySelector('#user-stories-container #user-story-identifier-0')
+        ?.textContent,
+    ).toEqual('0');
+    expect(
+      document.querySelector<HTMLInputElement>(
+        '#user-stories-container #complexity-input-0',
+      )?.value,
+    ).toEqual('5');
+    expect(
+      document.querySelector<HTMLInputElement>(
+        '#user-stories-container #review-complexity-input-0',
+      )?.value,
+    ).toEqual('2');
+    expect(
+      document.querySelector('#user-stories-container #user-story-identifier-1')
+        ?.textContent,
+    ).toEqual('1');
+    expect(
+      document.querySelector<HTMLInputElement>(
+        '#user-stories-container #complexity-input-1',
+      )?.value,
+    ).toEqual('5');
+    expect(
+      document.querySelector<HTMLInputElement>(
+        '#user-stories-container #review-complexity-input-1',
+      )?.value,
+    ).toEqual('2');
+  });
+
+  test('Should build the backlog with 2 user stories', () => {
+    setValueTo('#user-story-count-input', '2');
+    clickOn('#generate-user-stories-button');
+    setValueTo('#complexity-input-0', '2');
+    setValueTo('#review-complexity-input-0', '1');
+    setValueTo('#complexity-input-1', '4');
+    setValueTo('#review-complexity-input-1', '2');
+    expect(buildBacklog()).toEqual(
+      Backlog.init()
+        .addUserStory({
+          name: `US0`,
+          complexity: 2,
+          review: noReview,
+          reviewComplexity: 1,
+          state: State.TODO,
+          thread: undefined,
+          progression: 0,
+        })
+        .addUserStory({
+          name: `US1`,
+          complexity: 4,
+          review: noReview,
+          reviewComplexity: 2,
+          state: State.TODO,
+          thread: undefined,
+          progression: 0,
+        })
+        .build(),
+    );
   });
 });
