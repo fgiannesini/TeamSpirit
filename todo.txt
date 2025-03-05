@@ -1,4 +1,3 @@
-un dev doit prendre la tâche de complexité proche
 team mob
 team binome
 implémenter statistiques avec un graph qui se construit

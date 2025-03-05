@@ -6,14 +6,14 @@ import { noReview } from './review.ts';
 describe('Backlog', () => {
   test('Should get idle by default', () => {
     const backlog = new Backlog([]);
-    const userStory = backlog.next(thread());
+    const userStory = backlog.next(thread(0));
     expect(userStory).toEqual(idle);
   });
 
-  test('Should get TODO', () => {
-    const backlog = new Backlog([todo()]);
-    const userStory = backlog.next(thread());
-    expect(userStory).toEqual(todo());
+  test('Should get best TODO', () => {
+    const backlog = new Backlog([inProgress(1), todo(5), todo(1)]);
+    const userStory = backlog.next(thread(0, 2));
+    expect(userStory).toEqual(todo(1));
   });
 
   test('Should get IN_PROGRESS by the corresponding thread', () => {
@@ -22,9 +22,9 @@ describe('Backlog', () => {
     expect(userStory).toEqual(inProgress(1));
   });
 
-  test('Should get first TO_REVIEW', () => {
-    const backlog = new Backlog([todo(), toReview(1), toReview(2)]);
-    const userStory = backlog.next(thread(0));
+  test('Should get best TO_REVIEW', () => {
+    const backlog = new Backlog([todo(), toReview(1, 5), toReview(1, 1)]);
+    const userStory = backlog.next(thread(0, 2));
     expect(userStory).toEqual(toReview(1));
   });
 
@@ -111,19 +111,19 @@ describe('Backlog', () => {
         reviewers: new Map(reviewers),
       },
       state: State.REVIEW,
-      thread: thread,
+      thread,
       progression: 0,
     };
   };
 
-  const toReview = (thread: number) => {
+  const toReview = (thread: number, reviewComplexity = 1) => {
     return {
       name: 'toReview',
       complexity: 1,
-      reviewComplexity: 1,
+      reviewComplexity,
       review: noReview,
       state: State.TO_REVIEW,
-      thread: thread,
+      thread,
       progression: 0,
     };
   };
@@ -131,19 +131,19 @@ describe('Backlog', () => {
   const inProgress = (thread: number) => {
     return {
       name: 'inProgress',
-      complexity: 1,
+      complexity: 2,
       reviewComplexity: 1,
       review: noReview,
       state: State.IN_PROGRESS,
-      thread: thread,
+      thread,
       progression: 0,
     };
   };
 
-  const todo = () => {
+  const todo = (complexity = 1) => {
     return {
       name: 'todo',
-      complexity: 1,
+      complexity,
       reviewComplexity: 1,
       review: noReview,
       state: State.TODO,
@@ -152,7 +152,7 @@ describe('Backlog', () => {
     };
   };
 
-  const thread = (id = 0) => {
-    return { id, power: 1 };
+  const thread = (id: number, power = 1) => {
+    return { id, power };
   };
 });

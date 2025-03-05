@@ -42,16 +42,31 @@ export class Backlog {
     }
 
     if (threadUserStoryIndex == -1) {
-      threadUserStoryIndex = this._userStories.findIndex((userStory) =>
-        isToReviewBy(userStory, thread),
-      );
+      let minDiff = Number.MAX_VALUE;
+      this._userStories.forEach((userStory, i) => {
+        if (isToReviewBy(userStory, thread)) {
+          const diff = Math.abs(userStory.reviewComplexity - thread.power);
+          if (diff < minDiff) {
+            minDiff = diff;
+            threadUserStoryIndex = i;
+          }
+        }
+      });
     }
 
     if (threadUserStoryIndex == -1) {
-      threadUserStoryIndex = this._userStories.findIndex((userStory) =>
-        toDo(userStory),
-      );
+      let minDiff = Number.MAX_VALUE;
+      this._userStories.forEach((userStory, i) => {
+        if (toDo(userStory)) {
+          const diff = Math.abs(userStory.complexity - thread.power);
+          if (diff < minDiff) {
+            minDiff = diff;
+            threadUserStoryIndex = i;
+          }
+        }
+      });
     }
+
     if (threadUserStoryIndex != -1) {
       return this._userStories.splice(threadUserStoryIndex, 1)[0];
     }
