@@ -1,1 +1,0 @@
-:root{color-scheme:light dark;color:#ffffffde;background-color:#242424}body{display:flex;place-items:center;min-width:320px;min-height:100vh;flex-direction:column;justify-content:space-around}button{border:1px solid transparent;padding:.6em 1.2em;cursor:pointer}button:hover{border-color:#646cff}button:focus,button:focus-visible{outline:4px auto -webkit-focus-ring-color}
