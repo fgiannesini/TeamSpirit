@@ -18,25 +18,22 @@ const createUserStory = (i: number, reviewersCount: number) => ({
   progression: 0,
 });
 
+const getInputValueOf = (selector: string) =>
+  parseInt(document.querySelector<HTMLInputElement>(selector)?.value ?? '0');
+
 export const buildBacklog = () => {
-  const taskCount = parseInt(
-    document.querySelector<HTMLInputElement>('#task-count-input')?.value ?? '0',
-  );
-  const reviewersCount =
-    document.querySelector<HTMLInputElement>('#reviewers-input')?.value;
+  const taskCount = getInputValueOf('#task-count-input');
+  const reviewersCount = getInputValueOf('#reviewers-input');
   const backlogBuilder = Backlog.init();
   Array.from({ length: taskCount }, (_, i) =>
-    backlogBuilder.addUserStory(createUserStory(i, Number(reviewersCount))),
+    backlogBuilder.addUserStory(createUserStory(i, reviewersCount)),
   );
   return backlogBuilder.build();
 };
 
 export const buildParallelTeam = () => {
-  const devCount = parseInt(
-    document.querySelector<HTMLInputElement>('#dev-count-input')?.value ?? '0',
-  );
-  const reviewersCount =
-    document.querySelector<HTMLInputElement>('#reviewers-input')?.value;
+  const devCount = getInputValueOf('#dev-count-input');
+  const reviewersCount = getInputValueOf('#reviewers-input');
   const hasReview = !!reviewersCount && Number(reviewersCount) > 0;
   return Team.parallelTeam()
     .withDevCount(devCount)
@@ -64,6 +61,7 @@ const generateDevForm = (id: number) => {
   dev.append(identifierLabel, identifier, powerLabel, powerInput);
   return dev;
 };
+
 document.addEventListener('DOMContentLoaded', () => {
   document
     .querySelector<HTMLButtonElement>('#calculate-button')
@@ -81,10 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .querySelector<HTMLButtonElement>('#generate-devs-button')
     ?.addEventListener('click', () => {
       const devsContainer = document.getElementById('devs-container');
-      const devCount = parseInt(
-        document.querySelector<HTMLInputElement>('#dev-count-input')?.value ??
-          '0',
-      );
+      const devCount = getInputValueOf('#dev-count-input');
       const devs = Array.from({ length: devCount }, (_, i) =>
         generateDevForm(i),
       );
