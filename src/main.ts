@@ -44,6 +44,26 @@ export const buildParallelTeam = () => {
     .build();
 };
 
+const generateDevForm = (id: number) => {
+  const identifierLabel = document.createElement('span');
+  identifierLabel.textContent = 'Id';
+  const identifier = document.createElement('span');
+  identifier.id = `identifier-${id}`;
+  identifier.textContent = id.toString();
+
+  const powerLabel = document.createElement('label');
+  powerLabel.textContent = 'Power';
+
+  const powerInput = document.createElement('input');
+  powerInput.id = `power-input-${id}`;
+  powerInput.type = 'number';
+  powerInput.min = '1';
+  powerInput.value = '1';
+
+  const dev = document.createElement('div');
+  dev.append(identifierLabel, identifier, powerLabel, powerInput);
+  return dev;
+};
 document.addEventListener('DOMContentLoaded', () => {
   document
     .querySelector<HTMLButtonElement>('#calculate-button')
@@ -61,9 +81,13 @@ document.addEventListener('DOMContentLoaded', () => {
     .querySelector<HTMLButtonElement>('#generate-devs-button')
     ?.addEventListener('click', () => {
       const devsContainer = document.getElementById('devs-container');
-      devsContainer?.replaceChildren(
-        document.createElement('div'),
-        document.createElement('div'),
+      const devCount = parseInt(
+        document.querySelector<HTMLInputElement>('#dev-count-input')?.value ??
+          '0',
       );
+      const devs = Array.from({ length: devCount }, (_, i) =>
+        generateDevForm(i),
+      );
+      devsContainer?.replaceChildren(...devs);
     });
 });

@@ -125,6 +125,20 @@ describe('Main', () => {
     clickOn('#generate-devs-button');
     const devs = Array.from(document.querySelectorAll('#devs-container div'));
     expect(devs.length).toEqual(2);
+    expect(
+      document.querySelector('#devs-container #identifier-0')?.textContent,
+    ).toEqual('0');
+    expect(
+      document.querySelector<HTMLInputElement>('#devs-container #power-input-0')
+        ?.value,
+    ).toEqual('1');
+    expect(
+      document.querySelector('#devs-container #identifier-1')?.textContent,
+    ).toEqual('1');
+    expect(
+      document.querySelector<HTMLInputElement>('#devs-container #power-input-1')
+        ?.value,
+    ).toEqual('1');
   });
 
   test('Should generate developers once', () => {
