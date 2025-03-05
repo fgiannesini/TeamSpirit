@@ -102,10 +102,6 @@ export const isReviewed = (userStory: UserStory): boolean => {
   return hasAllReviews(userStory.review, userStory.reviewComplexity);
 };
 
-export const toReviewBy = (userStory: UserStory, thread: Thread): boolean => {
-  return userStory.state === State.TO_REVIEW && userStory.thread !== thread.id;
-};
-
 export const isInProgressBy: (
   userStory: UserStory,
   thread: Thread,

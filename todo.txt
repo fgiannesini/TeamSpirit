@@ -1,3 +1,5 @@
+mettre des complexités d'US configurable
+mettre des compétences de dev configurables
 team mob
 team binome
 implémenter statistiques avec un graph qui se construit

@@ -4,7 +4,6 @@ import {
   isInReviewBy,
   State,
   toDo,
-  toReviewBy,
   UserStory,
 } from './user-story.ts';
 import { Thread } from './team.ts';
@@ -34,21 +33,15 @@ export class Backlog {
     let threadUserStoryIndex = this._userStories.findLastIndex((userStory) =>
       isInReviewBy(userStory, thread),
     );
-    if (threadUserStoryIndex == -1) {
-      //TODO à supprimer
-      threadUserStoryIndex = this._userStories.findLastIndex((userStory) =>
-        toReviewBy(userStory, thread),
-      );
-    }
 
     if (threadUserStoryIndex == -1) {
-      threadUserStoryIndex = this._userStories.findLastIndex((userStory) =>
+      threadUserStoryIndex = this._userStories.findIndex((userStory) =>
         isInProgressBy(userStory, thread),
       );
     }
 
     if (threadUserStoryIndex == -1) {
-      threadUserStoryIndex = this._userStories.findLastIndex((userStory) =>
+      threadUserStoryIndex = this._userStories.findIndex((userStory) =>
         toDo(userStory),
       );
     }

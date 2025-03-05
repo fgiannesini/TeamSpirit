@@ -9,21 +9,21 @@ describe('Parallel Team', () => {
   it('should handle 2 simple userStories by 2 devs', () => {
     const backlog = Backlog.init()
       .addUserStory({
-        name: 'userStory2',
-        complexity: 1,
-        reviewComplexity: 0,
-        review: noReview,
-        state: State.TODO,
-        thread: -1,
-        progression: 0,
-      })
-      .addUserStory({
         name: 'userStory1',
         complexity: 1,
         reviewComplexity: 0,
         review: noReview,
         state: State.TODO,
-        thread: -1,
+        thread: undefined,
+        progression: 0,
+      })
+      .addUserStory({
+        name: 'userStory2',
+        complexity: 1,
+        reviewComplexity: 0,
+        review: noReview,
+        state: State.TODO,
+        thread: undefined,
         progression: 0,
       })
       .build();
@@ -69,7 +69,7 @@ describe('Parallel Team', () => {
         reviewComplexity: 0,
         review: noReview,
         state: State.TODO,
-        thread: -1,
+        thread: undefined,
         progression: 0,
       })
       .build();
@@ -116,12 +116,12 @@ describe('Parallel Team', () => {
   it('should handle 3 simple userStories by 2 devs', () => {
     const backlog = Backlog.init()
       .addUserStory({
-        name: 'userStory3',
+        name: 'userStory1',
         complexity: 1,
         reviewComplexity: 0,
         review: noReview,
         state: State.TODO,
-        thread: -1,
+        thread: undefined,
         progression: 0,
       })
       .addUserStory({
@@ -130,16 +130,16 @@ describe('Parallel Team', () => {
         reviewComplexity: 0,
         review: noReview,
         state: State.TODO,
-        thread: -1,
+        thread: undefined,
         progression: 0,
       })
       .addUserStory({
-        name: 'userStory1',
+        name: 'userStory3',
         complexity: 1,
         reviewComplexity: 0,
         review: noReview,
         state: State.TODO,
-        thread: -1,
+        thread: undefined,
         progression: 0,
       })
       .build();
@@ -198,21 +198,21 @@ describe('Parallel Team', () => {
   it('should handle 2 complex userStories by 2 devs', () => {
     const backlog = Backlog.init()
       .addUserStory({
-        name: 'userStory2',
-        complexity: 2,
-        reviewComplexity: 0,
-        review: noReview,
-        state: State.TODO,
-        thread: -1,
-        progression: 0,
-      })
-      .addUserStory({
         name: 'userStory1',
         complexity: 2,
         reviewComplexity: 0,
         review: noReview,
         state: State.TODO,
-        thread: -1,
+        thread: undefined,
+        progression: 0,
+      })
+      .addUserStory({
+        name: 'userStory2',
+        complexity: 2,
+        reviewComplexity: 0,
+        review: noReview,
+        state: State.TODO,
+        thread: undefined,
         progression: 0,
       })
       .build();
@@ -273,7 +273,7 @@ describe('Parallel Team', () => {
           reviewers: new Map<number, number>(),
         },
         state: State.TODO,
-        thread: -1,
+        thread: undefined,
         progression: 0,
       })
       .build();
@@ -338,7 +338,7 @@ describe('Parallel Team', () => {
           reviewers: new Map<number, number>(),
         },
         state: State.TODO,
-        thread: -1,
+        thread: undefined,
         progression: 0,
       })
       .build();
@@ -422,7 +422,7 @@ describe('Parallel Team', () => {
           reviewers: new Map<number, number>(),
         },
         state: State.TODO,
-        thread: -1,
+        thread: undefined,
         progression: 0,
       })
       .build();
