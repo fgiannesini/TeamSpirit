@@ -1,4 +1,4 @@
-import { TimeEvent } from '../compute/events.ts';
+import { TimeEvent } from '../simulate/events.ts';
 
 export const createUserStory = (id: string) => {
   const userStoryHtmlElement = document.createElement('div');

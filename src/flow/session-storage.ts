@@ -1,5 +1,5 @@
-import { TimeEvent } from '../compute/events.ts';
-import { StatEvent } from '../compute/stats.ts';
+import { TimeEvent } from '../simulate/events.ts';
+import { StatEvent } from '../simulate/stats.ts';
 
 export const loadTimeEvents = () =>
   JSON.parse(sessionStorage.getItem('computation') ?? '[]') as TimeEvent[];

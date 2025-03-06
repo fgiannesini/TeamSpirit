@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { resolve } from 'path';
 import { readFileSync } from 'fs';
-import { TimeEvent } from './compute/events.ts';
-import { Backlog } from './compute/backlog.ts';
+import { TimeEvent } from './simulate/events.ts';
+import { Backlog } from './simulate/backlog.ts';
 import { buildBacklog, buildParallelTeam } from './main.ts';
-import { State } from './compute/user-story.ts';
-import { ParallelTeam } from './compute/team.ts';
-import { noReview } from './compute/review.ts';
-import { StatEvent } from './compute/stats.ts';
+import { State } from './simulate/user-story.ts';
+import { ParallelTeam } from './simulate/team.ts';
+import { noReview } from './simulate/review.ts';
+import { StatEvent } from './simulate/stats.ts';
 
 describe('Main', () => {
   beforeEach(async () => {

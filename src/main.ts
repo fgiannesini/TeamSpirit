@@ -1,11 +1,11 @@
 import './style.scss';
-import { ParallelTeam, Team } from './compute/team.ts';
-import { Backlog } from './compute/backlog.ts';
-import { State } from './compute/user-story.ts';
+import { ParallelTeam, Team } from './simulate/team.ts';
+import { Backlog } from './simulate/backlog.ts';
+import { State } from './simulate/user-story.ts';
 import { saveStatEvents, saveTimeEvents } from './flow/session-storage.ts';
-import { computeStatEvents } from './compute/stats.ts';
-import { generateDevForm, generateUserStoriesForm } from './compute/form.ts';
-import { simulate } from './compute/simulation.ts';
+import { computeStatEvents } from './simulate/stats.ts';
+import { generateDevForm, generateUserStoriesForm } from './simulate/form.ts';
+import { simulate } from './simulate/simulation.ts';
 
 const getInputValueOf = (selector: string) => {
   const number = parseInt(

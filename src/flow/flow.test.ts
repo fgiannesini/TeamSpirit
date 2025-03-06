@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { State } from '../compute/user-story.ts';
+import { State } from '../simulate/user-story.ts';
 import {
   getCompute,
   getComputeAll,
