@@ -5,6 +5,7 @@ import { State } from './compute/user-story.ts';
 import { saveStatEvents, saveTimeEvents } from './flow/session-storage.ts';
 import { computeStatEvents } from './compute/stats.ts';
 import { generateDevForm, generateUserStoriesForm } from './compute/form.ts';
+import { simulate } from './compute/simulation.ts';
 
 const getInputValueOf = (selector: string) => {
   const number = parseInt(
@@ -49,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ?.addEventListener('click', () => {
       const backlog = buildBacklog();
       const team = buildParallelTeam();
-      const timeEvents = team.run(backlog);
+      const timeEvents = simulate(backlog, team);
       saveTimeEvents(timeEvents);
       const statEvents = computeStatEvents(timeEvents);
       saveStatEvents(statEvents);

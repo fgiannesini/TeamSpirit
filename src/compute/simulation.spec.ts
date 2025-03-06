@@ -1,12 +1,13 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, test } from 'vitest';
 import { Backlog } from './backlog.ts';
+import { noReview } from './review.ts';
 import { State } from './user-story.ts';
 import { Team } from './team.ts';
 import { TimeEvent } from './events.ts';
-import { noReview } from './review.ts';
+import { simulate } from './simulation.ts';
 
-describe('Team', () => {
-  it('should handle 2 simple userStories by 2 devs', () => {
+describe('Simulation', () => {
+  test('should handle 2 simple userStories by 2 devs', () => {
     const backlog = Backlog.init()
       .addUserStory({
         name: 'userStory1',
@@ -28,10 +29,11 @@ describe('Team', () => {
       })
       .build();
 
-    const events = new Team([
+    const team = new Team([
       { id: 0, power: 1 },
       { id: 1, power: 1 },
-    ]).run(backlog);
+    ]);
+    const events = simulate(backlog, team);
 
     expect(events).toEqual<TimeEvent[]>([
       {
@@ -64,7 +66,7 @@ describe('Team', () => {
     expect(backlog.remainings()).toHaveLength(0);
   });
 
-  it('should handle 1 simple userStory by an efficient dev', () => {
+  test('should handle 1 simple userStory by an efficient dev', () => {
     const backlog = Backlog.init()
       .addUserStory({
         name: 'userStory1',
@@ -77,7 +79,8 @@ describe('Team', () => {
       })
       .build();
 
-    const events = new Team([{ id: 0, power: 2 }]).run(backlog);
+    const team = new Team([{ id: 0, power: 2 }]);
+    const events = simulate(backlog, team);
 
     expect(events).toEqual<TimeEvent[]>([
       {
@@ -110,7 +113,7 @@ describe('Team', () => {
     expect(backlog.remainings()).toHaveLength(0);
   });
 
-  it('should handle 3 simple userStories by 2 devs', () => {
+  test('should handle 3 simple userStories by 2 devs', () => {
     const backlog = Backlog.init()
       .addUserStory({
         name: 'userStory1',
@@ -141,10 +144,11 @@ describe('Team', () => {
       })
       .build();
 
-    const events = new Team([
+    const team = new Team([
       { id: 0, power: 1 },
       { id: 1, power: 1 },
-    ]).run(backlog);
+    ]);
+    const events = simulate(backlog, team);
     expect(events).toEqual([
       {
         time: 1,
@@ -194,7 +198,7 @@ describe('Team', () => {
     expect(backlog.remainings()).toHaveLength(0);
   });
 
-  it('should handle 2 complex userStories by 2 devs', () => {
+  test('should handle 2 complex userStories by 2 devs', () => {
     const backlog = Backlog.init()
       .addUserStory({
         name: 'userStory1',
@@ -216,10 +220,11 @@ describe('Team', () => {
       })
       .build();
 
-    const events = new Team([
+    const team = new Team([
       { id: 0, power: 1 },
       { id: 1, power: 1 },
-    ]).run(backlog);
+    ]);
+    const events = simulate(backlog, team);
     expect(events).toEqual([
       {
         time: 1,
@@ -263,7 +268,7 @@ describe('Team', () => {
     expect(backlog.remainings()).toHaveLength(0);
   });
 
-  it('should handle 1 simple userStory and review', () => {
+  test('should handle 1 simple userStory and review', () => {
     const backlog = Backlog.init()
       .addUserStory({
         name: 'userStory1',
@@ -279,10 +284,11 @@ describe('Team', () => {
       })
       .build();
 
-    const events = new Team([
+    const team = new Team([
       { id: 0, power: 1 },
       { id: 1, power: 1 },
-    ]).run(backlog);
+    ]);
+    const events = simulate(backlog, team);
 
     expect(events).toEqual([
       {
@@ -327,7 +333,7 @@ describe('Team', () => {
     expect(backlog.remainings()).toHaveLength(0);
   });
 
-  it('should handle 1 simple userStory and review by an efficient dev', () => {
+  test('should handle 1 simple userStory and review by an efficient dev', () => {
     const backlog = Backlog.init()
       .addUserStory({
         name: 'userStory1',
@@ -343,7 +349,7 @@ describe('Team', () => {
       })
       .build();
 
-    const events = new Team([
+    const team = new Team([
       {
         id: 0,
         power: 20,
@@ -352,7 +358,8 @@ describe('Team', () => {
         id: 1,
         power: 1,
       },
-    ]).run(backlog);
+    ]);
+    const events = simulate(backlog, team);
 
     expect(events).toEqual([
       {
@@ -409,7 +416,7 @@ describe('Team', () => {
     expect(backlog.remainings()).toHaveLength(0);
   });
 
-  it('should handle 1 simple userStory and review by two devs', () => {
+  test('should handle 1 simple userStory and review by two devs', () => {
     const backlog = Backlog.init()
       .addUserStory({
         name: 'userStory1',
@@ -425,7 +432,7 @@ describe('Team', () => {
       })
       .build();
 
-    const events = new Team([
+    const team = new Team([
       {
         id: 0,
         power: 20,
@@ -438,7 +445,8 @@ describe('Team', () => {
         id: 2,
         power: 1,
       },
-    ]).run(backlog);
+    ]);
+    const events = simulate(backlog, team);
 
     expect(events).toEqual([
       {
