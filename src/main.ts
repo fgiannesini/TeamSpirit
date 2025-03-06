@@ -4,7 +4,7 @@ import { Backlog } from './simulate/backlog.ts';
 import { State } from './simulate/user-story.ts';
 import { saveStatEvents, saveTimeEvents } from './flow/session-storage.ts';
 import { computeStatEvents } from './simulate/stats.ts';
-import { generateDevForm, generateUserStoriesForm } from './simulate/form.ts';
+import { generateDevForm, generateUserStoriesForm } from './form/form.ts';
 import { simulate } from './simulate/simulation.ts';
 
 const getInputValueOf = (selector: string) => {
