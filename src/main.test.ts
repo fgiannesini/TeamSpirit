@@ -3,9 +3,9 @@ import { resolve } from 'path';
 import { readFileSync } from 'fs';
 import { TimeEvent } from './simulate/events.ts';
 import { Backlog } from './simulate/backlog.ts';
-import { buildBacklog, buildParallelTeam } from './main.ts';
+import { buildBacklog, buildTeam } from './main.ts';
 import { State } from './simulate/user-story.ts';
-import { ParallelTeam } from './simulate/team.ts';
+import { EnsembleTeam, ParallelTeam } from './simulate/team.ts';
 import { noReview } from './simulate/review.ts';
 import { StatEvent } from './simulate/stats.ts';
 
@@ -30,6 +30,16 @@ describe('Main', () => {
   };
   const clickOn = (buttonId: string) => {
     document.querySelector<HTMLButtonElement>(buttonId)?.click();
+  };
+
+  const select = (selectId: string, optionValue: string) => {
+    const select = document.querySelector<HTMLSelectElement>(selectId);
+    const option = select?.querySelector<HTMLOptionElement>(
+      `option[value="${optionValue}"]`,
+    );
+    if (option) {
+      option.selected = true;
+    }
   };
 
   test('Should compute and store in sessionStorage', () => {
@@ -130,14 +140,28 @@ describe('Main', () => {
     expect(devs.length).toEqual(2);
   });
 
-  test('Should build the team with 2 developers', () => {
+  test('Should build a parallel team with 2 developers', () => {
     setValueTo('#dev-count-input', '2');
     clickOn('#generate-devs-button');
     setValueTo('#power-input-0', '5');
     setValueTo('#power-input-1', '10');
-    setValueTo('#user-story-count-input', '3');
-    expect(buildParallelTeam()).toEqual(
+    select('#team-type-select', 'parallel');
+    expect(buildTeam()).toStrictEqual(
       new ParallelTeam([
+        { id: 0, power: 5 },
+        { id: 1, power: 10 },
+      ]),
+    );
+  });
+
+  test('Should build an ensemble team with 2 developers', () => {
+    setValueTo('#dev-count-input', '2');
+    clickOn('#generate-devs-button');
+    setValueTo('#power-input-0', '5');
+    setValueTo('#power-input-1', '10');
+    select('#team-type-select', 'ensemble');
+    expect(buildTeam()).toStrictEqual(
+      new EnsembleTeam([
         { id: 0, power: 5 },
         { id: 1, power: 10 },
       ]),

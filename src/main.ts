@@ -1,5 +1,5 @@
 import './style.scss';
-import { ParallelTeam, Team } from './simulate/team.ts';
+import { EnsembleTeam, ParallelTeam, Team } from './simulate/team.ts';
 import { Backlog } from './simulate/backlog.ts';
 import { State } from './simulate/user-story.ts';
 import { saveStatEvents, saveTimeEvents } from './flow/session-storage.ts';
@@ -36,11 +36,17 @@ export const buildBacklog = () => {
   return backlogBuilder.build();
 };
 
-export const buildParallelTeam = (): Team => {
+export const buildTeam = (): Team => {
   const devCount = getInputValueOf('#dev-count-input');
   const threads = Array.from({ length: devCount }, (_, i) => {
     return { id: i, power: getInputValueOf(`#power-input-${i}`) };
   });
+
+  const selectedTeam =
+    document.querySelector<HTMLSelectElement>('#team-type-select')?.value;
+  if (selectedTeam === 'ensemble') {
+    return new EnsembleTeam(threads);
+  }
   return new ParallelTeam(threads);
 };
 
@@ -49,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .querySelector<HTMLButtonElement>('#calculate-button')
     ?.addEventListener('click', () => {
       const backlog = buildBacklog();
-      const team = buildParallelTeam();
+      const team = buildTeam();
       const timeEvents = simulate(backlog, team);
       saveTimeEvents(timeEvents);
       const statEvents = computeStatEvents(timeEvents);
