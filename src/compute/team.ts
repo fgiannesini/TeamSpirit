@@ -3,14 +3,18 @@ export interface Thread {
   power: number;
 }
 
-export class Team {
-  private readonly _devs: Thread[] = [];
+export interface Team {
+  getThreads(): Thread[];
+}
 
-  constructor(devs: Thread[]) {
-    this._devs = devs;
+export class ParallelTeam implements Team {
+  private readonly threads: Thread[] = [];
+
+  constructor(threads: Thread[]) {
+    this.threads = threads;
   }
 
   getThreads(): Thread[] {
-    return this._devs;
+    return this.threads;
   }
 }

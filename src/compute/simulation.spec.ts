@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest';
 import { Backlog } from './backlog.ts';
 import { noReview } from './review.ts';
 import { State } from './user-story.ts';
-import { Team } from './team.ts';
+import { ParallelTeam } from './team.ts';
 import { TimeEvent } from './events.ts';
 import { simulate } from './simulation.ts';
 
@@ -29,7 +29,7 @@ describe('Simulation', () => {
       })
       .build();
 
-    const team = new Team([
+    const team = new ParallelTeam([
       { id: 0, power: 1 },
       { id: 1, power: 1 },
     ]);
@@ -79,7 +79,7 @@ describe('Simulation', () => {
       })
       .build();
 
-    const team = new Team([{ id: 0, power: 2 }]);
+    const team = new ParallelTeam([{ id: 0, power: 2 }]);
     const events = simulate(backlog, team);
 
     expect(events).toEqual<TimeEvent[]>([
@@ -144,7 +144,7 @@ describe('Simulation', () => {
       })
       .build();
 
-    const team = new Team([
+    const team = new ParallelTeam([
       { id: 0, power: 1 },
       { id: 1, power: 1 },
     ]);
@@ -220,7 +220,7 @@ describe('Simulation', () => {
       })
       .build();
 
-    const team = new Team([
+    const team = new ParallelTeam([
       { id: 0, power: 1 },
       { id: 1, power: 1 },
     ]);
@@ -284,7 +284,7 @@ describe('Simulation', () => {
       })
       .build();
 
-    const team = new Team([
+    const team = new ParallelTeam([
       { id: 0, power: 1 },
       { id: 1, power: 1 },
     ]);
@@ -349,7 +349,7 @@ describe('Simulation', () => {
       })
       .build();
 
-    const team = new Team([
+    const team = new ParallelTeam([
       {
         id: 0,
         power: 20,
@@ -432,7 +432,7 @@ describe('Simulation', () => {
       })
       .build();
 
-    const team = new Team([
+    const team = new ParallelTeam([
       {
         id: 0,
         power: 20,

@@ -1,5 +1,5 @@
 import './style.scss';
-import { Team } from './compute/team.ts';
+import { ParallelTeam, Team } from './compute/team.ts';
 import { Backlog } from './compute/backlog.ts';
 import { State } from './compute/user-story.ts';
 import { saveStatEvents, saveTimeEvents } from './flow/session-storage.ts';
@@ -36,12 +36,12 @@ export const buildBacklog = () => {
   return backlogBuilder.build();
 };
 
-export const buildParallelTeam = () => {
+export const buildParallelTeam = (): Team => {
   const devCount = getInputValueOf('#dev-count-input');
   const threads = Array.from({ length: devCount }, (_, i) => {
     return { id: i, power: getInputValueOf(`#power-input-${i}`) };
   });
-  return new Team(threads);
+  return new ParallelTeam(threads);
 };
 
 document.addEventListener('DOMContentLoaded', () => {

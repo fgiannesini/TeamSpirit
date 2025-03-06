@@ -5,7 +5,7 @@ import { TimeEvent } from './compute/events.ts';
 import { Backlog } from './compute/backlog.ts';
 import { buildBacklog, buildParallelTeam } from './main.ts';
 import { State } from './compute/user-story.ts';
-import { Team } from './compute/team.ts';
+import { ParallelTeam } from './compute/team.ts';
 import { noReview } from './compute/review.ts';
 import { StatEvent } from './compute/stats.ts';
 
@@ -137,7 +137,7 @@ describe('Main', () => {
     setValueTo('#power-input-1', '10');
     setValueTo('#user-story-count-input', '3');
     expect(buildParallelTeam()).toEqual(
-      new Team([
+      new ParallelTeam([
         { id: 0, power: 5 },
         { id: 1, power: 10 },
       ]),
