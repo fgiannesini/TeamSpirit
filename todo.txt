@@ -1,4 +1,10 @@
-team mob
+Afficher l'action du thread
+Pouvoir ouvrir plusieurs pages pour comparer les simulations
+Afficher l'avancement de la tâche lors du rendu
+implémenter bugs review
+implémenter bug recette/prod
+complexité des tâches aléatoires (gaussienne avec fibonachi)
+Afficher la montée compétence du développeur (échelle logarithmique)
+Départ/arrivée de nouveau dev
 team binome
-implémenter statistiques avec un graph qui se construit
-implémenter retours de review
+implémenter statistiques lead time avec un graph qui se construit
