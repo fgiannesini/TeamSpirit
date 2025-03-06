@@ -101,36 +101,6 @@ describe('Main', () => {
     );
   });
 
-  test.each(['1', '2'])(
-    'Should build the team with %s reviewers',
-    (reviewersInput) => {
-      setValueTo('#dev-count-input', '2');
-      clickOn('#generate-devs-button');
-      setValueTo('#reviewers-input', reviewersInput);
-      expect(buildParallelTeam()).toEqual(
-        Team.parallelTeam()
-          .withDev({ id: 0, power: 1 })
-          .withDev({ id: 1, power: 1 })
-          .build(),
-      );
-    },
-  );
-
-  test.each(['0', '', ' '])(
-    'Should build the team without reviewers (value %s)',
-    (reviewersInput) => {
-      setValueTo('#dev-count-input', '2');
-      clickOn('#generate-devs-button');
-      setValueTo('#reviewers-input', reviewersInput);
-      expect(buildParallelTeam()).toEqual(
-        Team.parallelTeam()
-          .withDev({ id: 0, power: 1 })
-          .withDev({ id: 1, power: 1 })
-          .build(),
-      );
-    },
-  );
-
   test('Should generate developers', () => {
     setValueTo('#dev-count-input', '2');
     clickOn('#generate-devs-button');
@@ -167,10 +137,10 @@ describe('Main', () => {
     setValueTo('#power-input-1', '10');
     setValueTo('#user-story-count-input', '3');
     expect(buildParallelTeam()).toEqual(
-      Team.parallelTeam()
-        .withDev({ id: 0, power: 5 })
-        .withDev({ id: 1, power: 10 })
-        .build(),
+      new Team([
+        { id: 0, power: 5 },
+        { id: 1, power: 10 },
+      ]),
     );
   });
 

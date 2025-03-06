@@ -25,10 +25,6 @@ export class Team {
     this._devs = devs;
   }
 
-  public static parallelTeam = (): ParallelTeamBuilder => {
-    return new ParallelTeamBuilder();
-  };
-
   run(backlog: Backlog): TimeEvent[] {
     const events: TimeEvent[] = [];
     let time = 1;
@@ -82,18 +78,5 @@ export class Team {
     }
 
     return events;
-  }
-}
-
-class ParallelTeamBuilder {
-  private _devs: Thread[] = [];
-
-  public withDev(dev: Thread) {
-    this._devs.push(dev);
-    return this;
-  }
-
-  public build(): Team {
-    return new Team(this._devs);
   }
 }

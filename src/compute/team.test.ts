@@ -28,11 +28,10 @@ describe('Team', () => {
       })
       .build();
 
-    const events = Team.parallelTeam()
-      .withDev({ id: 0, power: 1 })
-      .withDev({ id: 1, power: 1 })
-      .build()
-      .run(backlog);
+    const events = new Team([
+      { id: 0, power: 1 },
+      { id: 1, power: 1 },
+    ]).run(backlog);
 
     expect(events).toEqual<TimeEvent[]>([
       {
@@ -78,13 +77,7 @@ describe('Team', () => {
       })
       .build();
 
-    const events = Team.parallelTeam()
-      .withDev({
-        id: 0,
-        power: 2,
-      })
-      .build()
-      .run(backlog);
+    const events = new Team([{ id: 0, power: 2 }]).run(backlog);
 
     expect(events).toEqual<TimeEvent[]>([
       {
@@ -148,12 +141,10 @@ describe('Team', () => {
       })
       .build();
 
-    const events = Team.parallelTeam()
-      .withDev({ id: 0, power: 1 })
-      .withDev({ id: 1, power: 1 })
-      .build()
-      .run(backlog);
-
+    const events = new Team([
+      { id: 0, power: 1 },
+      { id: 1, power: 1 },
+    ]).run(backlog);
     expect(events).toEqual([
       {
         time: 1,
@@ -225,12 +216,10 @@ describe('Team', () => {
       })
       .build();
 
-    const events = Team.parallelTeam()
-      .withDev({ id: 0, power: 1 })
-      .withDev({ id: 1, power: 1 })
-      .build()
-      .run(backlog);
-
+    const events = new Team([
+      { id: 0, power: 1 },
+      { id: 1, power: 1 },
+    ]).run(backlog);
     expect(events).toEqual([
       {
         time: 1,
@@ -290,11 +279,10 @@ describe('Team', () => {
       })
       .build();
 
-    const events = Team.parallelTeam()
-      .withDev({ id: 0, power: 1 })
-      .withDev({ id: 1, power: 1 })
-      .build()
-      .run(backlog);
+    const events = new Team([
+      { id: 0, power: 1 },
+      { id: 1, power: 1 },
+    ]).run(backlog);
 
     expect(events).toEqual([
       {
@@ -355,17 +343,16 @@ describe('Team', () => {
       })
       .build();
 
-    const events = Team.parallelTeam()
-      .withDev({
+    const events = new Team([
+      {
         id: 0,
         power: 20,
-      })
-      .withDev({
+      },
+      {
         id: 1,
         power: 1,
-      })
-      .build()
-      .run(backlog);
+      },
+    ]).run(backlog);
 
     expect(events).toEqual([
       {
@@ -438,21 +425,20 @@ describe('Team', () => {
       })
       .build();
 
-    const events = Team.parallelTeam()
-      .withDev({
+    const events = new Team([
+      {
         id: 0,
         power: 20,
-      })
-      .withDev({
+      },
+      {
         id: 1,
         power: 1,
-      })
-      .withDev({
+      },
+      {
         id: 2,
         power: 1,
-      })
-      .build()
-      .run(backlog);
+      },
+    ]).run(backlog);
 
     expect(events).toEqual([
       {

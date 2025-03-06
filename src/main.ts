@@ -36,12 +36,11 @@ export const buildBacklog = () => {
 };
 
 export const buildParallelTeam = () => {
-  const teamBuilder = Team.parallelTeam();
   const devCount = getInputValueOf('#dev-count-input');
-  Array.from({ length: devCount }, (_, i) => {
+  const threads = Array.from({ length: devCount }, (_, i) => {
     return { id: i, power: getInputValueOf(`#power-input-${i}`) };
-  }).forEach((thread) => teamBuilder.withDev(thread));
-  return teamBuilder.build();
+  });
+  return new Team(threads);
 };
 
 document.addEventListener('DOMContentLoaded', () => {
