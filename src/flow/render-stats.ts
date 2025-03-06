@@ -8,7 +8,11 @@ const getTime = () => {
   return document.querySelector('#time');
 };
 
-export const renderStatEvents = (events: StatEvent[], time: number) => {
+export const renderStatEvents = (
+  events: StatEvent[],
+  time: number,
+  maxTime: number,
+) => {
   const currentEvents = events.filter((event) => event.time == time);
   if (currentEvents.length == 0) return;
 
@@ -17,5 +21,6 @@ export const renderStatEvents = (events: StatEvent[], time: number) => {
     leadTime.textContent = currentEvents[0].leadTime?.toFixed(2) ?? NaN;
 
   const timeElement = getTime();
-  if (timeElement) timeElement.textContent = currentEvents[0].time.toString();
+  if (timeElement)
+    timeElement.textContent = `${currentEvents[0].time.toString()}/${maxTime}`;
 };

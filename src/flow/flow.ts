@@ -26,7 +26,7 @@ const render = (events: TimeEvent[], statEvents: StatEvent[]) => {
     computeButton.disabled = true;
     time++;
     await renderTimeEvents(events, time, 1000);
-    renderStatEvents(statEvents, time);
+    renderStatEvents(statEvents, time, maxTime);
     if (maxTime !== time && computeButton) {
       computeButton.disabled = false;
     }
@@ -37,12 +37,10 @@ const render = (events: TimeEvent[], statEvents: StatEvent[]) => {
     while (maxTime !== time) {
       time++;
       await renderTimeEvents(events, time, 300);
-      renderStatEvents(statEvents, time);
+      renderStatEvents(statEvents, time, maxTime);
     }
     if (computeButtonAll) computeButtonAll.disabled = true;
   });
 };
 
-const timeEvents = loadTimeEvents();
-const statEvents = loadStatEvents();
-render(timeEvents, statEvents);
+render(loadTimeEvents(), loadStatEvents());

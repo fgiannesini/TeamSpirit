@@ -50,7 +50,14 @@ describe('Flow', () => {
   ])(
     'Should render the page with a stat event',
     async (leadTimeProvided, leadTimeDisplayed) => {
-      saveTimeEvents([]);
+      saveTimeEvents([
+        {
+          time: 1,
+          userStoryName: 'US1',
+          thread: 1,
+          state: State.IN_PROGRESS,
+        },
+      ]);
       saveStatEvents([
         {
           time: 1,
@@ -60,13 +67,13 @@ describe('Flow', () => {
       await import('./flow.ts');
 
       getCompute()?.click();
-      await vi.advanceTimersToNextTimerAsync();
+      await vi.runAllTimersAsync();
 
       const leadTime = document.querySelector('#lead-time');
       expect(leadTime?.textContent).toEqual(leadTimeDisplayed);
 
       const time = document.querySelector('#time');
-      expect(time?.textContent).toEqual('1');
+      expect(time?.textContent).toEqual('1/1');
     },
   );
 
