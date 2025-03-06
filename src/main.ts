@@ -6,8 +6,12 @@ import { saveStatEvents, saveTimeEvents } from './flow/session-storage.ts';
 import { computeStatEvents } from './compute/stats.ts';
 import { generateDevForm, generateUserStoriesForm } from './compute/form.ts';
 
-const getInputValueOf = (selector: string) =>
-  parseInt(document.querySelector<HTMLInputElement>(selector)?.value ?? '0');
+const getInputValueOf = (selector: string) => {
+  const number = parseInt(
+    document.querySelector<HTMLInputElement>(selector)?.value ?? '0',
+  );
+  return isNaN(number) ? 0 : number;
+};
 
 export const buildBacklog = () => {
   const userStoryCount = getInputValueOf('#user-story-count-input');
@@ -37,11 +41,6 @@ export const buildParallelTeam = () => {
   Array.from({ length: devCount }, (_, i) => {
     return { id: i, power: getInputValueOf(`#power-input-${i}`) };
   }).forEach((thread) => teamBuilder.withDev(thread));
-
-  const reviewersCount = getInputValueOf('#reviewers-input');
-  const hasReview = reviewersCount > 0;
-  teamBuilder.withReview(hasReview);
-
   return teamBuilder.build();
 };
 

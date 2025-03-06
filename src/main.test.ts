@@ -108,7 +108,10 @@ describe('Main', () => {
       clickOn('#generate-devs-button');
       setValueTo('#reviewers-input', reviewersInput);
       expect(buildParallelTeam()).toEqual(
-        Team.parallelTeam().withDevCount(2).withReview(true).build(),
+        Team.parallelTeam()
+          .withDev({ id: 0, power: 1 })
+          .withDev({ id: 1, power: 1 })
+          .build(),
       );
     },
   );
@@ -120,7 +123,10 @@ describe('Main', () => {
       clickOn('#generate-devs-button');
       setValueTo('#reviewers-input', reviewersInput);
       expect(buildParallelTeam()).toEqual(
-        Team.parallelTeam().withDevCount(2).withReview(false).build(),
+        Team.parallelTeam()
+          .withDev({ id: 0, power: 1 })
+          .withDev({ id: 1, power: 1 })
+          .build(),
       );
     },
   );
@@ -164,7 +170,6 @@ describe('Main', () => {
       Team.parallelTeam()
         .withDev({ id: 0, power: 5 })
         .withDev({ id: 1, power: 10 })
-        .withReview(false)
         .build(),
     );
   });

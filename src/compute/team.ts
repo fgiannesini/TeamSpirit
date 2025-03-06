@@ -20,11 +20,9 @@ export interface Thread {
 
 export class Team {
   private readonly _devs: Thread[] = [];
-  private readonly _review: boolean;
 
-  constructor(devs: Thread[], review: boolean) {
+  constructor(devs: Thread[]) {
     this._devs = devs;
-    this._review = review;
   }
 
   public static parallelTeam = (): ParallelTeamBuilder => {
@@ -65,7 +63,7 @@ export class Team {
           const inProgress = setInProgress(userStory, dev);
           events.push(createEvent(time, inProgress, dev.id));
           if (isDeveloped(inProgress)) {
-            if (this._review) {
+            if (!isReviewed(inProgress)) {
               const toReview = setToReview(inProgress, dev);
               events.push(createEvent(time, toReview, dev.id));
               toAddBacklog.push(toReview);
@@ -89,26 +87,13 @@ export class Team {
 
 class ParallelTeamBuilder {
   private _devs: Thread[] = [];
-  private _review = false;
 
   public withDev(dev: Thread) {
     this._devs.push(dev);
     return this;
   }
 
-  public withDevCount(devCount: number): ParallelTeamBuilder {
-    for (let i = 0; i < devCount; i++) {
-      this._devs.push({ id: i, power: 1 });
-    }
-    return this;
-  }
-
-  public withReview(review = true): ParallelTeamBuilder {
-    this._review = review;
-    return this;
-  }
-
   public build(): Team {
-    return new Team(this._devs, this._review);
+    return new Team(this._devs);
   }
 }
