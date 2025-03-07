@@ -1,3 +1,5 @@
+import { createUserStory } from './render-user-story.ts';
+
 export const getThreads = (): HTMLDivElement | null =>
   document.querySelector<HTMLDivElement>('#threads');
 
@@ -21,6 +23,9 @@ export const getDone = (): HTMLDivElement | null =>
 
 export const getUserStory = (userStoryName: string): HTMLDivElement | null =>
   document.querySelector<HTMLDivElement>(`#${userStoryName}`);
+
+export const getOrCreateUserStory = (userStoryName: string): HTMLDivElement =>
+  getUserStory(userStoryName) ?? createUserStory(userStoryName);
 
 export const getDuplicatedUserStories = (
   userStoryName: string,

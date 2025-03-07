@@ -4,11 +4,11 @@ import {
   getBacklog,
   getDone,
   getDuplicatedUserStories,
+  getOrCreateUserStory,
   getThreadState,
   getThreadUserStory,
   getUserStory,
 } from './selector.ts';
-import { createUserStory } from './render-user-story.ts';
 
 const getDuplicatesInReview = (timeEvents: TimeEvent[]): string[] => {
   const seen = new Set<string>();
@@ -33,6 +33,11 @@ const setThreadStateTo = (threadIndex: number, textContent: string) => {
   }
 };
 
+const removeUserStory = (...userStory: (HTMLDivElement | null)[]) => {
+  userStory
+    .filter((userStory) => userStory !== null)
+    .forEach((userStory) => userStory.remove());
+};
 export const renderTimeEvents = async (
   events: TimeEvent[],
   time: number,
@@ -45,44 +50,48 @@ export const renderTimeEvents = async (
       setThreadStateTo(currentEvent.thread, 'Wait');
       continue;
     }
-    if (currentEvent.state == State.IN_PROGRESS) {
-      const userStory = getUserStory(currentEvent.userStoryName);
-      if (userStory) {
-        getThreadUserStory(currentEvent.thread)?.appendChild(userStory);
-        setThreadStateTo(currentEvent.thread, 'Develop');
+    switch (currentEvent.state) {
+      case State.IN_PROGRESS: {
+        const inProgressUserStory = getUserStory(currentEvent.userStoryName);
+        if (inProgressUserStory) {
+          getThreadUserStory(currentEvent.thread)?.appendChild(
+            inProgressUserStory,
+          );
+          setThreadStateTo(currentEvent.thread, 'Develop');
+        }
+        break;
       }
-    }
-    if (currentEvent.state == State.REVIEW) {
-      if (duplicates.indexOf(currentEvent.userStoryName) != -1) {
-        getUserStory(currentEvent.userStoryName)?.remove();
-        const id = `${currentEvent.userStoryName}_${currentEvent.thread}`;
-        getThreadUserStory(currentEvent.thread)?.appendChild(
-          getUserStory(id) ?? createUserStory(id),
-        );
-      } else {
-        getDuplicatedUserStories(currentEvent.userStoryName).forEach((el) =>
-          el.remove(),
-        );
-        getThreadUserStory(currentEvent.thread)?.appendChild(
-          getUserStory(currentEvent.userStoryName) ??
-            createUserStory(currentEvent.userStoryName),
-        );
+      case State.REVIEW: {
+        if (duplicates.indexOf(currentEvent.userStoryName) != -1) {
+          removeUserStory(getUserStory(currentEvent.userStoryName));
+          const id = `${currentEvent.userStoryName}_${currentEvent.thread}`;
+          getThreadUserStory(currentEvent.thread)?.appendChild(
+            getOrCreateUserStory(id),
+          );
+        } else {
+          getDuplicatedUserStories(currentEvent.userStoryName).forEach((el) =>
+            el.remove(),
+          );
+          getThreadUserStory(currentEvent.thread)?.appendChild(
+            getOrCreateUserStory(currentEvent.userStoryName),
+          );
+        }
+        setThreadStateTo(currentEvent.thread, 'Review');
+        break;
       }
-      setThreadStateTo(currentEvent.thread, 'Review');
-    }
-    if (currentEvent.state == State.TO_REVIEW) {
-      const userStory = getUserStory(currentEvent.userStoryName);
-      if (userStory) getBacklog()?.appendChild(userStory);
-    }
-
-    if (currentEvent.state == State.DONE) {
-      getDuplicatedUserStories(currentEvent.userStoryName).forEach((el) =>
-        el.remove(),
-      );
-      const userStory =
-        getUserStory(currentEvent.userStoryName) ??
-        createUserStory(currentEvent.userStoryName);
-      getDone()?.appendChild(userStory);
+      case State.TO_REVIEW: {
+        const toReviewUserStory = getUserStory(currentEvent.userStoryName);
+        if (toReviewUserStory) getBacklog()?.appendChild(toReviewUserStory);
+        break;
+      }
+      case State.DONE: {
+        removeUserStory(
+          ...getDuplicatedUserStories(currentEvent.userStoryName),
+        );
+        const doneUserStory = getOrCreateUserStory(currentEvent.userStoryName);
+        getDone()?.appendChild(doneUserStory);
+        break;
+      }
     }
     await sleep(animationTime);
   }
