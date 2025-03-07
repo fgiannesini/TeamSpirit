@@ -1,8 +1,6 @@
-Afficher l'action du thread
-Pouvoir ouvrir plusieurs pages pour comparer les simulations
-Afficher l'avancement de la tâche lors du rendu
 implémenter bugs review
 implémenter bug recette/prod
+Afficher l'avancement de la tâche lors du rendu
 complexité des tâches aléatoires (gaussienne avec fibonachi)
 Afficher la montée compétence du développeur (échelle logarithmique)
 Départ/arrivée de nouveau dev

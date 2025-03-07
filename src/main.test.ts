@@ -12,10 +12,7 @@ import { UUID } from 'node:crypto';
 
 describe('Main', () => {
   beforeEach(async () => {
-    vi.spyOn(window, 'location', 'get').mockReturnValue({
-      assign: vi.fn(),
-      href: '',
-    } as unknown as Location);
+    vi.spyOn(window, 'open').mockImplementation(vi.fn());
     const htmlPath = resolve(__dirname, './index.html');
     document.body.innerHTML = readFileSync(htmlPath, 'utf-8');
     await import('./main.ts');
@@ -44,7 +41,7 @@ describe('Main', () => {
   };
 
   test('Should compute and store in sessionStorage', () => {
-    crypto.randomUUID = (): UUID => '123e4567-e89b-12d3-a456-426614174000';
+    crypto.randomUUID = (): UUID => 'e4567-e89b-12d3-a456-426614174000';
     setValueTo('#user-story-count-input', '1');
     setValueTo('#dev-count-input', '2');
     clickOn('#generate-devs-button');
@@ -53,15 +50,13 @@ describe('Main', () => {
     clickOn('#calculate-button');
 
     const timeEvents = JSON.parse(
-      sessionStorage.getItem(
-        'computation-123e4567-e89b-12d3-a456-426614174000',
-      ) ?? '[]',
+      sessionStorage.getItem('computation-e4567-e89b-12d3-a456-426614174000') ??
+        '[]',
     ) as TimeEvent[];
     expect(timeEvents.length).greaterThan(0);
 
     const statEvents = JSON.parse(
-      sessionStorage.getItem('stats-123e4567-e89b-12d3-a456-426614174000') ??
-        '[]',
+      sessionStorage.getItem('stats-e4567-e89b-12d3-a456-426614174000') ?? '[]',
     ) as StatEvent[];
     expect(statEvents.length).greaterThan(0);
   });

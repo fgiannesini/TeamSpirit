@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
       saveTimeEvents(timeEvents, randomKey);
       const statEvents = computeStatEvents(timeEvents);
       saveStatEvents(statEvents, randomKey);
-      window.location.href = `/TeamSpirit/flow/flow.html?id=${randomKey}`;
+      window.open(`/TeamSpirit/flow/flow.html?id=${randomKey}`);
     });
 
   document

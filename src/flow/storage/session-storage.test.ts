@@ -13,9 +13,9 @@ describe('session storage', () => {
           state: State.IN_PROGRESS,
         },
       ],
-      '123e4567-e89b-12d3-a456-426614174000',
+      'e4567-e89b-12d3-a456-426614174000',
     );
-    expect(loadTimeEvents('123e4567-e89b-12d3-a456-426614174000')).toEqual([
+    expect(loadTimeEvents('e4567-e89b-12d3-a456-426614174000')).toEqual([
       {
         time: 1,
         userStoryName: 'userStory1',

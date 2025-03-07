@@ -43,8 +43,7 @@ const render = (events: TimeEvent[], statEvents: StatEvent[]) => {
   });
 };
 
-const url = new URL(window.location.href);
-const params = new URLSearchParams(url.search);
+const params = new URLSearchParams(window.location.search);
 const id = params.get('id');
 if (id) {
   render(loadTimeEvents(id), loadStatEvents(id));

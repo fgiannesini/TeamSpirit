@@ -18,7 +18,7 @@ describe('Flow', () => {
     vi.resetModules();
     vi.spyOn(window, 'location', 'get').mockReturnValue({
       assign: vi.fn(),
-      href: 'http://localhost:8080/TeamSpirit/flow/flow.html?id=123',
+      search: '?id=e4567-e89b-12d3-a456-426614174000',
     } as unknown as Location);
     const htmlPath = resolve(__dirname, './flow.html');
     document.body.innerHTML = readFileSync(htmlPath, 'utf-8');
@@ -26,7 +26,7 @@ describe('Flow', () => {
   });
 
   test('Should render the page without time events', async () => {
-    saveTimeEvents([], '123e4567-e89b-12d3-a456-426614174000');
+    saveTimeEvents([], 'e4567-e89b-12d3-a456-426614174000');
     await import('./flow.ts');
 
     const threads = document.querySelector('#threads');
@@ -54,7 +54,7 @@ describe('Flow', () => {
             state: State.DONE,
           },
         ],
-        '123e4567-e89b-12d3-a456-426614174000',
+        'e4567-e89b-12d3-a456-426614174000',
       );
       await import('./flow.ts');
       const thread0 = getThread(0);
@@ -97,7 +97,7 @@ describe('Flow', () => {
             state: State.DONE,
           },
         ],
-        '123e4567-e89b-12d3-a456-426614174000',
+        'e4567-e89b-12d3-a456-426614174000',
       );
       await import('./flow.ts');
 
@@ -125,7 +125,7 @@ describe('Flow', () => {
             state: State.DONE,
           },
         ],
-        '123e4567-e89b-12d3-a456-426614174000',
+        'e4567-e89b-12d3-a456-426614174000',
       );
       await import('./flow.ts');
 
@@ -153,7 +153,7 @@ describe('Flow', () => {
             state: State.TO_REVIEW,
           },
         ],
-        '123e4567-e89b-12d3-a456-426614174000',
+        'e4567-e89b-12d3-a456-426614174000',
       );
       await import('./flow.ts');
 
@@ -185,7 +185,7 @@ describe('Flow', () => {
             state: State.DONE,
           },
         ],
-        '123e4567-e89b-12d3-a456-426614174000',
+        'e4567-e89b-12d3-a456-426614174000',
       );
       await import('./flow.ts');
 
@@ -213,7 +213,7 @@ describe('Flow', () => {
             state: State.IN_PROGRESS,
           },
         ],
-        '123e4567-e89b-12d3-a456-426614174000',
+        'e4567-e89b-12d3-a456-426614174000',
       );
       await import('./flow.ts');
       const userStory1 = getUserStory('userStory1');
@@ -241,7 +241,7 @@ describe('Flow', () => {
             state: State.DONE,
           },
         ],
-        '123e4567-e89b-12d3-a456-426614174000',
+        'e4567-e89b-12d3-a456-426614174000',
       );
       await import('./flow.ts');
 
@@ -271,7 +271,7 @@ describe('Flow', () => {
             state: State.DONE,
           },
         ],
-        '123e4567-e89b-12d3-a456-426614174000',
+        'e4567-e89b-12d3-a456-426614174000',
       );
       await import('./flow.ts');
 
@@ -295,7 +295,7 @@ describe('Flow', () => {
             state: State.TO_REVIEW,
           },
         ],
-        '123e4567-e89b-12d3-a456-426614174000',
+        'e4567-e89b-12d3-a456-426614174000',
       );
       await import('./flow.ts');
 
@@ -320,7 +320,7 @@ describe('Flow', () => {
             state: State.REVIEW,
           },
         ],
-        '123e4567-e89b-12d3-a456-426614174000',
+        'e4567-e89b-12d3-a456-426614174000',
       );
       await import('./flow.ts');
 
@@ -363,7 +363,7 @@ describe('Flow', () => {
             state: State.REVIEW,
           },
         ],
-        '123e4567-e89b-12d3-a456-426614174000',
+        'e4567-e89b-12d3-a456-426614174000',
       );
       await import('./flow.ts');
 
@@ -412,7 +412,7 @@ describe('Flow', () => {
             state: State.REVIEW,
           },
         ],
-        '123e4567-e89b-12d3-a456-426614174000',
+        'e4567-e89b-12d3-a456-426614174000',
       );
       await import('./flow.ts');
 
@@ -455,7 +455,7 @@ describe('Flow', () => {
           },
           { time: 2, userStoryName: 'idle', thread: 1, state: State.DONE },
         ],
-        '123e4567-e89b-12d3-a456-426614174000',
+        'e4567-e89b-12d3-a456-426614174000',
       );
 
       await import('./flow.ts');
@@ -490,7 +490,7 @@ describe('Flow', () => {
             state: State.DONE,
           },
         ],
-        '123e4567-e89b-12d3-a456-426614174000',
+        'e4567-e89b-12d3-a456-426614174000',
       );
 
       await import('./flow.ts');
@@ -523,7 +523,7 @@ describe('Flow', () => {
             state: State.DONE,
           },
         ],
-        '123e4567-e89b-12d3-a456-426614174000',
+        'e4567-e89b-12d3-a456-426614174000',
       );
 
       await import('./flow.ts');
@@ -551,7 +551,7 @@ describe('Flow', () => {
             state: State.DONE,
           },
         ],
-        '123e4567-e89b-12d3-a456-426614174000',
+        'e4567-e89b-12d3-a456-426614174000',
       );
 
       await import('./flow.ts');
@@ -578,7 +578,7 @@ describe('Flow', () => {
             state: State.DONE,
           },
         ],
-        '123e4567-e89b-12d3-a456-426614174000',
+        'e4567-e89b-12d3-a456-426614174000',
       );
 
       await import('./flow.ts');
@@ -592,8 +592,8 @@ describe('Flow', () => {
 
   describe('Stats', () => {
     test('Should render the page without stat events', async () => {
-      saveTimeEvents([], '123e4567-e89b-12d3-a456-426614174000');
-      saveStatEvents([], '123e4567-e89b-12d3-a456-426614174000');
+      saveTimeEvents([], 'e4567-e89b-12d3-a456-426614174000');
+      saveStatEvents([], 'e4567-e89b-12d3-a456-426614174000');
       await import('./flow.ts');
 
       const leadTime = document.querySelector('#lead-time');
@@ -620,7 +620,7 @@ describe('Flow', () => {
               state: State.IN_PROGRESS,
             },
           ],
-          '123e4567-e89b-12d3-a456-426614174000',
+          'e4567-e89b-12d3-a456-426614174000',
         );
         saveStatEvents(
           [
@@ -629,7 +629,7 @@ describe('Flow', () => {
               leadTime: leadTimeProvided,
             },
           ],
-          '123e4567-e89b-12d3-a456-426614174000',
+          'e4567-e89b-12d3-a456-426614174000',
         );
         await import('./flow.ts');
 
