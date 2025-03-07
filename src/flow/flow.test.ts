@@ -4,6 +4,9 @@ import {
   getCompute,
   getComputeAll,
   getThread,
+  getThreadState,
+  getThreadTitle,
+  getThreadUserStory,
   getUserStory,
 } from './selector.ts';
 import { readFileSync } from 'fs';
@@ -95,11 +98,27 @@ describe('Flow', () => {
     await import('./flow.ts');
     const thread0 = getThread(0);
     expect(thread0?.className).toEqual('thread');
-    expect(thread0?.textContent).toEqual('thread 0');
+
+    const threadTitle0 = getThreadTitle(0);
+    expect(threadTitle0?.textContent).toEqual('Thread 0');
+
+    const threadUserStory0 = getThreadUserStory(0);
+    expect(threadUserStory0).not.toBeNull();
+
+    const threadState0 = getThreadState(0);
+    expect(threadState0?.textContent).toEqual('Wait');
 
     const thread1 = getThread(1);
     expect(thread1?.className).toEqual('thread');
-    expect(thread1?.textContent).toEqual('thread 1');
+
+    const threadTitle1 = getThreadTitle(1);
+    expect(threadTitle1?.textContent).toEqual('Thread 1');
+
+    const threadUserStory1 = getThreadUserStory(1);
+    expect(threadUserStory1).not.toBeNull();
+
+    const threadState1 = getThreadState(1);
+    expect(threadState1?.textContent).toEqual('Wait');
   });
 
   test('Should create 2 userStories elements', async () => {

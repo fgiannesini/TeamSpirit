@@ -4,7 +4,19 @@ const addThread = (threadNumber: number) => {
   const threadHtmlElement = document.createElement('div');
   threadHtmlElement.id = `thread${threadNumber}`;
   threadHtmlElement.className = 'thread';
-  threadHtmlElement.textContent = `thread ${threadNumber}`;
+
+  const threadTitle = document.createElement('div');
+  threadTitle.id = `thread-title-${threadNumber}`;
+  threadTitle.textContent = `Thread ${threadNumber}`;
+
+  const threadContent = document.createElement('div');
+  threadContent.id = `thread-user-story-${threadNumber}`;
+
+  const threadState = document.createElement('div');
+  threadState.id = `thread-state-${threadNumber}`;
+  threadState.textContent = `Wait`;
+
+  threadHtmlElement.append(threadTitle, threadContent, threadState);
   return threadHtmlElement;
 };
 

@@ -4,6 +4,15 @@ export const getThreads = (): HTMLDivElement | null =>
 export const getThread = (index: number): HTMLDivElement | null =>
   document.querySelector<HTMLDivElement>(`#thread${index}`);
 
+export const getThreadTitle = (index: number): HTMLDivElement | null =>
+  document.querySelector<HTMLDivElement>(`#thread-title-${index}`);
+
+export const getThreadState = (index: number): HTMLDivElement | null =>
+  document.querySelector<HTMLDivElement>(`#thread-state-${index}`);
+
+export const getThreadUserStory = (index: number): HTMLDivElement | null =>
+  document.querySelector<HTMLDivElement>(`#thread-user-story-${index}`);
+
 export const getBacklog = (): HTMLDivElement | null =>
   document.querySelector<HTMLDivElement>('#backlog');
 
