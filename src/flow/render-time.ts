@@ -10,20 +10,17 @@ import {
   getUserStory,
 } from './selector.ts';
 
-const getDuplicatesInReview = (timeEvents: TimeEvent[]): string[] => {
-  const seen = new Set<string>();
-  const duplicates = new Set<string>();
-
-  timeEvents
-    .filter((timeEvent) => timeEvent.state == State.REVIEW)
-    .forEach((item) => {
-      if (seen.has(item.userStoryName)) {
-        duplicates.add(item.userStoryName);
-      } else {
-        seen.add(item.userStoryName);
-      }
-    });
-  return Array.from(duplicates);
+const hasManyReviewsInSameTime = (
+  timeEvents: TimeEvent[],
+  userStoryName: string,
+) => {
+  return (
+    timeEvents.filter(
+      (timeEvent) =>
+        timeEvent.state == State.REVIEW &&
+        timeEvent.userStoryName === userStoryName,
+    ).length > 1
+  );
 };
 
 const setThreadStateTo = (threadIndex: number, textContent: string) => {
@@ -44,7 +41,6 @@ export const renderTimeEvents = async (
   animationTime: number,
 ) => {
   const currentEvents = events.filter((event) => event.time == time);
-  const duplicates = getDuplicatesInReview(currentEvents);
   for (const currentEvent of currentEvents) {
     if (currentEvent.userStoryName === 'idle') {
       setThreadStateTo(currentEvent.thread, 'Wait');
@@ -62,7 +58,9 @@ export const renderTimeEvents = async (
         break;
       }
       case State.REVIEW: {
-        if (duplicates.indexOf(currentEvent.userStoryName) != -1) {
+        if (
+          hasManyReviewsInSameTime(currentEvents, currentEvent.userStoryName)
+        ) {
           removeUserStory(getUserStory(currentEvent.userStoryName));
           const id = `${currentEvent.userStoryName}_${currentEvent.thread}`;
           getThreadUserStory(currentEvent.thread)?.appendChild(
