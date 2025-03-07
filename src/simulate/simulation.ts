@@ -19,19 +19,19 @@ export const simulate = (backlog: Backlog, team: Team): TimeEvent[] => {
   let time = 1;
   while (backlog.hasMoreUserStories()) {
     const toAddBacklog: UserStory[] = [];
-    for (const dev of team.getThreads()) {
-      const userStory: UserStory = backlog.next(dev);
+    for (const thread of team.getThreads()) {
+      const userStory: UserStory = backlog.next(thread);
       if (userStory == idle) {
-        idle.thread = dev.id;
-        events.push(createEvent(time, idle, dev.id));
+        idle.thread = thread.id;
+        events.push(createEvent(time, idle, thread.id));
         continue;
       }
       if (
         userStory.state == State.TO_REVIEW ||
         userStory.state == State.REVIEW
       ) {
-        const review = setReview(userStory, dev);
-        events.push(createEvent(time, review, dev.id));
+        const review = setReview(userStory, thread);
+        events.push(createEvent(time, review, thread.id));
         if (isReviewed(review)) {
           const done = setDoneBy(userStory, review.thread as number);
           events.push(createEvent(time, done, done.thread as number));
@@ -45,16 +45,16 @@ export const simulate = (backlog: Backlog, team: Team): TimeEvent[] => {
         userStory.state == State.TODO ||
         userStory.state == State.IN_PROGRESS
       ) {
-        const inProgress = setInProgress(userStory, dev);
-        events.push(createEvent(time, inProgress, dev.id));
+        const inProgress = setInProgress(userStory, thread);
+        events.push(createEvent(time, inProgress, thread.id));
         if (isDeveloped(inProgress)) {
           if (!isReviewed(inProgress)) {
-            const toReview = setToReview(inProgress, dev);
-            events.push(createEvent(time, toReview, dev.id));
+            const toReview = setToReview(inProgress, thread.id);
+            events.push(createEvent(time, toReview, thread.id));
             toAddBacklog.push(toReview);
           } else {
             const done = setDone(inProgress);
-            events.push(createEvent(time, done, dev.id));
+            events.push(createEvent(time, done, thread.id));
             toAddBacklog.push(done);
           }
         } else {
@@ -62,6 +62,10 @@ export const simulate = (backlog: Backlog, team: Team): TimeEvent[] => {
         }
       }
     }
+    backlog.userStoriesWithSomeReviews().forEach((review: UserStory) => {
+      const toReview = setToReview(review, review.thread as number);
+      events.push(createEvent(time, toReview, review.thread as number));
+    });
     toAddBacklog.forEach((userStory) => backlog.add(userStory));
     time++;
   }

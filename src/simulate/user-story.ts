@@ -47,19 +47,22 @@ export const setInProgress = (userStory: UserStory, dev: Thread): UserStory => {
   };
 };
 
-export const setDoneBy = (userStory: UserStory, devId: number): UserStory => {
-  return { ...userStory, state: State.DONE, thread: devId };
+export const setDoneBy = (userStory: UserStory, threadId: number): UserStory => {
+  return { ...userStory, state: State.DONE, thread: threadId };
 };
 
 export const setDone = (userStory: UserStory): UserStory => {
   return { ...userStory, state: State.DONE };
 };
 
-export const setToReview = (userStory: UserStory, dev: Thread): UserStory => {
+export const setToReview = (
+  userStory: UserStory,
+  threadId: number,
+): UserStory => {
   return {
     ...userStory,
     state: State.TO_REVIEW,
-    thread: dev.id,
+    thread: threadId,
   };
 };
 
@@ -78,14 +81,14 @@ const updateReviewPoints = (
   };
 };
 
-export const setReview = (userStory: UserStory, dev: Thread): UserStory => {
+export const setReview = (userStory: UserStory, thread: Thread): UserStory => {
   const currentReview = userStory.review;
-  const currentReviewPoints = getReviewPoints(currentReview, dev);
+  const currentReviewPoints = getReviewPoints(currentReview, thread);
   const newReviewPoints = Math.min(
-    currentReviewPoints + dev.power,
+    currentReviewPoints + thread.power,
     userStory.reviewComplexity,
   );
-  const newReview = updateReviewPoints(currentReview, dev, newReviewPoints);
+  const newReview = updateReviewPoints(currentReview, thread, newReviewPoints);
 
   return {
     ...userStory,

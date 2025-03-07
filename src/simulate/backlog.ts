@@ -8,6 +8,7 @@ import {
   UserStory,
 } from './user-story.ts';
 import { Thread } from './team.ts';
+import { hasSomeReviews } from './review.ts';
 
 class BacklogBuilder {
   private userStories: UserStory[] = [];
@@ -91,5 +92,13 @@ export class Backlog {
 
   hasMoreUserStories() {
     return this._userStories.length > 0;
+  }
+
+  userStoriesWithSomeReviews(): UserStory[] {
+    return this._userStories
+      .filter((userStory) => userStory.state === State.REVIEW)
+      .filter((userStory) =>
+        hasSomeReviews(userStory.review, userStory.reviewComplexity),
+      );
   }
 }

@@ -101,6 +101,26 @@ describe('Backlog', () => {
     expect(userStory).toEqual(idle);
   });
 
+  test('Should get userStories with ended partial review', () => {
+    const backlog = new Backlog([
+      todo(0),
+      inProgress(0),
+      toReview(0),
+      inReview(0, [[0, 1]]),
+      inReview(0, [[0, 2]]),
+      inReview(0, [
+        [0, 2],
+        [1, 1],
+      ]),
+      inReview(0, [
+        [0, 2],
+        [1, 2],
+      ]),
+    ]);
+    const userStory = backlog.userStoriesWithSomeReviews();
+    expect(userStory).toEqual([inReview(0, [[0, 2]])]);
+  });
+
   const inReview = (thread: number, reviewers: [number, number][]) => {
     return {
       name: 'inReview',

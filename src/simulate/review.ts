@@ -31,3 +31,10 @@ export const hasAllReviews = (
 ): boolean =>
   review.reviewersNeeded == review.reviewers.size &&
   review.reviewers.values().every((review) => review == reviewComplexity);
+
+export const hasSomeReviews = (review: Review, reviewComplexity: number) => {
+  return (
+    review.reviewersNeeded != review.reviewers.size &&
+    review.reviewers.values().every((review) => review == reviewComplexity)
+  );
+};

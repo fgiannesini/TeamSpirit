@@ -271,9 +271,9 @@ describe('Simulation', () => {
   test('should handle 1 simple userStory and review', () => {
     const backlog = Backlog.init()
       .addUserStory({
-        name: 'userStory1',
+        name: 'userStory0',
         complexity: 1,
-        reviewComplexity: 1,
+        reviewComplexity: 2,
         review: {
           reviewersNeeded: 1,
           reviewers: new Map<number, number>(),
@@ -293,13 +293,13 @@ describe('Simulation', () => {
     expect(events).toEqual([
       {
         time: 1,
-        userStoryName: 'userStory1',
+        userStoryName: 'userStory0',
         thread: 0,
         state: State.IN_PROGRESS,
       },
       {
         time: 1,
-        userStoryName: 'userStory1',
+        userStoryName: 'userStory0',
         thread: 0,
         state: State.TO_REVIEW,
       },
@@ -317,15 +317,27 @@ describe('Simulation', () => {
       },
       {
         time: 2,
-        userStoryName: 'userStory1',
+        userStoryName: 'userStory0',
         thread: 1,
         state: State.REVIEW,
       },
       {
-        time: 2,
-        userStoryName: 'userStory1',
-        thread: 0,
         state: State.DONE,
+        thread: 0,
+        time: 3,
+        userStoryName: 'idle',
+      },
+      {
+        state: State.REVIEW,
+        thread: 1,
+        time: 3,
+        userStoryName: 'userStory0',
+      },
+      {
+        state: State.DONE,
+        thread: 0,
+        time: 3,
+        userStoryName: 'userStory0',
       },
     ]);
 
@@ -518,6 +530,155 @@ describe('Simulation', () => {
     ]);
 
     expect(backlog.dones()).toHaveLength(1);
+    expect(backlog.remainings()).toHaveLength(0);
+  });
+
+  test('should handle 3 simple userStories by 3 devs and 2 reviews', () => {
+    const backlog = Backlog.init()
+      .addUserStory({
+        name: 'userStory0',
+        complexity: 1,
+        reviewComplexity: 1,
+        review: {
+          reviewersNeeded: 2,
+          reviewers: new Map<number, number>(),
+        },
+        state: State.TODO,
+        thread: undefined,
+        progression: 0,
+      })
+      .addUserStory({
+        name: 'userStory1',
+        complexity: 1,
+        reviewComplexity: 1,
+        review: {
+          reviewersNeeded: 2,
+          reviewers: new Map<number, number>(),
+        },
+        state: State.TODO,
+        thread: undefined,
+        progression: 0,
+      })
+      .addUserStory({
+        name: 'userStory2',
+        complexity: 1,
+        reviewComplexity: 1,
+        review: {
+          reviewersNeeded: 2,
+          reviewers: new Map<number, number>(),
+        },
+        state: State.TODO,
+        thread: undefined,
+        progression: 0,
+      })
+      .build();
+
+    const team = new ParallelTeam([
+      { id: 0, power: 1 },
+      { id: 1, power: 1 },
+      { id: 2, power: 1 },
+    ]);
+    const events = simulate(backlog, team);
+    expect(events).toEqual([
+      {
+        state: State.IN_PROGRESS,
+        thread: 0,
+        time: 1,
+        userStoryName: 'userStory0',
+      },
+      {
+        state: State.TO_REVIEW,
+        thread: 0,
+        time: 1,
+        userStoryName: 'userStory0',
+      },
+      {
+        state: State.IN_PROGRESS,
+        thread: 1,
+        time: 1,
+        userStoryName: 'userStory1',
+      },
+      {
+        state: State.TO_REVIEW,
+        thread: 1,
+        time: 1,
+        userStoryName: 'userStory1',
+      },
+      {
+        state: State.IN_PROGRESS,
+        thread: 2,
+        time: 1,
+        userStoryName: 'userStory2',
+      },
+      {
+        state: State.TO_REVIEW,
+        thread: 2,
+        time: 1,
+        userStoryName: 'userStory2',
+      },
+      {
+        state: State.REVIEW,
+        thread: 0,
+        time: 2,
+        userStoryName: 'userStory1',
+      },
+      {
+        state: State.REVIEW,
+        thread: 1,
+        time: 2,
+        userStoryName: 'userStory0',
+      },
+      {
+        state: State.REVIEW,
+        thread: 2,
+        time: 2,
+        userStoryName: 'userStory1',
+      },
+      {
+        state: State.DONE,
+        thread: 1,
+        time: 2,
+        userStoryName: 'userStory1',
+      },
+      {
+        state: State.TO_REVIEW,
+        thread: 0,
+        time: 2,
+        userStoryName: 'userStory0',
+      },
+      {
+        state: State.REVIEW,
+        thread: 0,
+        time: 3,
+        userStoryName: 'userStory2',
+      },
+      {
+        state: State.REVIEW,
+        thread: 1,
+        time: 3,
+        userStoryName: 'userStory2',
+      },
+      {
+        state: State.DONE,
+        thread: 2,
+        time: 3,
+        userStoryName: 'userStory2',
+      },
+      {
+        state: State.REVIEW,
+        thread: 2,
+        time: 3,
+        userStoryName: 'userStory0',
+      },
+      {
+        state: State.DONE,
+        thread: 0,
+        time: 3,
+        userStoryName: 'userStory0',
+      },
+    ]);
+
+    expect(backlog.dones()).toHaveLength(3);
     expect(backlog.remainings()).toHaveLength(0);
   });
 });
