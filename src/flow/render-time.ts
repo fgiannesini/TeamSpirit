@@ -4,7 +4,7 @@ import {
   getBacklog,
   getDone,
   getDuplicatedUserStories,
-  getThread,
+  getThreadUserStory,
   getUserStory,
 } from './selector.ts';
 import { createUserStory } from './render-user-story.ts';
@@ -37,21 +37,21 @@ export const renderTimeEvents = async (
     if (currentEvent.state == State.IN_PROGRESS) {
       const userStory = getUserStory(currentEvent.userStoryName);
       if (userStory) {
-        getThread(currentEvent.thread)?.appendChild(userStory);
+        getThreadUserStory(currentEvent.thread)?.appendChild(userStory);
       }
     }
     if (currentEvent.state == State.REVIEW) {
       if (duplicates.indexOf(currentEvent.userStoryName) != -1) {
         getUserStory(currentEvent.userStoryName)?.remove();
         const id = `${currentEvent.userStoryName}_${currentEvent.thread}`;
-        getThread(currentEvent.thread)?.appendChild(
+        getThreadUserStory(currentEvent.thread)?.appendChild(
           getUserStory(id) ?? createUserStory(id),
         );
       } else {
         getDuplicatedUserStories(currentEvent.userStoryName).forEach((el) =>
           el.remove(),
         );
-        getThread(currentEvent.thread)?.appendChild(
+        getThreadUserStory(currentEvent.thread)?.appendChild(
           getUserStory(currentEvent.userStoryName) ??
             createUserStory(currentEvent.userStoryName),
         );

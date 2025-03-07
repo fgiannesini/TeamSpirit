@@ -165,7 +165,9 @@ describe('Flow', () => {
 
     getCompute()?.click();
     await vi.advanceTimersToNextTimerAsync();
-    expect(document.querySelector('#thread0 #userStory1')).not.toBeNull();
+    expect(
+      document.querySelector('#thread-user-story-0 #userStory1'),
+    ).not.toBeNull();
 
     await vi.advanceTimersToNextTimerAsync();
     expect(document.querySelector('#done #userStory1')).not.toBeNull();
@@ -190,7 +192,9 @@ describe('Flow', () => {
 
     getCompute()?.click();
     await vi.advanceTimersToNextTimerAsync();
-    expect(document.querySelector('#thread0 #userStory1')).not.toBeNull();
+    expect(
+      document.querySelector('#thread-user-story-0 #userStory1'),
+    ).not.toBeNull();
 
     await vi.advanceTimersToNextTimerAsync();
     expect(document.querySelector('#done #userStory1')).not.toBeNull();
@@ -231,8 +235,12 @@ describe('Flow', () => {
 
     getCompute()?.click();
     await vi.runAllTimersAsync();
-    expect(document.querySelector('#thread1 #userStory1_1')).not.toBeNull();
-    expect(document.querySelector('#thread2 #userStory1_2')).not.toBeNull();
+    expect(
+      document.querySelector('#thread-user-story-1 #userStory1_1'),
+    ).not.toBeNull();
+    expect(
+      document.querySelector('#thread-user-story-2 #userStory1_2'),
+    ).not.toBeNull();
     expect(document.querySelector('#backlog #userStory1')).toBeNull();
   });
 
@@ -271,9 +279,15 @@ describe('Flow', () => {
     getCompute()?.click();
     await vi.runAllTimersAsync();
 
-    expect(document.querySelector('#thread2 #userStory1')).not.toBeNull();
-    expect(document.querySelector('#thread1 #userStory1_1')).toBeNull();
-    expect(document.querySelector('#thread2 #userStory1_2')).toBeNull();
+    expect(
+      document.querySelector('#thread-user-story-2 #userStory1'),
+    ).not.toBeNull();
+    expect(
+      document.querySelector('#thread-user-story-1 #userStory1_1'),
+    ).toBeNull();
+    expect(
+      document.querySelector('#thread-user-story-2 #userStory1_2'),
+    ).toBeNull();
   });
 
   test('Should keep two reviews when reviews last', async () => {
@@ -311,12 +325,12 @@ describe('Flow', () => {
     getCompute()?.click();
     await vi.runAllTimersAsync();
 
-    expect(document.querySelectorAll('#thread1 #userStory1_1').length).toEqual(
-      1,
-    );
-    expect(document.querySelectorAll('#thread2 #userStory1_2').length).toEqual(
-      1,
-    );
+    expect(
+      document.querySelectorAll('#thread-user-story-1 #userStory1_1').length,
+    ).toEqual(1);
+    expect(
+      document.querySelectorAll('#thread-user-story-2 #userStory1_2').length,
+    ).toEqual(1);
     expect(document.querySelector('#userStory1')).toBeNull();
   });
 
