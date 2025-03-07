@@ -35,6 +35,7 @@ const removeUserStory = (...userStory: (HTMLDivElement | null)[]) => {
     .filter((userStory) => userStory !== null)
     .forEach((userStory) => userStory.remove());
 };
+
 export const renderTimeEvents = async (
   events: TimeEvent[],
   time: number,
@@ -67,8 +68,8 @@ export const renderTimeEvents = async (
             getOrCreateUserStory(id),
           );
         } else {
-          getDuplicatedUserStories(currentEvent.userStoryName).forEach((el) =>
-            el.remove(),
+          removeUserStory(
+            ...getDuplicatedUserStories(currentEvent.userStoryName),
           );
           getThreadUserStory(currentEvent.thread)?.appendChild(
             getOrCreateUserStory(currentEvent.userStoryName),
