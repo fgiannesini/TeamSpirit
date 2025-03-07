@@ -1,5 +1,9 @@
 import { describe, expect, test } from 'vitest';
-import { Backlog } from './backlog.ts';
+import {
+  Backlog,
+  getUserStoriesDone,
+  getUserStoriesRemainings,
+} from './backlog.ts';
 import { noReview } from './review.ts';
 import { State } from './user-story.ts';
 import { ParallelTeam } from './team.ts';
@@ -8,8 +12,8 @@ import { simulate } from './simulation.ts';
 
 describe('Simulation', () => {
   test('should handle 2 simple userStories by 2 devs', () => {
-    const backlog = Backlog.init()
-      .addUserStory({
+    const backlog = new Backlog([
+      {
         name: 'userStory1',
         complexity: 1,
         reviewComplexity: 0,
@@ -17,8 +21,8 @@ describe('Simulation', () => {
         state: State.TODO,
         thread: undefined,
         progression: 0,
-      })
-      .addUserStory({
+      },
+      {
         name: 'userStory2',
         complexity: 1,
         reviewComplexity: 0,
@@ -26,8 +30,8 @@ describe('Simulation', () => {
         state: State.TODO,
         thread: undefined,
         progression: 0,
-      })
-      .build();
+      },
+    ]);
 
     const team = new ParallelTeam([
       { id: 0, power: 1 },
@@ -62,13 +66,13 @@ describe('Simulation', () => {
       },
     ]);
 
-    expect(backlog.dones()).toHaveLength(2);
-    expect(backlog.remainings()).toHaveLength(0);
+    expect(getUserStoriesDone(backlog)).toHaveLength(2);
+    expect(getUserStoriesRemainings(backlog)).toHaveLength(0);
   });
 
   test('should handle 1 simple userStory by an efficient dev', () => {
-    const backlog = Backlog.init()
-      .addUserStory({
+    const backlog = new Backlog([
+      {
         name: 'userStory1',
         complexity: 5,
         reviewComplexity: 0,
@@ -76,8 +80,8 @@ describe('Simulation', () => {
         state: State.TODO,
         thread: undefined,
         progression: 0,
-      })
-      .build();
+      },
+    ]);
 
     const team = new ParallelTeam([{ id: 0, power: 2 }]);
     const events = simulate(backlog, team);
@@ -109,13 +113,13 @@ describe('Simulation', () => {
       },
     ]);
 
-    expect(backlog.dones()).toHaveLength(1);
-    expect(backlog.remainings()).toHaveLength(0);
+    expect(getUserStoriesDone(backlog)).toHaveLength(1);
+    expect(getUserStoriesRemainings(backlog)).toHaveLength(0);
   });
 
   test('should handle 3 simple userStories by 2 devs', () => {
-    const backlog = Backlog.init()
-      .addUserStory({
+    const backlog = new Backlog([
+      {
         name: 'userStory1',
         complexity: 1,
         reviewComplexity: 0,
@@ -123,8 +127,8 @@ describe('Simulation', () => {
         state: State.TODO,
         thread: undefined,
         progression: 0,
-      })
-      .addUserStory({
+      },
+      {
         name: 'userStory2',
         complexity: 1,
         reviewComplexity: 0,
@@ -132,8 +136,8 @@ describe('Simulation', () => {
         state: State.TODO,
         thread: undefined,
         progression: 0,
-      })
-      .addUserStory({
+      },
+      {
         name: 'userStory3',
         complexity: 1,
         reviewComplexity: 0,
@@ -141,8 +145,8 @@ describe('Simulation', () => {
         state: State.TODO,
         thread: undefined,
         progression: 0,
-      })
-      .build();
+      },
+    ]);
 
     const team = new ParallelTeam([
       { id: 0, power: 1 },
@@ -194,13 +198,13 @@ describe('Simulation', () => {
       },
     ]);
 
-    expect(backlog.dones()).toHaveLength(3);
-    expect(backlog.remainings()).toHaveLength(0);
+    expect(getUserStoriesDone(backlog)).toHaveLength(3);
+    expect(getUserStoriesRemainings(backlog)).toHaveLength(0);
   });
 
   test('should handle 2 complex userStories by 2 devs', () => {
-    const backlog = Backlog.init()
-      .addUserStory({
+    const backlog = new Backlog([
+      {
         name: 'userStory1',
         complexity: 2,
         reviewComplexity: 0,
@@ -208,8 +212,8 @@ describe('Simulation', () => {
         state: State.TODO,
         thread: undefined,
         progression: 0,
-      })
-      .addUserStory({
+      },
+      {
         name: 'userStory2',
         complexity: 2,
         reviewComplexity: 0,
@@ -217,8 +221,8 @@ describe('Simulation', () => {
         state: State.TODO,
         thread: undefined,
         progression: 0,
-      })
-      .build();
+      },
+    ]);
 
     const team = new ParallelTeam([
       { id: 0, power: 1 },
@@ -264,13 +268,13 @@ describe('Simulation', () => {
       },
     ]);
 
-    expect(backlog.dones()).toHaveLength(2);
-    expect(backlog.remainings()).toHaveLength(0);
+    expect(getUserStoriesDone(backlog)).toHaveLength(2);
+    expect(getUserStoriesRemainings(backlog)).toHaveLength(0);
   });
 
   test('should handle 1 simple userStory and review', () => {
-    const backlog = Backlog.init()
-      .addUserStory({
+    const backlog = new Backlog([
+      {
         name: 'userStory0',
         complexity: 1,
         reviewComplexity: 2,
@@ -281,8 +285,8 @@ describe('Simulation', () => {
         state: State.TODO,
         thread: undefined,
         progression: 0,
-      })
-      .build();
+      },
+    ]);
 
     const team = new ParallelTeam([
       { id: 0, power: 1 },
@@ -341,13 +345,13 @@ describe('Simulation', () => {
       },
     ]);
 
-    expect(backlog.dones()).toHaveLength(1);
-    expect(backlog.remainings()).toHaveLength(0);
+    expect(getUserStoriesDone(backlog)).toHaveLength(1);
+    expect(getUserStoriesRemainings(backlog)).toHaveLength(0);
   });
 
   test('should handle 1 simple userStory and review by an efficient dev', () => {
-    const backlog = Backlog.init()
-      .addUserStory({
+    const backlog = new Backlog([
+      {
         name: 'userStory1',
         complexity: 20,
         reviewComplexity: 2,
@@ -358,8 +362,8 @@ describe('Simulation', () => {
         state: State.TODO,
         thread: undefined,
         progression: 0,
-      })
-      .build();
+      },
+    ]);
 
     const team = new ParallelTeam([
       {
@@ -424,13 +428,13 @@ describe('Simulation', () => {
       },
     ]);
 
-    expect(backlog.dones()).toHaveLength(1);
-    expect(backlog.remainings()).toHaveLength(0);
+    expect(getUserStoriesDone(backlog)).toHaveLength(1);
+    expect(getUserStoriesRemainings(backlog)).toHaveLength(0);
   });
 
   test('should handle 1 simple userStory and review by two devs', () => {
-    const backlog = Backlog.init()
-      .addUserStory({
+    const backlog = new Backlog([
+      {
         name: 'userStory1',
         complexity: 20,
         reviewComplexity: 2,
@@ -441,8 +445,8 @@ describe('Simulation', () => {
         state: State.TODO,
         thread: undefined,
         progression: 0,
-      })
-      .build();
+      },
+    ]);
 
     const team = new ParallelTeam([
       {
@@ -529,13 +533,13 @@ describe('Simulation', () => {
       },
     ]);
 
-    expect(backlog.dones()).toHaveLength(1);
-    expect(backlog.remainings()).toHaveLength(0);
+    expect(getUserStoriesDone(backlog)).toHaveLength(1);
+    expect(getUserStoriesRemainings(backlog)).toHaveLength(0);
   });
 
   test('should handle 3 simple userStories by 3 devs and 2 reviews', () => {
-    const backlog = Backlog.init()
-      .addUserStory({
+    const backlog = new Backlog([
+      {
         name: 'userStory0',
         complexity: 1,
         reviewComplexity: 1,
@@ -546,8 +550,8 @@ describe('Simulation', () => {
         state: State.TODO,
         thread: undefined,
         progression: 0,
-      })
-      .addUserStory({
+      },
+      {
         name: 'userStory1',
         complexity: 1,
         reviewComplexity: 1,
@@ -558,8 +562,8 @@ describe('Simulation', () => {
         state: State.TODO,
         thread: undefined,
         progression: 0,
-      })
-      .addUserStory({
+      },
+      {
         name: 'userStory2',
         complexity: 1,
         reviewComplexity: 1,
@@ -570,8 +574,8 @@ describe('Simulation', () => {
         state: State.TODO,
         thread: undefined,
         progression: 0,
-      })
-      .build();
+      },
+    ]);
 
     const team = new ParallelTeam([
       { id: 0, power: 1 },
@@ -678,7 +682,7 @@ describe('Simulation', () => {
       },
     ]);
 
-    expect(backlog.dones()).toHaveLength(3);
-    expect(backlog.remainings()).toHaveLength(0);
+    expect(getUserStoriesDone(backlog)).toHaveLength(3);
+    expect(getUserStoriesRemainings(backlog)).toHaveLength(0);
   });
 });

@@ -65,8 +65,8 @@ describe('Main', () => {
     setValueTo('#user-story-count-input', '2');
     clickOn('#generate-user-stories-button');
     expect(buildBacklog()).toEqual(
-      Backlog.init()
-        .addUserStory({
+      new Backlog([
+        {
           name: `US0`,
           complexity: 5,
           review: noReview,
@@ -74,8 +74,8 @@ describe('Main', () => {
           state: State.TODO,
           thread: undefined,
           progression: 0,
-        })
-        .addUserStory({
+        },
+        {
           name: `US1`,
           complexity: 5,
           review: noReview,
@@ -83,8 +83,8 @@ describe('Main', () => {
           state: State.TODO,
           thread: undefined,
           progression: 0,
-        })
-        .build(),
+        },
+      ]),
     );
   });
 
@@ -94,8 +94,8 @@ describe('Main', () => {
     setValueTo('#reviewers-input', '1');
 
     expect(buildBacklog()).toEqual(
-      Backlog.init()
-        .addUserStory({
+      new Backlog([
+        {
           name: `US0`,
           complexity: 5,
           review: {
@@ -106,8 +106,8 @@ describe('Main', () => {
           state: State.TODO,
           thread: undefined,
           progression: 0,
-        })
-        .build(),
+        },
+      ]),
     );
   });
 
@@ -213,8 +213,8 @@ describe('Main', () => {
     setValueTo('#complexity-input-1', '4');
     setValueTo('#review-complexity-input-1', '2');
     expect(buildBacklog()).toEqual(
-      Backlog.init()
-        .addUserStory({
+      new Backlog([
+        {
           name: `US0`,
           complexity: 2,
           review: noReview,
@@ -222,8 +222,8 @@ describe('Main', () => {
           state: State.TODO,
           thread: undefined,
           progression: 0,
-        })
-        .addUserStory({
+        },
+        {
           name: `US1`,
           complexity: 4,
           review: noReview,
@@ -231,8 +231,8 @@ describe('Main', () => {
           state: State.TODO,
           thread: undefined,
           progression: 0,
-        })
-        .build(),
+        },
+      ]),
     );
   });
 });

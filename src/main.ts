@@ -20,10 +20,8 @@ const getInputValueOf = (selector: string) => {
 export const buildBacklog = () => {
   const userStoryCount = getInputValueOf('#user-story-count-input');
   const reviewersCount = getInputValueOf('#reviewers-input');
-  const backlogBuilder = Backlog.init();
-
-  Array.from({ length: userStoryCount }, (_, i) =>
-    backlogBuilder.addUserStory({
+  return new Backlog(
+    Array.from({ length: userStoryCount }, (_, i) => ({
       name: `US${i}`,
       complexity: getInputValueOf(`#complexity-input-${i}`),
       review: {
@@ -34,9 +32,8 @@ export const buildBacklog = () => {
       state: State.TODO,
       thread: undefined,
       progression: 0,
-    }),
+    })),
   );
-  return backlogBuilder.build();
 };
 
 export const buildTeam = (): Team => {
