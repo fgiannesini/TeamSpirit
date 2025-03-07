@@ -8,7 +8,7 @@ import {
 } from './selector.ts';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
-import { saveStatEvents, saveTimeEvents } from './session-storage.ts';
+import { saveStatEvents, saveTimeEvents } from './storage/session-storage.ts';
 
 describe('Flow', () => {
   beforeEach(async () => {

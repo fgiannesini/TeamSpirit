@@ -1,6 +1,6 @@
 import './flow.scss';
 import { renderTimeEvents } from './render-time.ts';
-import { loadStatEvents, loadTimeEvents } from './session-storage.ts';
+import { loadStatEvents, loadTimeEvents } from './storage/session-storage.ts';
 import { TimeEvent } from '../simulate/events.ts';
 import { StatEvent } from '../simulate/stats.ts';
 import {
