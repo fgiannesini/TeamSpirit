@@ -4,6 +4,7 @@ import {
   getBacklog,
   getDone,
   getDuplicatedUserStories,
+  getThreadState,
   getThreadUserStory,
   getUserStory,
 } from './selector.ts';
@@ -25,6 +26,13 @@ const getDuplicatesInReview = (timeEvents: TimeEvent[]): string[] => {
   return Array.from(duplicates);
 };
 
+const setThreadStateTo = (threadIndex: number, textContent: string) => {
+  const threadState = getThreadState(threadIndex);
+  if (threadState) {
+    threadState.textContent = textContent;
+  }
+};
+
 export const renderTimeEvents = async (
   events: TimeEvent[],
   time: number,
@@ -33,11 +41,15 @@ export const renderTimeEvents = async (
   const currentEvents = events.filter((event) => event.time == time);
   const duplicates = getDuplicatesInReview(currentEvents);
   for (const currentEvent of currentEvents) {
-    if (currentEvent.userStoryName == 'idle') continue;
+    if (currentEvent.userStoryName === 'idle') {
+      setThreadStateTo(currentEvent.thread, 'Wait');
+      continue;
+    }
     if (currentEvent.state == State.IN_PROGRESS) {
       const userStory = getUserStory(currentEvent.userStoryName);
       if (userStory) {
         getThreadUserStory(currentEvent.thread)?.appendChild(userStory);
+        setThreadStateTo(currentEvent.thread, 'Develop');
       }
     }
     if (currentEvent.state == State.REVIEW) {
@@ -56,6 +68,7 @@ export const renderTimeEvents = async (
             createUserStory(currentEvent.userStoryName),
         );
       }
+      setThreadStateTo(currentEvent.thread, 'Review');
     }
     if (currentEvent.state == State.TO_REVIEW) {
       const userStory = getUserStory(currentEvent.userStoryName);

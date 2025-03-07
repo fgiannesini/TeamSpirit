@@ -74,6 +74,107 @@ describe('Flow', () => {
       const threadState1 = getThreadState(1);
       expect(threadState1?.textContent).toEqual('Wait');
     });
+    test('Should set thread state to "Develop" when in progress', async () => {
+      saveTimeEvents([
+        {
+          time: 1,
+          userStoryName: 'userStory1',
+          thread: 0,
+          state: State.IN_PROGRESS,
+        },
+        {
+          time: 1,
+          userStoryName: 'userStory1',
+          thread: 0,
+          state: State.DONE,
+        },
+      ]);
+      await import('./flow.ts');
+
+      getCompute()?.click();
+      await vi.advanceTimersToNextTimerAsync();
+      expect(getThreadState(0)?.textContent).toEqual('Develop');
+
+      await vi.advanceTimersToNextTimerAsync();
+      expect(getThreadState(0)?.textContent).toEqual('Develop');
+    });
+
+    test('Should set thread state to "Review" when in review', async () => {
+      saveTimeEvents([
+        {
+          time: 1,
+          userStoryName: 'userStory1',
+          thread: 0,
+          state: State.REVIEW,
+        },
+        {
+          time: 1,
+          userStoryName: 'userStory1',
+          thread: 0,
+          state: State.DONE,
+        },
+      ]);
+      await import('./flow.ts');
+
+      getCompute()?.click();
+      await vi.advanceTimersToNextTimerAsync();
+      expect(getThreadState(0)?.textContent).toEqual('Review');
+
+      await vi.advanceTimersToNextTimerAsync();
+      expect(getThreadState(0)?.textContent).toEqual('Review');
+    });
+
+    test('Should set thread state to "Develop" when to review', async () => {
+      saveTimeEvents([
+        {
+          time: 1,
+          userStoryName: 'userStory1',
+          thread: 0,
+          state: State.IN_PROGRESS,
+        },
+        {
+          time: 1,
+          userStoryName: 'userStory1',
+          thread: 0,
+          state: State.TO_REVIEW,
+        },
+      ]);
+      await import('./flow.ts');
+
+      getCompute()?.click();
+      await vi.runAllTimersAsync();
+
+      expect(getThreadState(0)?.textContent).toEqual('Develop');
+    });
+
+    test('Should set thread state to "Wait" when idle', async () => {
+      saveTimeEvents([
+        {
+          time: 1,
+          userStoryName: 'userStory1',
+          thread: 0,
+          state: State.IN_PROGRESS,
+        },
+        {
+          time: 1,
+          userStoryName: 'userStory1',
+          thread: 0,
+          state: State.TO_REVIEW,
+        },
+        {
+          time: 2,
+          userStoryName: 'idle',
+          thread: 0,
+          state: State.DONE,
+        },
+      ]);
+      await import('./flow.ts');
+
+      getComputeAll()?.click();
+      await vi.runAllTimersAsync();
+
+      expect(getThreadState(0)?.textContent).toEqual('Wait');
+    });
   });
 
   describe('User story', () => {
