@@ -60,10 +60,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const backlog = buildBacklog();
       const team = buildTeam();
       const timeEvents = simulate(backlog, team);
-      saveTimeEvents(timeEvents);
+      const randomKey = crypto.randomUUID();
+      saveTimeEvents(timeEvents, randomKey);
       const statEvents = computeStatEvents(timeEvents);
-      saveStatEvents(statEvents);
-      window.location.href = '/TeamSpirit/flow/flow.html';
+      saveStatEvents(statEvents, randomKey);
+      window.location.href = `/TeamSpirit/flow/flow.html?id=${randomKey}`;
     });
 
   document

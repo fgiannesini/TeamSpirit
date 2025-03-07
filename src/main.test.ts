@@ -8,6 +8,7 @@ import { State } from './simulate/user-story.ts';
 import { EnsembleTeam, ParallelTeam } from './simulate/team.ts';
 import { noReview } from './simulate/review.ts';
 import { StatEvent } from './simulate/stats.ts';
+import { UUID } from 'node:crypto';
 
 describe('Main', () => {
   beforeEach(async () => {
@@ -43,6 +44,7 @@ describe('Main', () => {
   };
 
   test('Should compute and store in sessionStorage', () => {
+    crypto.randomUUID = (): UUID => '123e4567-e89b-12d3-a456-426614174000';
     setValueTo('#user-story-count-input', '1');
     setValueTo('#dev-count-input', '2');
     clickOn('#generate-devs-button');
@@ -51,12 +53,15 @@ describe('Main', () => {
     clickOn('#calculate-button');
 
     const timeEvents = JSON.parse(
-      sessionStorage.getItem('computation') ?? '[]',
+      sessionStorage.getItem(
+        'computation-123e4567-e89b-12d3-a456-426614174000',
+      ) ?? '[]',
     ) as TimeEvent[];
     expect(timeEvents.length).greaterThan(0);
 
     const statEvents = JSON.parse(
-      sessionStorage.getItem('stats') ?? '[]',
+      sessionStorage.getItem('stats-123e4567-e89b-12d3-a456-426614174000') ??
+        '[]',
     ) as StatEvent[];
     expect(statEvents.length).greaterThan(0);
   });

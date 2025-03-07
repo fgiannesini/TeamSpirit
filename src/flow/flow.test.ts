@@ -16,13 +16,17 @@ import { saveStatEvents, saveTimeEvents } from './storage/session-storage.ts';
 describe('Flow', () => {
   beforeEach(async () => {
     vi.resetModules();
+    vi.spyOn(window, 'location', 'get').mockReturnValue({
+      assign: vi.fn(),
+      href: 'http://localhost:8080/TeamSpirit/flow/flow.html?id=123',
+    } as unknown as Location);
     const htmlPath = resolve(__dirname, './flow.html');
     document.body.innerHTML = readFileSync(htmlPath, 'utf-8');
     vi.useFakeTimers();
   });
 
   test('Should render the page without time events', async () => {
-    saveTimeEvents([]);
+    saveTimeEvents([], '123e4567-e89b-12d3-a456-426614174000');
     await import('./flow.ts');
 
     const threads = document.querySelector('#threads');
@@ -35,20 +39,23 @@ describe('Flow', () => {
 
   describe('Thread', () => {
     test('Should initialize 2 thread elements', async () => {
-      saveTimeEvents([
-        {
-          time: 1,
-          userStoryName: 'userStory1',
-          thread: 0,
-          state: State.IN_PROGRESS,
-        },
-        {
-          time: 1,
-          userStoryName: 'userStory2',
-          thread: 1,
-          state: State.DONE,
-        },
-      ]);
+      saveTimeEvents(
+        [
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.IN_PROGRESS,
+          },
+          {
+            time: 1,
+            userStoryName: 'userStory2',
+            thread: 1,
+            state: State.DONE,
+          },
+        ],
+        '123e4567-e89b-12d3-a456-426614174000',
+      );
       await import('./flow.ts');
       const thread0 = getThread(0);
       expect(thread0?.className).toEqual('thread');
@@ -75,20 +82,23 @@ describe('Flow', () => {
       expect(threadState1?.textContent).toEqual('Wait');
     });
     test('Should set thread state to "Develop" when in progress', async () => {
-      saveTimeEvents([
-        {
-          time: 1,
-          userStoryName: 'userStory1',
-          thread: 0,
-          state: State.IN_PROGRESS,
-        },
-        {
-          time: 1,
-          userStoryName: 'userStory1',
-          thread: 0,
-          state: State.DONE,
-        },
-      ]);
+      saveTimeEvents(
+        [
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.IN_PROGRESS,
+          },
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.DONE,
+          },
+        ],
+        '123e4567-e89b-12d3-a456-426614174000',
+      );
       await import('./flow.ts');
 
       getCompute()?.click();
@@ -100,20 +110,23 @@ describe('Flow', () => {
     });
 
     test('Should set thread state to "Review" when in review', async () => {
-      saveTimeEvents([
-        {
-          time: 1,
-          userStoryName: 'userStory1',
-          thread: 0,
-          state: State.REVIEW,
-        },
-        {
-          time: 1,
-          userStoryName: 'userStory1',
-          thread: 0,
-          state: State.DONE,
-        },
-      ]);
+      saveTimeEvents(
+        [
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.REVIEW,
+          },
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.DONE,
+          },
+        ],
+        '123e4567-e89b-12d3-a456-426614174000',
+      );
       await import('./flow.ts');
 
       getCompute()?.click();
@@ -125,20 +138,23 @@ describe('Flow', () => {
     });
 
     test('Should set thread state to "Develop" when to review', async () => {
-      saveTimeEvents([
-        {
-          time: 1,
-          userStoryName: 'userStory1',
-          thread: 0,
-          state: State.IN_PROGRESS,
-        },
-        {
-          time: 1,
-          userStoryName: 'userStory1',
-          thread: 0,
-          state: State.TO_REVIEW,
-        },
-      ]);
+      saveTimeEvents(
+        [
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.IN_PROGRESS,
+          },
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.TO_REVIEW,
+          },
+        ],
+        '123e4567-e89b-12d3-a456-426614174000',
+      );
       await import('./flow.ts');
 
       getCompute()?.click();
@@ -148,26 +164,29 @@ describe('Flow', () => {
     });
 
     test('Should set thread state to "Wait" when idle', async () => {
-      saveTimeEvents([
-        {
-          time: 1,
-          userStoryName: 'userStory1',
-          thread: 0,
-          state: State.IN_PROGRESS,
-        },
-        {
-          time: 1,
-          userStoryName: 'userStory1',
-          thread: 0,
-          state: State.TO_REVIEW,
-        },
-        {
-          time: 2,
-          userStoryName: 'idle',
-          thread: 0,
-          state: State.DONE,
-        },
-      ]);
+      saveTimeEvents(
+        [
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.IN_PROGRESS,
+          },
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.TO_REVIEW,
+          },
+          {
+            time: 2,
+            userStoryName: 'idle',
+            thread: 0,
+            state: State.DONE,
+          },
+        ],
+        '123e4567-e89b-12d3-a456-426614174000',
+      );
       await import('./flow.ts');
 
       getComputeAll()?.click();
@@ -179,20 +198,23 @@ describe('Flow', () => {
 
   describe('User story', () => {
     test('Should initialize 2 userStories elements', async () => {
-      saveTimeEvents([
-        {
-          time: 1,
-          userStoryName: 'userStory1',
-          thread: 0,
-          state: State.IN_PROGRESS,
-        },
-        {
-          time: 1,
-          userStoryName: 'userStory2',
-          thread: 1,
-          state: State.IN_PROGRESS,
-        },
-      ]);
+      saveTimeEvents(
+        [
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.IN_PROGRESS,
+          },
+          {
+            time: 1,
+            userStoryName: 'userStory2',
+            thread: 1,
+            state: State.IN_PROGRESS,
+          },
+        ],
+        '123e4567-e89b-12d3-a456-426614174000',
+      );
       await import('./flow.ts');
       const userStory1 = getUserStory('userStory1');
       expect(userStory1?.className).toEqual('userStory');
@@ -204,20 +226,23 @@ describe('Flow', () => {
     });
 
     test('Should move userStories to thread when in progress, then done', async () => {
-      saveTimeEvents([
-        {
-          time: 1,
-          userStoryName: 'userStory1',
-          thread: 0,
-          state: State.IN_PROGRESS,
-        },
-        {
-          time: 1,
-          userStoryName: 'userStory1',
-          thread: 0,
-          state: State.DONE,
-        },
-      ]);
+      saveTimeEvents(
+        [
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.IN_PROGRESS,
+          },
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.DONE,
+          },
+        ],
+        '123e4567-e89b-12d3-a456-426614174000',
+      );
       await import('./flow.ts');
 
       getCompute()?.click();
@@ -231,20 +256,23 @@ describe('Flow', () => {
     });
 
     test('Should move userStories to thread when in review, then done', async () => {
-      saveTimeEvents([
-        {
-          time: 1,
-          userStoryName: 'userStory1',
-          thread: 0,
-          state: State.REVIEW,
-        },
-        {
-          time: 1,
-          userStoryName: 'userStory1',
-          thread: 0,
-          state: State.DONE,
-        },
-      ]);
+      saveTimeEvents(
+        [
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.REVIEW,
+          },
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.DONE,
+          },
+        ],
+        '123e4567-e89b-12d3-a456-426614174000',
+      );
       await import('./flow.ts');
 
       getCompute()?.click();
@@ -258,14 +286,17 @@ describe('Flow', () => {
     });
 
     test('Should move userStories to the backlog area when to review', async () => {
-      saveTimeEvents([
-        {
-          time: 1,
-          userStoryName: 'userStory1',
-          thread: 0,
-          state: State.TO_REVIEW,
-        },
-      ]);
+      saveTimeEvents(
+        [
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.TO_REVIEW,
+          },
+        ],
+        '123e4567-e89b-12d3-a456-426614174000',
+      );
       await import('./flow.ts');
 
       getCompute()?.click();
@@ -274,20 +305,23 @@ describe('Flow', () => {
     });
 
     test('Should move userStories to the corresponding threads when reviewed by several threads', async () => {
-      saveTimeEvents([
-        {
-          time: 1,
-          userStoryName: 'userStory1',
-          thread: 1,
-          state: State.REVIEW,
-        },
-        {
-          time: 1,
-          userStoryName: 'userStory1',
-          thread: 2,
-          state: State.REVIEW,
-        },
-      ]);
+      saveTimeEvents(
+        [
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 1,
+            state: State.REVIEW,
+          },
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 2,
+            state: State.REVIEW,
+          },
+        ],
+        '123e4567-e89b-12d3-a456-426614174000',
+      );
       await import('./flow.ts');
 
       getCompute()?.click();
@@ -302,32 +336,35 @@ describe('Flow', () => {
     });
 
     test('Should keep only one review when the other one is completed', async () => {
-      saveTimeEvents([
-        {
-          time: 1,
-          userStoryName: 'userStory1',
-          thread: 1,
-          state: State.REVIEW,
-        },
-        {
-          time: 1,
-          userStoryName: 'userStory1',
-          thread: 2,
-          state: State.REVIEW,
-        },
-        {
-          time: 2,
-          userStoryName: 'idle',
-          thread: 1,
-          state: State.DONE,
-        },
-        {
-          time: 2,
-          userStoryName: 'userStory1',
-          thread: 2,
-          state: State.REVIEW,
-        },
-      ]);
+      saveTimeEvents(
+        [
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 1,
+            state: State.REVIEW,
+          },
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 2,
+            state: State.REVIEW,
+          },
+          {
+            time: 2,
+            userStoryName: 'idle',
+            thread: 1,
+            state: State.DONE,
+          },
+          {
+            time: 2,
+            userStoryName: 'userStory1',
+            thread: 2,
+            state: State.REVIEW,
+          },
+        ],
+        '123e4567-e89b-12d3-a456-426614174000',
+      );
       await import('./flow.ts');
 
       getCompute()?.click();
@@ -348,32 +385,35 @@ describe('Flow', () => {
     });
 
     test('Should keep two reviews when reviews last', async () => {
-      saveTimeEvents([
-        {
-          time: 1,
-          userStoryName: 'userStory1',
-          thread: 1,
-          state: State.REVIEW,
-        },
-        {
-          time: 1,
-          userStoryName: 'userStory1',
-          thread: 2,
-          state: State.REVIEW,
-        },
-        {
-          time: 2,
-          userStoryName: 'userStory1',
-          thread: 1,
-          state: State.REVIEW,
-        },
-        {
-          time: 2,
-          userStoryName: 'userStory1',
-          thread: 2,
-          state: State.REVIEW,
-        },
-      ]);
+      saveTimeEvents(
+        [
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 1,
+            state: State.REVIEW,
+          },
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 2,
+            state: State.REVIEW,
+          },
+          {
+            time: 2,
+            userStoryName: 'userStory1',
+            thread: 1,
+            state: State.REVIEW,
+          },
+          {
+            time: 2,
+            userStoryName: 'userStory1',
+            thread: 2,
+            state: State.REVIEW,
+          },
+        ],
+        '123e4567-e89b-12d3-a456-426614174000',
+      );
       await import('./flow.ts');
 
       getCompute()?.click();
@@ -392,23 +432,31 @@ describe('Flow', () => {
     });
 
     test('Should not display "idle" user story', async () => {
-      saveTimeEvents([
-        {
-          time: 1,
-          userStoryName: 'userStory1',
-          thread: 0,
-          state: State.IN_PROGRESS,
-        },
-        { time: 1, userStoryName: 'idle', thread: 1, state: State.DONE },
-        {
-          time: 2,
-          userStoryName: 'userStory1',
-          thread: 0,
-          state: State.IN_PROGRESS,
-        },
-        { time: 2, userStoryName: 'userStory1', thread: 0, state: State.DONE },
-        { time: 2, userStoryName: 'idle', thread: 1, state: State.DONE },
-      ]);
+      saveTimeEvents(
+        [
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.IN_PROGRESS,
+          },
+          { time: 1, userStoryName: 'idle', thread: 1, state: State.DONE },
+          {
+            time: 2,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.IN_PROGRESS,
+          },
+          {
+            time: 2,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.DONE,
+          },
+          { time: 2, userStoryName: 'idle', thread: 1, state: State.DONE },
+        ],
+        '123e4567-e89b-12d3-a456-426614174000',
+      );
 
       await import('./flow.ts');
 
@@ -421,21 +469,29 @@ describe('Flow', () => {
 
   describe('Compute', () => {
     test('Should compute all on click on compute All button', async () => {
-      saveTimeEvents([
-        {
-          time: 1,
-          userStoryName: 'userStory1',
-          thread: 0,
-          state: State.IN_PROGRESS,
-        },
-        {
-          time: 2,
-          userStoryName: 'userStory1',
-          thread: 0,
-          state: State.IN_PROGRESS,
-        },
-        { time: 2, userStoryName: 'userStory1', thread: 0, state: State.DONE },
-      ]);
+      saveTimeEvents(
+        [
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.IN_PROGRESS,
+          },
+          {
+            time: 2,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.IN_PROGRESS,
+          },
+          {
+            time: 2,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.DONE,
+          },
+        ],
+        '123e4567-e89b-12d3-a456-426614174000',
+      );
 
       await import('./flow.ts');
 
@@ -446,21 +502,29 @@ describe('Flow', () => {
     });
 
     test('Should disable "compute" button during display', async () => {
-      saveTimeEvents([
-        {
-          time: 1,
-          userStoryName: 'userStory1',
-          thread: 0,
-          state: State.IN_PROGRESS,
-        },
-        {
-          time: 2,
-          userStoryName: 'userStory1',
-          thread: 0,
-          state: State.IN_PROGRESS,
-        },
-        { time: 2, userStoryName: 'userStory1', thread: 0, state: State.DONE },
-      ]);
+      saveTimeEvents(
+        [
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.IN_PROGRESS,
+          },
+          {
+            time: 2,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.IN_PROGRESS,
+          },
+          {
+            time: 2,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.DONE,
+          },
+        ],
+        '123e4567-e89b-12d3-a456-426614174000',
+      );
 
       await import('./flow.ts');
 
@@ -472,15 +536,23 @@ describe('Flow', () => {
     });
 
     test('Should disable "compute" button when finished', async () => {
-      saveTimeEvents([
-        {
-          time: 1,
-          userStoryName: 'userStory1',
-          thread: 0,
-          state: State.IN_PROGRESS,
-        },
-        { time: 1, userStoryName: 'userStory1', thread: 0, state: State.DONE },
-      ]);
+      saveTimeEvents(
+        [
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.IN_PROGRESS,
+          },
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.DONE,
+          },
+        ],
+        '123e4567-e89b-12d3-a456-426614174000',
+      );
 
       await import('./flow.ts');
 
@@ -491,15 +563,23 @@ describe('Flow', () => {
     });
 
     test('Should disable "compute all" button when finished', async () => {
-      saveTimeEvents([
-        {
-          time: 1,
-          userStoryName: 'userStory1',
-          thread: 0,
-          state: State.IN_PROGRESS,
-        },
-        { time: 1, userStoryName: 'userStory1', thread: 0, state: State.DONE },
-      ]);
+      saveTimeEvents(
+        [
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.IN_PROGRESS,
+          },
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: State.DONE,
+          },
+        ],
+        '123e4567-e89b-12d3-a456-426614174000',
+      );
 
       await import('./flow.ts');
 
@@ -512,8 +592,8 @@ describe('Flow', () => {
 
   describe('Stats', () => {
     test('Should render the page without stat events', async () => {
-      saveTimeEvents([]);
-      saveStatEvents([]);
+      saveTimeEvents([], '123e4567-e89b-12d3-a456-426614174000');
+      saveStatEvents([], '123e4567-e89b-12d3-a456-426614174000');
       await import('./flow.ts');
 
       const leadTime = document.querySelector('#lead-time');
@@ -531,20 +611,26 @@ describe('Flow', () => {
     ])(
       'Should render the page with a stat event',
       async (leadTimeProvided, leadTimeDisplayed) => {
-        saveTimeEvents([
-          {
-            time: 1,
-            userStoryName: 'US1',
-            thread: 1,
-            state: State.IN_PROGRESS,
-          },
-        ]);
-        saveStatEvents([
-          {
-            time: 1,
-            leadTime: leadTimeProvided,
-          },
-        ]);
+        saveTimeEvents(
+          [
+            {
+              time: 1,
+              userStoryName: 'US1',
+              thread: 1,
+              state: State.IN_PROGRESS,
+            },
+          ],
+          '123e4567-e89b-12d3-a456-426614174000',
+        );
+        saveStatEvents(
+          [
+            {
+              time: 1,
+              leadTime: leadTimeProvided,
+            },
+          ],
+          '123e4567-e89b-12d3-a456-426614174000',
+        );
         await import('./flow.ts');
 
         getCompute()?.click();
