@@ -1,7 +1,8 @@
+Implémenter des évènements pour le changement de structure de l'équipe (création de user story, de thread, apprentissage)
 implémenter bugs review
 implémenter bug recette/prod
 Afficher l'avancement de la tâche lors du rendu
-complexité des tâches aléatoires (gaussienne avec fibonachi)
+complexité des tâches aléatoires (gaussienne avec Fibonacci)
 Afficher la montée compétence du développeur (échelle logarithmique)
 Départ/arrivée de nouveau dev
 team binome
