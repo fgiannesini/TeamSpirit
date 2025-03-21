@@ -6,13 +6,13 @@ import { Backlog } from './simulate/backlog.ts';
 import {
   buildBacklogForEnsembleTeam,
   buildBacklogForParallelTeam,
-  buildTeam,
+  buildEnsembleTeam,
+  buildParallelTeam,
 } from './main.ts';
 import { State } from './simulate/user-story.ts';
 import { EnsembleTeam, ParallelTeam } from './simulate/team.ts';
 import { noReview } from './simulate/review.ts';
 import { StatEvent } from './simulate/stats.ts';
-import { UUID } from 'node:crypto';
 
 describe('Main', () => {
   beforeEach(async () => {
@@ -45,7 +45,10 @@ describe('Main', () => {
   };
 
   test('Should compute and store in sessionStorage', () => {
-    crypto.randomUUID = (): UUID => 'e4567-e89b-12d3-a456-426614174000';
+    const randomUUIDSpy = vi.spyOn(crypto, 'randomUUID');
+    randomUUIDSpy
+      .mockReturnValueOnce('e4567-e89b-12d3-a456-426614174000')
+      .mockReturnValueOnce('e4567-e89b-12d3-a456-426614174001');
     setValueTo('#user-story-count-input', '1');
     setValueTo('#dev-count-input', '2');
     clickOn('#generate-devs-button');
@@ -53,16 +56,29 @@ describe('Main', () => {
     setValueTo('#reviewers-input', '');
     clickOn('#calculate-button');
 
-    const timeEvents = JSON.parse(
+    const timeEventsForParallelTeam = JSON.parse(
       sessionStorage.getItem('computation-e4567-e89b-12d3-a456-426614174000') ??
         '[]',
     ) as TimeEvent[];
-    expect(timeEvents.length).greaterThan(0);
+    expect(timeEventsForParallelTeam.length).greaterThan(0);
 
-    const statEvents = JSON.parse(
+    const timeEventsForEnsembleTeam = JSON.parse(
+      sessionStorage.getItem('computation-e4567-e89b-12d3-a456-426614174001') ??
+        '[]',
+    ) as TimeEvent[];
+    expect(timeEventsForEnsembleTeam.length).greaterThan(0);
+
+    const statEventsForParallelTeam = JSON.parse(
       sessionStorage.getItem('stats-e4567-e89b-12d3-a456-426614174000') ?? '[]',
     ) as StatEvent[];
-    expect(statEvents.length).greaterThan(0);
+    expect(statEventsForParallelTeam.length).greaterThan(0);
+
+    const statEventsForEnsembleTeam = JSON.parse(
+      sessionStorage.getItem('stats-e4567-e89b-12d3-a456-426614174001') ?? '[]',
+    ) as StatEvent[];
+    expect(statEventsForEnsembleTeam.length).greaterThan(0);
+
+    expect(randomUUIDSpy).toHaveBeenCalledTimes(2);
   });
 
   test('Should build the backlog for ensemble team', () => {
@@ -170,8 +186,7 @@ describe('Main', () => {
     clickOn('#generate-devs-button');
     setValueTo('#power-input-0', '5');
     setValueTo('#power-input-1', '10');
-    select('#team-type-select', 'parallel');
-    expect(buildTeam()).toStrictEqual(
+    expect(buildParallelTeam()).toStrictEqual(
       new ParallelTeam([
         { id: 0, power: 5 },
         { id: 1, power: 10 },
@@ -185,7 +200,7 @@ describe('Main', () => {
     setValueTo('#power-input-0', '5');
     setValueTo('#power-input-1', '10');
     select('#team-type-select', 'ensemble');
-    expect(buildTeam()).toStrictEqual(
+    expect(buildEnsembleTeam()).toStrictEqual(
       new EnsembleTeam([
         { id: 0, power: 5 },
         { id: 1, power: 10 },

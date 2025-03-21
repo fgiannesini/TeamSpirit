@@ -52,18 +52,29 @@ export const buildBacklogForEnsembleTeam = () => {
   );
 };
 
-export const buildTeam = (): Team => {
+export const buildParallelTeam = (): Team => {
   const devCount = getInputValueOf('#dev-count-input');
   const threads = Array.from({ length: devCount }, (_, i) => {
     return { id: i, power: getInputValueOf(`#power-input-${i}`) };
   });
-
-  const selectedTeam =
-    document.querySelector<HTMLSelectElement>('#team-type-select')?.value;
-  if (selectedTeam === 'ensemble') {
-    return new EnsembleTeam(threads);
-  }
   return new ParallelTeam(threads);
+};
+
+export const buildEnsembleTeam = (): Team => {
+  const devCount = getInputValueOf('#dev-count-input');
+  const threads = Array.from({ length: devCount }, (_, i) => {
+    return { id: i, power: getInputValueOf(`#power-input-${i}`) };
+  });
+  return new EnsembleTeam(threads);
+};
+
+const runSimulation = (backlog: Backlog, team: Team) => {
+  const timeEvents = simulate(backlog, team);
+  const randomKey = crypto.randomUUID();
+  saveTimeEvents(timeEvents, randomKey);
+  const statEvents = computeStatEvents(timeEvents);
+  saveStatEvents(statEvents, randomKey);
+  window.open(`/TeamSpirit/flow/flow.html?id=${randomKey}`);
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -71,14 +82,9 @@ document.addEventListener('DOMContentLoaded', () => {
     .querySelector<HTMLButtonElement>('#calculate-button')
     ?.addEventListener('click', () => {
       const ensembleTeamBacklog = buildBacklogForEnsembleTeam();
-
-      const team = buildTeam();
-      const timeEvents = simulate(ensembleTeamBacklog, team);
-      const randomKey = crypto.randomUUID();
-      saveTimeEvents(timeEvents, randomKey);
-      const statEvents = computeStatEvents(timeEvents);
-      saveStatEvents(statEvents, randomKey);
-      window.open(`/TeamSpirit/flow/flow.html?id=${randomKey}`);
+      runSimulation(ensembleTeamBacklog, buildEnsembleTeam());
+      const parallelTeamBacklog = buildBacklogForParallelTeam();
+      runSimulation(parallelTeamBacklog, buildParallelTeam());
     });
 
   document
