@@ -74,7 +74,7 @@ const runSimulation = (backlog: Backlog, team: Team) => {
   saveTimeEvents(timeEvents, randomKey);
   const statEvents = computeStatEvents(timeEvents);
   saveStatEvents(statEvents, randomKey);
-  window.open(`/TeamSpirit/flow/flow.html?id=${randomKey}`);
+  return randomKey;
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -82,9 +82,17 @@ document.addEventListener('DOMContentLoaded', () => {
     .querySelector<HTMLButtonElement>('#calculate-button')
     ?.addEventListener('click', () => {
       const ensembleTeamBacklog = buildBacklogForEnsembleTeam();
-      runSimulation(ensembleTeamBacklog, buildEnsembleTeam());
+      const ensembleRandomKey = runSimulation(
+        ensembleTeamBacklog,
+        buildEnsembleTeam(),
+      );
+      window.open(`/TeamSpirit/flow/flow.html?id=${ensembleRandomKey}`);
       const parallelTeamBacklog = buildBacklogForParallelTeam();
-      runSimulation(parallelTeamBacklog, buildParallelTeam());
+      const parallelRandomKey = runSimulation(
+        parallelTeamBacklog,
+        buildParallelTeam(),
+      );
+      window.open(`/TeamSpirit/flow/flow.html?id=${parallelRandomKey}`);
     });
 
   document
