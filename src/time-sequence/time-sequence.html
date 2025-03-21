@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créneau en HTML & CSS</title>
+    <style>
+        .container {
+            display: flex;
+            align-items: center;
+            gap: 5px; /* Espacement entre les éléments */
+        }
+
+        .vertical {
+            width: 1px;
+            height: 40px;
+            background-color: black;
+        }
+
+        .horizontal-top {
+            width: 30px;
+            height: 40px;
+            border-top: solid 1px black;
+        }
+
+        .horizontal-bottom {
+            width: 30px;
+            height: 40px;
+            border-bottom: solid 1px black;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="horizontal-top"></div>  <!-- Barre horizontale en haut -->
+    <div class="vertical"></div>  <!-- Juste une barre verticale -->
+    <div class="horizontal-bottom"></div>  <!-- Barre horizontale en bas -->
+</div>
+</body>
+</html>

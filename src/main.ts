@@ -87,12 +87,18 @@ document.addEventListener('DOMContentLoaded', () => {
         buildEnsembleTeam(),
       );
       window.open(`/TeamSpirit/flow/flow.html?id=${ensembleRandomKey}`);
+      window.open(
+        `/TeamSpirit/time-sequence/time-sequence.html?id=${ensembleRandomKey}`,
+      );
       const parallelTeamBacklog = buildBacklogForParallelTeam();
       const parallelRandomKey = runSimulation(
         parallelTeamBacklog,
         buildParallelTeam(),
       );
       window.open(`/TeamSpirit/flow/flow.html?id=${parallelRandomKey}`);
+      window.open(
+        `/TeamSpirit/time-sequence/time-sequence.html?id=${parallelRandomKey}`,
+      );
     });
 
   document

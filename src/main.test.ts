@@ -50,7 +50,6 @@ describe('Main', () => {
       .mockReturnValueOnce('e4567-e89b-12d3-a456-426614174000')
       .mockReturnValueOnce('e4567-e89b-12d3-a456-426614174001');
 
-    const windowsOpenSpy = vi.spyOn(window, 'open');
     setValueTo('#user-story-count-input', '1');
     setValueTo('#dev-count-input', '2');
     clickOn('#generate-devs-button');
@@ -81,12 +80,34 @@ describe('Main', () => {
     expect(statEventsForEnsembleTeam.length).greaterThan(0);
 
     expect(randomUUIDSpy).toHaveBeenCalledTimes(2);
-    expect(windowsOpenSpy).toHaveBeenCalledTimes(2);
+  });
+
+  test('Should open new pages', () => {
+    const randomUUIDSpy = vi.spyOn(crypto, 'randomUUID');
+    randomUUIDSpy
+      .mockReturnValueOnce('e4567-e89b-12d3-a456-426614174000')
+      .mockReturnValueOnce('e4567-e89b-12d3-a456-426614174001');
+
+    const windowsOpenSpy = vi.spyOn(window, 'open');
+    setValueTo('#user-story-count-input', '1');
+    setValueTo('#dev-count-input', '2');
+    clickOn('#generate-devs-button');
+
+    setValueTo('#reviewers-input', '');
+    clickOn('#calculate-button');
+
+    expect(windowsOpenSpy).toHaveBeenCalledTimes(4);
     expect(windowsOpenSpy).toBeCalledWith(
       '/TeamSpirit/flow/flow.html?id=e4567-e89b-12d3-a456-426614174000',
     );
     expect(windowsOpenSpy).toBeCalledWith(
+      '/TeamSpirit/time-sequence/time-sequence.html?id=e4567-e89b-12d3-a456-426614174000',
+    );
+    expect(windowsOpenSpy).toBeCalledWith(
       '/TeamSpirit/flow/flow.html?id=e4567-e89b-12d3-a456-426614174001',
+    );
+    expect(windowsOpenSpy).toBeCalledWith(
+      '/TeamSpirit/time-sequence/time-sequence.html?id=e4567-e89b-12d3-a456-426614174001',
     );
   });
 
