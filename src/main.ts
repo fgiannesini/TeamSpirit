@@ -9,6 +9,7 @@ import {
 import { computeStatEvents } from './simulate/stats.ts';
 import { generateDevForm, generateUserStoriesForm } from './form/form.ts';
 import { simulate } from './simulate/simulation.ts';
+import { noReview } from './simulate/review.ts';
 
 const getInputValueOf = (selector: string) => {
   const number = parseInt(
@@ -17,7 +18,7 @@ const getInputValueOf = (selector: string) => {
   return isNaN(number) ? 0 : number;
 };
 
-export const buildBacklog = () => {
+export const buildBacklogForParallelTeam = () => {
   const userStoryCount = getInputValueOf('#user-story-count-input');
   const reviewersCount = getInputValueOf('#reviewers-input');
   return new Backlog(
@@ -28,6 +29,21 @@ export const buildBacklog = () => {
         reviewersNeeded: reviewersCount,
         reviewers: new Map<number, number>(),
       },
+      reviewComplexity: getInputValueOf(`#review-complexity-input-${i}`),
+      state: State.TODO,
+      thread: undefined,
+      progression: 0,
+    })),
+  );
+};
+
+export const buildBacklogForEnsembleTeam = () => {
+  const userStoryCount = getInputValueOf('#user-story-count-input');
+  return new Backlog(
+    Array.from({ length: userStoryCount }, (_, i) => ({
+      name: `US${i}`,
+      complexity: getInputValueOf(`#complexity-input-${i}`),
+      review: noReview,
       reviewComplexity: getInputValueOf(`#review-complexity-input-${i}`),
       state: State.TODO,
       thread: undefined,
@@ -54,9 +70,10 @@ document.addEventListener('DOMContentLoaded', () => {
   document
     .querySelector<HTMLButtonElement>('#calculate-button')
     ?.addEventListener('click', () => {
-      const backlog = buildBacklog();
+      const ensembleTeamBacklog = buildBacklogForEnsembleTeam();
+
       const team = buildTeam();
-      const timeEvents = simulate(backlog, team);
+      const timeEvents = simulate(ensembleTeamBacklog, team);
       const randomKey = crypto.randomUUID();
       saveTimeEvents(timeEvents, randomKey);
       const statEvents = computeStatEvents(timeEvents);

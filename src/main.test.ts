@@ -3,7 +3,11 @@ import { resolve } from 'path';
 import { readFileSync } from 'fs';
 import { TimeEvent } from './simulate/events.ts';
 import { Backlog } from './simulate/backlog.ts';
-import { buildBacklog, buildTeam } from './main.ts';
+import {
+  buildBacklogForEnsembleTeam,
+  buildBacklogForParallelTeam,
+  buildTeam,
+} from './main.ts';
 import { State } from './simulate/user-story.ts';
 import { EnsembleTeam, ParallelTeam } from './simulate/team.ts';
 import { noReview } from './simulate/review.ts';
@@ -61,10 +65,12 @@ describe('Main', () => {
     expect(statEvents.length).greaterThan(0);
   });
 
-  test('Should build the backlog without reviewers', () => {
+  test('Should build the backlog for ensemble team', () => {
     setValueTo('#user-story-count-input', '2');
     clickOn('#generate-user-stories-button');
-    expect(buildBacklog()).toEqual(
+    setValueTo('#reviewers-input', '1');
+
+    expect(buildBacklogForEnsembleTeam()).toEqual(
       new Backlog([
         {
           name: `US0`,
@@ -88,12 +94,12 @@ describe('Main', () => {
     );
   });
 
-  test('Should build the backlog with reviewers', () => {
+  test('Should build the backlog for parallel team with reviewers', () => {
     setValueTo('#user-story-count-input', '1');
     clickOn('#generate-user-stories-button');
     setValueTo('#reviewers-input', '1');
 
-    expect(buildBacklog()).toEqual(
+    expect(buildBacklogForParallelTeam()).toEqual(
       new Backlog([
         {
           name: `US0`,
@@ -102,6 +108,25 @@ describe('Main', () => {
             reviewersNeeded: 1,
             reviewers: new Map<number, number>(),
           },
+          reviewComplexity: 2,
+          state: State.TODO,
+          thread: undefined,
+          progression: 0,
+        },
+      ]),
+    );
+  });
+
+  test('Should build the backlog for parallel team without reviewers', () => {
+    setValueTo('#user-story-count-input', '1');
+    clickOn('#generate-user-stories-button');
+
+    expect(buildBacklogForParallelTeam()).toEqual(
+      new Backlog([
+        {
+          name: `US0`,
+          complexity: 5,
+          review: noReview,
           reviewComplexity: 2,
           state: State.TODO,
           thread: undefined,
@@ -205,14 +230,14 @@ describe('Main', () => {
     ).toEqual('2');
   });
 
-  test('Should build the backlog with 2 user stories', () => {
+  test('Should build the backlog for ensemble team with 2 user stories', () => {
     setValueTo('#user-story-count-input', '2');
     clickOn('#generate-user-stories-button');
     setValueTo('#complexity-input-0', '2');
     setValueTo('#review-complexity-input-0', '1');
     setValueTo('#complexity-input-1', '4');
     setValueTo('#review-complexity-input-1', '2');
-    expect(buildBacklog()).toEqual(
+    expect(buildBacklogForEnsembleTeam()).toEqual(
       new Backlog([
         {
           name: `US0`,
