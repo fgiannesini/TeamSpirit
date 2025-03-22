@@ -10,8 +10,15 @@ const createUserStory = (id: string) => {
 };
 
 const addUserStory = (parent: Element, events: TimeEvent[]) => {
-  const userStory = createUserStory(events[0].userStoryName);
-  parent.appendChild(userStory);
+  const userStoryNames = Array.from(
+    new Set(events.map((event) => event.userStoryName)),
+  );
+  userStoryNames
+    .filter((userStoryName) => userStoryName !== 'idle')
+    .map((userStoryName) => createUserStory(userStoryName))
+    .forEach((userStoryElement) => {
+      parent.appendChild(userStoryElement);
+    });
 };
 
 const timeSequenceElement = (className: string) => {

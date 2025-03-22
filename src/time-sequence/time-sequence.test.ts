@@ -44,4 +44,46 @@ describe('Time sequence', () => {
       ),
     ).toEqual(['vertical', 'horizontal-top', 'vertical']);
   });
+
+  test('Should render the page with two events on two user stories', async () => {
+    saveTimeEvents(
+      [
+        {
+          time: 1,
+          userStoryName: 'userStory1',
+          thread: 0,
+          state: State.IN_PROGRESS,
+        },
+        {
+          time: 1,
+          userStoryName: 'userStory1',
+          thread: 0,
+          state: State.DONE,
+        },
+        {
+          time: 1,
+          userStoryName: 'userStory2',
+          thread: 1,
+          state: State.IN_PROGRESS,
+        },
+        {
+          time: 1,
+          userStoryName: 'userStory2',
+          thread: 1,
+          state: State.DONE,
+        },
+        {
+          time: 1,
+          userStoryName: 'idle',
+          thread: 2,
+          state: State.DONE,
+        },
+      ],
+      'e4567-e89b-12d3-a456-426614174000',
+    );
+    await import('./time-sequence.ts');
+
+    const userStories = document.querySelectorAll('.user-story');
+    expect(userStories.length).toEqual(2);
+  });
 });
