@@ -9,18 +9,6 @@ const createUserStory = (id: string) => {
   return userStoryHtmlElement;
 };
 
-const addUserStory = (parent: Element, events: TimeEvent[]) => {
-  const userStoryNames = Array.from(
-    new Set(events.map((event) => event.userStoryName)),
-  );
-  userStoryNames
-    .filter((userStoryName) => userStoryName !== 'idle')
-    .map((userStoryName) => createUserStory(userStoryName))
-    .forEach((userStoryElement) => {
-      parent.appendChild(userStoryElement);
-    });
-};
-
 const timeSequenceElement = (className: string) => {
   const timeSequenceElement = document.createElement('div');
   timeSequenceElement.className = className;
@@ -32,16 +20,35 @@ const renderTimeSequence = (timeEvents: TimeEvent[]) => {
   if (!parent) {
     return;
   }
-  addUserStory(parent, timeEvents);
+  const userStoryNames = Array.from(
+    new Set(timeEvents.map((event) => event.userStoryName)),
+  );
+  userStoryNames
+    .filter((userStoryName) => userStoryName !== 'idle')
+    .map((userStoryName) => createUserStory(userStoryName))
+    .forEach((userStoryElement) => {
+      parent.appendChild(userStoryElement);
+    });
 
-  for (const timeEvent of timeEvents) {
-    const userStory = document.querySelector('#' + timeEvent.userStoryName);
-    if (timeEvent.state == State.IN_PROGRESS) {
-      userStory?.appendChild(timeSequenceElement('vertical'));
-      userStory?.appendChild(timeSequenceElement('horizontal-top'));
-    }
-    if (timeEvent.state == State.DONE) {
-      userStory?.appendChild(timeSequenceElement('vertical'));
+  const maxTime = Math.max(...timeEvents.map((event) => event.time));
+  let time = 0;
+
+  while (maxTime !== time) {
+    time++;
+    const currentEvents = timeEvents.filter((event) => event.time == time);
+    for (const userStoryName of userStoryNames) {
+      const userStory = document.querySelector('#' + userStoryName);
+      const state = currentEvents.findLast(
+        (event) => event.userStoryName === userStoryName,
+      )?.state;
+      if (!state) {
+        userStory?.appendChild(timeSequenceElement('horizontal-bottom'));
+      }
+      if (state == State.DONE) {
+        userStory?.appendChild(timeSequenceElement('vertical'));
+        userStory?.appendChild(timeSequenceElement('horizontal-top'));
+        userStory?.appendChild(timeSequenceElement('vertical'));
+      }
     }
   }
 };

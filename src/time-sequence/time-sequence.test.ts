@@ -86,4 +86,48 @@ describe('Time sequence', () => {
     const userStories = document.querySelectorAll('.user-story');
     expect(userStories.length).toEqual(2);
   });
+
+  test('Should render the page with two user stories not dealt at the same time', async () => {
+    saveTimeEvents(
+      [
+        {
+          time: 1,
+          userStoryName: 'userStory1',
+          thread: 0,
+          state: State.IN_PROGRESS,
+        },
+        {
+          time: 1,
+          userStoryName: 'userStory1',
+          thread: 0,
+          state: State.DONE,
+        },
+        {
+          time: 2,
+          userStoryName: 'userStory2',
+          thread: 0,
+          state: State.IN_PROGRESS,
+        },
+        {
+          time: 2,
+          userStoryName: 'userStory2',
+          thread: 0,
+          state: State.DONE,
+        },
+      ],
+      'e4567-e89b-12d3-a456-426614174000',
+    );
+    await import('./time-sequence.ts');
+
+    expect(
+      Array.from(document.querySelectorAll('#userStory1 div')).map(
+        (div) => div.className,
+      ),
+    ).toEqual(['vertical', 'horizontal-top', 'vertical', 'horizontal-bottom']);
+    expect(
+      Array.from(document.querySelectorAll('#userStory2 div')).map(
+        (div) => div.className,
+      ),
+    ).toEqual(['horizontal-bottom', 'vertical', 'horizontal-top', 'vertical']);
+  });
 });
