@@ -83,8 +83,10 @@ describe('Time sequence', () => {
     );
     await import('./time-sequence.ts');
 
-    const userStories = document.querySelectorAll('.user-story');
-    expect(userStories.length).toEqual(2);
+    const userStoriesTitle = Array.from(
+      document.querySelectorAll('.user-story span'),
+    ).map((div) => div.textContent);
+    expect(userStoriesTitle).toEqual(['userStory1', 'userStory2']);
   });
 
   test('Should render the page with two user stories not dealt at the same time', async () => {

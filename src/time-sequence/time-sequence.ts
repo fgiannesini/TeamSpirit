@@ -7,6 +7,12 @@ const createUserStory = (id: string) => {
   const userStoryHtmlElement = document.createElement('div');
   userStoryHtmlElement.id = id;
   userStoryHtmlElement.className = 'user-story';
+
+  const userStoryTitle = document.createElement('span');
+  userStoryTitle.textContent = id;
+  userStoryTitle.className = 'user-story-title';
+  userStoryHtmlElement.appendChild(userStoryTitle);
+
   return userStoryHtmlElement;
 };
 
