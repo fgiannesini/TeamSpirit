@@ -59,7 +59,7 @@ const renderTimeSequence = (timeEvents: TimeEvent[]) => {
         userStory.appendChild(timeSequenceElement('horizontal-top'));
         userStory.appendChild(timeSequenceElement('vertical'));
       }
-      if (state == State.IN_PROGRESS) {
+      if (state == State.IN_PROGRESS || state == State.REVIEW) {
         if (!userStoriesState.get(userStoryName)) {
           userStory.appendChild(timeSequenceElement('vertical'));
           userStoriesState.set(userStoryName, true);

@@ -162,32 +162,35 @@ describe('Time sequence', () => {
     ]);
   });
 
-  test('Should render the page with one user story still in progress', async () => {
-    saveTimeEvents(
-      [
-        {
-          time: 1,
-          userStoryName: 'userStory1',
-          thread: 0,
-          state: State.IN_PROGRESS,
-        },
-        {
-          time: 2,
-          userStoryName: 'userStory1',
-          thread: 0,
-          state: State.IN_PROGRESS,
-        },
-      ],
-      'e4567-e89b-12d3-a456-426614174000',
-    );
-    await import('./time-sequence.ts');
+  test.each([State.IN_PROGRESS, State.REVIEW])(
+    'Should render the page with one user story still processed',
+    async (state: State) => {
+      saveTimeEvents(
+        [
+          {
+            time: 1,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: state,
+          },
+          {
+            time: 2,
+            userStoryName: 'userStory1',
+            thread: 0,
+            state: state,
+          },
+        ],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
+      await import('./time-sequence.ts');
 
-    expect(userStoryClassNames('userStory1')).toEqual([
-      'vertical',
-      'horizontal-top',
-      'horizontal-top',
-    ]);
-  });
+      expect(userStoryClassNames('userStory1')).toEqual([
+        'vertical',
+        'horizontal-top',
+        'horizontal-top',
+      ]);
+    },
+  );
 
   const userStoryClassNames = (userStoryName: string) =>
     Array.from(document.querySelectorAll(`#${userStoryName} div`)).map(
