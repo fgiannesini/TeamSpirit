@@ -227,6 +227,33 @@ describe('Time sequence', () => {
     ]);
   });
 
+  test('Should render the page with one user story reviewed by two threads', async () => {
+    saveTimeEvents(
+      [
+        {
+          time: 1,
+          userStoryName: 'userStory1',
+          thread: 0,
+          state: State.REVIEW,
+        },
+        {
+          time: 1,
+          userStoryName: 'userStory1',
+          thread: 1,
+          state: State.REVIEW,
+        },
+      ],
+      'e4567-e89b-12d3-a456-426614174000',
+    );
+    await import('./time-sequence.ts');
+
+    expect(userStoryClassNames('userStory1')).toEqual([
+      'vertical',
+      'horizontal-top',
+      'vertical',
+    ]);
+  });
+
   const userStoryClassNames = (userStoryName: string) =>
     Array.from(document.querySelectorAll(`#${userStoryName} div`)).map(
       (div) => div.className,

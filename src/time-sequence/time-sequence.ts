@@ -22,6 +22,20 @@ const timeSequenceElement = (className: string) => {
   return timeSequenceElement;
 };
 
+const getDeduplicatesEventsStates = (currentEvents: TimeEvent[]) => {
+  const values = currentEvents
+    .reduce<Map<string, { userStoryName: string; state: State }>>(
+      (acc, { userStoryName, state }) => {
+        const key = `${userStoryName}_${state}`;
+        acc.set(key, { userStoryName, state });
+        return acc;
+      },
+      new Map(),
+    )
+    .values();
+  return Array.from(values);
+};
+
 const generateSequences = (
   timeEvents: TimeEvent[],
   userStoryNames: string[],
@@ -34,10 +48,11 @@ const generateSequences = (
   let time = 0;
   while (maxTime !== time) {
     time++;
-    const currentEvents = timeEvents.filter((event) => event.time == time);
-    currentEvents.forEach((event) => {
-      if (event.state === State.IN_PROGRESS || event.state === State.REVIEW) {
-        const sequence = userStoriesSequence.get(event.userStoryName);
+    const currentEvents = timeEvents.filter((event) => event.time === time);
+    const eventStates = getDeduplicatesEventsStates(currentEvents);
+    eventStates.forEach(({ userStoryName, state }) => {
+      if (state === State.IN_PROGRESS || state === State.REVIEW) {
+        const sequence = userStoriesSequence.get(userStoryName);
         if (!sequence) return;
         sequence.push('vertical', 'horizontal-top', 'vertical');
       }
@@ -53,16 +68,9 @@ const generateSequences = (
   return userStoriesSequence;
 };
 
-function hasTwoConsecutiveVertical(
-  sequenceElement: string,
-  sequence: string[],
-  index: number,
-) {
-  return (
-    sequenceElement === 'vertical' &&
-    (sequence[index - 1] === 'vertical' || sequence[index + 1] === 'vertical')
-  );
-}
+const hasTwoConsecutiveVertical = (sequence: string[], index: number) =>
+  sequence[index] === 'vertical' &&
+  (sequence[index - 1] === 'vertical' || sequence[index + 1] === 'vertical');
 
 const cleanConsecutiveVerticals = (
   userStoriesSequence: Map<string, string[]>,
@@ -72,8 +80,8 @@ const cleanConsecutiveVerticals = (
     newUserStoriesSequence.set(
       key,
       values.filter(
-        (sequenceElement, index, sequence) =>
-          !hasTwoConsecutiveVertical(sequenceElement, sequence, index),
+        (_sequenceElement, index, sequence) =>
+          !hasTwoConsecutiveVertical(sequence, index),
       ),
     );
   });
