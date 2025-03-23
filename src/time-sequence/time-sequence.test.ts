@@ -188,9 +188,44 @@ describe('Time sequence', () => {
         'vertical',
         'horizontal-top',
         'horizontal-top',
+        'vertical',
       ]);
     },
   );
+
+  test('Should render the page with one user story to review and review', async () => {
+    saveTimeEvents(
+      [
+        {
+          time: 1,
+          userStoryName: 'userStory1',
+          thread: 0,
+          state: State.IN_PROGRESS,
+        },
+        {
+          time: 1,
+          userStoryName: 'userStory1',
+          thread: 0,
+          state: State.TO_REVIEW,
+        },
+        {
+          time: 2,
+          userStoryName: 'userStory1',
+          thread: 0,
+          state: State.REVIEW,
+        },
+      ],
+      'e4567-e89b-12d3-a456-426614174000',
+    );
+    await import('./time-sequence.ts');
+
+    expect(userStoryClassNames('userStory1')).toEqual([
+      'vertical',
+      'horizontal-top',
+      'horizontal-top',
+      'vertical',
+    ]);
+  });
 
   const userStoryClassNames = (userStoryName: string) =>
     Array.from(document.querySelectorAll(`#${userStoryName} div`)).map(

@@ -40,35 +40,50 @@ const renderTimeSequence = (timeEvents: TimeEvent[]) => {
   const maxTime = Math.max(...timeEvents.map((event) => event.time));
   let time = 0;
 
-  const userStoriesState = new Map(userStoryNames.map((str) => [str, false]));
+  const userStoriesSequence = new Map<string, string[]>(
+    userStoryNames.map((str) => [str, []]),
+  );
   while (maxTime !== time) {
     time++;
     const currentEvents = timeEvents.filter((event) => event.time == time);
-    for (const userStoryName of userStoryNames) {
-      const userStory = document.querySelector(`#${userStoryName}`);
-      if (!userStory) continue;
-
-      const state = currentEvents.findLast(
-        (event) => event.userStoryName === userStoryName,
-      )?.state;
-      if (!state) {
-        userStory.appendChild(timeSequenceElement('horizontal-bottom'));
-      }
-      if (state == State.DONE || state == State.TO_REVIEW) {
-        userStory.appendChild(timeSequenceElement('vertical'));
-        userStory.appendChild(timeSequenceElement('horizontal-top'));
-        userStory.appendChild(timeSequenceElement('vertical'));
-      }
+    for (const event of currentEvents) {
+      const state = event.state;
       if (state == State.IN_PROGRESS || state == State.REVIEW) {
-        if (!userStoriesState.get(userStoryName)) {
-          userStory.appendChild(timeSequenceElement('vertical'));
-          userStoriesState.set(userStoryName, true);
-        }
-        userStory.appendChild(timeSequenceElement('horizontal-top'));
+        const sequence = userStoriesSequence.get(event.userStoryName) ?? [];
+        sequence.push('vertical');
+        sequence.push('horizontal-top');
+        sequence.push('vertical');
       }
     }
+    userStoriesSequence.forEach((sequences) => {
+      const length = sequences.filter((sequence) =>
+        sequence.startsWith('horizontal'),
+      ).length;
+      for (let i = 0; i < time - length; i++) {
+        sequences.push('horizontal-bottom');
+      }
+    });
   }
+  const newUserStoriesSequence = new Map<string, string[]>();
+  userStoriesSequence.forEach((values, key) =>
+    newUserStoriesSequence.set(
+      key,
+      values.filter(
+        (value, index, array) =>
+          !(value === 'vertical' && array[index - 1] === 'vertical') &&
+          !(value === 'vertical' && array[index + 1] === 'vertical'),
+      ),
+    ),
+  );
+  newUserStoriesSequence.forEach((sequences, userStoryName) => {
+    const userStory = document.querySelector(`#${userStoryName}`);
+    if (!userStory) return;
+    sequences.forEach((element) => {
+      userStory.appendChild(timeSequenceElement(element));
+    });
+  });
 };
+
 const params = new URLSearchParams(window.location.search);
 const id = params.get('id');
 if (id) {
