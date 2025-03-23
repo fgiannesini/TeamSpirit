@@ -1,3 +1,4 @@
+import './time-sequence.scss';
 import { loadTimeEvents } from '../flow/storage/session-storage.ts';
 import { TimeEvent } from '../simulate/events.ts';
 import { State } from '../simulate/user-story.ts';

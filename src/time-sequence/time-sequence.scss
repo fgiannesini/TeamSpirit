@@ -1,0 +1,24 @@
+.user-story {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+  margin: 1rem;
+}
+
+.vertical {
+  width: 0;
+  height: 2rem;
+  border-right: solid 0.1rem black;
+}
+
+.horizontal-top {
+  width: 2rem;
+  height: 2rem;
+  border-top: solid 0.1rem black;
+}
+
+.horizontal-bottom {
+  width: 2rem;
+  height: 2rem;
+  border-bottom: solid 0.1rem black;
+}
