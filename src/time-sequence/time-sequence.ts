@@ -40,21 +40,31 @@ const renderTimeSequence = (timeEvents: TimeEvent[]) => {
   const maxTime = Math.max(...timeEvents.map((event) => event.time));
   let time = 0;
 
+  const userStoriesState = new Map(userStoryNames.map((str) => [str, false]));
   while (maxTime !== time) {
     time++;
     const currentEvents = timeEvents.filter((event) => event.time == time);
     for (const userStoryName of userStoryNames) {
-      const userStory = document.querySelector('#' + userStoryName);
+      const userStory = document.querySelector(`#${userStoryName}`);
+      if (!userStory) continue;
+
       const state = currentEvents.findLast(
         (event) => event.userStoryName === userStoryName,
       )?.state;
       if (!state) {
-        userStory?.appendChild(timeSequenceElement('horizontal-bottom'));
+        userStory.appendChild(timeSequenceElement('horizontal-bottom'));
       }
-      if (state == State.DONE) {
-        userStory?.appendChild(timeSequenceElement('vertical'));
-        userStory?.appendChild(timeSequenceElement('horizontal-top'));
-        userStory?.appendChild(timeSequenceElement('vertical'));
+      if (state == State.DONE || state == State.TO_REVIEW) {
+        userStory.appendChild(timeSequenceElement('vertical'));
+        userStory.appendChild(timeSequenceElement('horizontal-top'));
+        userStory.appendChild(timeSequenceElement('vertical'));
+      }
+      if (state == State.IN_PROGRESS) {
+        if (!userStoriesState.get(userStoryName)) {
+          userStory.appendChild(timeSequenceElement('vertical'));
+          userStoriesState.set(userStoryName, true);
+        }
+        userStory.appendChild(timeSequenceElement('horizontal-top'));
       }
     }
   }

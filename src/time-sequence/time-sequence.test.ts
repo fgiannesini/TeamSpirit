@@ -16,7 +16,7 @@ describe('Time sequence', () => {
     vi.useFakeTimers();
   });
 
-  test('Should render the page with two events on one user story', async () => {
+  test('Should render the page with two events on one user story in progress and done', async () => {
     saveTimeEvents(
       [
         {
@@ -38,11 +38,11 @@ describe('Time sequence', () => {
 
     const userStories = document.querySelectorAll('.user-story');
     expect(userStories.length).toEqual(1);
-    expect(
-      Array.from(document.querySelectorAll('#userStory1 div')).map(
-        (div) => div.className,
-      ),
-    ).toEqual(['vertical', 'horizontal-top', 'vertical']);
+    expect(userStoryClassNames('userStory1')).toEqual([
+      'vertical',
+      'horizontal-top',
+      'vertical',
+    ]);
   });
 
   test('Should render the page with two events on two user stories', async () => {
@@ -89,7 +89,7 @@ describe('Time sequence', () => {
     expect(userStoriesTitle).toEqual(['userStory1', 'userStory2']);
   });
 
-  test('Should render the page with two user stories not dealt at the same time', async () => {
+  test('Should render the page with two user stories in progress and done at different time', async () => {
     saveTimeEvents(
       [
         {
@@ -121,15 +121,76 @@ describe('Time sequence', () => {
     );
     await import('./time-sequence.ts');
 
-    expect(
-      Array.from(document.querySelectorAll('#userStory1 div')).map(
-        (div) => div.className,
-      ),
-    ).toEqual(['vertical', 'horizontal-top', 'vertical', 'horizontal-bottom']);
-    expect(
-      Array.from(document.querySelectorAll('#userStory2 div')).map(
-        (div) => div.className,
-      ),
-    ).toEqual(['horizontal-bottom', 'vertical', 'horizontal-top', 'vertical']);
+    expect(userStoryClassNames('userStory1')).toEqual([
+      'vertical',
+      'horizontal-top',
+      'vertical',
+      'horizontal-bottom',
+    ]);
+    expect(userStoryClassNames('userStory2')).toEqual([
+      'horizontal-bottom',
+      'vertical',
+      'horizontal-top',
+      'vertical',
+    ]);
   });
+
+  test('Should render the page with one user story in progress and to review', async () => {
+    saveTimeEvents(
+      [
+        {
+          time: 1,
+          userStoryName: 'userStory1',
+          thread: 0,
+          state: State.IN_PROGRESS,
+        },
+        {
+          time: 1,
+          userStoryName: 'userStory1',
+          thread: 0,
+          state: State.TO_REVIEW,
+        },
+      ],
+      'e4567-e89b-12d3-a456-426614174000',
+    );
+    await import('./time-sequence.ts');
+
+    expect(userStoryClassNames('userStory1')).toEqual([
+      'vertical',
+      'horizontal-top',
+      'vertical',
+    ]);
+  });
+
+  test('Should render the page with one user story still in progress', async () => {
+    saveTimeEvents(
+      [
+        {
+          time: 1,
+          userStoryName: 'userStory1',
+          thread: 0,
+          state: State.IN_PROGRESS,
+        },
+        {
+          time: 2,
+          userStoryName: 'userStory1',
+          thread: 0,
+          state: State.IN_PROGRESS,
+        },
+      ],
+      'e4567-e89b-12d3-a456-426614174000',
+    );
+    await import('./time-sequence.ts');
+
+    expect(userStoryClassNames('userStory1')).toEqual([
+      'vertical',
+      'horizontal-top',
+      'horizontal-top',
+    ]);
+  });
+
+  const userStoryClassNames = (userStoryName: string) =>
+    Array.from(document.querySelectorAll(`#${userStoryName} div`)).map(
+      (div) => div.className,
+    );
 });
