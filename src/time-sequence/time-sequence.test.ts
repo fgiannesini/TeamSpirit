@@ -45,7 +45,7 @@ describe('Time sequence', () => {
     ]);
   });
 
-  test('Should render the page with two events on two user stories', async () => {
+  test('Should render the page with two user stories', async () => {
     saveTimeEvents(
       [
         {
@@ -193,7 +193,7 @@ describe('Time sequence', () => {
     },
   );
 
-  test('Should render the page with one user story to review and review', async () => {
+  test('Should render the page with one user story to review and reviewed', async () => {
     saveTimeEvents(
       [
         {
