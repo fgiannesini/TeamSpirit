@@ -1,0 +1,1 @@
+.user-story{display:flex;align-items:center;gap:.1rem;margin:1rem}.user-story .user-story-title{margin:0 .5rem}.vertical{width:0;height:2rem;border-right:solid .1rem black}.vertical-dashed{width:0;height:2rem;border-right:grey .1rem dashed}.horizontal-top{width:2rem;height:2rem;border-top:solid .1rem black}.horizontal-bottom{width:2rem;height:2rem;border-bottom:solid .1rem black}
