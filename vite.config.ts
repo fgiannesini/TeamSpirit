@@ -8,6 +8,7 @@ export default defineConfig({
       input: {
         main: './src/index.html',
         flow: './src/flow/flow.html',
+        'time-sequence': './src/time-sequence/time-sequence.html',
       },
     },
     outDir: '../dist',
