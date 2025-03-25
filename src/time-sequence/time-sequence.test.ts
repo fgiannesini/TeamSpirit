@@ -126,8 +126,10 @@ describe('Time sequence', () => {
       'horizontal-top',
       'vertical',
       'horizontal-bottom',
+      'vertical-dashed',
     ]);
     expect(userStoryClassNames('userStory2')).toEqual([
+      'vertical-dashed',
       'horizontal-bottom',
       'vertical',
       'horizontal-top',
@@ -187,6 +189,7 @@ describe('Time sequence', () => {
       expect(userStoryClassNames('userStory1')).toEqual([
         'vertical',
         'horizontal-top',
+        'vertical-dashed',
         'horizontal-top',
         'vertical',
       ]);
@@ -222,6 +225,7 @@ describe('Time sequence', () => {
     expect(userStoryClassNames('userStory1')).toEqual([
       'vertical',
       'horizontal-top',
+      'vertical-dashed',
       'horizontal-top',
       'vertical',
     ]);
@@ -251,6 +255,55 @@ describe('Time sequence', () => {
       'vertical',
       'horizontal-top',
       'vertical',
+    ]);
+  });
+
+  test('Should render the page with one user story reviewed by two threads', async () => {
+    saveTimeEvents(
+      [
+        {
+          time: 1,
+          userStoryName: 'userStory1',
+          thread: 0,
+          state: State.IN_PROGRESS,
+        },
+        {
+          time: 1,
+          userStoryName: 'userStory2',
+          thread: 1,
+          state: State.IN_PROGRESS,
+        },
+        {
+          time: 1,
+          userStoryName: 'userStory2',
+          thread: 1,
+          state: State.DONE,
+        },
+        {
+          time: 2,
+          userStoryName: 'userStory1',
+          thread: 0,
+          state: State.IN_PROGRESS,
+        },
+        {
+          time: 3,
+          userStoryName: 'userStory1',
+          thread: 0,
+          state: State.IN_PROGRESS,
+        },
+      ],
+      'e4567-e89b-12d3-a456-426614174000',
+    );
+    await import('./time-sequence.ts');
+
+    expect(userStoryClassNames('userStory2')).toEqual([
+      'vertical',
+      'horizontal-top',
+      'vertical',
+      'horizontal-bottom',
+      'vertical-dashed',
+      'horizontal-bottom',
+      'vertical-dashed',
     ]);
   });
 

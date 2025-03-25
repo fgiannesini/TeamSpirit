@@ -62,29 +62,48 @@ const generateSequences = (
         s.startsWith('horizontal'),
       ).length;
       const missingBottoms = time - horizontalCount;
-      sequences.push(...Array(missingBottoms).fill('horizontal-bottom'));
+      sequences.push(
+        ...Array.from({ length: missingBottoms }).flatMap(() => [
+          'vertical-dashed',
+          'horizontal-bottom',
+          'vertical-dashed',
+        ]),
+      );
     });
   }
   return userStoriesSequence;
 };
 
-const hasTwoConsecutiveVertical = (sequence: string[], index: number) =>
-  sequence[index] === 'vertical' &&
-  (sequence[index - 1] === 'vertical' || sequence[index + 1] === 'vertical');
-
 const cleanConsecutiveVerticals = (
   userStoriesSequence: Map<string, string[]>,
 ) => {
   const newUserStoriesSequence = new Map<string, string[]>();
+
   userStoriesSequence.forEach((values, key) => {
-    newUserStoriesSequence.set(
-      key,
-      values.filter(
-        (_sequenceElement, index, sequence) =>
-          !hasTwoConsecutiveVertical(sequence, index),
-      ),
-    );
+    const transformedList: string[] = [];
+    for (let i = 0; i < values.length; i++) {
+      if (values[i] === 'vertical' && values[i + 1] === 'vertical') {
+        transformedList.push('vertical-dashed');
+        i++;
+      } else if (
+        values[i] === 'vertical-dashed' &&
+        values[i + 1] === 'vertical-dashed'
+      ) {
+        transformedList.push('vertical-dashed');
+        i++;
+      } else if (
+        (values[i] === 'vertical' && values[i + 1] === 'vertical-dashed') ||
+        (values[i] === 'vertical-dashed' && values[i + 1] === 'vertical')
+      ) {
+        transformedList.push('vertical');
+        i++;
+      } else {
+        transformedList.push(values[i]);
+      }
+    }
+    newUserStoriesSequence.set(key, transformedList);
   });
+
   return newUserStoriesSequence;
 };
 

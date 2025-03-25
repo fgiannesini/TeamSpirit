@@ -15,6 +15,12 @@
   border-right: solid 0.1rem black;
 }
 
+.vertical-dashed {
+  width: 0;
+  height: 2rem;
+  border-right: grey 0.1rem dashed;
+}
+
 .horizontal-top {
   width: 2rem;
   height: 2rem;
