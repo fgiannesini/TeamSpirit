@@ -119,6 +119,7 @@ describe('Main', () => {
     expect(buildBacklogForEnsembleTeam()).toEqual(
       new Backlog([
         {
+          id: 0,
           name: `US0`,
           complexity: 5,
           review: noReview,
@@ -128,6 +129,7 @@ describe('Main', () => {
           progression: 0,
         },
         {
+          id: 1,
           name: `US1`,
           complexity: 5,
           review: noReview,
@@ -148,6 +150,7 @@ describe('Main', () => {
     expect(buildBacklogForParallelTeam()).toEqual(
       new Backlog([
         {
+          id: 0,
           name: `US0`,
           complexity: 5,
           review: {
@@ -170,6 +173,7 @@ describe('Main', () => {
     expect(buildBacklogForParallelTeam()).toEqual(
       new Backlog([
         {
+          id: 0,
           name: `US0`,
           complexity: 5,
           review: noReview,
@@ -218,8 +222,8 @@ describe('Main', () => {
     setValueTo('#power-input-1', '10');
     expect(buildParallelTeam()).toStrictEqual(
       new ParallelTeam([
-        { id: 0, power: 5 },
-        { id: 1, power: 10 },
+        { id: 0, name: 'thread0', power: 5 },
+        { id: 1, name: 'thread1', power: 10 },
       ]),
     );
   });
@@ -232,8 +236,8 @@ describe('Main', () => {
     select('#team-type-select', 'ensemble');
     expect(buildEnsembleTeam()).toStrictEqual(
       new EnsembleTeam([
-        { id: 0, power: 5 },
-        { id: 1, power: 10 },
+        { id: 0, name: 'thread0', power: 5 },
+        { id: 1, name: 'thread1', power: 10 },
       ]),
     );
   });
@@ -285,6 +289,7 @@ describe('Main', () => {
     expect(buildBacklogForEnsembleTeam()).toEqual(
       new Backlog([
         {
+          id: 0,
           name: `US0`,
           complexity: 2,
           review: noReview,
@@ -294,6 +299,7 @@ describe('Main', () => {
           progression: 0,
         },
         {
+          id: 1,
           name: `US1`,
           complexity: 4,
           review: noReview,

@@ -14,6 +14,7 @@ describe('Simulation', () => {
   test('should handle 2 simple userStories by 2 devs', () => {
     const backlog = new Backlog([
       {
+        id: 1,
         name: 'userStory1',
         complexity: 1,
         reviewComplexity: 0,
@@ -23,6 +24,7 @@ describe('Simulation', () => {
         progression: 0,
       },
       {
+        id: 2,
         name: 'userStory2',
         complexity: 1,
         reviewComplexity: 0,
@@ -34,8 +36,8 @@ describe('Simulation', () => {
     ]);
 
     const team = new ParallelTeam([
-      { id: 0, power: 1 },
-      { id: 1, power: 1 },
+      { id: 0, name: 'thread0', power: 1 },
+      { id: 1, name: 'thread1', power: 1 },
     ]);
     const events = simulate(backlog, team);
 
@@ -73,6 +75,7 @@ describe('Simulation', () => {
   test('should handle 1 simple userStory by an efficient dev', () => {
     const backlog = new Backlog([
       {
+        id: 1,
         name: 'userStory1',
         complexity: 5,
         reviewComplexity: 0,
@@ -83,7 +86,7 @@ describe('Simulation', () => {
       },
     ]);
 
-    const team = new ParallelTeam([{ id: 0, power: 2 }]);
+    const team = new ParallelTeam([{ id: 0, name: 'thread0', power: 2 }]);
     const events = simulate(backlog, team);
 
     expect(events).toEqual<TimeEvent[]>([
@@ -120,6 +123,7 @@ describe('Simulation', () => {
   test('should handle 3 simple userStories by 2 devs', () => {
     const backlog = new Backlog([
       {
+        id: 1,
         name: 'userStory1',
         complexity: 1,
         reviewComplexity: 0,
@@ -129,6 +133,7 @@ describe('Simulation', () => {
         progression: 0,
       },
       {
+        id: 2,
         name: 'userStory2',
         complexity: 1,
         reviewComplexity: 0,
@@ -138,6 +143,7 @@ describe('Simulation', () => {
         progression: 0,
       },
       {
+        id: 3,
         name: 'userStory3',
         complexity: 1,
         reviewComplexity: 0,
@@ -149,8 +155,8 @@ describe('Simulation', () => {
     ]);
 
     const team = new ParallelTeam([
-      { id: 0, power: 1 },
-      { id: 1, power: 1 },
+      { id: 0, name: 'thread0', power: 1 },
+      { id: 1, name: 'thread1', power: 1 },
     ]);
     const events = simulate(backlog, team);
     expect(events).toEqual([
@@ -205,6 +211,7 @@ describe('Simulation', () => {
   test('should handle 2 complex userStories by 2 devs', () => {
     const backlog = new Backlog([
       {
+        id: 1,
         name: 'userStory1',
         complexity: 2,
         reviewComplexity: 0,
@@ -214,6 +221,7 @@ describe('Simulation', () => {
         progression: 0,
       },
       {
+        id: 2,
         name: 'userStory2',
         complexity: 2,
         reviewComplexity: 0,
@@ -225,8 +233,8 @@ describe('Simulation', () => {
     ]);
 
     const team = new ParallelTeam([
-      { id: 0, power: 1 },
-      { id: 1, power: 1 },
+      { id: 0, name: 'thread0', power: 1 },
+      { id: 1, name: 'thread1', power: 1 },
     ]);
     const events = simulate(backlog, team);
     expect(events).toEqual([
@@ -275,6 +283,7 @@ describe('Simulation', () => {
   test('should handle 1 simple userStory and review', () => {
     const backlog = new Backlog([
       {
+        id: 0,
         name: 'userStory0',
         complexity: 1,
         reviewComplexity: 2,
@@ -289,8 +298,8 @@ describe('Simulation', () => {
     ]);
 
     const team = new ParallelTeam([
-      { id: 0, power: 1 },
-      { id: 1, power: 1 },
+      { id: 0, name: 'thread0', power: 1 },
+      { id: 1, name: 'thread1', power: 1 },
     ]);
     const events = simulate(backlog, team);
 
@@ -352,6 +361,7 @@ describe('Simulation', () => {
   test('should handle 1 simple userStory and review by an efficient dev', () => {
     const backlog = new Backlog([
       {
+        id: 1,
         name: 'userStory1',
         complexity: 20,
         reviewComplexity: 2,
@@ -368,10 +378,12 @@ describe('Simulation', () => {
     const team = new ParallelTeam([
       {
         id: 0,
+        name: 'thread0',
         power: 20,
       },
       {
         id: 1,
+        name: 'thread1',
         power: 1,
       },
     ]);
@@ -435,6 +447,7 @@ describe('Simulation', () => {
   test('should handle 1 simple userStory and review by two devs', () => {
     const backlog = new Backlog([
       {
+        id: 1,
         name: 'userStory1',
         complexity: 20,
         reviewComplexity: 2,
@@ -451,14 +464,17 @@ describe('Simulation', () => {
     const team = new ParallelTeam([
       {
         id: 0,
+        name: 'thread0',
         power: 20,
       },
       {
         id: 1,
+        name: 'thread1',
         power: 1,
       },
       {
         id: 2,
+        name: 'thread2',
         power: 1,
       },
     ]);
@@ -540,6 +556,7 @@ describe('Simulation', () => {
   test('should handle 3 simple userStories by 3 devs and 2 reviews', () => {
     const backlog = new Backlog([
       {
+        id: 0,
         name: 'userStory0',
         complexity: 1,
         reviewComplexity: 1,
@@ -552,6 +569,7 @@ describe('Simulation', () => {
         progression: 0,
       },
       {
+        id: 1,
         name: 'userStory1',
         complexity: 1,
         reviewComplexity: 1,
@@ -564,6 +582,7 @@ describe('Simulation', () => {
         progression: 0,
       },
       {
+        id: 2,
         name: 'userStory2',
         complexity: 1,
         reviewComplexity: 1,
@@ -578,9 +597,9 @@ describe('Simulation', () => {
     ]);
 
     const team = new ParallelTeam([
-      { id: 0, power: 1 },
-      { id: 1, power: 1 },
-      { id: 2, power: 1 },
+      { id: 0, name: 'thread1', power: 1 },
+      { id: 1, name: 'thread2', power: 1 },
+      { id: 2, name: 'thread3', power: 1 },
     ]);
     const events = simulate(backlog, team);
     expect(events).toEqual([

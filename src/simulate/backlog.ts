@@ -18,6 +18,11 @@ export class Backlog {
   }
 }
 
+export const getUserStories = (backlog: Backlog) => [
+  ...backlog.userStoriesRemaining,
+  ...backlog.userStoriesDone,
+];
+
 export const getNextUserStory = (
   backlog: Backlog,
   thread: Thread,

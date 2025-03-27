@@ -127,6 +127,7 @@ describe('Backlog', () => {
 
   const inReview = (thread: number, reviewers: [number, number][]) => {
     return {
+      id: 0,
       name: 'inReview',
       complexity: 4,
       reviewComplexity: 2,
@@ -142,6 +143,7 @@ describe('Backlog', () => {
 
   const toReview = (thread: number, reviewComplexity = 1) => {
     return {
+      id: 0,
       name: 'toReview',
       complexity: 1,
       reviewComplexity,
@@ -154,6 +156,7 @@ describe('Backlog', () => {
 
   const inProgress = (thread: number) => {
     return {
+      id: 0,
       name: 'inProgress',
       complexity: 2,
       reviewComplexity: 1,
@@ -166,6 +169,7 @@ describe('Backlog', () => {
 
   const todo = (complexity = 1) => {
     return {
+      id: 0,
       name: 'todo',
       complexity,
       reviewComplexity: 1,
@@ -177,6 +181,6 @@ describe('Backlog', () => {
   };
 
   const thread = (id: number, power = 1) => {
-    return { id, power };
+    return { id, name: '', power };
   };
 });

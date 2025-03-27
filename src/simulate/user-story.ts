@@ -16,6 +16,7 @@ export enum State {
 }
 
 export interface UserStory {
+  id: number;
   name: string;
   complexity: number;
   reviewComplexity: number;
@@ -26,6 +27,7 @@ export interface UserStory {
 }
 
 export const idle: UserStory = {
+  id: -1,
   name: 'idle',
   complexity: 0,
   progression: 0,
@@ -47,7 +49,10 @@ export const setInProgress = (userStory: UserStory, dev: Thread): UserStory => {
   };
 };
 
-export const setDoneBy = (userStory: UserStory, threadId: number): UserStory => {
+export const setDoneBy = (
+  userStory: UserStory,
+  threadId: number,
+): UserStory => {
   return { ...userStory, state: State.DONE, thread: threadId };
 };
 
