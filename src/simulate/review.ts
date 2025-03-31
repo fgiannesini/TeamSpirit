@@ -1,4 +1,4 @@
-﻿import type {Thread} from './team.ts';
+﻿import type { Thread } from './team.ts';
 
 export interface Review {
   reviewersNeeded: number;
@@ -29,12 +29,12 @@ export const hasAllReviews = (
   review: Review,
   reviewComplexity: number,
 ): boolean =>
-  review.reviewersNeeded == review.reviewers.size &&
-  review.reviewers.values().every((review) => review == reviewComplexity);
+  review.reviewersNeeded === review.reviewers.size &&
+  review.reviewers.values().every((review) => review === reviewComplexity);
 
 export const hasSomeReviews = (review: Review, reviewComplexity: number) => {
   return (
-    review.reviewersNeeded != review.reviewers.size &&
-    review.reviewers.values().every((review) => review == reviewComplexity)
+    review.reviewersNeeded !== review.reviewers.size &&
+    review.reviewers.values().every((review) => review === reviewComplexity)
   );
 };

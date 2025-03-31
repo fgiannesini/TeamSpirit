@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "lint": "npx @biomejs/biome check src",
     "lint:fix": "npx @biomejs/biome check --write src",
+    "lint:fix-unsafe": "npx @biomejs/biome check --write --unsafe src",
     "test": "vitest run"
   },
   "devDependencies": {

@@ -13,8 +13,8 @@ export const renderStatEvents = (
   time: number,
   maxTime: number,
 ) => {
-  const currentEvents = events.filter((event) => event.time == time);
-  if (currentEvents.length == 0) return;
+  const currentEvents = events.filter((event) => event.time === time);
+  if (currentEvents.length === 0) return;
 
   const leadTime = getLeadTime();
   if (leadTime)

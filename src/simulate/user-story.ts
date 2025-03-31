@@ -1,5 +1,11 @@
-import {getReviewPoints, hasAllReviews, needReview, noReview, type Review,} from './review.ts';
-import type {Thread} from './team.ts';
+import {
+  type Review,
+  getReviewPoints,
+  hasAllReviews,
+  needReview,
+  noReview,
+} from './review.ts';
+import type { Thread } from './team.ts';
 
 export enum State {
   TODO = 0,
@@ -97,7 +103,7 @@ export const setReview = (userStory: UserStory, thread: Thread): UserStory => {
 };
 
 export const isDeveloped = (userStory: UserStory): boolean => {
-  return userStory.progression == userStory.complexity;
+  return userStory.progression === userStory.complexity;
 };
 
 export const isReviewed = (userStory: UserStory): boolean => {

@@ -1,6 +1,14 @@
-import {hasSomeReviews} from './review.ts';
-import type {Thread} from './team.ts';
-import {idle, isInProgressBy, isInReviewBy, isToReviewBy, State, toDo, type UserStory,} from './user-story.ts';
+import { hasSomeReviews } from './review.ts';
+import type { Thread } from './team.ts';
+import {
+  State,
+  type UserStory,
+  idle,
+  isInProgressBy,
+  isInReviewBy,
+  isToReviewBy,
+  toDo,
+} from './user-story.ts';
 
 export class Backlog {
   readonly userStoriesRemaining: UserStory[];
@@ -23,13 +31,13 @@ export const getNextUserStory = (
     (userStory) => isInProgressBy(userStory, thread),
   );
 
-  if (threadUserStoryIndex == -1) {
+  if (threadUserStoryIndex === -1) {
     threadUserStoryIndex = backlog.userStoriesRemaining.findIndex((userStory) =>
       isInReviewBy(userStory, thread),
     );
   }
 
-  if (threadUserStoryIndex == -1) {
+  if (threadUserStoryIndex === -1) {
     let minDiff = Number.MAX_VALUE;
     backlog.userStoriesRemaining.forEach((userStory, i) => {
       if (isToReviewBy(userStory, thread)) {
@@ -42,7 +50,7 @@ export const getNextUserStory = (
     });
   }
 
-  if (threadUserStoryIndex == -1) {
+  if (threadUserStoryIndex === -1) {
     let minDiff = Number.MAX_VALUE;
     backlog.userStoriesRemaining.forEach((userStory, i) => {
       if (toDo(userStory)) {
@@ -55,7 +63,7 @@ export const getNextUserStory = (
     });
   }
 
-  if (threadUserStoryIndex != -1) {
+  if (threadUserStoryIndex !== -1) {
     return backlog.userStoriesRemaining.splice(threadUserStoryIndex, 1)[0];
   }
   return idle;
@@ -70,7 +78,7 @@ export const userStoriesWithSomeReviews = (backlog: Backlog): UserStory[] => {
 };
 
 export const addUserStory = (userStory: UserStory, backlog: Backlog) => {
-  if (userStory.state == State.DONE) {
+  if (userStory.state === State.DONE) {
     backlog.userStoriesDone.push(userStory);
   } else {
     backlog.userStoriesRemaining.push(userStory);

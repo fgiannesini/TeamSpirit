@@ -1,4 +1,4 @@
-import type {TimeEvent} from '../simulate/events.ts';
+import type { TimeEvent } from '../simulate/events.ts';
 
 const addThread = (threadNumber: number) => {
   const threadHtmlElement = document.createElement('div');
@@ -14,7 +14,7 @@ const addThread = (threadNumber: number) => {
 
   const threadState = document.createElement('div');
   threadState.id = `thread-state-${threadNumber}`;
-  threadState.textContent = `Wait`;
+  threadState.textContent = 'Wait';
 
   threadHtmlElement.append(threadTitle, threadContent, threadState);
   return threadHtmlElement;

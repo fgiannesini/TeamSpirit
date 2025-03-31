@@ -25,7 +25,7 @@ const simulateTimeEvents = (team: Team, backlog: Backlog, time: number) => {
   const toAddBacklog: UserStory[] = [];
   for (const thread of team.getThreads()) {
     const userStory: UserStory = getNextUserStory(backlog, thread);
-    if (userStory == idle) {
+    if (userStory === idle) {
       idle.thread = thread.id;
       events.push(createEvent(time, idle, thread.id));
       continue;

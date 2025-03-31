@@ -15,7 +15,7 @@ const getInputValueOf = (selector: string) => {
   const number = Number.parseInt(
     document.querySelector<HTMLInputElement>(selector)?.value ?? '0',
   );
-  return isNaN(number) ? 0 : number;
+  return Number.isNaN(number) ? 0 : number;
 };
 
 export const buildBacklogForParallelTeam = () => {

@@ -1,5 +1,5 @@
-import { readFileSync } from 'fs';
-import { resolve } from 'path';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { saveTimeEvents } from '../flow/storage/session-storage.ts';
 import { State } from '../simulate/user-story.ts';

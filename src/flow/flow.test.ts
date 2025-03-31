@@ -1,7 +1,7 @@
-import {readFileSync} from 'fs';
-import {resolve} from 'path';
-import {beforeEach, describe, expect, test, vi} from 'vitest';
-import {State} from '../simulate/user-story.ts';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { State } from '../simulate/user-story.ts';
 import {
   getCompute,
   getComputeAll,
@@ -11,7 +11,7 @@ import {
   getThreadUserStory,
   getUserStory,
 } from './selector.ts';
-import {saveStatEvents, saveTimeEvents} from './storage/session-storage.ts';
+import { saveStatEvents, saveTimeEvents } from './storage/session-storage.ts';
 
 describe('Flow', () => {
   beforeEach(async () => {

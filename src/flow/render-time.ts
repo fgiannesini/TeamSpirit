@@ -1,5 +1,5 @@
-import type {TimeEvent} from '../simulate/events.ts';
-import {State} from '../simulate/user-story.ts';
+import type { TimeEvent } from '../simulate/events.ts';
+import { State } from '../simulate/user-story.ts';
 import {
   getBacklog,
   getDone,
@@ -17,7 +17,7 @@ const hasManyReviewsInSameTime = (
   return (
     timeEvents.filter(
       (timeEvent) =>
-        timeEvent.state == State.REVIEW &&
+        timeEvent.state === State.REVIEW &&
         timeEvent.userStoryName === userStoryName,
     ).length > 1
   );
@@ -41,7 +41,7 @@ export const renderTimeEvents = async (
   time: number,
   animationTime: number,
 ) => {
-  const currentEvents = events.filter((event) => event.time == time);
+  const currentEvents = events.filter((event) => event.time === time);
   for (const currentEvent of currentEvents) {
     if (currentEvent.userStoryName === 'idle') {
       setThreadStateTo(currentEvent.thread, 'Wait');

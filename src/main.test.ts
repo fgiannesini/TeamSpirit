@@ -1,18 +1,18 @@
-import {readFileSync} from 'fs';
-import {resolve} from 'path';
-import {beforeEach, describe, expect, test, vi} from 'vitest';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 import {
   buildBacklogForEnsembleTeam,
   buildBacklogForParallelTeam,
   buildEnsembleTeam,
   buildParallelTeam,
 } from './main.ts';
-import {Backlog} from './simulate/backlog.ts';
-import type {TimeEvent} from './simulate/events.ts';
-import {noReview} from './simulate/review.ts';
-import type {StatEvent} from './simulate/stats.ts';
-import {EnsembleTeam, ParallelTeam} from './simulate/team.ts';
-import {State} from './simulate/user-story.ts';
+import { Backlog } from './simulate/backlog.ts';
+import type { TimeEvent } from './simulate/events.ts';
+import { noReview } from './simulate/review.ts';
+import type { StatEvent } from './simulate/stats.ts';
+import { EnsembleTeam, ParallelTeam } from './simulate/team.ts';
+import { State } from './simulate/user-story.ts';
 
 describe('Main', () => {
   beforeEach(async () => {
@@ -120,7 +120,7 @@ describe('Main', () => {
       new Backlog([
         {
           id: 0,
-          name: `US0`,
+          name: 'US0',
           complexity: 5,
           review: noReview,
           reviewComplexity: 2,
@@ -130,7 +130,7 @@ describe('Main', () => {
         },
         {
           id: 1,
-          name: `US1`,
+          name: 'US1',
           complexity: 5,
           review: noReview,
           reviewComplexity: 2,
@@ -151,7 +151,7 @@ describe('Main', () => {
       new Backlog([
         {
           id: 0,
-          name: `US0`,
+          name: 'US0',
           complexity: 5,
           review: {
             reviewersNeeded: 1,
@@ -174,7 +174,7 @@ describe('Main', () => {
       new Backlog([
         {
           id: 0,
-          name: `US0`,
+          name: 'US0',
           complexity: 5,
           review: noReview,
           reviewComplexity: 2,
@@ -290,7 +290,7 @@ describe('Main', () => {
       new Backlog([
         {
           id: 0,
-          name: `US0`,
+          name: 'US0',
           complexity: 2,
           review: noReview,
           reviewComplexity: 1,
@@ -300,7 +300,7 @@ describe('Main', () => {
         },
         {
           id: 1,
-          name: `US1`,
+          name: 'US1',
           complexity: 4,
           review: noReview,
           reviewComplexity: 2,

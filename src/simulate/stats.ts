@@ -1,5 +1,5 @@
-import type {TimeEvent} from './events.ts';
-import {State} from './user-story.ts';
+import type { TimeEvent } from './events.ts';
+import { State } from './user-story.ts';
 
 export interface StatEvent {
   time: number;
@@ -19,7 +19,7 @@ export const computeStatEvents = (timeEvents: TimeEvent[]): StatEvent[] => {
 
   while (true) {
     const currentEvents = timeEvents.filter(
-      (event: TimeEvent) => event.time == time,
+      (event: TimeEvent) => event.time === time,
     );
     if (currentEvents.length === 0) break;
 
