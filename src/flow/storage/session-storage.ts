@@ -1,5 +1,5 @@
-import { TimeEvent } from '../../simulate/events.ts';
-import { StatEvent } from '../../simulate/stats.ts';
+import type {TimeEvent} from '../../simulate/events.ts';
+import type {StatEvent} from '../../simulate/stats.ts';
 
 export const loadTimeEvents = (key: string) =>
   JSON.parse(

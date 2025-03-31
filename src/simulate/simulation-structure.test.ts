@@ -1,15 +1,14 @@
 import { describe, expect, test } from 'vitest';
 import { Backlog } from './backlog.ts';
 import { noReview } from './review.ts';
-import { State } from './user-story.ts';
-import { ParallelTeam } from './team.ts';
 import { simulateStructure } from './simulation-structure.ts';
+import { ParallelTeam } from './team.ts';
+import { State } from './user-story.ts';
 
 export enum Action {
-  CREATE_THREAD,
-  CREATE_USER_STORY,
+  CREATE_THREAD = 0,
+  CREATE_USER_STORY = 1,
 }
-
 interface StructureEvent {
   time: number;
   action: Action;

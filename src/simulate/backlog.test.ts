@@ -4,8 +4,8 @@ import {
   getNextUserStory,
   userStoriesWithSomeReviews,
 } from './backlog.ts';
-import { idle, State } from './user-story.ts';
 import { noReview } from './review.ts';
+import { State, idle } from './user-story.ts';
 
 describe('Backlog', () => {
   test('Should get idle by default', () => {

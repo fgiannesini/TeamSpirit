@@ -26,7 +26,7 @@ describe('stats', () => {
         },
       ]),
     ).toEqual([
-      { time: 1, leadTime: NaN },
+      { time: 1, leadTime: Number.NaN },
       { time: 2, leadTime: 2 },
     ]);
   });
@@ -77,8 +77,8 @@ describe('stats', () => {
         { time: 3, userStoryName: 'US1', thread: 0, state: State.DONE },
       ]),
     ).toEqual([
-      { time: 1, leadTime: NaN },
-      { time: 2, leadTime: NaN },
+      { time: 1, leadTime: Number.NaN },
+      { time: 2, leadTime: Number.NaN },
       { time: 3, leadTime: 3 },
     ]);
   });

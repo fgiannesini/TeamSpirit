@@ -1,5 +1,5 @@
-import { TimeEvent } from '../simulate/events.ts';
-import { State } from '../simulate/user-story.ts';
+import type {TimeEvent} from '../simulate/events.ts';
+import {State} from '../simulate/user-story.ts';
 import {
   getBacklog,
   getDone,

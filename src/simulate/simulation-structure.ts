@@ -1,6 +1,6 @@
-import { Backlog, getUserStories } from './backlog.ts';
-import { ParallelTeam } from './team.ts';
+import { type Backlog, getUserStories } from './backlog.ts';
 import { Action } from './simulation-structure.test.ts';
+import type { ParallelTeam } from './team.ts';
 
 export const simulateStructure = (backlog: Backlog, team: ParallelTeam) => {
   const userStoryStructureEvents = getUserStories(backlog).map((userStory) => {

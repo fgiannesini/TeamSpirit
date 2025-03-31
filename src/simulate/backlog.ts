@@ -1,14 +1,6 @@
-import {
-  idle,
-  isInProgressBy,
-  isInReviewBy,
-  isToReviewBy,
-  State,
-  toDo,
-  UserStory,
-} from './user-story.ts';
-import { Thread } from './team.ts';
-import { hasSomeReviews } from './review.ts';
+import {hasSomeReviews} from './review.ts';
+import type {Thread} from './team.ts';
+import {idle, isInProgressBy, isInReviewBy, isToReviewBy, State, toDo, type UserStory,} from './user-story.ts';
 
 export class Backlog {
   readonly userStoriesRemaining: UserStory[];

@@ -4,11 +4,11 @@ import {
   getUserStoriesDone,
   getUserStoriesRemainings,
 } from './backlog.ts';
+import type { TimeEvent } from './events.ts';
 import { noReview } from './review.ts';
-import { State } from './user-story.ts';
-import { ParallelTeam } from './team.ts';
-import { TimeEvent } from './events.ts';
 import { simulate } from './simulation.ts';
+import { ParallelTeam } from './team.ts';
+import { State } from './user-story.ts';
 
 describe('Simulation', () => {
   test('should handle 2 simple userStories by 2 devs', () => {

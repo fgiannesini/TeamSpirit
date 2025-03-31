@@ -1,18 +1,18 @@
 import './style.scss';
-import { EnsembleTeam, ParallelTeam, Team } from './simulate/team.ts';
-import { Backlog } from './simulate/backlog.ts';
-import { State } from './simulate/user-story.ts';
 import {
   saveStatEvents,
   saveTimeEvents,
 } from './flow/storage/session-storage.ts';
-import { computeStatEvents } from './simulate/stats.ts';
 import { generateDevForm, generateUserStoriesForm } from './form/form.ts';
-import { simulate } from './simulate/simulation.ts';
+import { Backlog } from './simulate/backlog.ts';
 import { noReview } from './simulate/review.ts';
+import { simulate } from './simulate/simulation.ts';
+import { computeStatEvents } from './simulate/stats.ts';
+import { EnsembleTeam, ParallelTeam, type Team } from './simulate/team.ts';
+import { State } from './simulate/user-story.ts';
 
 const getInputValueOf = (selector: string) => {
-  const number = parseInt(
+  const number = Number.parseInt(
     document.querySelector<HTMLInputElement>(selector)?.value ?? '0',
   );
   return isNaN(number) ? 0 : number;

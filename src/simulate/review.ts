@@ -1,4 +1,4 @@
-﻿import { Thread } from './team.ts';
+﻿import type {Thread} from './team.ts';
 
 export interface Review {
   reviewersNeeded: number;

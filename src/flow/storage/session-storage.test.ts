@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
-import { loadTimeEvents, saveTimeEvents } from './session-storage.ts';
 import { State } from '../../simulate/user-story.ts';
+import { loadTimeEvents, saveTimeEvents } from './session-storage.ts';
 
 describe('session storage', () => {
   test('should save and load time events', () => {

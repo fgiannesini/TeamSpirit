@@ -1,4 +1,4 @@
-import { State, UserStory } from './user-story.ts';
+import type { State, UserStory } from './user-story.ts';
 
 export interface TimeEvent {
   time: number;

@@ -1,18 +1,12 @@
-import { Thread } from './team.ts';
-import {
-  getReviewPoints,
-  hasAllReviews,
-  needReview,
-  noReview,
-  Review,
-} from './review.ts';
+import {getReviewPoints, hasAllReviews, needReview, noReview, type Review,} from './review.ts';
+import type {Thread} from './team.ts';
 
 export enum State {
-  TODO,
-  IN_PROGRESS,
-  TO_REVIEW,
-  REVIEW,
-  DONE,
+  TODO = 0,
+  IN_PROGRESS = 1,
+  TO_REVIEW = 2,
+  REVIEW = 3,
+  DONE = 4,
 }
 
 export interface UserStory {
@@ -110,11 +104,9 @@ export const isReviewed = (userStory: UserStory): boolean => {
   return hasAllReviews(userStory.review, userStory.reviewComplexity);
 };
 
-export const isInProgressBy: (
-  userStory: UserStory,
-  thread: Thread,
-) => boolean = (userStory: UserStory, thread: Thread) =>
-  userStory.state === State.IN_PROGRESS && userStory.thread === thread.id;
+export const isInProgressBy: (userStory: UserStory, thread: Thread) => boolean =
+  (userStory: UserStory, thread: Thread) =>
+    userStory.state === State.IN_PROGRESS && userStory.thread === thread.id;
 
 export const isInReviewBy: (userStory: UserStory, thread: Thread) => boolean = (
   userStory: UserStory,

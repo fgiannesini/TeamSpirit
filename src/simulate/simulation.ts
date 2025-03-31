@@ -1,12 +1,15 @@
 import {
+  type Backlog,
   addUserStory,
-  Backlog,
   getNextUserStory,
   hasMoreUserStories,
   userStoriesWithSomeReviews,
 } from './backlog.ts';
-import { createEvent, TimeEvent } from './events.ts';
+import { type TimeEvent, createEvent } from './events.ts';
+import type { Team } from './team.ts';
 import {
+  State,
+  type UserStory,
   idle,
   isDeveloped,
   isReviewed,
@@ -15,10 +18,7 @@ import {
   setInProgress,
   setReview,
   setToReview,
-  State,
-  UserStory,
 } from './user-story.ts';
-import { Team } from './team.ts';
 
 const simulateTimeEvents = (team: Team, backlog: Backlog, time: number) => {
   const events: TimeEvent[] = [];

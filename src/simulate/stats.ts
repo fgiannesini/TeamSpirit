@@ -1,5 +1,5 @@
-import { TimeEvent } from './events.ts';
-import { State } from './user-story.ts';
+import type {TimeEvent} from './events.ts';
+import {State} from './user-story.ts';
 
 export interface StatEvent {
   time: number;

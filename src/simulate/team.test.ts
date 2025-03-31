@@ -1,5 +1,5 @@
-import { describe, expect, test } from 'vitest';
-import { EnsembleTeam, ParallelTeam, Team } from './team.ts';
+import {describe, expect, test} from 'vitest';
+import {EnsembleTeam, ParallelTeam, type Team} from './team.ts';
 
 describe('Team', () => {
   test('Should create a parallel team', () => {

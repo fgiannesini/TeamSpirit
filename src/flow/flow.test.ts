@@ -1,5 +1,7 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { State } from '../simulate/user-story.ts';
+import {readFileSync} from 'fs';
+import {resolve} from 'path';
+import {beforeEach, describe, expect, test, vi} from 'vitest';
+import {State} from '../simulate/user-story.ts';
 import {
   getCompute,
   getComputeAll,
@@ -9,9 +11,7 @@ import {
   getThreadUserStory,
   getUserStory,
 } from './selector.ts';
-import { readFileSync } from 'fs';
-import { resolve } from 'path';
-import { saveStatEvents, saveTimeEvents } from './storage/session-storage.ts';
+import {saveStatEvents, saveTimeEvents} from './storage/session-storage.ts';
 
 describe('Flow', () => {
   beforeEach(async () => {
@@ -607,7 +607,7 @@ describe('Flow', () => {
 
     test.each([
       [1 / 3, '0.33'],
-      [NaN, 'NaN'],
+      [Number.NaN, 'NaN'],
     ])(
       'Should render the page with a stat event',
       async (leadTimeProvided, leadTimeDisplayed) => {

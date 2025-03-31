@@ -1,4 +1,4 @@
-import { StatEvent } from '../simulate/stats.ts';
+import type { StatEvent } from '../simulate/stats.ts';
 
 const getLeadTime = () => {
   return document.querySelector('#lead-time');
@@ -18,7 +18,7 @@ export const renderStatEvents = (
 
   const leadTime = getLeadTime();
   if (leadTime)
-    leadTime.textContent = currentEvents[0].leadTime?.toFixed(2) ?? NaN;
+    leadTime.textContent = currentEvents[0].leadTime?.toFixed(2) ?? Number.NaN;
 
   const timeElement = getTime();
   if (timeElement)

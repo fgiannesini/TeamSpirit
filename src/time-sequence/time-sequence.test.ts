@@ -1,6 +1,6 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { resolve } from 'path';
 import { readFileSync } from 'fs';
+import { resolve } from 'path';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { saveTimeEvents } from '../flow/storage/session-storage.ts';
 import { State } from '../simulate/user-story.ts';
 

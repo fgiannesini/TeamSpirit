@@ -1,4 +1,4 @@
-import { TimeEvent } from '../simulate/events.ts';
+import type {TimeEvent} from '../simulate/events.ts';
 
 const addThread = (threadNumber: number) => {
   const threadHtmlElement = document.createElement('div');

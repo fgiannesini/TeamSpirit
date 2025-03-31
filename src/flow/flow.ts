@@ -1,17 +1,12 @@
 import './flow.scss';
-import { renderTimeEvents } from './render-time.ts';
-import { loadStatEvents, loadTimeEvents } from './storage/session-storage.ts';
-import { TimeEvent } from '../simulate/events.ts';
-import { StatEvent } from '../simulate/stats.ts';
-import {
-  getBacklog,
-  getCompute,
-  getComputeAll,
-  getThreads,
-} from './selector.ts';
-import { addThreads } from './render-thread.ts';
-import { addUserStories } from './render-user-story.ts';
-import { renderStatEvents } from './render-stats.ts';
+import type {TimeEvent} from '../simulate/events.ts';
+import type {StatEvent} from '../simulate/stats.ts';
+import {renderStatEvents} from './render-stats.ts';
+import {addThreads} from './render-thread.ts';
+import {renderTimeEvents} from './render-time.ts';
+import {addUserStories} from './render-user-story.ts';
+import {getBacklog, getCompute, getComputeAll, getThreads,} from './selector.ts';
+import {loadStatEvents, loadTimeEvents} from './storage/session-storage.ts';
 
 const render = (events: TimeEvent[], statEvents: StatEvent[]) => {
   const threads = getThreads();

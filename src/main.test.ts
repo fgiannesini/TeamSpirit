@@ -1,18 +1,18 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { resolve } from 'path';
-import { readFileSync } from 'fs';
-import { TimeEvent } from './simulate/events.ts';
-import { Backlog } from './simulate/backlog.ts';
+import {readFileSync} from 'fs';
+import {resolve} from 'path';
+import {beforeEach, describe, expect, test, vi} from 'vitest';
 import {
   buildBacklogForEnsembleTeam,
   buildBacklogForParallelTeam,
   buildEnsembleTeam,
   buildParallelTeam,
 } from './main.ts';
-import { State } from './simulate/user-story.ts';
-import { EnsembleTeam, ParallelTeam } from './simulate/team.ts';
-import { noReview } from './simulate/review.ts';
-import { StatEvent } from './simulate/stats.ts';
+import {Backlog} from './simulate/backlog.ts';
+import type {TimeEvent} from './simulate/events.ts';
+import {noReview} from './simulate/review.ts';
+import type {StatEvent} from './simulate/stats.ts';
+import {EnsembleTeam, ParallelTeam} from './simulate/team.ts';
+import {State} from './simulate/user-story.ts';
 
 describe('Main', () => {
   beforeEach(async () => {
