@@ -1,14 +1,10 @@
 import { describe, expect, test } from 'vitest';
 import { Backlog } from './backlog.ts';
 import { noReview } from './review.ts';
-import { simulateStructure } from './simulation-structure.ts';
+import { Action, simulateStructure } from './simulation-structure.ts';
 import { ParallelTeam } from './team.ts';
 import { State } from './user-story.ts';
 
-export enum Action {
-  CREATE_THREAD = 0,
-  CREATE_USER_STORY = 1,
-}
 interface StructureEvent {
   time: number;
   action: Action;
@@ -25,7 +21,7 @@ describe('simulation-structure', () => {
         complexity: 1,
         reviewComplexity: 0,
         review: noReview,
-        state: State.TODO,
+        state: State.Todo,
         thread: undefined,
         progression: 0,
       },
@@ -35,7 +31,7 @@ describe('simulation-structure', () => {
         complexity: 1,
         reviewComplexity: 0,
         review: noReview,
-        state: State.TODO,
+        state: State.Todo,
         thread: undefined,
         progression: 0,
       },
@@ -52,25 +48,25 @@ describe('simulation-structure', () => {
         time: 1,
         id: 0,
         name: 'thread0',
-        action: Action.CREATE_THREAD,
+        action: Action.CreateThread,
       },
       {
         time: 1,
         id: 1,
         name: 'thread1',
-        action: Action.CREATE_THREAD,
+        action: Action.CreateThread,
       },
       {
         time: 1,
         id: 0,
         name: 'userStory0',
-        action: Action.CREATE_USER_STORY,
+        action: Action.CreateUserStory,
       },
       {
         time: 1,
         id: 1,
         name: 'userStory1',
-        action: Action.CREATE_USER_STORY,
+        action: Action.CreateUserStory,
       },
     ]);
   });

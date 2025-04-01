@@ -17,7 +17,7 @@ const hasManyReviewsInSameTime = (
   return (
     timeEvents.filter(
       (timeEvent) =>
-        timeEvent.state === State.REVIEW &&
+        timeEvent.state === State.Review &&
         timeEvent.userStoryName === userStoryName,
     ).length > 1
   );
@@ -48,7 +48,7 @@ export const renderTimeEvents = async (
       continue;
     }
     switch (currentEvent.state) {
-      case State.IN_PROGRESS: {
+      case State.InProgress: {
         const inProgressUserStory = getUserStory(currentEvent.userStoryName);
         if (inProgressUserStory) {
           getThreadUserStory(currentEvent.thread)?.appendChild(
@@ -58,7 +58,7 @@ export const renderTimeEvents = async (
         }
         break;
       }
-      case State.REVIEW: {
+      case State.Review: {
         if (
           hasManyReviewsInSameTime(currentEvents, currentEvent.userStoryName)
         ) {
@@ -78,12 +78,14 @@ export const renderTimeEvents = async (
         setThreadStateTo(currentEvent.thread, 'Review');
         break;
       }
-      case State.TO_REVIEW: {
+      case State.ToReview: {
         const toReviewUserStory = getUserStory(currentEvent.userStoryName);
-        if (toReviewUserStory) getBacklog()?.appendChild(toReviewUserStory);
+        if (toReviewUserStory) {
+          getBacklog()?.appendChild(toReviewUserStory);
+        }
         break;
       }
-      case State.DONE: {
+      case State.Done: {
         removeUserStory(
           ...getDuplicatedUserStories(currentEvent.userStoryName),
         );
@@ -91,6 +93,8 @@ export const renderTimeEvents = async (
         getDone()?.appendChild(doneUserStory);
         break;
       }
+      default:
+        break;
     }
     await sleep(animationTime);
   }

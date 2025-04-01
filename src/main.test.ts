@@ -45,8 +45,8 @@ describe('Main', () => {
   };
 
   test('Should compute and store in sessionStorage', () => {
-    const randomUUIDSpy = vi.spyOn(crypto, 'randomUUID');
-    randomUUIDSpy
+    const randomUuidSpy = vi.spyOn(crypto, 'randomUUID');
+    randomUuidSpy
       .mockReturnValueOnce('e4567-e89b-12d3-a456-426614174000')
       .mockReturnValueOnce('e4567-e89b-12d3-a456-426614174001');
 
@@ -79,12 +79,12 @@ describe('Main', () => {
     ) as StatEvent[];
     expect(statEventsForEnsembleTeam.length).greaterThan(0);
 
-    expect(randomUUIDSpy).toHaveBeenCalledTimes(2);
+    expect(randomUuidSpy).toHaveBeenCalledTimes(2);
   });
 
   test('Should open new pages', () => {
-    const randomUUIDSpy = vi.spyOn(crypto, 'randomUUID');
-    randomUUIDSpy
+    const randomUuidSpy = vi.spyOn(crypto, 'randomUUID');
+    randomUuidSpy
       .mockReturnValueOnce('e4567-e89b-12d3-a456-426614174000')
       .mockReturnValueOnce('e4567-e89b-12d3-a456-426614174001');
 
@@ -124,7 +124,7 @@ describe('Main', () => {
           complexity: 5,
           review: noReview,
           reviewComplexity: 2,
-          state: State.TODO,
+          state: State.Todo,
           thread: undefined,
           progression: 0,
         },
@@ -134,7 +134,7 @@ describe('Main', () => {
           complexity: 5,
           review: noReview,
           reviewComplexity: 2,
-          state: State.TODO,
+          state: State.Todo,
           thread: undefined,
           progression: 0,
         },
@@ -158,7 +158,7 @@ describe('Main', () => {
             reviewers: new Map<number, number>(),
           },
           reviewComplexity: 2,
-          state: State.TODO,
+          state: State.Todo,
           thread: undefined,
           progression: 0,
         },
@@ -178,7 +178,7 @@ describe('Main', () => {
           complexity: 5,
           review: noReview,
           reviewComplexity: 2,
-          state: State.TODO,
+          state: State.Todo,
           thread: undefined,
           progression: 0,
         },
@@ -294,7 +294,7 @@ describe('Main', () => {
           complexity: 2,
           review: noReview,
           reviewComplexity: 1,
-          state: State.TODO,
+          state: State.Todo,
           thread: undefined,
           progression: 0,
         },
@@ -304,7 +304,7 @@ describe('Main', () => {
           complexity: 4,
           review: noReview,
           reviewComplexity: 2,
-          state: State.TODO,
+          state: State.Todo,
           thread: undefined,
           progression: 0,
         },

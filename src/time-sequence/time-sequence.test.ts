@@ -5,7 +5,7 @@ import { saveTimeEvents } from '../flow/storage/session-storage.ts';
 import { State } from '../simulate/user-story.ts';
 
 describe('Time sequence', () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     vi.resetModules();
     vi.spyOn(window, 'location', 'get').mockReturnValue({
       assign: vi.fn(),
@@ -23,13 +23,13 @@ describe('Time sequence', () => {
           time: 1,
           userStoryName: 'userStory1',
           thread: 0,
-          state: State.IN_PROGRESS,
+          state: State.InProgress,
         },
         {
           time: 1,
           userStoryName: 'userStory1',
           thread: 0,
-          state: State.DONE,
+          state: State.Done,
         },
       ],
       'e4567-e89b-12d3-a456-426614174000',
@@ -52,31 +52,31 @@ describe('Time sequence', () => {
           time: 1,
           userStoryName: 'userStory1',
           thread: 0,
-          state: State.IN_PROGRESS,
+          state: State.InProgress,
         },
         {
           time: 1,
           userStoryName: 'userStory1',
           thread: 0,
-          state: State.DONE,
+          state: State.Done,
         },
         {
           time: 1,
           userStoryName: 'userStory2',
           thread: 1,
-          state: State.IN_PROGRESS,
+          state: State.InProgress,
         },
         {
           time: 1,
           userStoryName: 'userStory2',
           thread: 1,
-          state: State.DONE,
+          state: State.Done,
         },
         {
           time: 1,
           userStoryName: 'idle',
           thread: 2,
-          state: State.DONE,
+          state: State.Done,
         },
       ],
       'e4567-e89b-12d3-a456-426614174000',
@@ -96,25 +96,25 @@ describe('Time sequence', () => {
           time: 1,
           userStoryName: 'userStory1',
           thread: 0,
-          state: State.IN_PROGRESS,
+          state: State.InProgress,
         },
         {
           time: 1,
           userStoryName: 'userStory1',
           thread: 0,
-          state: State.DONE,
+          state: State.Done,
         },
         {
           time: 2,
           userStoryName: 'userStory2',
           thread: 0,
-          state: State.IN_PROGRESS,
+          state: State.InProgress,
         },
         {
           time: 2,
           userStoryName: 'userStory2',
           thread: 0,
-          state: State.DONE,
+          state: State.Done,
         },
       ],
       'e4567-e89b-12d3-a456-426614174000',
@@ -144,13 +144,13 @@ describe('Time sequence', () => {
           time: 1,
           userStoryName: 'userStory1',
           thread: 0,
-          state: State.IN_PROGRESS,
+          state: State.InProgress,
         },
         {
           time: 1,
           userStoryName: 'userStory1',
           thread: 0,
-          state: State.TO_REVIEW,
+          state: State.ToReview,
         },
       ],
       'e4567-e89b-12d3-a456-426614174000',
@@ -164,7 +164,7 @@ describe('Time sequence', () => {
     ]);
   });
 
-  test.each([State.IN_PROGRESS, State.REVIEW])(
+  test.each([State.InProgress, State.Review])(
     'Should render the page with one user story still processed',
     async (state: State) => {
       saveTimeEvents(
@@ -203,19 +203,19 @@ describe('Time sequence', () => {
           time: 1,
           userStoryName: 'userStory1',
           thread: 0,
-          state: State.IN_PROGRESS,
+          state: State.InProgress,
         },
         {
           time: 1,
           userStoryName: 'userStory1',
           thread: 0,
-          state: State.TO_REVIEW,
+          state: State.ToReview,
         },
         {
           time: 2,
           userStoryName: 'userStory1',
           thread: 0,
-          state: State.REVIEW,
+          state: State.Review,
         },
       ],
       'e4567-e89b-12d3-a456-426614174000',
@@ -238,13 +238,13 @@ describe('Time sequence', () => {
           time: 1,
           userStoryName: 'userStory1',
           thread: 0,
-          state: State.REVIEW,
+          state: State.Review,
         },
         {
           time: 1,
           userStoryName: 'userStory1',
           thread: 1,
-          state: State.REVIEW,
+          state: State.Review,
         },
       ],
       'e4567-e89b-12d3-a456-426614174000',
@@ -265,31 +265,31 @@ describe('Time sequence', () => {
           time: 1,
           userStoryName: 'userStory1',
           thread: 0,
-          state: State.IN_PROGRESS,
+          state: State.InProgress,
         },
         {
           time: 1,
           userStoryName: 'userStory2',
           thread: 1,
-          state: State.IN_PROGRESS,
+          state: State.InProgress,
         },
         {
           time: 1,
           userStoryName: 'userStory2',
           thread: 1,
-          state: State.DONE,
+          state: State.Done,
         },
         {
           time: 2,
           userStoryName: 'userStory1',
           thread: 0,
-          state: State.IN_PROGRESS,
+          state: State.InProgress,
         },
         {
           time: 3,
           userStoryName: 'userStory1',
           thread: 0,
-          state: State.IN_PROGRESS,
+          state: State.InProgress,
         },
       ],
       'e4567-e89b-12d3-a456-426614174000',

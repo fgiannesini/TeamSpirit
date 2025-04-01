@@ -15,9 +15,13 @@ import { loadStatEvents, loadTimeEvents } from './storage/session-storage.ts';
 
 const render = (events: TimeEvent[], statEvents: StatEvent[]) => {
   const threads = getThreads();
-  if (threads) addThreads(threads, events);
+  if (threads) {
+    addThreads(threads, events);
+  }
   const backlog = getBacklog();
-  if (backlog) addUserStories(backlog, events);
+  if (backlog) {
+    addUserStories(backlog, events);
+  }
 
   const maxTime = Math.max(...events.map((event) => event.time));
   let time = 0;

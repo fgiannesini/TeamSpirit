@@ -71,14 +71,14 @@ export const getNextUserStory = (
 
 export const userStoriesWithSomeReviews = (backlog: Backlog): UserStory[] => {
   return backlog.userStoriesRemaining
-    .filter((userStory) => userStory.state === State.REVIEW)
+    .filter((userStory) => userStory.state === State.Review)
     .filter((userStory) =>
       hasSomeReviews(userStory.review, userStory.reviewComplexity),
     );
 };
 
 export const addUserStory = (userStory: UserStory, backlog: Backlog) => {
-  if (userStory.state === State.DONE) {
+  if (userStory.state === State.Done) {
     backlog.userStoriesDone.push(userStory);
   } else {
     backlog.userStoriesRemaining.push(userStory);

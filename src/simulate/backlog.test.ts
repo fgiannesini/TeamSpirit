@@ -135,7 +135,7 @@ describe('Backlog', () => {
         reviewersNeeded: 2,
         reviewers: new Map(reviewers),
       },
-      state: State.REVIEW,
+      state: State.Review,
       thread,
       progression: 0,
     };
@@ -148,7 +148,7 @@ describe('Backlog', () => {
       complexity: 1,
       reviewComplexity,
       review: noReview,
-      state: State.TO_REVIEW,
+      state: State.ToReview,
       thread,
       progression: 0,
     };
@@ -161,7 +161,7 @@ describe('Backlog', () => {
       complexity: 2,
       reviewComplexity: 1,
       review: noReview,
-      state: State.IN_PROGRESS,
+      state: State.InProgress,
       thread,
       progression: 0,
     };
@@ -174,7 +174,7 @@ describe('Backlog', () => {
       complexity,
       reviewComplexity: 1,
       review: noReview,
-      state: State.TODO,
+      state: State.Todo,
       thread: undefined,
       progression: 0,
     };

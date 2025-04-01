@@ -32,7 +32,6 @@
       "correctness": {
         "noConstantMathMinMaxClamp": "error",
         "noInvalidNewBuiltin": "error",
-        "noNodejsModules": "error",
         "noUndeclaredVariables": "error",
         "noUnusedFunctionParameters": "error",
         "noUnusedImports": "error",

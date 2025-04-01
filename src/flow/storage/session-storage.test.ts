@@ -10,7 +10,7 @@ describe('session storage', () => {
           time: 1,
           userStoryName: 'userStory1',
           thread: 0,
-          state: State.IN_PROGRESS,
+          state: State.InProgress,
         },
       ],
       'e4567-e89b-12d3-a456-426614174000',
@@ -20,7 +20,7 @@ describe('session storage', () => {
         time: 1,
         userStoryName: 'userStory1',
         thread: 0,
-        state: State.IN_PROGRESS,
+        state: State.InProgress,
       },
     ]);
   });

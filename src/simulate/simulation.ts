@@ -31,8 +31,8 @@ const simulateTimeEvents = (team: Team, backlog: Backlog, time: number) => {
       continue;
     }
     switch (userStory.state) {
-      case State.TO_REVIEW:
-      case State.REVIEW: {
+      case State.ToReview:
+      case State.Review: {
         const review = setReview(userStory, thread);
         events.push(createEvent(time, review, thread.id));
         if (isReviewed(review)) {
@@ -44,25 +44,27 @@ const simulateTimeEvents = (team: Team, backlog: Backlog, time: number) => {
         }
         break;
       }
-      case State.TODO:
-      case State.IN_PROGRESS: {
+      case State.Todo:
+      case State.InProgress: {
         const inProgress = setInProgress(userStory, thread);
         events.push(createEvent(time, inProgress, thread.id));
         if (isDeveloped(inProgress)) {
-          if (!isReviewed(inProgress)) {
-            const toReview = setToReview(inProgress, thread.id);
-            events.push(createEvent(time, toReview, thread.id));
-            toAddBacklog.push(toReview);
-          } else {
+          if (isReviewed(inProgress)) {
             const done = setDone(inProgress);
             events.push(createEvent(time, done, thread.id));
             toAddBacklog.push(done);
+          } else {
+            const toReview = setToReview(inProgress, thread.id);
+            events.push(createEvent(time, toReview, thread.id));
+            toAddBacklog.push(toReview);
           }
         } else {
           toAddBacklog.push(inProgress);
         }
         break;
       }
+      default:
+        break;
     }
   }
   userStoriesWithSomeReviews(backlog).forEach((review: UserStory) => {

@@ -21,9 +21,9 @@ export const needReview = (
   const hasReviewed = reviewers.has(dev.id);
   const isFull = reviewers.size === reviewersNeeded;
 
-  return !isFull
-    ? !hasReviewed || currentComplexity !== reviewComplexity
-    : hasReviewed && currentComplexity !== reviewComplexity;
+  return isFull
+    ? hasReviewed && currentComplexity !== reviewComplexity
+    : !hasReviewed || currentComplexity !== reviewComplexity;
 };
 export const hasAllReviews = (
   review: Review,

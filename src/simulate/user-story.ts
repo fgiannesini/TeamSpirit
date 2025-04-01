@@ -8,11 +8,11 @@ import {
 import type { Thread } from './team.ts';
 
 export enum State {
-  TODO = 0,
-  IN_PROGRESS = 1,
-  TO_REVIEW = 2,
-  REVIEW = 3,
-  DONE = 4,
+  Todo = 0,
+  InProgress = 1,
+  ToReview = 2,
+  Review = 3,
+  Done = 4,
 }
 
 export interface UserStory {
@@ -34,7 +34,7 @@ export const idle: UserStory = {
   reviewComplexity: 0,
   review: noReview,
   thread: undefined,
-  state: State.DONE,
+  state: State.Done,
 };
 
 export const setInProgress = (userStory: UserStory, dev: Thread): UserStory => {
@@ -45,7 +45,7 @@ export const setInProgress = (userStory: UserStory, dev: Thread): UserStory => {
       userStory.complexity,
     ),
     thread: dev.id,
-    state: State.IN_PROGRESS,
+    state: State.InProgress,
   };
 };
 
@@ -53,11 +53,11 @@ export const setDoneBy = (
   userStory: UserStory,
   threadId: number,
 ): UserStory => {
-  return { ...userStory, state: State.DONE, thread: threadId };
+  return { ...userStory, state: State.Done, thread: threadId };
 };
 
 export const setDone = (userStory: UserStory): UserStory => {
-  return { ...userStory, state: State.DONE };
+  return { ...userStory, state: State.Done };
 };
 
 export const setToReview = (
@@ -66,7 +66,7 @@ export const setToReview = (
 ): UserStory => {
   return {
     ...userStory,
-    state: State.TO_REVIEW,
+    state: State.ToReview,
     thread: threadId,
   };
 };
@@ -97,7 +97,7 @@ export const setReview = (userStory: UserStory, thread: Thread): UserStory => {
 
   return {
     ...userStory,
-    state: State.REVIEW,
+    state: State.Review,
     review: newReview,
   };
 };
@@ -112,20 +112,20 @@ export const isReviewed = (userStory: UserStory): boolean => {
 
 export const isInProgressBy: (userStory: UserStory, thread: Thread) => boolean =
   (userStory: UserStory, thread: Thread) =>
-    userStory.state === State.IN_PROGRESS && userStory.thread === thread.id;
+    userStory.state === State.InProgress && userStory.thread === thread.id;
 
 export const isInReviewBy: (userStory: UserStory, thread: Thread) => boolean = (
   userStory: UserStory,
   thread: Thread,
 ) =>
-  userStory.state === State.REVIEW &&
+  userStory.state === State.Review &&
   userStory.thread !== thread.id &&
   needReview(userStory.review, thread, userStory.reviewComplexity);
 
 export const isToReviewBy: (userStory: UserStory, thread: Thread) => boolean = (
   userStory: UserStory,
   thread: Thread,
-) => userStory.state === State.TO_REVIEW && userStory.thread !== thread.id;
+) => userStory.state === State.ToReview && userStory.thread !== thread.id;
 
 export const toDo: (userStory: UserStory) => boolean = (userStory: UserStory) =>
-  userStory.state === State.TODO;
+  userStory.state === State.Todo;

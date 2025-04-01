@@ -51,9 +51,11 @@ const generateSequences = (
     const currentEvents = timeEvents.filter((event) => event.time === time);
     const eventStates = getDeduplicatesEventsStates(currentEvents);
     eventStates.forEach(({ userStoryName, state }) => {
-      if (state === State.IN_PROGRESS || state === State.REVIEW) {
+      if (state === State.InProgress || state === State.Review) {
         const sequence = userStoriesSequence.get(userStoryName);
-        if (!sequence) return;
+        if (!sequence) {
+          return;
+        }
         sequence.push('vertical', 'horizontal-top', 'vertical');
       }
     });
@@ -112,7 +114,9 @@ const addSequencesToDom = (
 ) => {
   cleanedUserStoriesSequence.forEach((sequences, userStoryName) => {
     const userStory = document.querySelector(`#${userStoryName}`);
-    if (!userStory) return;
+    if (!userStory) {
+      return;
+    }
     sequences.forEach((element) =>
       userStory.appendChild(timeSequenceElement(element)),
     );

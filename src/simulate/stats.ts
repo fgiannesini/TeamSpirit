@@ -14,18 +14,20 @@ const mean = (times: number[]) => {
 export const computeStatEvents = (timeEvents: TimeEvent[]): StatEvent[] => {
   const timesOfRunningUserStoriesByName = new Map<string, number>();
   const dones: number[] = [];
-  const statEvents = [];
+  const statEvents: StatEvent[] = [];
   let time = 1;
 
   while (true) {
     const currentEvents = timeEvents.filter(
       (event: TimeEvent) => event.time === time,
     );
-    if (currentEvents.length === 0) break;
+    if (currentEvents.length === 0) {
+      break;
+    }
 
     const uniqueInProgressUserStoryNames = new Set(
       currentEvents
-        .filter((event) => event.state === State.IN_PROGRESS)
+        .filter((event) => event.state === State.InProgress)
         .map((event) => event.userStoryName),
     );
 
@@ -41,12 +43,14 @@ export const computeStatEvents = (timeEvents: TimeEvent[]): StatEvent[] => {
 
     const uniqueUserStoryNamesDone = new Set(
       currentEvents
-        .filter((event) => event.state === State.DONE)
+        .filter((event) => event.state === State.Done)
         .map((event) => event.userStoryName),
     );
     for (const userStoryName of uniqueUserStoryNamesDone) {
       const doneTime = timesOfRunningUserStoriesByName.get(userStoryName);
-      if (doneTime) dones.push(doneTime);
+      if (doneTime) {
+        dones.push(doneTime);
+      }
       timesOfRunningUserStoriesByName.delete(userStoryName);
     }
     const leadTime = mean(dones);

@@ -14,13 +14,17 @@ export const renderStatEvents = (
   maxTime: number,
 ) => {
   const currentEvents = events.filter((event) => event.time === time);
-  if (currentEvents.length === 0) return;
+  if (currentEvents.length === 0) {
+    return;
+  }
 
   const leadTime = getLeadTime();
-  if (leadTime)
+  if (leadTime) {
     leadTime.textContent = currentEvents[0].leadTime?.toFixed(2) ?? Number.NaN;
+  }
 
   const timeElement = getTime();
-  if (timeElement)
+  if (timeElement) {
     timeElement.textContent = `${currentEvents[0].time.toString()}/${maxTime}`;
+  }
 };
