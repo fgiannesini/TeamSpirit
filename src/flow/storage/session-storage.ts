@@ -1,4 +1,5 @@
 import type { TimeEvent } from '../../simulate/events.ts';
+import type { StructureEvent } from '../../simulate/simulation-structure.ts';
 import type { StatEvent } from '../../simulate/stats.ts';
 
 export const loadTimeEvents = (key: string) =>
@@ -14,3 +15,9 @@ export const loadStatEvents = (key: string) =>
 
 export const saveStatEvents = (statEvents: StatEvent[], key: string) =>
   sessionStorage.setItem(`stats-${key}`, JSON.stringify(statEvents));
+
+export const saveStructureEvents = (
+  structureEvents: StructureEvent[],
+  key: string,
+) =>
+  sessionStorage.setItem(`structure-${key}`, JSON.stringify(structureEvents));

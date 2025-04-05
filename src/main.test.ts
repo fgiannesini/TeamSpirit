@@ -10,6 +10,7 @@ import {
 import { Backlog } from './simulate/backlog.ts';
 import type { TimeEvent } from './simulate/events.ts';
 import { noReview } from './simulate/review.ts';
+import type { StructureEvent } from './simulate/simulation-structure.ts';
 import type { StatEvent } from './simulate/stats.ts';
 import { EnsembleTeam, ParallelTeam } from './simulate/team.ts';
 import { State } from './simulate/user-story.ts';
@@ -44,7 +45,7 @@ describe('Main', () => {
     }
   };
 
-  test('Should compute and store in sessionStorage', () => {
+  test('Should compute and store time events in sessionStorage', () => {
     const randomUuidSpy = vi.spyOn(crypto, 'randomUUID');
     randomUuidSpy
       .mockReturnValueOnce('e4567-e89b-12d3-a456-426614174000')
@@ -69,6 +70,22 @@ describe('Main', () => {
     ) as TimeEvent[];
     expect(timeEventsForEnsembleTeam.length).greaterThan(0);
 
+    expect(randomUuidSpy).toHaveBeenCalledTimes(2);
+  });
+
+  test('Should compute and store stats events in sessionStorage', () => {
+    const randomUuidSpy = vi.spyOn(crypto, 'randomUUID');
+    randomUuidSpy
+      .mockReturnValueOnce('e4567-e89b-12d3-a456-426614174000')
+      .mockReturnValueOnce('e4567-e89b-12d3-a456-426614174001');
+
+    setValueTo('#user-story-count-input', '1');
+    setValueTo('#dev-count-input', '2');
+    clickOn('#generate-devs-button');
+
+    setValueTo('#reviewers-input', '');
+    clickOn('#calculate-button');
+
     const statEventsForParallelTeam = JSON.parse(
       sessionStorage.getItem('stats-e4567-e89b-12d3-a456-426614174000') ?? '[]',
     ) as StatEvent[];
@@ -78,6 +95,33 @@ describe('Main', () => {
       sessionStorage.getItem('stats-e4567-e89b-12d3-a456-426614174001') ?? '[]',
     ) as StatEvent[];
     expect(statEventsForEnsembleTeam.length).greaterThan(0);
+
+    expect(randomUuidSpy).toHaveBeenCalledTimes(2);
+  });
+
+  test('Should compute and store structure events in sessionStorage', () => {
+    const randomUuidSpy = vi.spyOn(crypto, 'randomUUID');
+    randomUuidSpy
+      .mockReturnValueOnce('e4567-e89b-12d3-a456-426614174000')
+      .mockReturnValueOnce('e4567-e89b-12d3-a456-426614174001');
+
+    setValueTo('#user-story-count-input', '1');
+    setValueTo('#dev-count-input', '2');
+    clickOn('#generate-devs-button');
+
+    setValueTo('#reviewers-input', '');
+    clickOn('#calculate-button');
+
+    const structureEventsForParallelTeam = JSON.parse(
+      sessionStorage.getItem('structure-e4567-e89b-12d3-a456-426614174000') ??
+        '[]',
+    ) as StructureEvent[];
+    expect(structureEventsForParallelTeam.length).greaterThan(0);
+
+    const structureEventsForEnsembleTeam = JSON.parse(
+      sessionStorage.getItem('stats-e4567-e89b-12d3-a456-426614174001') ?? '[]',
+    ) as StructureEvent[];
+    expect(structureEventsForEnsembleTeam.length).greaterThan(0);
 
     expect(randomUuidSpy).toHaveBeenCalledTimes(2);
   });

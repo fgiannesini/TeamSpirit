@@ -1,11 +1,13 @@
 import './style.scss';
 import {
   saveStatEvents,
+  saveStructureEvents,
   saveTimeEvents,
 } from './flow/storage/session-storage.ts';
 import { generateDevForm, generateUserStoriesForm } from './form/form.ts';
 import { Backlog } from './simulate/backlog.ts';
 import { noReview } from './simulate/review.ts';
+import { simulateStructure } from './simulate/simulation-structure.ts';
 import { simulate } from './simulate/simulation.ts';
 import { computeStatEvents } from './simulate/stats.ts';
 import { EnsembleTeam, ParallelTeam, type Team } from './simulate/team.ts';
@@ -84,6 +86,8 @@ const runSimulation = (backlog: Backlog, team: Team) => {
   saveTimeEvents(timeEvents, randomKey);
   const statEvents = computeStatEvents(timeEvents);
   saveStatEvents(statEvents, randomKey);
+  const structureEvents = simulateStructure(backlog, team);
+  saveStructureEvents(structureEvents, randomKey);
   return randomKey;
 };
 
