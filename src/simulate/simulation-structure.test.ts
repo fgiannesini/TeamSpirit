@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { Backlog } from './backlog.ts';
 import { noReview } from './review.ts';
-import { Action, simulateStructure } from './simulation-structure.ts';
+import { type Action, simulateStructure } from './simulation-structure.ts';
 import { ParallelTeam } from './team.ts';
 import { State } from './user-story.ts';
 
@@ -48,25 +48,25 @@ describe('simulation-structure', () => {
         time: 1,
         id: 0,
         name: 'thread0',
-        action: Action.CreateThread,
+        action: 'CreateThread',
       },
       {
         time: 1,
         id: 1,
         name: 'thread1',
-        action: Action.CreateThread,
+        action: 'CreateThread',
       },
       {
         time: 1,
         id: 0,
         name: 'userStory0',
-        action: Action.CreateUserStory,
+        action: 'CreateUserStory',
       },
       {
         time: 1,
         id: 1,
         name: 'userStory1',
-        action: Action.CreateUserStory,
+        action: 'CreateUserStory',
       },
     ]);
   });
