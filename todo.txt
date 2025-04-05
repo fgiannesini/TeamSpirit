@@ -1,4 +1,3 @@
-Bug affichage, décalage sur les créneaux, le principe serait d'ajouter un vertical à tous les coups, moins en évidence
 Implémenter des évènements pour le changement de structure de l'équipe (création de user story, de thread, apprentissage)
 implémenter bugs review
 implémenter bug recette/prod
