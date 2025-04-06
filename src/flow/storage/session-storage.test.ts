@@ -1,6 +1,11 @@
 import { describe, expect, test } from 'vitest';
 import { State } from '../../simulate/user-story.ts';
-import { loadTimeEvents, saveTimeEvents } from './session-storage.ts';
+import {
+  loadStatEvents,
+  loadTimeEvents,
+  saveStatEvents,
+  saveTimeEvents,
+} from './session-storage.ts';
 
 describe('session storage', () => {
   test('should save and load time events', () => {
@@ -21,6 +26,24 @@ describe('session storage', () => {
         userStoryName: 'userStory1',
         thread: 0,
         state: State.InProgress,
+      },
+    ]);
+  });
+
+  test('should save and load stats events', () => {
+    saveStatEvents(
+      [
+        {
+          time: 1,
+          leadTime: 1.2,
+        },
+      ],
+      'e4567-e89b-12d3-a456-426614174000',
+    );
+    expect(loadStatEvents('e4567-e89b-12d3-a456-426614174000')).toEqual([
+      {
+        time: 1,
+        leadTime: 1.2,
       },
     ]);
   });
