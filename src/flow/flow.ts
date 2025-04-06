@@ -5,12 +5,7 @@ import { renderStatEvents } from './render-stats.ts';
 import { addThreads } from './render-thread.ts';
 import { renderTimeEvents } from './render-time.ts';
 import { addUserStories } from './render-user-story.ts';
-import {
-  getBacklog,
-  getCompute,
-  getComputeAll,
-  getThreads,
-} from './selector.ts';
+import { getBacklog, getCompute, getComputeAll, getThreads } from './selector.ts';
 import { loadStatEvents, loadTimeEvents } from './storage/session-storage.ts';
 
 const render = (events: TimeEvent[], statEvents: StatEvent[]) => {
