@@ -21,3 +21,8 @@ export const saveStructureEvents = (
   key: string,
 ) =>
   sessionStorage.setItem(`structure-${key}`, JSON.stringify(structureEvents));
+
+export const loadStructureEvents = (key: string) =>
+  JSON.parse(
+    sessionStorage.getItem(`structure-${key}`) ?? '[]',
+  ) as StructureEvent[];
