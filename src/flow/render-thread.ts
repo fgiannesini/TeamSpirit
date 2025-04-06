@@ -1,13 +1,13 @@
-import type { TimeEvent } from '../simulate/events.ts';
+import type { StructureEvent } from '../simulate/simulation-structure.ts';
 
-const addThread = (threadNumber: number) => {
+const addThread = (threadNumber: number, name: string) => {
   const threadHtmlElement = document.createElement('div');
   threadHtmlElement.id = `thread${threadNumber}`;
   threadHtmlElement.className = 'thread';
 
   const threadTitle = document.createElement('div');
   threadTitle.id = `thread-title-${threadNumber}`;
-  threadTitle.textContent = `Thread ${threadNumber}`;
+  threadTitle.textContent = name;
 
   const threadContent = document.createElement('div');
   threadContent.id = `thread-user-story-${threadNumber}`;
@@ -20,11 +20,14 @@ const addThread = (threadNumber: number) => {
   return threadHtmlElement;
 };
 
-export const addThreads = (parent: Element, events: TimeEvent[]) => {
-  Array.from(new Set(events.map((event) => event.thread))).forEach(
-    (threadNumber) => {
-      const threadHtmlElement = addThread(threadNumber);
+export const addThreads = (
+  parent: Element,
+  structureEvents: StructureEvent[],
+) => {
+  structureEvents
+    .filter((event) => event.action === 'CreateThread')
+    .forEach((event) => {
+      const threadHtmlElement = addThread(event.id, event.name);
       parent.append(threadHtmlElement);
-    },
-  );
+    });
 };

@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
+import type { StructureEvent } from '../simulate/simulation-structure.ts';
 import { State } from '../simulate/user-story.ts';
 import {
   getCompute,
@@ -11,7 +12,11 @@ import {
   getThreadUserStory,
   getUserStory,
 } from './selector.ts';
-import { saveStatEvents, saveTimeEvents } from './storage/session-storage.ts';
+import {
+  saveStatEvents,
+  saveStructureEvents,
+  saveTimeEvents,
+} from './storage/session-storage.ts';
 
 describe('Flow', () => {
   beforeEach(() => {
@@ -37,31 +42,32 @@ describe('Flow', () => {
     expect(done).not.toBeNull();
   });
 
+  const createThread0 = (): StructureEvent => ({
+    id: 0,
+    name: 'dev0',
+    action: 'CreateThread',
+    time: 1,
+  });
+  const createThread1 = (): StructureEvent => ({
+    id: 1,
+    name: 'dev1',
+    action: 'CreateThread',
+    time: 1,
+  });
+
   describe('Thread', () => {
     test('Should initialize 2 thread elements', async () => {
-      saveTimeEvents(
-        [
-          {
-            time: 1,
-            userStoryName: 'userStory1',
-            thread: 0,
-            state: State.InProgress,
-          },
-          {
-            time: 1,
-            userStoryName: 'userStory2',
-            thread: 1,
-            state: State.Done,
-          },
-        ],
+      saveStructureEvents(
+        [createThread0(), createThread1()],
         'e4567-e89b-12d3-a456-426614174000',
       );
+
       await import('./flow.ts');
       const thread0 = getThread(0);
       expect(thread0?.className).toEqual('thread');
 
       const threadTitle0 = getThreadTitle(0);
-      expect(threadTitle0?.textContent).toEqual('Thread 0');
+      expect(threadTitle0?.textContent).toEqual('dev0');
 
       const threadUserStory0 = getThreadUserStory(0);
       expect(threadUserStory0).not.toBeNull();
@@ -73,7 +79,7 @@ describe('Flow', () => {
       expect(thread1?.className).toEqual('thread');
 
       const threadTitle1 = getThreadTitle(1);
-      expect(threadTitle1?.textContent).toEqual('Thread 1');
+      expect(threadTitle1?.textContent).toEqual('dev1');
 
       const threadUserStory1 = getThreadUserStory(1);
       expect(threadUserStory1).not.toBeNull();
@@ -81,6 +87,7 @@ describe('Flow', () => {
       const threadState1 = getThreadState(1);
       expect(threadState1?.textContent).toEqual('Wait');
     });
+
     test('Should set thread state to "Develop" when in progress', async () => {
       saveTimeEvents(
         [
@@ -305,18 +312,22 @@ describe('Flow', () => {
     });
 
     test('Should move userStories to the corresponding threads when reviewed by several threads', async () => {
+      saveStructureEvents(
+        [createThread0(), createThread1()],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
       saveTimeEvents(
         [
           {
             time: 1,
             userStoryName: 'userStory1',
-            thread: 1,
+            thread: 0,
             state: State.Review,
           },
           {
             time: 1,
             userStoryName: 'userStory1',
-            thread: 2,
+            thread: 1,
             state: State.Review,
           },
         ],
@@ -327,39 +338,43 @@ describe('Flow', () => {
       getCompute()?.click();
       await vi.runAllTimersAsync();
       expect(
-        document.querySelector('#thread-user-story-1 #userStory1_1'),
+        document.querySelector('#thread-user-story-0 #userStory1_0'),
       ).not.toBeNull();
       expect(
-        document.querySelector('#thread-user-story-2 #userStory1_2'),
+        document.querySelector('#thread-user-story-1 #userStory1_1'),
       ).not.toBeNull();
       expect(document.querySelector('#backlog #userStory1')).toBeNull();
     });
 
     test('Should keep only one review when the other one is completed', async () => {
+      saveStructureEvents(
+        [createThread0(), createThread1()],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
       saveTimeEvents(
         [
           {
             time: 1,
             userStoryName: 'userStory1',
-            thread: 1,
+            thread: 0,
             state: State.Review,
           },
           {
             time: 1,
             userStoryName: 'userStory1',
-            thread: 2,
+            thread: 1,
             state: State.Review,
           },
           {
             time: 2,
             userStoryName: 'idle',
-            thread: 1,
+            thread: 0,
             state: State.Done,
           },
           {
             time: 2,
             userStoryName: 'userStory1',
-            thread: 2,
+            thread: 1,
             state: State.Review,
           },
         ],
@@ -374,41 +389,45 @@ describe('Flow', () => {
       await vi.runAllTimersAsync();
 
       expect(
-        document.querySelector('#thread-user-story-2 #userStory1'),
+        document.querySelector('#thread-user-story-1 #userStory1'),
       ).not.toBeNull();
       expect(
-        document.querySelector('#thread-user-story-1 #userStory1_1'),
+        document.querySelector('#thread-user-story-0 #userStory1_0'),
       ).toBeNull();
       expect(
-        document.querySelector('#thread-user-story-2 #userStory1_2'),
+        document.querySelector('#thread-user-story-1 #userStory1_1'),
       ).toBeNull();
     });
 
     test('Should keep two reviews when reviews last', async () => {
+      saveStructureEvents(
+        [createThread0(), createThread1()],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
       saveTimeEvents(
         [
           {
             time: 1,
             userStoryName: 'userStory1',
-            thread: 1,
+            thread: 0,
             state: State.Review,
           },
           {
             time: 1,
             userStoryName: 'userStory1',
-            thread: 2,
-            state: State.Review,
-          },
-          {
-            time: 2,
-            userStoryName: 'userStory1',
             thread: 1,
             state: State.Review,
           },
           {
             time: 2,
             userStoryName: 'userStory1',
-            thread: 2,
+            thread: 0,
+            state: State.Review,
+          },
+          {
+            time: 2,
+            userStoryName: 'userStory1',
+            thread: 1,
             state: State.Review,
           },
         ],
@@ -423,10 +442,10 @@ describe('Flow', () => {
       await vi.runAllTimersAsync();
 
       expect(
-        document.querySelectorAll('#thread-user-story-1 #userStory1_1').length,
+        document.querySelectorAll('#thread-user-story-0 #userStory1_0').length,
       ).toEqual(1);
       expect(
-        document.querySelectorAll('#thread-user-story-2 #userStory1_2').length,
+        document.querySelectorAll('#thread-user-story-1 #userStory1_1').length,
       ).toEqual(1);
       expect(document.querySelector('#userStory1')).toBeNull();
     });

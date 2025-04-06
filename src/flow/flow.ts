@@ -1,5 +1,6 @@
 import './flow.scss';
 import type { TimeEvent } from '../simulate/events.ts';
+import type { StructureEvent } from '../simulate/simulation-structure.ts';
 import type { StatEvent } from '../simulate/stats.ts';
 import { renderStatEvents } from './render-stats.ts';
 import { addThreads } from './render-thread.ts';
@@ -11,12 +12,20 @@ import {
   getComputeAll,
   getThreads,
 } from './selector.ts';
-import { loadStatEvents, loadTimeEvents } from './storage/session-storage.ts';
+import {
+  loadStatEvents,
+  loadStructureEvents,
+  loadTimeEvents,
+} from './storage/session-storage.ts';
 
-const render = (events: TimeEvent[], statEvents: StatEvent[]) => {
+const render = (
+  events: TimeEvent[],
+  statEvents: StatEvent[],
+  structureEvents: StructureEvent[],
+) => {
   const threads = getThreads();
   if (threads) {
-    addThreads(threads, events);
+    addThreads(threads, structureEvents);
   }
   const backlog = getBacklog();
   if (backlog) {
@@ -50,5 +59,5 @@ const render = (events: TimeEvent[], statEvents: StatEvent[]) => {
 const params = new URLSearchParams(window.location.search);
 const id = params.get('id');
 if (id) {
-  render(loadTimeEvents(id), loadStatEvents(id));
+  render(loadTimeEvents(id), loadStatEvents(id), loadStructureEvents(id));
 }
