@@ -1,5 +1,9 @@
 import { describe, expect, test } from 'vitest';
-import { Backlog, getUserStoriesDone, getUserStoriesRemainings } from './backlog.ts';
+import {
+  Backlog,
+  getUserStoriesDone,
+  getUserStoriesRemainings,
+} from './backlog.ts';
 import type { TimeEvent } from './events.ts';
 import { noReview } from './review.ts';
 import { simulate } from './simulation.ts';

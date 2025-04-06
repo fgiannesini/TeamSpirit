@@ -1,6 +1,14 @@
 import { hasSomeReviews } from './review.ts';
 import type { Thread } from './team.ts';
-import { idle, isInProgressBy, isInReviewBy, isToReviewBy, State, toDo, type UserStory } from './user-story.ts';
+import {
+  State,
+  type UserStory,
+  idle,
+  isInProgressBy,
+  isInReviewBy,
+  isToReviewBy,
+  toDo,
+} from './user-story.ts';
 
 export class Backlog {
   readonly userStoriesRemaining: UserStory[];

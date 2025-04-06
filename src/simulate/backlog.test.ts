@@ -1,7 +1,11 @@
 import { describe, expect, test } from 'vitest';
-import { Backlog, getNextUserStory, userStoriesWithSomeReviews } from './backlog.ts';
+import {
+  Backlog,
+  getNextUserStory,
+  userStoriesWithSomeReviews,
+} from './backlog.ts';
 import { noReview } from './review.ts';
-import { idle, State } from './user-story.ts';
+import { State, idle } from './user-story.ts';
 
 describe('Backlog', () => {
   test('Should get idle by default', () => {
