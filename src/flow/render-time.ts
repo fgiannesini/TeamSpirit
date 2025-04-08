@@ -12,13 +12,13 @@ import {
 
 const hasManyReviewsInSameTime = (
   timeEvents: TimeEvent[],
-  userStoryName: string,
+  userStoryId: string,
 ) => {
   return (
     timeEvents.filter(
       (timeEvent) =>
         timeEvent.state === State.Review &&
-        timeEvent.userStoryName === userStoryName,
+        timeEvent.userStoryId === userStoryId,
     ).length > 1
   );
 };
@@ -43,13 +43,13 @@ export const renderTimeEvents = async (
 ) => {
   const currentEvents = events.filter((event) => event.time === time);
   for (const currentEvent of currentEvents) {
-    if (currentEvent.userStoryName === 'idle') {
+    if (currentEvent.userStoryId === 'idle') {
       setThreadStateTo(currentEvent.threadId, 'Wait');
       continue;
     }
     switch (currentEvent.state) {
       case State.InProgress: {
-        const inProgressUserStory = getUserStory(currentEvent.userStoryName);
+        const inProgressUserStory = getUserStory(currentEvent.userStoryId);
         if (inProgressUserStory) {
           getThreadUserStory(currentEvent.threadId)?.appendChild(
             inProgressUserStory,
@@ -60,26 +60,26 @@ export const renderTimeEvents = async (
       }
       case State.Review: {
         if (
-          hasManyReviewsInSameTime(currentEvents, currentEvent.userStoryName)
+          hasManyReviewsInSameTime(currentEvents, currentEvent.userStoryId)
         ) {
-          removeUserStory(getUserStory(currentEvent.userStoryName));
-          const id = `${currentEvent.userStoryName}_${currentEvent.threadId}`;
+          removeUserStory(getUserStory(currentEvent.userStoryId));
+          const id = `${currentEvent.userStoryId}_${currentEvent.threadId}`;
           getThreadUserStory(currentEvent.threadId)?.appendChild(
             getOrCreateUserStory(id),
           );
         } else {
           removeUserStory(
-            ...getDuplicatedUserStories(currentEvent.userStoryName),
+            ...getDuplicatedUserStories(currentEvent.userStoryId),
           );
           getThreadUserStory(currentEvent.threadId)?.appendChild(
-            getOrCreateUserStory(currentEvent.userStoryName),
+            getOrCreateUserStory(currentEvent.userStoryId),
           );
         }
         setThreadStateTo(currentEvent.threadId, 'Review');
         break;
       }
       case State.ToReview: {
-        const toReviewUserStory = getUserStory(currentEvent.userStoryName);
+        const toReviewUserStory = getUserStory(currentEvent.userStoryId);
         if (toReviewUserStory) {
           getBacklog()?.appendChild(toReviewUserStory);
         }
@@ -87,9 +87,9 @@ export const renderTimeEvents = async (
       }
       case State.Done: {
         removeUserStory(
-          ...getDuplicatedUserStories(currentEvent.userStoryName),
+          ...getDuplicatedUserStories(currentEvent.userStoryId),
         );
-        const doneUserStory = getOrCreateUserStory(currentEvent.userStoryName);
+        const doneUserStory = getOrCreateUserStory(currentEvent.userStoryId);
         getDone()?.appendChild(doneUserStory);
         break;
       }

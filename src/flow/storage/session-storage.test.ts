@@ -15,7 +15,7 @@ describe('session storage', () => {
       [
         {
           time: 1,
-          userStoryName: 'userStory1',
+          userStoryId: 'userStory1',
           threadId: 0,
           state: State.InProgress,
         },
@@ -25,7 +25,7 @@ describe('session storage', () => {
     expect(loadTimeEvents('e4567-e89b-12d3-a456-426614174000')).toEqual([
       {
         time: 1,
-        userStoryName: 'userStory1',
+        userStoryId: 'userStory1',
         threadId: 0,
         state: State.InProgress,
       },

@@ -21,17 +21,17 @@ export const getBacklog = (): HTMLDivElement | null =>
 export const getDone = (): HTMLDivElement | null =>
   document.querySelector<HTMLDivElement>('#done');
 
-export const getUserStory = (userStoryName: string): HTMLDivElement | null =>
-  document.querySelector<HTMLDivElement>(`#${userStoryName}`);
+export const getUserStory = (userStoryId: string): HTMLDivElement | null =>
+  document.querySelector<HTMLDivElement>(`#${userStoryId}`);
 
-export const getOrCreateUserStory = (userStoryName: string): HTMLDivElement =>
-  getUserStory(userStoryName) ?? createUserStory(userStoryName);
+export const getOrCreateUserStory = (userStoryId: string): HTMLDivElement =>
+  getUserStory(userStoryId) ?? createUserStory(userStoryId);
 
 export const getDuplicatedUserStories = (
-  userStoryName: string,
+  userStoryId: string,
 ): HTMLDivElement[] =>
   Array.from(
-    document.querySelectorAll<HTMLDivElement>(`[id^="${userStoryName}_"]`),
+    document.querySelectorAll<HTMLDivElement>(`[id^="${userStoryId}_"]`),
   );
 
 export const getCompute = (): HTMLButtonElement | null =>

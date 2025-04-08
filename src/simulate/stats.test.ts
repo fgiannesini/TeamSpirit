@@ -8,19 +8,19 @@ describe('stats', () => {
       computeStatEvents([
         {
           time: 1,
-          userStoryName: 'userStory1',
+          userStoryId: 'userStory1',
           threadId: 0,
           state: State.InProgress,
         },
         {
           time: 2,
-          userStoryName: 'userStory1',
+          userStoryId: 'userStory1',
           threadId: 0,
           state: State.InProgress,
         },
         {
           time: 2,
-          userStoryName: 'userStory1',
+          userStoryId: 'userStory1',
           threadId: 0,
           state: State.Done,
         },
@@ -36,25 +36,25 @@ describe('stats', () => {
       computeStatEvents([
         {
           time: 1,
-          userStoryName: 'userStory1',
+          userStoryId: 'userStory1',
           threadId: 0,
           state: State.InProgress,
         },
         {
           time: 1,
-          userStoryName: 'userStory1',
+          userStoryId: 'userStory1',
           threadId: 0,
           state: State.Done,
         },
         {
           time: 1,
-          userStoryName: 'userStory2',
+          userStoryId: 'userStory2',
           threadId: 1,
           state: State.InProgress,
         },
         {
           time: 1,
-          userStoryName: 'userStory2',
+          userStoryId: 'userStory2',
           threadId: 1,
           state: State.Done,
         },
@@ -65,16 +65,16 @@ describe('stats', () => {
   test('should compute a lead time on two tasks reviewed by two devs', () => {
     expect(
       computeStatEvents([
-        { time: 1, userStoryName: 'US1', threadId: 0, state: State.InProgress },
-        { time: 1, userStoryName: 'US0', threadId: 1, state: State.InProgress },
-        { time: 1, userStoryName: 'US0', threadId: 1, state: State.ToReview },
-        { time: 2, userStoryName: 'US1', threadId: 0, state: State.InProgress },
-        { time: 2, userStoryName: 'US1', threadId: 0, state: State.ToReview },
-        { time: 2, userStoryName: 'idle', threadId: 1, state: State.Done },
-        { time: 3, userStoryName: 'US0', threadId: 0, state: State.Review },
-        { time: 3, userStoryName: 'US0', threadId: 1, state: State.Done },
-        { time: 3, userStoryName: 'US1', threadId: 1, state: State.Review },
-        { time: 3, userStoryName: 'US1', threadId: 0, state: State.Done },
+        { time: 1, userStoryId: 'US1', threadId: 0, state: State.InProgress },
+        { time: 1, userStoryId: 'US0', threadId: 1, state: State.InProgress },
+        { time: 1, userStoryId: 'US0', threadId: 1, state: State.ToReview },
+        { time: 2, userStoryId: 'US1', threadId: 0, state: State.InProgress },
+        { time: 2, userStoryId: 'US1', threadId: 0, state: State.ToReview },
+        { time: 2, userStoryId: 'idle', threadId: 1, state: State.Done },
+        { time: 3, userStoryId: 'US0', threadId: 0, state: State.Review },
+        { time: 3, userStoryId: 'US0', threadId: 1, state: State.Done },
+        { time: 3, userStoryId: 'US1', threadId: 1, state: State.Review },
+        { time: 3, userStoryId: 'US1', threadId: 0, state: State.Done },
       ]),
     ).toEqual([
       { time: 1, leadTime: Number.NaN },

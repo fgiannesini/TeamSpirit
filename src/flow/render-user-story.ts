@@ -9,12 +9,12 @@ export const createUserStory = (id: string) => {
 };
 
 export const addUserStories = (parent: Element, events: TimeEvent[]) => {
-  const userStoryNames = Array.from(
-    new Set(events.map((event) => event.userStoryName)),
+  const userStoryIds = Array.from(
+    new Set(events.map((event) => event.userStoryId)),
   );
-  userStoryNames
-    .filter((userStoryName) => userStoryName !== 'idle')
-    .map((userStoryName) => createUserStory(userStoryName))
+  userStoryIds
+    .filter((userStoryId) => userStoryId !== 'idle')
+    .map((userStoryId) => createUserStory(userStoryId))
     .forEach((userStoryElement) => {
       parent.appendChild(userStoryElement);
     });

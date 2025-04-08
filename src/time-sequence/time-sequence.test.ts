@@ -21,13 +21,13 @@ describe('Time sequence', () => {
       [
         {
           time: 1,
-          userStoryName: 'userStory1',
+          userStoryId: 'userStory1',
           threadId: 0,
           state: State.InProgress,
         },
         {
           time: 1,
-          userStoryName: 'userStory1',
+          userStoryId: 'userStory1',
           threadId: 0,
           state: State.Done,
         },
@@ -50,31 +50,31 @@ describe('Time sequence', () => {
       [
         {
           time: 1,
-          userStoryName: 'userStory1',
+          userStoryId: 'userStory1',
           threadId: 0,
           state: State.InProgress,
         },
         {
           time: 1,
-          userStoryName: 'userStory1',
+          userStoryId: 'userStory1',
           threadId: 0,
           state: State.Done,
         },
         {
           time: 1,
-          userStoryName: 'userStory2',
+          userStoryId: 'userStory2',
           threadId: 1,
           state: State.InProgress,
         },
         {
           time: 1,
-          userStoryName: 'userStory2',
+          userStoryId: 'userStory2',
           threadId: 1,
           state: State.Done,
         },
         {
           time: 1,
-          userStoryName: 'idle',
+          userStoryId: 'idle',
           threadId: 2,
           state: State.Done,
         },
@@ -94,25 +94,25 @@ describe('Time sequence', () => {
       [
         {
           time: 1,
-          userStoryName: 'userStory1',
+          userStoryId: 'userStory1',
           threadId: 0,
           state: State.InProgress,
         },
         {
           time: 1,
-          userStoryName: 'userStory1',
+          userStoryId: 'userStory1',
           threadId: 0,
           state: State.Done,
         },
         {
           time: 2,
-          userStoryName: 'userStory2',
+          userStoryId: 'userStory2',
           threadId: 0,
           state: State.InProgress,
         },
         {
           time: 2,
-          userStoryName: 'userStory2',
+          userStoryId: 'userStory2',
           threadId: 0,
           state: State.Done,
         },
@@ -142,13 +142,13 @@ describe('Time sequence', () => {
       [
         {
           time: 1,
-          userStoryName: 'userStory1',
+          userStoryId: 'userStory1',
           threadId: 0,
           state: State.InProgress,
         },
         {
           time: 1,
-          userStoryName: 'userStory1',
+          userStoryId: 'userStory1',
           threadId: 0,
           state: State.ToReview,
         },
@@ -171,13 +171,13 @@ describe('Time sequence', () => {
         [
           {
             time: 1,
-            userStoryName: 'userStory1',
+            userStoryId: 'userStory1',
             threadId: 0,
             state: state,
           },
           {
             time: 2,
-            userStoryName: 'userStory1',
+            userStoryId: 'userStory1',
             threadId: 0,
             state: state,
           },
@@ -201,19 +201,19 @@ describe('Time sequence', () => {
       [
         {
           time: 1,
-          userStoryName: 'userStory1',
+          userStoryId: 'userStory1',
           threadId: 0,
           state: State.InProgress,
         },
         {
           time: 1,
-          userStoryName: 'userStory1',
+          userStoryId: 'userStory1',
           threadId: 0,
           state: State.ToReview,
         },
         {
           time: 2,
-          userStoryName: 'userStory1',
+          userStoryId: 'userStory1',
           threadId: 0,
           state: State.Review,
         },
@@ -236,13 +236,13 @@ describe('Time sequence', () => {
       [
         {
           time: 1,
-          userStoryName: 'userStory1',
+          userStoryId: 'userStory1',
           threadId: 0,
           state: State.Review,
         },
         {
           time: 1,
-          userStoryName: 'userStory1',
+          userStoryId: 'userStory1',
           threadId: 1,
           state: State.Review,
         },
@@ -263,31 +263,31 @@ describe('Time sequence', () => {
       [
         {
           time: 1,
-          userStoryName: 'userStory1',
+          userStoryId: 'userStory1',
           threadId: 0,
           state: State.InProgress,
         },
         {
           time: 1,
-          userStoryName: 'userStory2',
+          userStoryId: 'userStory2',
           threadId: 1,
           state: State.InProgress,
         },
         {
           time: 1,
-          userStoryName: 'userStory2',
+          userStoryId: 'userStory2',
           threadId: 1,
           state: State.Done,
         },
         {
           time: 2,
-          userStoryName: 'userStory1',
+          userStoryId: 'userStory1',
           threadId: 0,
           state: State.InProgress,
         },
         {
           time: 3,
-          userStoryName: 'userStory1',
+          userStoryId: 'userStory1',
           threadId: 0,
           state: State.InProgress,
         },
@@ -307,8 +307,8 @@ describe('Time sequence', () => {
     ]);
   });
 
-  const userStoryClassNames = (userStoryName: string) =>
-    Array.from(document.querySelectorAll(`#${userStoryName} div`)).map(
+  const userStoryClassNames = (userStoryId: string) =>
+    Array.from(document.querySelectorAll(`#${userStoryId} div`)).map(
       (div) => div.className,
     );
 });

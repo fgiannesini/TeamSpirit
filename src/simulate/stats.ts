@@ -25,15 +25,15 @@ export const computeStatEvents = (timeEvents: TimeEvent[]): StatEvent[] => {
       break;
     }
 
-    const uniqueInProgressUserStoryNames = new Set(
+    const uniqueInProgressuserStoryIds = new Set(
       currentEvents
         .filter((event) => event.state === State.InProgress)
-        .map((event) => event.userStoryName),
+        .map((event) => event.userStoryId),
     );
 
-    for (const userStoryName of uniqueInProgressUserStoryNames) {
-      if (!timesOfRunningUserStoriesByName.has(userStoryName)) {
-        timesOfRunningUserStoriesByName.set(userStoryName, 0);
+    for (const userStoryId of uniqueInProgressuserStoryIds) {
+      if (!timesOfRunningUserStoriesByName.has(userStoryId)) {
+        timesOfRunningUserStoriesByName.set(userStoryId, 0);
       }
     }
 
@@ -41,17 +41,17 @@ export const computeStatEvents = (timeEvents: TimeEvent[]): StatEvent[] => {
       timesOfRunningUserStoriesByName.set(key, value + 1);
     });
 
-    const uniqueUserStoryNamesDone = new Set(
+    const uniqueuserStoryIdsDone = new Set(
       currentEvents
         .filter((event) => event.state === State.Done)
-        .map((event) => event.userStoryName),
+        .map((event) => event.userStoryId),
     );
-    for (const userStoryName of uniqueUserStoryNamesDone) {
-      const doneTime = timesOfRunningUserStoriesByName.get(userStoryName);
+    for (const userStoryId of uniqueuserStoryIdsDone) {
+      const doneTime = timesOfRunningUserStoriesByName.get(userStoryId);
       if (doneTime) {
         dones.push(doneTime);
       }
-      timesOfRunningUserStoriesByName.delete(userStoryName);
+      timesOfRunningUserStoriesByName.delete(userStoryId);
     }
     const leadTime = mean(dones);
     statEvents.push({

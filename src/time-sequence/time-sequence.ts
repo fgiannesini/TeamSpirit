@@ -24,10 +24,10 @@ const timeSequenceElement = (className: string) => {
 
 const getDeduplicatesEventsStates = (currentEvents: TimeEvent[]) => {
   const values = currentEvents
-    .reduce<Map<string, { userStoryName: string; state: State }>>(
-      (acc, { userStoryName, state }) => {
-        const key = `${userStoryName}_${state}`;
-        acc.set(key, { userStoryName, state });
+    .reduce<Map<string, { userStoryId: string; state: State }>>(
+      (acc, { userStoryId, state }) => {
+        const key = `${userStoryId}_${state}`;
+        acc.set(key, { userStoryId: userStoryId, state });
         return acc;
       },
       new Map(),
@@ -38,10 +38,10 @@ const getDeduplicatesEventsStates = (currentEvents: TimeEvent[]) => {
 
 const generateSequences = (
   timeEvents: TimeEvent[],
-  userStoryNames: string[],
+  userStoryIds: string[],
 ) => {
   const userStoriesSequence = new Map<string, string[]>(
-    userStoryNames.map((str) => [str, []]),
+    userStoryIds.map((str) => [str, []]),
   );
 
   const maxTime = Math.max(...timeEvents.map((event) => event.time));
@@ -50,9 +50,9 @@ const generateSequences = (
     time++;
     const currentEvents = timeEvents.filter((event) => event.time === time);
     const eventStates = getDeduplicatesEventsStates(currentEvents);
-    eventStates.forEach(({ userStoryName, state }) => {
+    eventStates.forEach(({ userStoryId, state }) => {
       if (state === State.InProgress || state === State.Review) {
-        const sequence = userStoriesSequence.get(userStoryName);
+        const sequence = userStoriesSequence.get(userStoryId);
         if (!sequence) {
           return;
         }
@@ -112,8 +112,8 @@ const cleanConsecutiveVerticals = (
 const addSequencesToDom = (
   cleanedUserStoriesSequence: Map<string, string[]>,
 ) => {
-  cleanedUserStoriesSequence.forEach((sequences, userStoryName) => {
-    const userStory = document.querySelector(`#${userStoryName}`);
+  cleanedUserStoriesSequence.forEach((sequences, userStoryId) => {
+    const userStory = document.querySelector(`#${userStoryId}`);
     if (!userStory) {
       return;
     }
@@ -128,16 +128,16 @@ const renderTimeSequence = (timeEvents: TimeEvent[]) => {
   if (!parent) {
     return;
   }
-  const userStoryNames = Array.from(
-    new Set(timeEvents.map((event) => event.userStoryName)),
+  const userStoryIds = Array.from(
+    new Set(timeEvents.map((event) => event.userStoryId)),
   );
-  userStoryNames
-    .filter((userStoryName) => userStoryName !== 'idle')
-    .map((userStoryName) => createUserStory(userStoryName))
+  userStoryIds
+    .filter((userStoryId) => userStoryId !== 'idle')
+    .map((userStoryId) => createUserStory(userStoryId))
     .forEach((userStoryElement) => {
       parent.appendChild(userStoryElement);
     });
-  const userStoriesSequence = generateSequences(timeEvents, userStoryNames);
+  const userStoriesSequence = generateSequences(timeEvents, userStoryIds);
   const cleanedUserStoriesSequence =
     cleanConsecutiveVerticals(userStoriesSequence);
   addSequencesToDom(cleanedUserStoriesSequence);
