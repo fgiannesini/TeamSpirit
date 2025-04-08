@@ -22,7 +22,7 @@ export interface UserStory {
   reviewComplexity: number;
   progression: number;
   review: Review;
-  thread?: number;
+  threadId?: number;
   state: State;
 }
 
@@ -33,7 +33,7 @@ export const idle: UserStory = {
   progression: 0,
   reviewComplexity: 0,
   review: noReview,
-  thread: undefined,
+  threadId: undefined,
   state: State.Done,
 };
 
@@ -44,7 +44,7 @@ export const setInProgress = (userStory: UserStory, dev: Thread): UserStory => {
       userStory.progression + dev.power,
       userStory.complexity,
     ),
-    thread: dev.id,
+    threadId: dev.id,
     state: State.InProgress,
   };
 };
@@ -53,7 +53,7 @@ export const setDoneBy = (
   userStory: UserStory,
   threadId: number,
 ): UserStory => {
-  return { ...userStory, state: State.Done, thread: threadId };
+  return { ...userStory, state: State.Done, threadId: threadId };
 };
 
 export const setDone = (userStory: UserStory): UserStory => {
@@ -67,7 +67,7 @@ export const setToReview = (
   return {
     ...userStory,
     state: State.ToReview,
-    thread: threadId,
+    threadId: threadId,
   };
 };
 
@@ -112,20 +112,20 @@ export const isReviewed = (userStory: UserStory): boolean => {
 
 export const isInProgressBy: (userStory: UserStory, thread: Thread) => boolean =
   (userStory: UserStory, thread: Thread) =>
-    userStory.state === State.InProgress && userStory.thread === thread.id;
+    userStory.state === State.InProgress && userStory.threadId === thread.id;
 
 export const isInReviewBy: (userStory: UserStory, thread: Thread) => boolean = (
   userStory: UserStory,
   thread: Thread,
 ) =>
   userStory.state === State.Review &&
-  userStory.thread !== thread.id &&
+  userStory.threadId !== thread.id &&
   needReview(userStory.review, thread, userStory.reviewComplexity);
 
 export const isToReviewBy: (userStory: UserStory, thread: Thread) => boolean = (
   userStory: UserStory,
   thread: Thread,
-) => userStory.state === State.ToReview && userStory.thread !== thread.id;
+) => userStory.state === State.ToReview && userStory.threadId !== thread.id;
 
 export const toDo: (userStory: UserStory) => boolean = (userStory: UserStory) =>
   userStory.state === State.Todo;

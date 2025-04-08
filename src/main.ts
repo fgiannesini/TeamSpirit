@@ -34,7 +34,7 @@ export const buildBacklogForParallelTeam = () => {
       },
       reviewComplexity: getInputValueOf(`#review-complexity-input-${i}`),
       state: State.Todo,
-      thread: undefined,
+      threadId: undefined,
       progression: 0,
     })),
   );
@@ -50,7 +50,7 @@ export const buildBacklogForEnsembleTeam = () => {
       review: noReview,
       reviewComplexity: getInputValueOf(`#review-complexity-input-${i}`),
       state: State.Todo,
-      thread: undefined,
+      threadId: undefined,
       progression: 0,
     })),
   );

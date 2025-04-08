@@ -22,7 +22,7 @@ describe('simulation-structure', () => {
         reviewComplexity: 0,
         review: noReview,
         state: State.Todo,
-        thread: undefined,
+        threadId: undefined,
         progression: 0,
       },
       {
@@ -32,7 +32,7 @@ describe('simulation-structure', () => {
         reviewComplexity: 0,
         review: noReview,
         state: State.Todo,
-        thread: undefined,
+        threadId: undefined,
         progression: 0,
       },
     ]);

@@ -4,16 +4,16 @@ export interface TimeEvent {
   time: number;
   userStoryName: string;
   state: State;
-  thread: number;
+  threadId: number;
 }
 
-export const createEvent = (
+export const createTimeEvent = (
   time: number,
   userStory: UserStory,
   threadId: number,
 ): TimeEvent => ({
   time: time,
   userStoryName: userStory.name,
-  thread: threadId,
+  threadId: threadId,
   state: userStory.state,
 });

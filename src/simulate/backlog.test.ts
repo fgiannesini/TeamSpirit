@@ -5,7 +5,8 @@ import {
   userStoriesWithSomeReviews,
 } from './backlog.ts';
 import { noReview } from './review.ts';
-import { State, idle } from './user-story.ts';
+import type { Thread } from './team.ts';
+import { State, type UserStory, idle } from './user-story.ts';
 
 describe('Backlog', () => {
   test('Should get idle by default', () => {
@@ -125,7 +126,10 @@ describe('Backlog', () => {
     expect(userStory).toEqual([inReview(0, [[0, 2]])]);
   });
 
-  const inReview = (thread: number, reviewers: [number, number][]) => {
+  const inReview = (
+    threadId: number,
+    reviewers: [number, number][],
+  ): UserStory => {
     return {
       id: 0,
       name: 'inReview',
@@ -136,12 +140,12 @@ describe('Backlog', () => {
         reviewers: new Map(reviewers),
       },
       state: State.Review,
-      thread,
+      threadId: threadId,
       progression: 0,
     };
   };
 
-  const toReview = (thread: number, reviewComplexity = 1) => {
+  const toReview = (threadId: number, reviewComplexity = 1): UserStory => {
     return {
       id: 0,
       name: 'toReview',
@@ -149,12 +153,12 @@ describe('Backlog', () => {
       reviewComplexity,
       review: noReview,
       state: State.ToReview,
-      thread,
+      threadId: threadId,
       progression: 0,
     };
   };
 
-  const inProgress = (thread: number) => {
+  const inProgress = (threadId: number): UserStory => {
     return {
       id: 0,
       name: 'inProgress',
@@ -162,12 +166,12 @@ describe('Backlog', () => {
       reviewComplexity: 1,
       review: noReview,
       state: State.InProgress,
-      thread,
+      threadId: threadId,
       progression: 0,
     };
   };
 
-  const todo = (complexity = 1) => {
+  const todo = (complexity = 1): UserStory => {
     return {
       id: 0,
       name: 'todo',
@@ -175,12 +179,12 @@ describe('Backlog', () => {
       reviewComplexity: 1,
       review: noReview,
       state: State.Todo,
-      thread: undefined,
+      threadId: undefined,
       progression: 0,
     };
   };
 
-  const thread = (id: number, power = 1) => {
+  const thread = (id: number, power = 1): Thread => {
     return { id, name: '', power };
   };
 });

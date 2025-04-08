@@ -16,7 +16,7 @@ describe('session storage', () => {
         {
           time: 1,
           userStoryName: 'userStory1',
-          thread: 0,
+          threadId: 0,
           state: State.InProgress,
         },
       ],
@@ -26,7 +26,7 @@ describe('session storage', () => {
       {
         time: 1,
         userStoryName: 'userStory1',
-        thread: 0,
+        threadId: 0,
         state: State.InProgress,
       },
     ]);
