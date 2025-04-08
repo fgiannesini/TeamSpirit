@@ -93,13 +93,13 @@ describe('Flow', () => {
         [
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.InProgress,
           },
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.Done,
           },
@@ -121,13 +121,13 @@ describe('Flow', () => {
         [
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.Review,
           },
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.Done,
           },
@@ -149,13 +149,13 @@ describe('Flow', () => {
         [
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.InProgress,
           },
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.ToReview,
           },
@@ -175,19 +175,19 @@ describe('Flow', () => {
         [
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.InProgress,
           },
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.ToReview,
           },
           {
             time: 2,
-            userStoryId: 'idle',
+            userStoryId: -1,
             threadId: 0,
             state: State.Done,
           },
@@ -209,13 +209,13 @@ describe('Flow', () => {
         [
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.InProgress,
           },
           {
             time: 1,
-            userStoryId: 'userStory2',
+            userStoryId: 2,
             threadId: 1,
             state: State.InProgress,
           },
@@ -223,11 +223,11 @@ describe('Flow', () => {
         'e4567-e89b-12d3-a456-426614174000',
       );
       await import('./flow.ts');
-      const userStory1 = getUserStory('userStory1');
+      const userStory1 = getUserStory(1);
       expect(userStory1?.className).toEqual('userStory');
       expect(userStory1?.textContent).toEqual('userStory1');
 
-      const userStory2 = getUserStory('userStory2');
+      const userStory2 = getUserStory(2);
       expect(userStory2?.className).toEqual('userStory');
       expect(userStory2?.textContent).toEqual('userStory2');
     });
@@ -237,13 +237,13 @@ describe('Flow', () => {
         [
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.InProgress,
           },
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.Done,
           },
@@ -255,11 +255,11 @@ describe('Flow', () => {
       getCompute()?.click();
       await vi.advanceTimersToNextTimerAsync();
       expect(
-        document.querySelector('#thread-user-story-0 #userStory1'),
+        document.querySelector('#thread-user-story-0 #user-story-1'),
       ).not.toBeNull();
 
       await vi.advanceTimersToNextTimerAsync();
-      expect(document.querySelector('#done #userStory1')).not.toBeNull();
+      expect(document.querySelector('#done #user-story-1')).not.toBeNull();
     });
 
     test('Should move userStories to thread when in review, then done', async () => {
@@ -267,13 +267,13 @@ describe('Flow', () => {
         [
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.Review,
           },
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.Done,
           },
@@ -285,11 +285,11 @@ describe('Flow', () => {
       getCompute()?.click();
       await vi.advanceTimersToNextTimerAsync();
       expect(
-        document.querySelector('#thread-user-story-0 #userStory1'),
+        document.querySelector('#thread-user-story-0 #user-story-1'),
       ).not.toBeNull();
 
       await vi.advanceTimersToNextTimerAsync();
-      expect(document.querySelector('#done #userStory1')).not.toBeNull();
+      expect(document.querySelector('#done #user-story-1')).not.toBeNull();
     });
 
     test('Should move userStories to the backlog area when to review', async () => {
@@ -297,7 +297,7 @@ describe('Flow', () => {
         [
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.ToReview,
           },
@@ -308,7 +308,7 @@ describe('Flow', () => {
 
       getCompute()?.click();
 
-      expect(document.querySelector('#backlog #userStory1')).not.toBeNull();
+      expect(document.querySelector('#backlog #user-story-1')).not.toBeNull();
     });
 
     test('Should move userStories to the corresponding threads when reviewed by several threads', async () => {
@@ -320,13 +320,13 @@ describe('Flow', () => {
         [
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.Review,
           },
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 1,
             state: State.Review,
           },
@@ -338,12 +338,12 @@ describe('Flow', () => {
       getCompute()?.click();
       await vi.runAllTimersAsync();
       expect(
-        document.querySelector('#thread-user-story-0 #userStory1_0'),
+        document.querySelector('#thread-user-story-0 #user-story-1_0'),
       ).not.toBeNull();
       expect(
-        document.querySelector('#thread-user-story-1 #userStory1_1'),
+        document.querySelector('#thread-user-story-1 #user-story-1_1'),
       ).not.toBeNull();
-      expect(document.querySelector('#backlog #userStory1')).toBeNull();
+      expect(document.querySelector('#backlog #user-story-1')).toBeNull();
     });
 
     test('Should keep only one review when the other one is completed', async () => {
@@ -355,25 +355,25 @@ describe('Flow', () => {
         [
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.Review,
           },
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 1,
             state: State.Review,
           },
           {
             time: 2,
-            userStoryId: 'idle',
+            userStoryId: -1,
             threadId: 0,
             state: State.Done,
           },
           {
             time: 2,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 1,
             state: State.Review,
           },
@@ -389,13 +389,13 @@ describe('Flow', () => {
       await vi.runAllTimersAsync();
 
       expect(
-        document.querySelector('#thread-user-story-1 #userStory1'),
+        document.querySelector('#thread-user-story-1 #user-story-1'),
       ).not.toBeNull();
       expect(
-        document.querySelector('#thread-user-story-0 #userStory1_0'),
+        document.querySelector('#thread-user-story-0 #user-story-1_0'),
       ).toBeNull();
       expect(
-        document.querySelector('#thread-user-story-1 #userStory1_1'),
+        document.querySelector('#thread-user-story-1 #user-story-1_1'),
       ).toBeNull();
     });
 
@@ -408,25 +408,25 @@ describe('Flow', () => {
         [
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.Review,
           },
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 1,
             state: State.Review,
           },
           {
             time: 2,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.Review,
           },
           {
             time: 2,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 1,
             state: State.Review,
           },
@@ -442,12 +442,12 @@ describe('Flow', () => {
       await vi.runAllTimersAsync();
 
       expect(
-        document.querySelectorAll('#thread-user-story-0 #userStory1_0').length,
+        document.querySelectorAll('#thread-user-story-0 #user-story-1_0').length,
       ).toEqual(1);
       expect(
-        document.querySelectorAll('#thread-user-story-1 #userStory1_1').length,
+        document.querySelectorAll('#thread-user-story-1 #user-story-1_1').length,
       ).toEqual(1);
-      expect(document.querySelector('#userStory1')).toBeNull();
+      expect(document.querySelector('#user-story-1')).toBeNull();
     });
 
     test('Should not display "idle" user story', async () => {
@@ -455,24 +455,24 @@ describe('Flow', () => {
         [
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.InProgress,
           },
-          { time: 1, userStoryId: 'idle', threadId: 1, state: State.Done },
+          { time: 1, userStoryId: -1, threadId: 1, state: State.Done },
           {
             time: 2,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.InProgress,
           },
           {
             time: 2,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.Done,
           },
-          { time: 2, userStoryId: 'idle', threadId: 1, state: State.Done },
+          { time: 2, userStoryId: -1, threadId: 1, state: State.Done },
         ],
         'e4567-e89b-12d3-a456-426614174000',
       );
@@ -492,19 +492,19 @@ describe('Flow', () => {
         [
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.InProgress,
           },
           {
             time: 2,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.InProgress,
           },
           {
             time: 2,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.Done,
           },
@@ -517,7 +517,7 @@ describe('Flow', () => {
       getComputeAll()?.click();
       await vi.runAllTimersAsync();
 
-      expect(document.querySelector(' #done #userStory1')).not.toBeNull();
+      expect(document.querySelector('#done #user-story-1')).not.toBeNull();
     });
 
     test('Should disable "compute" button during display', async () => {
@@ -525,19 +525,19 @@ describe('Flow', () => {
         [
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.InProgress,
           },
           {
             time: 2,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.InProgress,
           },
           {
             time: 2,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.Done,
           },
@@ -559,13 +559,13 @@ describe('Flow', () => {
         [
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.InProgress,
           },
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.Done,
           },
@@ -586,13 +586,13 @@ describe('Flow', () => {
         [
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.InProgress,
           },
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: State.Done,
           },
@@ -634,7 +634,7 @@ describe('Flow', () => {
           [
             {
               time: 1,
-              userStoryId: 'US1',
+              userStoryId: 1,
               threadId: 1,
               state: State.InProgress,
             },

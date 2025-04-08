@@ -21,13 +21,13 @@ describe('Time sequence', () => {
       [
         {
           time: 1,
-          userStoryId: 'userStory1',
+          userStoryId: 1,
           threadId: 0,
           state: State.InProgress,
         },
         {
           time: 1,
-          userStoryId: 'userStory1',
+          userStoryId: 1,
           threadId: 0,
           state: State.Done,
         },
@@ -38,7 +38,7 @@ describe('Time sequence', () => {
 
     const userStories = document.querySelectorAll('.user-story');
     expect(userStories.length).toEqual(1);
-    expect(userStoryClassNames('userStory1')).toEqual([
+    expect(userStoryClassNames('user-story-1')).toEqual([
       'vertical',
       'horizontal-top',
       'vertical',
@@ -50,31 +50,31 @@ describe('Time sequence', () => {
       [
         {
           time: 1,
-          userStoryId: 'userStory1',
+          userStoryId: 1,
           threadId: 0,
           state: State.InProgress,
         },
         {
           time: 1,
-          userStoryId: 'userStory1',
+          userStoryId: 1,
           threadId: 0,
           state: State.Done,
         },
         {
           time: 1,
-          userStoryId: 'userStory2',
+          userStoryId: 2,
           threadId: 1,
           state: State.InProgress,
         },
         {
           time: 1,
-          userStoryId: 'userStory2',
+          userStoryId: 2,
           threadId: 1,
           state: State.Done,
         },
         {
           time: 1,
-          userStoryId: 'idle',
+          userStoryId: -1,
           threadId: 2,
           state: State.Done,
         },
@@ -94,25 +94,25 @@ describe('Time sequence', () => {
       [
         {
           time: 1,
-          userStoryId: 'userStory1',
+          userStoryId: 1,
           threadId: 0,
           state: State.InProgress,
         },
         {
           time: 1,
-          userStoryId: 'userStory1',
+          userStoryId: 1,
           threadId: 0,
           state: State.Done,
         },
         {
           time: 2,
-          userStoryId: 'userStory2',
+          userStoryId: 2,
           threadId: 0,
           state: State.InProgress,
         },
         {
           time: 2,
-          userStoryId: 'userStory2',
+          userStoryId: 2,
           threadId: 0,
           state: State.Done,
         },
@@ -121,14 +121,14 @@ describe('Time sequence', () => {
     );
     await import('./time-sequence.ts');
 
-    expect(userStoryClassNames('userStory1')).toEqual([
+    expect(userStoryClassNames('user-story-1')).toEqual([
       'vertical',
       'horizontal-top',
       'vertical',
       'horizontal-bottom',
       'vertical-dashed',
     ]);
-    expect(userStoryClassNames('userStory2')).toEqual([
+    expect(userStoryClassNames('user-story-2')).toEqual([
       'vertical-dashed',
       'horizontal-bottom',
       'vertical',
@@ -142,13 +142,13 @@ describe('Time sequence', () => {
       [
         {
           time: 1,
-          userStoryId: 'userStory1',
+          userStoryId: 1,
           threadId: 0,
           state: State.InProgress,
         },
         {
           time: 1,
-          userStoryId: 'userStory1',
+          userStoryId: 1,
           threadId: 0,
           state: State.ToReview,
         },
@@ -157,7 +157,7 @@ describe('Time sequence', () => {
     );
     await import('./time-sequence.ts');
 
-    expect(userStoryClassNames('userStory1')).toEqual([
+    expect(userStoryClassNames('user-story-1')).toEqual([
       'vertical',
       'horizontal-top',
       'vertical',
@@ -171,13 +171,13 @@ describe('Time sequence', () => {
         [
           {
             time: 1,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: state,
           },
           {
             time: 2,
-            userStoryId: 'userStory1',
+            userStoryId: 1,
             threadId: 0,
             state: state,
           },
@@ -186,7 +186,7 @@ describe('Time sequence', () => {
       );
       await import('./time-sequence.ts');
 
-      expect(userStoryClassNames('userStory1')).toEqual([
+      expect(userStoryClassNames('user-story-1')).toEqual([
         'vertical',
         'horizontal-top',
         'vertical-dashed',
@@ -201,19 +201,19 @@ describe('Time sequence', () => {
       [
         {
           time: 1,
-          userStoryId: 'userStory1',
+          userStoryId: 1,
           threadId: 0,
           state: State.InProgress,
         },
         {
           time: 1,
-          userStoryId: 'userStory1',
+          userStoryId: 1,
           threadId: 0,
           state: State.ToReview,
         },
         {
           time: 2,
-          userStoryId: 'userStory1',
+          userStoryId: 1,
           threadId: 0,
           state: State.Review,
         },
@@ -222,7 +222,7 @@ describe('Time sequence', () => {
     );
     await import('./time-sequence.ts');
 
-    expect(userStoryClassNames('userStory1')).toEqual([
+    expect(userStoryClassNames('user-story-1')).toEqual([
       'vertical',
       'horizontal-top',
       'vertical-dashed',
@@ -236,13 +236,13 @@ describe('Time sequence', () => {
       [
         {
           time: 1,
-          userStoryId: 'userStory1',
+          userStoryId: 1,
           threadId: 0,
           state: State.Review,
         },
         {
           time: 1,
-          userStoryId: 'userStory1',
+          userStoryId: 1,
           threadId: 1,
           state: State.Review,
         },
@@ -251,7 +251,7 @@ describe('Time sequence', () => {
     );
     await import('./time-sequence.ts');
 
-    expect(userStoryClassNames('userStory1')).toEqual([
+    expect(userStoryClassNames('user-story-1')).toEqual([
       'vertical',
       'horizontal-top',
       'vertical',
@@ -263,31 +263,31 @@ describe('Time sequence', () => {
       [
         {
           time: 1,
-          userStoryId: 'userStory1',
+          userStoryId: 1,
           threadId: 0,
           state: State.InProgress,
         },
         {
           time: 1,
-          userStoryId: 'userStory2',
+          userStoryId: 2,
           threadId: 1,
           state: State.InProgress,
         },
         {
           time: 1,
-          userStoryId: 'userStory2',
+          userStoryId: 2,
           threadId: 1,
           state: State.Done,
         },
         {
           time: 2,
-          userStoryId: 'userStory1',
+          userStoryId: 1,
           threadId: 0,
           state: State.InProgress,
         },
         {
           time: 3,
-          userStoryId: 'userStory1',
+          userStoryId: 1,
           threadId: 0,
           state: State.InProgress,
         },
@@ -296,7 +296,7 @@ describe('Time sequence', () => {
     );
     await import('./time-sequence.ts');
 
-    expect(userStoryClassNames('userStory2')).toEqual([
+    expect(userStoryClassNames('user-story-2')).toEqual([
       'vertical',
       'horizontal-top',
       'vertical',

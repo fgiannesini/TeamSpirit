@@ -5,6 +5,7 @@ import {
   getDone,
   getDuplicatedUserStories,
   getOrCreateUserStory,
+  getOrCreateUserStoryInThread,
   getThreadState,
   getThreadUserStory,
   getUserStory,
@@ -12,7 +13,7 @@ import {
 
 const hasManyReviewsInSameTime = (
   timeEvents: TimeEvent[],
-  userStoryId: string,
+  userStoryId: number,
 ) => {
   return (
     timeEvents.filter(
@@ -43,7 +44,7 @@ export const renderTimeEvents = async (
 ) => {
   const currentEvents = events.filter((event) => event.time === time);
   for (const currentEvent of currentEvents) {
-    if (currentEvent.userStoryId === 'idle') {
+    if (currentEvent.userStoryId === -1) {
       setThreadStateTo(currentEvent.threadId, 'Wait');
       continue;
     }
@@ -59,13 +60,14 @@ export const renderTimeEvents = async (
         break;
       }
       case State.Review: {
-        if (
-          hasManyReviewsInSameTime(currentEvents, currentEvent.userStoryId)
-        ) {
+        if (hasManyReviewsInSameTime(currentEvents, currentEvent.userStoryId)) {
           removeUserStory(getUserStory(currentEvent.userStoryId));
-          const id = `${currentEvent.userStoryId}_${currentEvent.threadId}`;
+
           getThreadUserStory(currentEvent.threadId)?.appendChild(
-            getOrCreateUserStory(id),
+            getOrCreateUserStoryInThread(
+              currentEvent.userStoryId,
+              currentEvent.threadId,
+            ),
           );
         } else {
           removeUserStory(
@@ -86,10 +88,11 @@ export const renderTimeEvents = async (
         break;
       }
       case State.Done: {
-        removeUserStory(
-          ...getDuplicatedUserStories(currentEvent.userStoryId),
+        removeUserStory(...getDuplicatedUserStories(currentEvent.userStoryId));
+        const doneUserStory = getOrCreateUserStoryInThread(
+          currentEvent.userStoryId,
+          currentEvent.threadId,
         );
-        const doneUserStory = getOrCreateUserStory(currentEvent.userStoryId);
         getDone()?.appendChild(doneUserStory);
         break;
       }

@@ -1,4 +1,7 @@
-import { createUserStory } from './render-user-story.ts';
+import {
+  createUserStory,
+  createUserStoryInThread,
+} from './render-user-story.ts';
 
 export const getThreads = (): HTMLDivElement | null =>
   document.querySelector<HTMLDivElement>('#threads');
@@ -21,17 +24,32 @@ export const getBacklog = (): HTMLDivElement | null =>
 export const getDone = (): HTMLDivElement | null =>
   document.querySelector<HTMLDivElement>('#done');
 
-export const getUserStory = (userStoryId: string): HTMLDivElement | null =>
-  document.querySelector<HTMLDivElement>(`#${userStoryId}`);
+export const getUserStory = (userStoryId: number): HTMLDivElement | null =>
+  document.querySelector<HTMLDivElement>(`#user-story-${userStoryId}`);
 
-export const getOrCreateUserStory = (userStoryId: string): HTMLDivElement =>
+export const getOrCreateUserStoryInThread = (
+  userStoryId: number,
+  threadId: number,
+): HTMLDivElement => {
+  return (
+    document.querySelector<HTMLDivElement>(
+      `#user-story-${userStoryId}_${threadId}`,
+    ) ??
+    getUserStory(userStoryId) ??
+    createUserStoryInThread(userStoryId, threadId)
+  );
+};
+
+export const getOrCreateUserStory = (userStoryId: number): HTMLDivElement =>
   getUserStory(userStoryId) ?? createUserStory(userStoryId);
 
 export const getDuplicatedUserStories = (
-  userStoryId: string,
+  userStoryId: number,
 ): HTMLDivElement[] =>
   Array.from(
-    document.querySelectorAll<HTMLDivElement>(`[id^="${userStoryId}_"]`),
+    document.querySelectorAll<HTMLDivElement>(
+      `[id^="user-story-${userStoryId}_"]`,
+    ),
   );
 
 export const getCompute = (): HTMLButtonElement | null =>

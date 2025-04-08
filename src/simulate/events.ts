@@ -2,7 +2,7 @@ import type { State, UserStory } from './user-story.ts';
 
 export interface TimeEvent {
   time: number;
-  userStoryId: string;
+  userStoryId: number;
   state: State;
   threadId: number;
 }
@@ -13,7 +13,7 @@ export const createTimeEvent = (
   threadId: number,
 ): TimeEvent => ({
   time: time,
-  userStoryId: userStory.name,
+  userStoryId: userStory.id,
   threadId: threadId,
   state: userStory.state,
 });

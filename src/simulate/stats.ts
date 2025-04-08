@@ -12,7 +12,7 @@ const mean = (times: number[]) => {
 };
 
 export const computeStatEvents = (timeEvents: TimeEvent[]): StatEvent[] => {
-  const timesOfRunningUserStoriesByName = new Map<string, number>();
+  const timesOfRunningUserStoriesByName = new Map<number, number>();
   const dones: number[] = [];
   const statEvents: StatEvent[] = [];
   let time = 1;
@@ -25,13 +25,13 @@ export const computeStatEvents = (timeEvents: TimeEvent[]): StatEvent[] => {
       break;
     }
 
-    const uniqueInProgressuserStoryIds = new Set(
+    const uniqueInProgressUserStoryIds = new Set(
       currentEvents
         .filter((event) => event.state === State.InProgress)
         .map((event) => event.userStoryId),
     );
 
-    for (const userStoryId of uniqueInProgressuserStoryIds) {
+    for (const userStoryId of uniqueInProgressUserStoryIds) {
       if (!timesOfRunningUserStoriesByName.has(userStoryId)) {
         timesOfRunningUserStoriesByName.set(userStoryId, 0);
       }
@@ -41,12 +41,12 @@ export const computeStatEvents = (timeEvents: TimeEvent[]): StatEvent[] => {
       timesOfRunningUserStoriesByName.set(key, value + 1);
     });
 
-    const uniqueuserStoryIdsDone = new Set(
+    const uniqueUserStoryIdsDone = new Set(
       currentEvents
         .filter((event) => event.state === State.Done)
         .map((event) => event.userStoryId),
     );
-    for (const userStoryId of uniqueuserStoryIdsDone) {
+    for (const userStoryId of uniqueUserStoryIdsDone) {
       const doneTime = timesOfRunningUserStoriesByName.get(userStoryId);
       if (doneTime) {
         dones.push(doneTime);
