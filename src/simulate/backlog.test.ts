@@ -187,4 +187,19 @@ describe('Backlog', () => {
   const thread = (id: number, power = 1): Thread => {
     return { id, name: '', power };
   };
+
+  const shouldGenerateBug = (time: number) => {
+    if (time !== 0 && time % 2 === 0) {
+      return true;
+    }
+    return false;
+  };
+
+  test('should generate a bug', () => {
+    expect(shouldGenerateBug(0)).toEqual(false);
+    expect(shouldGenerateBug(1)).toEqual(false);
+    expect(shouldGenerateBug(2)).toEqual(true);
+    expect(shouldGenerateBug(3)).toEqual(false);
+    expect(shouldGenerateBug(4)).toEqual(true);
+  });
 });
