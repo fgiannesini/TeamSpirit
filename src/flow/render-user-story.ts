@@ -1,4 +1,4 @@
-import type { TimeEvent } from '../simulate/events.ts';
+import type { StructureEvent } from '../simulate/simulation-structure.ts';
 
 export const createUserStory = (id: number) => {
   const userStoryHtmlElement = document.createElement('div');
@@ -19,10 +19,13 @@ export const createUserStoryInThread = (
   return userStoryHtmlElement;
 };
 
-export const addUserStories = (parent: Element, events: TimeEvent[]) => {
-  const userStoryIds = Array.from(
-    new Set(events.map((event) => event.userStoryId)),
-  );
+export const addUserStories = (
+  parent: Element,
+  structureEvents: StructureEvent[],
+) => {
+  const userStoryIds = structureEvents
+    .filter(({ action }) => action === 'CreateUserStory')
+    .map(({ id }) => id);
   userStoryIds
     .filter((userStoryId) => userStoryId !== -1)
     .map((userStoryId) => createUserStory(userStoryId))

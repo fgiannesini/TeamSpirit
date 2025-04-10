@@ -29,7 +29,7 @@ const render = (
   }
   const backlog = getBacklog();
   if (backlog) {
-    addUserStories(backlog, events);
+    addUserStories(backlog, structureEvents);
   }
 
   const maxTime = Math.max(...events.map((event) => event.time));
