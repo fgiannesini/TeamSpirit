@@ -55,6 +55,16 @@ describe('Flow', () => {
     time: 1,
   });
 
+  const createUserStory = (
+    options: Partial<StructureEvent>,
+  ): StructureEvent => ({
+    id: 0,
+    name: 'user-story-0',
+    action: 'CreateUserStory',
+    time: 1,
+    ...options,
+  });
+
   describe('Thread', () => {
     test('Should initialize 2 thread elements', async () => {
       saveStructureEvents(
@@ -89,17 +99,21 @@ describe('Flow', () => {
     });
 
     test('Should set thread state to "Develop" when in progress', async () => {
+      saveStructureEvents(
+        [createThread0(), createUserStory({ id: 0 })],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
       saveTimeEvents(
         [
           {
             time: 1,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.InProgress,
           },
           {
             time: 1,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.Done,
           },
@@ -117,17 +131,21 @@ describe('Flow', () => {
     });
 
     test('Should set thread state to "Review" when in review', async () => {
+      saveStructureEvents(
+        [createThread0(), createUserStory({ id: 0 })],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
       saveTimeEvents(
         [
           {
             time: 1,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.Review,
           },
           {
             time: 1,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.Done,
           },
@@ -145,17 +163,21 @@ describe('Flow', () => {
     });
 
     test('Should set thread state to "Develop" when to review', async () => {
+      saveStructureEvents(
+        [createThread0(), createUserStory({ id: 0 })],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
       saveTimeEvents(
         [
           {
             time: 1,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.InProgress,
           },
           {
             time: 1,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.ToReview,
           },
@@ -171,17 +193,21 @@ describe('Flow', () => {
     });
 
     test('Should set thread state to "Wait" when idle', async () => {
+      saveStructureEvents(
+        [createThread0(), createUserStory({ id: 0 })],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
       saveTimeEvents(
         [
           {
             time: 1,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.InProgress,
           },
           {
             time: 1,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.ToReview,
           },
@@ -205,17 +231,21 @@ describe('Flow', () => {
 
   describe('User story', () => {
     test('Should initialize 2 userStories elements', async () => {
+      saveStructureEvents(
+        [createUserStory({ id: 0 }), createUserStory({ id: 1 })],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
       saveTimeEvents(
         [
           {
             time: 1,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.InProgress,
           },
           {
             time: 1,
-            userStoryId: 2,
+            userStoryId: 1,
             threadId: 1,
             state: State.InProgress,
           },
@@ -223,27 +253,31 @@ describe('Flow', () => {
         'e4567-e89b-12d3-a456-426614174000',
       );
       await import('./flow.ts');
-      const userStory1 = getUserStory(1);
+      const userStory1 = getUserStory(0);
       expect(userStory1?.className).toEqual('userStory');
-      expect(userStory1?.textContent).toEqual('userStory1');
+      expect(userStory1?.textContent).toEqual('userStory0');
 
-      const userStory2 = getUserStory(2);
+      const userStory2 = getUserStory(1);
       expect(userStory2?.className).toEqual('userStory');
-      expect(userStory2?.textContent).toEqual('userStory2');
+      expect(userStory2?.textContent).toEqual('userStory1');
     });
 
     test('Should move userStories to thread when in progress, then done', async () => {
+      saveStructureEvents(
+        [createThread0(), createUserStory({ id: 0 })],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
       saveTimeEvents(
         [
           {
             time: 1,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.InProgress,
           },
           {
             time: 1,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.Done,
           },
@@ -255,25 +289,29 @@ describe('Flow', () => {
       getCompute()?.click();
       await vi.advanceTimersToNextTimerAsync();
       expect(
-        document.querySelector('#thread-user-story-0 #user-story-1'),
+        document.querySelector('#thread-user-story-0 #user-story-0'),
       ).not.toBeNull();
 
       await vi.advanceTimersToNextTimerAsync();
-      expect(document.querySelector('#done #user-story-1')).not.toBeNull();
+      expect(document.querySelector('#done #user-story-0')).not.toBeNull();
     });
 
     test('Should move userStories to thread when in review, then done', async () => {
+      saveStructureEvents(
+        [createThread0(), createUserStory({ id: 0 })],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
       saveTimeEvents(
         [
           {
             time: 1,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.Review,
           },
           {
             time: 1,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.Done,
           },
@@ -285,19 +323,23 @@ describe('Flow', () => {
       getCompute()?.click();
       await vi.advanceTimersToNextTimerAsync();
       expect(
-        document.querySelector('#thread-user-story-0 #user-story-1'),
+        document.querySelector('#thread-user-story-0 #user-story-0'),
       ).not.toBeNull();
 
       await vi.advanceTimersToNextTimerAsync();
-      expect(document.querySelector('#done #user-story-1')).not.toBeNull();
+      expect(document.querySelector('#done #user-story-0')).not.toBeNull();
     });
 
     test('Should move userStories to the backlog area when to review', async () => {
+      saveStructureEvents(
+        [createThread0(), createUserStory({ id: 0 })],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
       saveTimeEvents(
         [
           {
             time: 1,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.ToReview,
           },
@@ -308,25 +350,25 @@ describe('Flow', () => {
 
       getCompute()?.click();
 
-      expect(document.querySelector('#backlog #user-story-1')).not.toBeNull();
+      expect(document.querySelector('#backlog #user-story-0')).not.toBeNull();
     });
 
     test('Should move userStories to the corresponding threads when reviewed by several threads', async () => {
       saveStructureEvents(
-        [createThread0(), createThread1()],
+        [createThread0(), createThread1(), createUserStory({ id: 0 })],
         'e4567-e89b-12d3-a456-426614174000',
       );
       saveTimeEvents(
         [
           {
             time: 1,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.Review,
           },
           {
             time: 1,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 1,
             state: State.Review,
           },
@@ -338,30 +380,30 @@ describe('Flow', () => {
       getCompute()?.click();
       await vi.runAllTimersAsync();
       expect(
-        document.querySelector('#thread-user-story-0 #user-story-1_0'),
+        document.querySelector('#thread-user-story-0 #user-story-0_0'),
       ).not.toBeNull();
       expect(
-        document.querySelector('#thread-user-story-1 #user-story-1_1'),
+        document.querySelector('#thread-user-story-1 #user-story-0_1'),
       ).not.toBeNull();
-      expect(document.querySelector('#backlog #user-story-1')).toBeNull();
+      expect(document.querySelector('#backlog #user-story-0')).toBeNull();
     });
 
     test('Should keep only one review when the other one is completed', async () => {
       saveStructureEvents(
-        [createThread0(), createThread1()],
+        [createThread0(), createThread1(), createUserStory({ id: 0 })],
         'e4567-e89b-12d3-a456-426614174000',
       );
       saveTimeEvents(
         [
           {
             time: 1,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.Review,
           },
           {
             time: 1,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 1,
             state: State.Review,
           },
@@ -373,7 +415,7 @@ describe('Flow', () => {
           },
           {
             time: 2,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 1,
             state: State.Review,
           },
@@ -389,44 +431,44 @@ describe('Flow', () => {
       await vi.runAllTimersAsync();
 
       expect(
-        document.querySelector('#thread-user-story-1 #user-story-1'),
+        document.querySelector('#thread-user-story-1 #user-story-0'),
       ).not.toBeNull();
       expect(
-        document.querySelector('#thread-user-story-0 #user-story-1_0'),
+        document.querySelector('#thread-user-story-0 #user-story-0_0'),
       ).toBeNull();
       expect(
-        document.querySelector('#thread-user-story-1 #user-story-1_1'),
+        document.querySelector('#thread-user-story-1 #user-story-0_1'),
       ).toBeNull();
     });
 
     test('Should keep two reviews when reviews last', async () => {
       saveStructureEvents(
-        [createThread0(), createThread1()],
+        [createThread0(), createThread1(), createUserStory({ id: 0 })],
         'e4567-e89b-12d3-a456-426614174000',
       );
       saveTimeEvents(
         [
           {
             time: 1,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.Review,
           },
           {
             time: 1,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 1,
             state: State.Review,
           },
           {
             time: 2,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.Review,
           },
           {
             time: 2,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 1,
             state: State.Review,
           },
@@ -442,33 +484,39 @@ describe('Flow', () => {
       await vi.runAllTimersAsync();
 
       expect(
-        document.querySelectorAll('#thread-user-story-0 #user-story-1_0').length,
+        document.querySelectorAll('#thread-user-story-0 #user-story-0_0')
+          .length,
       ).toEqual(1);
       expect(
-        document.querySelectorAll('#thread-user-story-1 #user-story-1_1').length,
+        document.querySelectorAll('#thread-user-story-1 #user-story-0_1')
+          .length,
       ).toEqual(1);
-      expect(document.querySelector('#user-story-1')).toBeNull();
+      expect(document.querySelector('#user-story-0')).toBeNull();
     });
 
     test('Should not display "idle" user story', async () => {
+      saveStructureEvents(
+        [createUserStory({ id: 0 })],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
       saveTimeEvents(
         [
           {
             time: 1,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.InProgress,
           },
           { time: 1, userStoryId: -1, threadId: 1, state: State.Done },
           {
             time: 2,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.InProgress,
           },
           {
             time: 2,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.Done,
           },
@@ -488,23 +536,27 @@ describe('Flow', () => {
 
   describe('Compute', () => {
     test('Should compute all on click on compute All button', async () => {
+      saveStructureEvents(
+        [createThread0(), createUserStory({ id: 0 })],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
       saveTimeEvents(
         [
           {
             time: 1,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.InProgress,
           },
           {
             time: 2,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.InProgress,
           },
           {
             time: 2,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.Done,
           },
@@ -517,27 +569,31 @@ describe('Flow', () => {
       getComputeAll()?.click();
       await vi.runAllTimersAsync();
 
-      expect(document.querySelector('#done #user-story-1')).not.toBeNull();
+      expect(document.querySelector('#done #user-story-0')).not.toBeNull();
     });
 
     test('Should disable "compute" button during display', async () => {
+      saveStructureEvents(
+        [createUserStory({ id: 0 })],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
       saveTimeEvents(
         [
           {
             time: 1,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.InProgress,
           },
           {
             time: 2,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.InProgress,
           },
           {
             time: 2,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.Done,
           },
@@ -555,17 +611,21 @@ describe('Flow', () => {
     });
 
     test('Should disable "compute" button when finished', async () => {
+      saveStructureEvents(
+        [createUserStory({ id: 0 })],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
       saveTimeEvents(
         [
           {
             time: 1,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.InProgress,
           },
           {
             time: 1,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.Done,
           },
@@ -582,17 +642,21 @@ describe('Flow', () => {
     });
 
     test('Should disable "compute all" button when finished', async () => {
+      saveStructureEvents(
+        [createUserStory({ id: 0 })],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
       saveTimeEvents(
         [
           {
             time: 1,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.InProgress,
           },
           {
             time: 1,
-            userStoryId: 1,
+            userStoryId: 0,
             threadId: 0,
             state: State.Done,
           },
