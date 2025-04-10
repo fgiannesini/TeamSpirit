@@ -1,6 +1,10 @@
 import './time-sequence.scss';
-import { loadTimeEvents } from '../flow/storage/session-storage.ts';
+import {
+  loadStructureEvents,
+  loadTimeEvents,
+} from '../flow/storage/session-storage.ts';
 import type { TimeEvent } from '../simulate/events.ts';
+import type { StructureEvent } from '../simulate/simulation-structure.ts';
 import { State } from '../simulate/user-story.ts';
 
 const createUserStory = (id: number) => {
@@ -36,10 +40,7 @@ const getDeduplicatesEventsStates = (currentEvents: TimeEvent[]) => {
   return Array.from(values);
 };
 
-const generateSequences = (
-  timeEvents: TimeEvent[],
-  userStoryIds: number[],
-) => {
+const generateSequences = (timeEvents: TimeEvent[], userStoryIds: number[]) => {
   const userStoriesSequence = new Map<number, string[]>(
     userStoryIds.map((id) => [id, []]),
   );
@@ -123,14 +124,17 @@ const addSequencesToDom = (
   });
 };
 
-const renderTimeSequence = (timeEvents: TimeEvent[]) => {
+const renderTimeSequence = (
+  timeEvents: TimeEvent[],
+  structureEvents: StructureEvent[],
+) => {
   const parent = document.querySelector('#user-stories');
   if (!parent) {
     return;
   }
-  const userStoryIds = Array.from(
-    new Set(timeEvents.map((event) => event.userStoryId)),
-  );
+  const userStoryIds = structureEvents
+    .filter(({ action }) => action === 'CreateUserStory')
+    .map(({ id }) => id);
   userStoryIds
     .filter((userStoryId) => userStoryId !== -1)
     .map((userStoryId) => createUserStory(userStoryId))
@@ -146,5 +150,5 @@ const renderTimeSequence = (timeEvents: TimeEvent[]) => {
 const params = new URLSearchParams(window.location.search);
 const id = params.get('id');
 if (id) {
-  renderTimeSequence(loadTimeEvents(id));
+  renderTimeSequence(loadTimeEvents(id), loadStructureEvents(id));
 }
