@@ -1,16 +1,82 @@
-import { describe, expect, test } from 'vitest';
-import {
-  Backlog,
-  getUserStoriesDone,
-  getUserStoriesRemainings,
-} from './backlog.ts';
-import type { TimeEvent } from './events.ts';
-import { noReview } from './review.ts';
-import { simulate } from './simulation.ts';
-import { ParallelTeam } from './team.ts';
-import { State } from './user-story.ts';
+import {describe, expect, test} from 'vitest';
+import {Backlog, getUserStoriesDone, getUserStoriesRemainings,} from './backlog.ts';
+import type {TimeEvent} from './events.ts';
+import {noReview} from './review.ts';
+import {simulate, simulateTimeEvents} from './simulation.ts';
+import {ParallelTeam} from './team.ts';
+import {State} from './user-story.ts';
 
 describe('Simulation', () => {
+  test('should have a thread idle', async () => {
+    const team = new ParallelTeam([
+      { id: 0, name: 'thread0', power: 1 },
+    ]);
+    const backlog = new Backlog([])
+    const timeEvents = simulateTimeEvents(team, backlog, 0);
+    expect(timeEvents).toEqual([
+      {
+        time: 0,
+        userStoryId: -1,
+        threadId: 0,
+        state: State.Done,
+      },
+    ])
+  })
+
+  test('should have two threads idle', async () => {
+    const team = new ParallelTeam([
+      { id: 0, name: 'thread0', power: 1 },
+      { id: 1, name: 'thread1', power: 1 },
+    ]);
+    const backlog = new Backlog([])
+    const timeEvents = simulateTimeEvents(team, backlog, 0);
+    expect(timeEvents).toEqual([
+      {
+        time: 0,
+        userStoryId: -1,
+        threadId: 0,
+        state: State.Done,
+      },
+      {
+        time: 0,
+        userStoryId: -1,
+        threadId: 1,
+        state: State.Done,
+      },
+    ])
+  })
+
+  test('should have a thread develop and done a user story', async () => {
+    const team = new ParallelTeam([
+      {id: 0, name: 'thread0', power: 1},
+    ]);
+    const backlog = new Backlog([{
+      id: 0,
+      name: 'todo',
+      complexity:1,
+      reviewComplexity: 1,
+      review: noReview,
+      state: State.Todo,
+      threadId: undefined,
+      progression: 0,
+    }])
+    const timeEvents = simulateTimeEvents(team, backlog, 0);
+    expect(timeEvents).toEqual([
+       {
+        state: State.InProgress,
+        threadId: 0,
+        time: 0,
+        userStoryId: 0,
+      },
+      {
+        time: 0,
+        userStoryId: 0,
+        threadId: 0,
+        state: State.Done,
+      },
+    ])
+  })
+
   test('should handle 2 simple userStories by 2 devs', () => {
     const backlog = new Backlog([
       {
