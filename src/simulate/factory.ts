@@ -36,7 +36,10 @@ export const toReview = (options: Partial<UserStory> = {}): UserStory => {
         name: 'toReview',
         complexity: 1,
         reviewComplexity: 1,
-        review: noReview,
+        review: {
+            reviewers : new Map(),
+            reviewersNeeded : 1
+        },
         state: State.ToReview,
         threadId: 0,
         progression: 0,
@@ -83,9 +86,30 @@ export const inProgressEvent = (options: Partial<TimeEvent> = {}) => {
     }
 }
 
+export const toReviewEvent = (options: Partial<TimeEvent> = {}) => {
+    return {
+        state: State.ToReview,
+        threadId: 0,
+        time: 0,
+        userStoryId: 0,
+        ...options
+    }
+}
+
 export const doneEvent = (options: Partial<TimeEvent> = {}) => {
     return {
         state: State.Done,
+        threadId: 0,
+        time: 0,
+        userStoryId: 0,
+        ...options
+    }
+}
+
+
+export const reviewEvent = (options: Partial<TimeEvent> = {}) => {
+    return {
+        state: State.Review,
         threadId: 0,
         time: 0,
         userStoryId: 0,
