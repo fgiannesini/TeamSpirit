@@ -42,3 +42,22 @@ export const toReview = (options : Partial<UserStory> = {}): UserStory => {
         ...options
     };
 };
+
+export const inReview = (
+    options: Partial<UserStory> = {}
+): UserStory => {
+    return {
+        id: 0,
+        name: 'inReview',
+        complexity: 4,
+        reviewComplexity: 2,
+        review: {
+            reviewersNeeded: 2,
+            reviewers: new Map(),
+        },
+        state: State.Review,
+        threadId: 0,
+        progression: 0,
+        ...options
+    };
+};
