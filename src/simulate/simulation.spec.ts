@@ -44,6 +44,17 @@ describe('Simulation', () => {
         ])
     })
 
+    test('should have a thread develop a user story', async () => {
+        const team = new ParallelTeam([
+            {id: 0, name: 'thread0', power: 1},
+        ]);
+        const backlog = new Backlog([todo({complexity:3})])
+        const timeEvents = simulateTimeEvents(team, backlog, 0);
+        expect(timeEvents).toEqual([
+            inProgressEvent(),
+        ])
+    })
+
     test('should handle 2 simple userStories by 2 devs', () => {
         const backlog = new Backlog([
             {
