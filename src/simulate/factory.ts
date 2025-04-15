@@ -1,7 +1,7 @@
 import {State, UserStory} from "./user-story.ts";
 import {noReview} from "./review.ts";
 
-export const todo = (options :Partial<UserStory>): UserStory => {
+export const todo = (options :Partial<UserStory> = {}): UserStory => {
     return {
         id: 0,
         name: 'todo',
@@ -15,7 +15,7 @@ export const todo = (options :Partial<UserStory>): UserStory => {
     };
 };
 
-export const inProgress = (options : Partial<UserStory>): UserStory => {
+export const inProgress = (options : Partial<UserStory> = {}): UserStory => {
     return {
         id: 0,
         name: 'inProgress',
@@ -29,7 +29,7 @@ export const inProgress = (options : Partial<UserStory>): UserStory => {
     };
 };
 
-export const toReview = (options : Partial<UserStory>): UserStory => {
+export const toReview = (options : Partial<UserStory> = {}): UserStory => {
     return {
         id: 0,
         name: 'toReview',

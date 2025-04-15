@@ -12,19 +12,19 @@ describe('Backlog', () => {
   });
 
   test('Should get best TODO', () => {
-    const backlog = new Backlog([inProgress({threadId: 1}), todo({complexity: 5}), todo({complexity: 1})]);
+    const backlog = new Backlog([inProgress({threadId: 1}), todo({complexity: 5}), todo({complexity:1})]);
     const userStory = getNextUserStory(backlog, thread(0, 2));
-    expect(userStory).toEqual(todo({complexity: 1}));
+    expect(userStory).toEqual(todo({complexity:1}));
   });
 
   test('Should get IN_PROGRESS by the corresponding thread', () => {
-    const backlog = new Backlog([todo({complexity: 1}), inProgress({threadId: 0}), inProgress({threadId: 1})]);
+    const backlog = new Backlog([todo(), inProgress({threadId: 0}), inProgress({threadId: 1})]);
     const userStory = getNextUserStory(backlog, thread(1));
     expect(userStory).toEqual(inProgress({threadId: 1}));
   });
 
   test('Should get best TO_REVIEW', () => {
-    const backlog = new Backlog([todo({complexity: 1}), toReview({
+    const backlog = new Backlog([todo(), toReview({
       threadId: 1,
       reviewComplexity: 5
     }), toReview({threadId: 1, reviewComplexity: 1})]);
@@ -33,14 +33,14 @@ describe('Backlog', () => {
   });
 
   test('Should get first IN_REVIEW', () => {
-    const backlog = new Backlog([todo({complexity: 1}), toReview({threadId: 1, reviewComplexity: 1}), inReview(1, [])]);
+    const backlog = new Backlog([todo(), toReview({threadId: 1, reviewComplexity: 1}), inReview(1, [])]);
     const userStory = getNextUserStory(backlog, thread(0));
     expect(userStory).toEqual(inReview(1, []));
   });
 
   test('Should get first IN_PROGRESS', () => {
     const backlog = new Backlog([
-      todo({complexity: 1}),
+      todo(),
       toReview({threadId: 1, reviewComplexity: 1}),
       inReview(1, []),
       inProgress({threadId: 0}),
