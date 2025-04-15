@@ -21,7 +21,7 @@ export const inProgress = (options: Partial<UserStory> = {}): UserStory => {
     return {
         id: 0,
         name: 'user-story',
-        complexity: 2,
+        complexity: 1,
         reviewComplexity: 1,
         review: noReview,
         state: State.InProgress,
@@ -63,6 +63,20 @@ export const inReview = (
         state: State.Review,
         threadId: 0,
         progression: 0,
+        ...options
+    };
+};
+
+export const done = (options: Partial<UserStory> = {}): UserStory => {
+    return {
+        id: 0,
+        name: 'user-story',
+        complexity: 1,
+        reviewComplexity: 1,
+        review: noReview,
+        state: State.Done,
+        threadId: 0,
+        progression: 1,
         ...options
     };
 };
