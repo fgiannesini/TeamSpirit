@@ -1,11 +1,12 @@
 import {State, UserStory} from "./user-story.ts";
 import {noReview} from "./review.ts";
 import {TimeEvent} from "./events.ts";
+import {Thread} from "./team.ts";
 
 export const todo = (options: Partial<UserStory> = {}): UserStory => {
     return {
         id: 0,
-        name: 'todo',
+        name: 'user-story',
         complexity: 1,
         reviewComplexity: 1,
         review: noReview,
@@ -19,13 +20,13 @@ export const todo = (options: Partial<UserStory> = {}): UserStory => {
 export const inProgress = (options: Partial<UserStory> = {}): UserStory => {
     return {
         id: 0,
-        name: 'inProgress',
+        name: 'user-story',
         complexity: 2,
         reviewComplexity: 1,
         review: noReview,
         state: State.InProgress,
         threadId: 0,
-        progression: 0,
+        progression: 1,
         ...options
     };
 };
@@ -33,7 +34,7 @@ export const inProgress = (options: Partial<UserStory> = {}): UserStory => {
 export const toReview = (options: Partial<UserStory> = {}): UserStory => {
     return {
         id: 0,
-        name: 'toReview',
+        name: 'user-story',
         complexity: 1,
         reviewComplexity: 1,
         review: {
@@ -52,7 +53,7 @@ export const inReview = (
 ): UserStory => {
     return {
         id: 0,
-        name: 'inReview',
+        name: 'user-story',
         complexity: 4,
         reviewComplexity: 2,
         review: {
@@ -113,6 +114,15 @@ export const reviewEvent = (options: Partial<TimeEvent> = {}) => {
         threadId: 0,
         time: 0,
         userStoryId: 0,
+        ...options
+    }
+}
+
+export const thread = (options: Partial<Thread> = {}) => {
+    return {
+        id: 0,
+        name: 'thread',
+        power: 1,
         ...options
     }
 }
