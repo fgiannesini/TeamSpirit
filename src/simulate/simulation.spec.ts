@@ -126,6 +126,20 @@ describe('Simulation', () => {
         expect(getUserStoriesRemainings(backlog)).toHaveLength(0);
     })
 
+    test("Should have a thread review a partially reviewed user story", () => {
+        const team = new ParallelTeam([
+            {id: 0, name: 'thread0', power: 3},
+        ]);
+        const backlog = new Backlog([toReview({threadId: 1, reviewComplexity: 1, review: {reviewersNeeded: 2, reviewers: new Map([[2,1]])}})])
+        const timeEvents = simulateTimeEvents(team, backlog, 0);
+        expect(timeEvents).toEqual([
+            reviewEvent(),
+            doneEvent({threadId : 1}),
+        ])
+        expect(getUserStoriesDone(backlog)).toHaveLength(1);
+        expect(getUserStoriesRemainings(backlog)).toHaveLength(0);
+    })
+
     test("Should have a thread develop a complex user story with review", () => {
         const team = new ParallelTeam([
             {id: 0, name: 'thread0', power: 1},
