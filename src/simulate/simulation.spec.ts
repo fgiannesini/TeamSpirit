@@ -1,6 +1,5 @@
 import {describe, expect, test} from 'vitest';
 import {Backlog, getUserStoriesDone, getUserStoriesRemainings,} from './backlog.ts';
-import type {TimeEvent} from './events.ts';
 import {noReview} from './review.ts';
 import {simulate, simulateTimeEvents} from './simulation.ts';
 import {ParallelTeam} from './team.ts';
@@ -59,53 +58,19 @@ describe('Simulation', () => {
         expect(getUserStoriesRemainings(backlog)).toHaveLength(1);
     })
 
-    test('should handle 1 simple userStory by an efficient dev', () => {
-        const backlog = new Backlog([
-            {
-                id: 1,
-                name: 'userStory1',
-                complexity: 5,
-                reviewComplexity: 0,
-                review: noReview,
-                state: State.Todo,
-                threadId: undefined,
-                progression: 0,
-            },
+    test('should have an efficient thread develop a complex user story', async () => {
+        const team = new ParallelTeam([
+            {id: 0, name: 'thread0', power: 3},
         ]);
-
-        const team = new ParallelTeam([{id: 0, name: 'thread0', power: 2}]);
-        const events = simulate(backlog, team);
-
-        expect(events).toEqual<TimeEvent[]>([
-            {
-                time: 1,
-                userStoryId: 1,
-                threadId: 0,
-                state: State.InProgress,
-            },
-            {
-                time: 2,
-                userStoryId: 1,
-                threadId: 0,
-                state: State.InProgress,
-            },
-            {
-                time: 3,
-                userStoryId: 1,
-                threadId: 0,
-                state: State.InProgress,
-            },
-            {
-                time: 3,
-                userStoryId: 1,
-                threadId: 0,
-                state: State.Done,
-            },
-        ]);
-
+        const backlog = new Backlog([todo({complexity:3})])
+        const timeEvents = simulateTimeEvents(team, backlog, 0);
+        expect(timeEvents).toEqual([
+            inProgressEvent(),
+            doneEvent(),
+        ])
         expect(getUserStoriesDone(backlog)).toHaveLength(1);
         expect(getUserStoriesRemainings(backlog)).toHaveLength(0);
-    });
+    })
 
     test('should handle 3 simple userStories by 2 devs', () => {
         const backlog = new Backlog([
