@@ -1,9 +1,8 @@
 import {describe, expect, test} from 'vitest';
 import {Backlog, getNextUserStory, shouldGenerateBug, userStoriesWithSomeReviews,} from './backlog.ts';
-import {noReview} from './review.ts';
 import type {Thread} from './team.ts';
 import {idle, State, type UserStory} from './user-story.ts';
-import {inProgress, todo} from "./factory.ts";
+import {inProgress, todo, toReview} from "./factory.ts";
 
 describe('Backlog', () => {
   test('Should get idle by default', () => {
@@ -25,13 +24,16 @@ describe('Backlog', () => {
   });
 
   test('Should get best TO_REVIEW', () => {
-    const backlog = new Backlog([todo({complexity: 1}), toReview(1, 5), toReview(1, 1)]);
+    const backlog = new Backlog([todo({complexity: 1}), toReview({
+      threadId: 1,
+      reviewComplexity: 5
+    }), toReview({threadId: 1, reviewComplexity: 1})]);
     const userStory = getNextUserStory(backlog, thread(0, 2));
-    expect(userStory).toEqual(toReview(1));
+    expect(userStory).toEqual(toReview({threadId: 1, reviewComplexity: 1}));
   });
 
   test('Should get first IN_REVIEW', () => {
-    const backlog = new Backlog([todo({complexity: 1}), toReview(1), inReview(1, [])]);
+    const backlog = new Backlog([todo({complexity: 1}), toReview({threadId: 1, reviewComplexity: 1}), inReview(1, [])]);
     const userStory = getNextUserStory(backlog, thread(0));
     expect(userStory).toEqual(inReview(1, []));
   });
@@ -39,7 +41,7 @@ describe('Backlog', () => {
   test('Should get first IN_PROGRESS', () => {
     const backlog = new Backlog([
       todo({complexity: 1}),
-      toReview(1),
+      toReview({threadId: 1, reviewComplexity: 1}),
       inReview(1, []),
       inProgress({threadId: 0}),
     ]);
@@ -107,7 +109,7 @@ describe('Backlog', () => {
     const backlog = new Backlog([
       todo({complexity: 0}),
       inProgress({threadId: 0}),
-      toReview(0),
+      toReview({threadId: 0, reviewComplexity: 1}),
       inReview(0, [[0, 1]]),
       inReview(0, [[0, 2]]),
       inReview(0, [
@@ -137,19 +139,6 @@ describe('Backlog', () => {
         reviewers: new Map(reviewers),
       },
       state: State.Review,
-      threadId: threadId,
-      progression: 0,
-    };
-  };
-
-  const toReview = (threadId: number, reviewComplexity = 1): UserStory => {
-    return {
-      id: 0,
-      name: 'toReview',
-      complexity: 1,
-      reviewComplexity,
-      review: noReview,
-      state: State.ToReview,
       threadId: threadId,
       progression: 0,
     };

@@ -28,3 +28,17 @@ export const inProgress = (options : Partial<UserStory>): UserStory => {
         ...options
     };
 };
+
+export const toReview = (options : Partial<UserStory>): UserStory => {
+    return {
+        id: 0,
+        name: 'toReview',
+        complexity: 1,
+        reviewComplexity : 1,
+        review: noReview,
+        state: State.ToReview,
+        threadId: 0,
+        progression: 0,
+        ...options
+    };
+};
