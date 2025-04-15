@@ -1,13 +1,15 @@
 import {
-  addUserStory,
   type Backlog,
+  addUserStory,
   getNextUserStory,
   hasMoreUserStories,
   userStoriesWithSomeReviews,
 } from './backlog.ts';
-import {createTimeEvent, type TimeEvent} from './events.ts';
-import type {Team} from './team.ts';
+import { type TimeEvent, createTimeEvent } from './events.ts';
+import type { Team } from './team.ts';
 import {
+  State,
+  type UserStory,
   idle,
   isDeveloped,
   isReviewed,
@@ -16,11 +18,13 @@ import {
   setInProgress,
   setReview,
   setToReview,
-  State,
-  type UserStory,
 } from './user-story.ts';
 
-export const simulateTimeEvents = (team: Team, backlog: Backlog, time: number) => {
+export const simulateTimeEvents = (
+  team: Team,
+  backlog: Backlog,
+  time: number,
+) => {
   const events: TimeEvent[] = [];
   const toAddBacklog: UserStory[] = [];
   for (const thread of team.getThreads()) {
