@@ -17,14 +17,14 @@ import { simulateTimeEvents } from './simulation.ts';
 import { ParallelTeam } from './team.ts';
 
 describe('Simulation', () => {
-  test('should have a thread idle', async () => {
+  test('should have a thread idle', () => {
     const team = new ParallelTeam([{ id: 0, name: 'thread0', power: 1 }]);
     const backlog = new Backlog([]);
     const timeEvents = simulateTimeEvents(team, backlog, 0);
     expect(timeEvents).toEqual([idleEvent()]);
   });
 
-  test('should have two threads idle', async () => {
+  test('should have two threads idle', () => {
     const team = new ParallelTeam([
       { id: 0, name: 'thread0', power: 1 },
       { id: 1, name: 'thread1', power: 1 },
@@ -37,7 +37,7 @@ describe('Simulation', () => {
     ]);
   });
 
-  test('should have a thread develop and done a user story', async () => {
+  test('should have a thread develop and done a user story', () => {
     const team = new ParallelTeam([{ id: 0, name: 'thread0', power: 1 }]);
     const backlog = new Backlog([todo()]);
     const timeEvents = simulateTimeEvents(team, backlog, 0);
@@ -46,7 +46,7 @@ describe('Simulation', () => {
     expect(getUserStoriesRemainings(backlog)).toHaveLength(0);
   });
 
-  test('should have a thread develop a user story', async () => {
+  test('should have a thread develop a user story', () => {
     const team = new ParallelTeam([{ id: 0, name: 'thread0', power: 1 }]);
     const backlog = new Backlog([todo({ complexity: 3 })]);
     const timeEvents = simulateTimeEvents(team, backlog, 0);
@@ -55,7 +55,7 @@ describe('Simulation', () => {
     expect(getUserStoriesRemainings(backlog)).toHaveLength(1);
   });
 
-  test('should have an efficient thread develop a complex user story', async () => {
+  test('should have an efficient thread develop a complex user story', () => {
     const team = new ParallelTeam([{ id: 0, name: 'thread0', power: 3 }]);
     const backlog = new Backlog([todo({ complexity: 3 })]);
     const timeEvents = simulateTimeEvents(team, backlog, 0);
