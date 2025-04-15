@@ -3,7 +3,7 @@ import {Backlog, getNextUserStory, shouldGenerateBug, userStoriesWithSomeReviews
 import {noReview} from './review.ts';
 import type {Thread} from './team.ts';
 import {idle, State, type UserStory} from './user-story.ts';
-import {todo} from "./factory.ts";
+import {inProgress, todo} from "./factory.ts";
 
 describe('Backlog', () => {
   test('Should get idle by default', () => {
@@ -13,15 +13,15 @@ describe('Backlog', () => {
   });
 
   test('Should get best TODO', () => {
-    const backlog = new Backlog([inProgress(1), todo({complexity: 5}), todo({complexity: 1})]);
+    const backlog = new Backlog([inProgress({threadId: 1}), todo({complexity: 5}), todo({complexity: 1})]);
     const userStory = getNextUserStory(backlog, thread(0, 2));
     expect(userStory).toEqual(todo({complexity: 1}));
   });
 
   test('Should get IN_PROGRESS by the corresponding thread', () => {
-    const backlog = new Backlog([todo({complexity: 1}), inProgress(0), inProgress(1)]);
+    const backlog = new Backlog([todo({complexity: 1}), inProgress({threadId: 0}), inProgress({threadId: 1})]);
     const userStory = getNextUserStory(backlog, thread(1));
-    expect(userStory).toEqual(inProgress(1));
+    expect(userStory).toEqual(inProgress({threadId: 1}));
   });
 
   test('Should get best TO_REVIEW', () => {
@@ -41,10 +41,10 @@ describe('Backlog', () => {
       todo({complexity: 1}),
       toReview(1),
       inReview(1, []),
-      inProgress(0),
+      inProgress({threadId: 0}),
     ]);
     const userStory = getNextUserStory(backlog, thread(0));
-    expect(userStory).toEqual(inProgress(0));
+    expect(userStory).toEqual(inProgress({threadId: 0}));
   });
 
   test('Should get IN_REVIEW with a missing review', () => {
@@ -106,7 +106,7 @@ describe('Backlog', () => {
   test('Should get userStories with ended partial review', () => {
     const backlog = new Backlog([
       todo({complexity: 0}),
-      inProgress(0),
+      inProgress({threadId: 0}),
       toReview(0),
       inReview(0, [[0, 1]]),
       inReview(0, [[0, 2]]),
@@ -150,19 +150,6 @@ describe('Backlog', () => {
       reviewComplexity,
       review: noReview,
       state: State.ToReview,
-      threadId: threadId,
-      progression: 0,
-    };
-  };
-
-  const inProgress = (threadId: number): UserStory => {
-    return {
-      id: 0,
-      name: 'inProgress',
-      complexity: 2,
-      reviewComplexity: 1,
-      review: noReview,
-      state: State.InProgress,
       threadId: threadId,
       progression: 0,
     };
