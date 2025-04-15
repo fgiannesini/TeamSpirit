@@ -43,7 +43,7 @@ export const toReview = (options: Partial<UserStory> = {}): UserStory => {
         },
         state: State.ToReview,
         threadId: 0,
-        progression: 0,
+        progression: 1,
         ...options
     };
 };
