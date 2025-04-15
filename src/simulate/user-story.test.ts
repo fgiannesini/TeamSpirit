@@ -1,6 +1,6 @@
 import {describe, expect, test} from "vitest"
 import {done, inProgress, thread, todo} from "./factory.ts";
-import {setDone, setInProgress} from "./user-story.ts";
+import {setDone, setDoneBy, setInProgress} from "./user-story.ts";
 
 describe("user-story", () => {
     test("should set in Progress", () => {
@@ -16,5 +16,10 @@ describe("user-story", () => {
     test("Should set Done", () =>{
         const result = setDone(inProgress())
         expect(result).toEqual(done())
+    })
+
+    test("Should set Done By a specific thread", () =>{
+        const result = setDoneBy(inProgress(), 1)
+        expect(result).toEqual(done({threadId:1}))
     })
 })
