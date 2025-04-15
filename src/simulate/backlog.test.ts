@@ -1,12 +1,9 @@
-import { describe, expect, test } from 'vitest';
-import {
-  Backlog,
-  getNextUserStory, shouldGenerateBug,
-  userStoriesWithSomeReviews,
-} from './backlog.ts';
-import { noReview } from './review.ts';
-import type { Thread } from './team.ts';
-import { State, type UserStory, idle } from './user-story.ts';
+import {describe, expect, test} from 'vitest';
+import {Backlog, getNextUserStory, shouldGenerateBug, userStoriesWithSomeReviews,} from './backlog.ts';
+import {noReview} from './review.ts';
+import type {Thread} from './team.ts';
+import {idle, State, type UserStory} from './user-story.ts';
+import {todo} from "./factory.ts";
 
 describe('Backlog', () => {
   test('Should get idle by default', () => {
@@ -16,32 +13,32 @@ describe('Backlog', () => {
   });
 
   test('Should get best TODO', () => {
-    const backlog = new Backlog([inProgress(1), todo(5), todo(1)]);
+    const backlog = new Backlog([inProgress(1), todo({complexity: 5}), todo({complexity: 1})]);
     const userStory = getNextUserStory(backlog, thread(0, 2));
-    expect(userStory).toEqual(todo(1));
+    expect(userStory).toEqual(todo({complexity: 1}));
   });
 
   test('Should get IN_PROGRESS by the corresponding thread', () => {
-    const backlog = new Backlog([todo(), inProgress(0), inProgress(1)]);
+    const backlog = new Backlog([todo({complexity: 1}), inProgress(0), inProgress(1)]);
     const userStory = getNextUserStory(backlog, thread(1));
     expect(userStory).toEqual(inProgress(1));
   });
 
   test('Should get best TO_REVIEW', () => {
-    const backlog = new Backlog([todo(), toReview(1, 5), toReview(1, 1)]);
+    const backlog = new Backlog([todo({complexity: 1}), toReview(1, 5), toReview(1, 1)]);
     const userStory = getNextUserStory(backlog, thread(0, 2));
     expect(userStory).toEqual(toReview(1));
   });
 
   test('Should get first IN_REVIEW', () => {
-    const backlog = new Backlog([todo(), toReview(1), inReview(1, [])]);
+    const backlog = new Backlog([todo({complexity: 1}), toReview(1), inReview(1, [])]);
     const userStory = getNextUserStory(backlog, thread(0));
     expect(userStory).toEqual(inReview(1, []));
   });
 
   test('Should get first IN_PROGRESS', () => {
     const backlog = new Backlog([
-      todo(),
+      todo({complexity: 1}),
       toReview(1),
       inReview(1, []),
       inProgress(0),
@@ -108,7 +105,7 @@ describe('Backlog', () => {
 
   test('Should get userStories with ended partial review', () => {
     const backlog = new Backlog([
-      todo(0),
+      todo({complexity: 0}),
       inProgress(0),
       toReview(0),
       inReview(0, [[0, 1]]),
@@ -167,19 +164,6 @@ describe('Backlog', () => {
       review: noReview,
       state: State.InProgress,
       threadId: threadId,
-      progression: 0,
-    };
-  };
-
-  const todo = (complexity = 1): UserStory => {
-    return {
-      id: 0,
-      name: 'todo',
-      complexity,
-      reviewComplexity: 1,
-      review: noReview,
-      state: State.Todo,
-      threadId: undefined,
       progression: 0,
     };
   };
