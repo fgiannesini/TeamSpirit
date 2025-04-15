@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import {
   Backlog,
-  getNextUserStory,
+  getNextUserStory, shouldGenerateBug,
   userStoriesWithSomeReviews,
 } from './backlog.ts';
 import { noReview } from './review.ts';
@@ -188,18 +188,24 @@ describe('Backlog', () => {
     return { id, name: '', power };
   };
 
-  const shouldGenerateBug = (time: number) => {
-    if (time !== 0 && time % 2 === 0) {
-      return true;
-    }
-    return false;
-  };
-
-  test('should generate a bug', () => {
+  test('should not generate a bug in the first turn', () => {
     expect(shouldGenerateBug(0)).toEqual(false);
-    expect(shouldGenerateBug(1)).toEqual(false);
-    expect(shouldGenerateBug(2)).toEqual(true);
-    expect(shouldGenerateBug(3)).toEqual(false);
-    expect(shouldGenerateBug(4)).toEqual(true);
   });
+
+  test('should not generate a bug in the second turn', () => {
+    expect(shouldGenerateBug(1, () => 0.5)).toEqual(false);
+  });
+
+  test('should generate a bug in the second turn', () => {
+    expect(shouldGenerateBug(1, () => 1)).toEqual(true);
+  });
+
+  test('should generate a bug in the third turn', () => {
+    expect(shouldGenerateBug(2, () => 0.5)).toEqual(true);
+  });
+
+  test('should not generate a bug in the third turn', () => {
+    expect(shouldGenerateBug(2, () => 0.51)).toEqual(true);
+  });
+
 });

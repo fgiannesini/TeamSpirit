@@ -96,3 +96,10 @@ export const getUserStoriesRemainings = (backlog: Backlog): UserStory[] => {
 export const hasMoreUserStories = (backlog: Backlog) => {
   return backlog.userStoriesRemaining.length > 0;
 };
+
+export const shouldGenerateBug = (time: number, random = () => Math.random()) => {
+  if (time === 0) {
+    return false
+  }
+  return random() >= 1/time;
+};
