@@ -6,8 +6,8 @@ import {
   idle,
   isInProgressBy,
   isInReviewBy,
+  isToDo,
   isToReviewBy,
-  toDo,
 } from './user-story.ts';
 
 export class Backlog {
@@ -53,7 +53,7 @@ export const getNextUserStory = (
   if (threadUserStoryIndex === -1) {
     let minDiff = Number.MAX_VALUE;
     backlog.userStoriesRemaining.forEach((userStory, i) => {
-      if (toDo(userStory)) {
+      if (isToDo(userStory)) {
         const diff = Math.abs(userStory.complexity - thread.power);
         if (diff < minDiff) {
           minDiff = diff;

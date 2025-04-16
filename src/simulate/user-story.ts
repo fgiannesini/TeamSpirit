@@ -127,5 +127,6 @@ export const isToReviewBy: (userStory: UserStory, thread: Thread) => boolean = (
   thread: Thread,
 ) => userStory.state === State.ToReview && userStory.threadId !== thread.id;
 
-export const toDo: (userStory: UserStory) => boolean = (userStory: UserStory) =>
-  userStory.state === State.Todo;
+export const isToDo: (userStory: UserStory) => boolean = (
+  userStory: UserStory,
+) => userStory.state === State.Todo;

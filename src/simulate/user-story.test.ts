@@ -11,6 +11,7 @@ import {
   isDeveloped,
   isInProgressBy,
   isReviewed,
+  isToDo,
   setDone,
   setDoneBy,
   setInProgress,
@@ -176,6 +177,16 @@ describe('user-story', () => {
       inProgress({ threadId: 1 }),
       thread({ id: 0 }),
     );
+    expect(result).toEqual(false);
+  });
+
+  test('Should consider a user story todo', () => {
+    const result = isToDo(todo());
+    expect(result).toEqual(true);
+  });
+
+  test('Should consider a user story not todo', () => {
+    const result = isToDo(inProgress());
     expect(result).toEqual(false);
   });
 });
