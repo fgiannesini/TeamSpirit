@@ -9,6 +9,7 @@ import {
 } from './factory.ts';
 import {
   isDeveloped,
+  isReviewed,
   setDone,
   setDoneBy,
   setInProgress,
@@ -109,5 +110,21 @@ describe('user-story', () => {
       }),
     );
     expect(result).toEqual(false);
+  });
+
+  test('Should consider a user story reviewed', () => {
+    const result = isReviewed(
+      inReview({
+        reviewComplexity: 2,
+        review: {
+          reviewersNeeded: 2,
+          reviewers: new Map([
+            [0, 2],
+            [1, 2],
+          ]),
+        },
+      }),
+    );
+    expect(result).toEqual(true);
   });
 });
