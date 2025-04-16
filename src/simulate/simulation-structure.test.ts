@@ -1,7 +1,10 @@
 import { describe, expect, test } from 'vitest';
 import { Backlog } from './backlog.ts';
 import { noReview } from './review.ts';
-import { type Action, simulateStructure } from './simulation-structure.ts';
+import {
+  type Action,
+  structureEventsOnInitialization,
+} from './simulation-structure.ts';
 import { ParallelTeam } from './team.ts';
 
 type StructureEvent = {
@@ -40,7 +43,7 @@ describe('simulation-structure', () => {
       { id: 0, name: 'thread0', power: 1 },
       { id: 1, name: 'thread1', power: 1 },
     ]);
-    const events = simulateStructure(backlog, team);
+    const events = structureEventsOnInitialization(backlog, team);
 
     expect(events).toEqual<StructureEvent[]>([
       {

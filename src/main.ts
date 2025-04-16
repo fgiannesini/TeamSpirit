@@ -7,7 +7,6 @@ import {
 import { generateDevForm, generateUserStoriesForm } from './form/form.ts';
 import { Backlog } from './simulate/backlog.ts';
 import { noReview } from './simulate/review.ts';
-import { simulateStructure } from './simulate/simulation-structure.ts';
 import { simulate } from './simulate/simulation.ts';
 import { computeStatEvents } from './simulate/stats.ts';
 import { EnsembleTeam, ParallelTeam, type Team } from './simulate/team.ts';
@@ -80,13 +79,12 @@ export const buildEnsembleTeam = (): Team => {
 };
 
 const runSimulation = (backlog: Backlog, team: Team) => {
-  const timeEvents = simulate(backlog, team);
+  const { timeEvents, structureEvents } = simulate(backlog, team);
   const randomKey = crypto.randomUUID();
   saveTimeEvents(timeEvents, randomKey);
+  saveStructureEvents(structureEvents, randomKey);
   const statEvents = computeStatEvents(timeEvents);
   saveStatEvents(statEvents, randomKey);
-  const structureEvents = simulateStructure(backlog, team);
-  saveStructureEvents(structureEvents, randomKey);
   return randomKey;
 };
 

@@ -9,7 +9,10 @@ export type StructureEvent = {
   action: Action;
 };
 
-export const simulateStructure = (backlog: Backlog, team: Team) => {
+export const structureEventsOnInitialization = (
+  backlog: Backlog,
+  team: Team,
+) => {
   const userStoryStructureEvents: StructureEvent[] = getUserStories(
     backlog,
   ).map((userStory) => {
