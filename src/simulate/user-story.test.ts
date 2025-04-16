@@ -127,4 +127,33 @@ describe('user-story', () => {
     );
     expect(result).toEqual(true);
   });
+
+  test('Should consider a user story not reviewed if a viewer is missing', () => {
+    const result = isReviewed(
+      inReview({
+        reviewComplexity: 2,
+        review: {
+          reviewersNeeded: 2,
+          reviewers: new Map([[0, 2]]),
+        },
+      }),
+    );
+    expect(result).toEqual(false);
+  });
+
+  test('Should consider a user story not reviewed if review is not completed', () => {
+    const result = isReviewed(
+      inReview({
+        reviewComplexity: 2,
+        review: {
+          reviewersNeeded: 2,
+          reviewers: new Map([
+            [0, 1],
+            [1, 2],
+          ]),
+        },
+      }),
+    );
+    expect(result).toEqual(false);
+  });
 });
