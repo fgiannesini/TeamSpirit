@@ -10,6 +10,7 @@ import {
 import {
   isDeveloped,
   isInProgressBy,
+  isInReviewBy,
   isReviewed,
   isToDo,
   isToReviewBy,
@@ -160,6 +161,22 @@ describe('user-story', () => {
     expect(result).toEqual(false);
   });
 
+  test('Should consider a user story not reviewed if review is not completed', () => {
+    const result = isReviewed(
+      inReview({
+        reviewComplexity: 2,
+        review: {
+          reviewersNeeded: 2,
+          reviewers: new Map([
+            [0, 1],
+            [1, 2],
+          ]),
+        },
+      }),
+    );
+    expect(result).toEqual(false);
+  });
+
   test('Should be in progress by a thread', () => {
     const result = isInProgressBy(
       inProgress({ threadId: 0 }),
@@ -204,5 +221,81 @@ describe('user-story', () => {
   test('Should not be to review by a thread', () => {
     const result = isToReviewBy(toReview({ threadId: 1 }), thread({ id: 1 }));
     expect(result).toEqual(false);
+  });
+
+  test('Should be reviewed by a thread', () => {
+    const result = isInReviewBy(
+      inReview({
+        reviewComplexity: 2,
+        review: {
+          reviewersNeeded: 2,
+          reviewers: new Map([
+            [1, 2],
+            [2, 1],
+          ]),
+        },
+      }),
+      thread({ id: 2 }),
+    );
+    expect(result).toEqual(true);
+  });
+
+  test('Should not be reviewed by a thread if review is completed', () => {
+    const result = isInReviewBy(
+      inReview({
+        reviewComplexity: 2,
+        review: {
+          reviewersNeeded: 2,
+          reviewers: new Map([[2, 2]]),
+        },
+      }),
+      thread({ id: 2 }),
+    );
+    expect(result).toEqual(false);
+  });
+
+  test('Should not be reviewed by a thread if all reviews are started', () => {
+    const result = isInReviewBy(
+      inReview({
+        reviewComplexity: 2,
+        review: {
+          reviewersNeeded: 2,
+          reviewers: new Map([
+            [1, 2],
+            [2, 1],
+          ]),
+        },
+      }),
+      thread({ id: 3 }),
+    );
+    expect(result).toEqual(false);
+  });
+
+  test('Should not be reviewed by the thread that developed the user story', () => {
+    const result = isInReviewBy(
+      inReview({
+        reviewComplexity: 2,
+        review: {
+          reviewersNeeded: 2,
+          reviewers: new Map([[1, 2]]),
+        },
+      }),
+      thread({ id: 0 }),
+    );
+    expect(result).toEqual(false);
+  });
+
+  test('Should be reviewed by an other thread', () => {
+    const result = isInReviewBy(
+      inReview({
+        reviewComplexity: 2,
+        review: {
+          reviewersNeeded: 2,
+          reviewers: new Map([[1, 2]]),
+        },
+      }),
+      thread({ id: 2 }),
+    );
+    expect(result).toEqual(true);
   });
 });
