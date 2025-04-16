@@ -152,6 +152,7 @@ describe('Backlog', () => {
   ): UserStory => {
     return inReview({
       threadId: threadId,
+      reviewComplexity: 2,
       review: { reviewersNeeded: 2, reviewers: new Map(reviewers) },
     });
   };
