@@ -9,6 +9,7 @@ import {
 } from './factory.ts';
 import {
   isDeveloped,
+  isInProgressBy,
   isReviewed,
   setDone,
   setDoneBy,
@@ -153,6 +154,27 @@ describe('user-story', () => {
           ]),
         },
       }),
+    );
+    expect(result).toEqual(false);
+  });
+
+  test('Should be in progress by a thread', () => {
+    const result = isInProgressBy(
+      inProgress({ threadId: 0 }),
+      thread({ id: 0 }),
+    );
+    expect(result).toEqual(true);
+  });
+
+  test('Should not be in progress', () => {
+    const result = isInProgressBy(inReview({ threadId: 0 }), thread({ id: 0 }));
+    expect(result).toEqual(false);
+  });
+
+  test('Should not be in progress by a thread', () => {
+    const result = isInProgressBy(
+      inProgress({ threadId: 1 }),
+      thread({ id: 0 }),
     );
     expect(result).toEqual(false);
   });
