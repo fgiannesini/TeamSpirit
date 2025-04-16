@@ -8,6 +8,7 @@ import {
   todo,
 } from './factory.ts';
 import {
+  isDeveloped,
   setDone,
   setDoneBy,
   setInProgress,
@@ -88,5 +89,25 @@ describe('user-story', () => {
         },
       }),
     );
+  });
+
+  test('Should consider a user story developed', () => {
+    const result = isDeveloped(
+      inProgress({
+        complexity: 3,
+        progression: 3,
+      }),
+    );
+    expect(result).toEqual(true);
+  });
+
+  test('Should consider a user story not developed', () => {
+    const result = isDeveloped(
+      inProgress({
+        complexity: 3,
+        progression: 1,
+      }),
+    );
+    expect(result).toEqual(false);
   });
 });
