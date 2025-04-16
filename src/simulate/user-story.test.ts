@@ -1,9 +1,17 @@
 import { describe, expect, test } from 'vitest';
-import { done, inProgress, thread, toReview, todo } from './factory.ts';
+import {
+  done,
+  inProgress,
+  inReview,
+  thread,
+  toReview,
+  todo,
+} from './factory.ts';
 import {
   setDone,
   setDoneBy,
   setInProgress,
+  setReview,
   setToReview,
 } from './user-story.ts';
 
@@ -44,5 +52,41 @@ describe('user-story', () => {
       1,
     );
     expect(result).toEqual(toReview({ threadId: 1 }));
+  });
+
+  test('Should set review', () => {
+    const result = setReview(
+      toReview({
+        review: { reviewersNeeded: 1, reviewers: new Map() },
+        reviewComplexity: 1,
+      }),
+      thread({ power: 1 }),
+    );
+    expect(result).toEqual(
+      inReview({
+        review: { reviewersNeeded: 1, reviewers: new Map([[0, 1]]) },
+      }),
+    );
+  });
+
+  test('Should keep review by an experimented thread', () => {
+    const result = setReview(
+      inReview({
+        review: { reviewersNeeded: 2, reviewers: new Map([[1, 1]]) },
+        reviewComplexity: 1,
+      }),
+      thread({ power: 3 }),
+    );
+    expect(result).toEqual(
+      inReview({
+        review: {
+          reviewersNeeded: 2,
+          reviewers: new Map([
+            [1, 1],
+            [0, 1],
+          ]),
+        },
+      }),
+    );
   });
 });

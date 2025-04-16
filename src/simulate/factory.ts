@@ -52,15 +52,15 @@ export const inReview = (options: Partial<UserStory> = {}): UserStory => {
   return {
     id: 0,
     name: 'user-story',
-    complexity: 4,
-    reviewComplexity: 2,
+    complexity: 1,
+    reviewComplexity: 1,
     review: {
-      reviewersNeeded: 2,
+      reviewersNeeded: 1,
       reviewers: new Map(),
     },
     state: State.Review,
     threadId: 0,
-    progression: 0,
+    progression: 1,
     ...options,
   };
 };
