@@ -1,12 +1,12 @@
-export interface Thread {
+export type Thread = {
   id: number;
   name: string;
   power: number;
-}
+};
 
-export interface Team {
+export type Team = {
   getThreads(): Thread[];
-}
+};
 
 export class ParallelTeam implements Team {
   private readonly threads: Thread[] = [];

@@ -1,9 +1,9 @@
 ﻿import type { Thread } from './team.ts';
 
-export interface Review {
+export type Review = {
   reviewersNeeded: number;
   reviewers: Map<number, number>;
-}
+};
 export const noReview: Review = {
   reviewersNeeded: 0,
   reviewers: new Map<number, number>(),

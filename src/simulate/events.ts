@@ -1,11 +1,11 @@
 import type { State, UserStory } from './user-story.ts';
 
-export interface TimeEvent {
+export type TimeEvent = {
   time: number;
   userStoryId: number;
   state: State;
   threadId: number;
-}
+};
 
 export const createTimeEvent = (
   time: number,

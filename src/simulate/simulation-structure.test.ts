@@ -5,12 +5,12 @@ import { type Action, simulateStructure } from './simulation-structure.ts';
 import { ParallelTeam } from './team.ts';
 import { State } from './user-story.ts';
 
-interface StructureEvent {
+type StructureEvent = {
   time: number;
   action: Action;
   id: number;
   name: string;
-}
+};
 
 describe('simulation-structure', () => {
   test('should create 2 user stories and 2 threads', () => {
