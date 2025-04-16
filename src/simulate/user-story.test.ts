@@ -12,6 +12,7 @@ import {
   isInProgressBy,
   isReviewed,
   isToDo,
+  isToReviewBy,
   setDone,
   setDoneBy,
   setInProgress,
@@ -187,6 +188,21 @@ describe('user-story', () => {
 
   test('Should consider a user story not todo', () => {
     const result = isToDo(inProgress());
+    expect(result).toEqual(false);
+  });
+
+  test('Should be to review by a thread', () => {
+    const result = isToReviewBy(toReview({ threadId: 0 }), thread({ id: 1 }));
+    expect(result).toEqual(true);
+  });
+
+  test('Should not be to review', () => {
+    const result = isToReviewBy(inReview({ threadId: 0 }), thread({ id: 1 }));
+    expect(result).toEqual(false);
+  });
+
+  test('Should not be to review by a thread', () => {
+    const result = isToReviewBy(toReview({ threadId: 1 }), thread({ id: 1 }));
     expect(result).toEqual(false);
   });
 });
