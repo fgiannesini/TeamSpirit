@@ -6,7 +6,7 @@ import {
   saveTimeEvents,
 } from '../flow/storage/session-storage.ts';
 import type { StructureEvent } from '../simulate/simulation-structure.ts';
-import { State } from '../simulate/user-story.ts';
+import type { State } from '../simulate/user-story.ts';
 
 describe('Time sequence', () => {
   beforeEach(() => {
@@ -41,13 +41,13 @@ describe('Time sequence', () => {
           time: 1,
           userStoryId: 0,
           threadId: 0,
-          state: State.InProgress,
+          state: 'InProgress',
         },
         {
           time: 1,
           userStoryId: 0,
           threadId: 0,
-          state: State.Done,
+          state: 'Done',
         },
       ],
       'e4567-e89b-12d3-a456-426614174000',
@@ -74,31 +74,31 @@ describe('Time sequence', () => {
           time: 1,
           userStoryId: 0,
           threadId: 0,
-          state: State.InProgress,
+          state: 'InProgress',
         },
         {
           time: 1,
           userStoryId: 0,
           threadId: 0,
-          state: State.Done,
+          state: 'Done',
         },
         {
           time: 1,
           userStoryId: 1,
           threadId: 1,
-          state: State.InProgress,
+          state: 'InProgress',
         },
         {
           time: 1,
           userStoryId: 1,
           threadId: 1,
-          state: State.Done,
+          state: 'Done',
         },
         {
           time: 1,
           userStoryId: -1,
           threadId: 2,
-          state: State.Done,
+          state: 'Done',
         },
       ],
       'e4567-e89b-12d3-a456-426614174000',
@@ -122,25 +122,25 @@ describe('Time sequence', () => {
           time: 1,
           userStoryId: 0,
           threadId: 0,
-          state: State.InProgress,
+          state: 'InProgress',
         },
         {
           time: 1,
           userStoryId: 0,
           threadId: 0,
-          state: State.Done,
+          state: 'Done',
         },
         {
           time: 2,
           userStoryId: 1,
           threadId: 0,
-          state: State.InProgress,
+          state: 'InProgress',
         },
         {
           time: 2,
           userStoryId: 1,
           threadId: 0,
-          state: State.Done,
+          state: 'Done',
         },
       ],
       'e4567-e89b-12d3-a456-426614174000',
@@ -174,13 +174,13 @@ describe('Time sequence', () => {
           time: 1,
           userStoryId: 0,
           threadId: 0,
-          state: State.InProgress,
+          state: 'InProgress',
         },
         {
           time: 1,
           userStoryId: 0,
           threadId: 0,
-          state: State.ToReview,
+          state: 'ToReview',
         },
       ],
       'e4567-e89b-12d3-a456-426614174000',
@@ -194,7 +194,7 @@ describe('Time sequence', () => {
     ]);
   });
 
-  test.each([State.InProgress, State.Review])(
+  test.each(['InProgress' as State, 'Review' as State])(
     'Should render the page with one user story still processed',
     async (state: State) => {
       saveStructureEvents(
@@ -241,19 +241,19 @@ describe('Time sequence', () => {
           time: 1,
           userStoryId: 0,
           threadId: 0,
-          state: State.InProgress,
+          state: 'InProgress',
         },
         {
           time: 1,
           userStoryId: 0,
           threadId: 0,
-          state: State.ToReview,
+          state: 'ToReview',
         },
         {
           time: 2,
           userStoryId: 0,
           threadId: 0,
-          state: State.Review,
+          state: 'Review',
         },
       ],
       'e4567-e89b-12d3-a456-426614174000',
@@ -280,13 +280,13 @@ describe('Time sequence', () => {
           time: 1,
           userStoryId: 0,
           threadId: 0,
-          state: State.Review,
+          state: 'Review',
         },
         {
           time: 1,
           userStoryId: 0,
           threadId: 1,
-          state: State.Review,
+          state: 'Review',
         },
       ],
       'e4567-e89b-12d3-a456-426614174000',
@@ -311,31 +311,31 @@ describe('Time sequence', () => {
           time: 1,
           userStoryId: 0,
           threadId: 0,
-          state: State.InProgress,
+          state: 'InProgress',
         },
         {
           time: 1,
           userStoryId: 1,
           threadId: 1,
-          state: State.InProgress,
+          state: 'InProgress',
         },
         {
           time: 1,
           userStoryId: 1,
           threadId: 1,
-          state: State.Done,
+          state: 'Done',
         },
         {
           time: 2,
           userStoryId: 0,
           threadId: 0,
-          state: State.InProgress,
+          state: 'InProgress',
         },
         {
           time: 3,
           userStoryId: 0,
           threadId: 0,
-          state: State.InProgress,
+          state: 'InProgress',
         },
       ],
       'e4567-e89b-12d3-a456-426614174000',

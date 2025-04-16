@@ -5,7 +5,7 @@ import {
 } from '../flow/storage/session-storage.ts';
 import type { TimeEvent } from '../simulate/events.ts';
 import type { StructureEvent } from '../simulate/simulation-structure.ts';
-import { State } from '../simulate/user-story.ts';
+import type { State } from '../simulate/user-story.ts';
 
 const createUserStory = (id: number) => {
   const userStoryHtmlElement = document.createElement('div');
@@ -52,7 +52,7 @@ const generateSequences = (timeEvents: TimeEvent[], userStoryIds: number[]) => {
     const currentEvents = timeEvents.filter((event) => event.time === time);
     const eventStates = getDeduplicatesEventsStates(currentEvents);
     eventStates.forEach(({ userStoryId, state }) => {
-      if (state === State.InProgress || state === State.Review) {
+      if (state === 'InProgress' || state === 'Review') {
         const sequence = userStoriesSequence.get(userStoryId);
         if (!sequence) {
           return;

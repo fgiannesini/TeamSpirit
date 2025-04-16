@@ -3,7 +3,6 @@ import { Backlog } from './backlog.ts';
 import { noReview } from './review.ts';
 import { type Action, simulateStructure } from './simulation-structure.ts';
 import { ParallelTeam } from './team.ts';
-import { State } from './user-story.ts';
 
 type StructureEvent = {
   time: number;
@@ -21,7 +20,7 @@ describe('simulation-structure', () => {
         complexity: 1,
         reviewComplexity: 0,
         review: noReview,
-        state: State.Todo,
+        state: 'Todo',
         threadId: undefined,
         progression: 0,
       },
@@ -31,7 +30,7 @@ describe('simulation-structure', () => {
         complexity: 1,
         reviewComplexity: 0,
         review: noReview,
-        state: State.Todo,
+        state: 'Todo',
         threadId: undefined,
         progression: 0,
       },

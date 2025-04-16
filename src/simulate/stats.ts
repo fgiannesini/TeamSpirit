@@ -1,5 +1,4 @@
 import type { TimeEvent } from './events.ts';
-import { State } from './user-story.ts';
 
 export type StatEvent = {
   time: number;
@@ -27,7 +26,7 @@ export const computeStatEvents = (timeEvents: TimeEvent[]): StatEvent[] => {
 
     const uniqueInProgressUserStoryIds = new Set(
       currentEvents
-        .filter((event) => event.state === State.InProgress)
+        .filter((event) => event.state === 'InProgress')
         .map((event) => event.userStoryId),
     );
 
@@ -43,7 +42,7 @@ export const computeStatEvents = (timeEvents: TimeEvent[]): StatEvent[] => {
 
     const uniqueUserStoryIdsDone = new Set(
       currentEvents
-        .filter((event) => event.state === State.Done)
+        .filter((event) => event.state === 'Done')
         .map((event) => event.userStoryId),
     );
     for (const userStoryId of uniqueUserStoryIdsDone) {

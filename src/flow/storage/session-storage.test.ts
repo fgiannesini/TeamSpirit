@@ -1,5 +1,4 @@
 import { describe, expect, test } from 'vitest';
-import { State } from '../../simulate/user-story.ts';
 import {
   loadStatEvents,
   loadStructureEvents,
@@ -17,7 +16,7 @@ describe('session storage', () => {
           time: 1,
           userStoryId: 1,
           threadId: 0,
-          state: State.InProgress,
+          state: 'InProgress',
         },
       ],
       'e4567-e89b-12d3-a456-426614174000',
@@ -27,7 +26,7 @@ describe('session storage', () => {
         time: 1,
         userStoryId: 1,
         threadId: 0,
-        state: State.InProgress,
+        state: 'InProgress',
       },
     ]);
   });

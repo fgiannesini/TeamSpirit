@@ -1,7 +1,6 @@
 import { hasSomeReviews } from './review.ts';
 import type { Thread } from './team.ts';
 import {
-  State,
   type UserStory,
   idle,
   isInProgressBy,
@@ -71,14 +70,14 @@ export const getNextUserStory = (
 
 export const userStoriesWithSomeReviews = (backlog: Backlog): UserStory[] => {
   return backlog.userStoriesRemaining
-    .filter((userStory) => userStory.state === State.Review)
+    .filter((userStory) => userStory.state === 'Review')
     .filter((userStory) =>
       hasSomeReviews(userStory.review, userStory.reviewComplexity),
     );
 };
 
 export const addUserStory = (userStory: UserStory, backlog: Backlog) => {
-  if (userStory.state === State.Done) {
+  if (userStory.state === 'Done') {
     backlog.userStoriesDone.push(userStory);
   } else {
     backlog.userStoriesRemaining.push(userStory);

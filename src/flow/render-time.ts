@@ -1,5 +1,4 @@
 import type { TimeEvent } from '../simulate/events.ts';
-import { State } from '../simulate/user-story.ts';
 import {
   getBacklog,
   getDone,
@@ -18,8 +17,7 @@ const hasManyReviewsInSameTime = (
   return (
     timeEvents.filter(
       (timeEvent) =>
-        timeEvent.state === State.Review &&
-        timeEvent.userStoryId === userStoryId,
+        timeEvent.state === 'Review' && timeEvent.userStoryId === userStoryId,
     ).length > 1
   );
 };
@@ -49,7 +47,7 @@ export const renderTimeEvents = async (
       continue;
     }
     switch (currentEvent.state) {
-      case State.InProgress: {
+      case 'InProgress': {
         const inProgressUserStory = getUserStory(currentEvent.userStoryId);
         if (inProgressUserStory) {
           getThreadUserStory(currentEvent.threadId)?.appendChild(
@@ -59,7 +57,7 @@ export const renderTimeEvents = async (
         }
         break;
       }
-      case State.Review: {
+      case 'Review': {
         if (hasManyReviewsInSameTime(currentEvents, currentEvent.userStoryId)) {
           removeUserStory(getUserStory(currentEvent.userStoryId));
 
@@ -80,14 +78,14 @@ export const renderTimeEvents = async (
         setThreadStateTo(currentEvent.threadId, 'Review');
         break;
       }
-      case State.ToReview: {
+      case 'ToReview': {
         const toReviewUserStory = getUserStory(currentEvent.userStoryId);
         if (toReviewUserStory) {
           getBacklog()?.appendChild(toReviewUserStory);
         }
         break;
       }
-      case State.Done: {
+      case 'Done': {
         removeUserStory(...getDuplicatedUserStories(currentEvent.userStoryId));
         const doneUserStory = getOrCreateUserStoryInThread(
           currentEvent.userStoryId,

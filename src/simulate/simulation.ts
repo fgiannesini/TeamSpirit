@@ -8,7 +8,6 @@ import {
 import { type TimeEvent, createTimeEvent } from './events.ts';
 import type { Team } from './team.ts';
 import {
-  State,
   type UserStory,
   idle,
   isDeveloped,
@@ -35,8 +34,8 @@ export const simulateTimeEvents = (
       continue;
     }
     switch (userStory.state) {
-      case State.ToReview:
-      case State.Review: {
+      case 'ToReview':
+      case 'Review': {
         const review = setReview(userStory, thread);
         events.push(createTimeEvent(time, review, thread.id));
         if (isReviewed(review)) {
@@ -48,8 +47,8 @@ export const simulateTimeEvents = (
         }
         break;
       }
-      case State.Todo:
-      case State.InProgress: {
+      case 'Todo':
+      case 'InProgress': {
         const inProgress = setInProgress(userStory, thread);
         events.push(createTimeEvent(time, inProgress, thread.id));
         if (isDeveloped(inProgress)) {

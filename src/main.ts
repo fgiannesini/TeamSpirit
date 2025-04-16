@@ -11,7 +11,6 @@ import { simulateStructure } from './simulate/simulation-structure.ts';
 import { simulate } from './simulate/simulation.ts';
 import { computeStatEvents } from './simulate/stats.ts';
 import { EnsembleTeam, ParallelTeam, type Team } from './simulate/team.ts';
-import { State } from './simulate/user-story.ts';
 
 const getInputValueOf = (selector: string) => {
   const number = Number.parseInt(
@@ -33,7 +32,7 @@ export const buildBacklogForParallelTeam = () => {
         reviewers: new Map<number, number>(),
       },
       reviewComplexity: getInputValueOf(`#review-complexity-input-${i}`),
-      state: State.Todo,
+      state: 'Todo',
       threadId: undefined,
       progression: 0,
     })),
@@ -49,7 +48,7 @@ export const buildBacklogForEnsembleTeam = () => {
       complexity: getInputValueOf(`#complexity-input-${i}`),
       review: noReview,
       reviewComplexity: getInputValueOf(`#review-complexity-input-${i}`),
-      state: State.Todo,
+      state: 'Todo',
       threadId: undefined,
       progression: 0,
     })),

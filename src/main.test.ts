@@ -13,7 +13,6 @@ import { noReview } from './simulate/review.ts';
 import type { StructureEvent } from './simulate/simulation-structure.ts';
 import type { StatEvent } from './simulate/stats.ts';
 import { EnsembleTeam, ParallelTeam } from './simulate/team.ts';
-import { State } from './simulate/user-story.ts';
 
 describe('Main', () => {
   beforeEach(async () => {
@@ -168,7 +167,7 @@ describe('Main', () => {
           complexity: 5,
           review: noReview,
           reviewComplexity: 2,
-          state: State.Todo,
+          state: 'Todo',
           threadId: undefined,
           progression: 0,
         },
@@ -178,7 +177,7 @@ describe('Main', () => {
           complexity: 5,
           review: noReview,
           reviewComplexity: 2,
-          state: State.Todo,
+          state: 'Todo',
           threadId: undefined,
           progression: 0,
         },
@@ -202,7 +201,7 @@ describe('Main', () => {
             reviewers: new Map<number, number>(),
           },
           reviewComplexity: 2,
-          state: State.Todo,
+          state: 'Todo',
           threadId: undefined,
           progression: 0,
         },
@@ -222,7 +221,7 @@ describe('Main', () => {
           complexity: 5,
           review: noReview,
           reviewComplexity: 2,
-          state: State.Todo,
+          state: 'Todo',
           threadId: undefined,
           progression: 0,
         },
@@ -338,7 +337,7 @@ describe('Main', () => {
           complexity: 2,
           review: noReview,
           reviewComplexity: 1,
-          state: State.Todo,
+          state: 'Todo',
           threadId: undefined,
           progression: 0,
         },
@@ -348,7 +347,7 @@ describe('Main', () => {
           complexity: 4,
           review: noReview,
           reviewComplexity: 2,
-          state: State.Todo,
+          state: 'Todo',
           threadId: undefined,
           progression: 0,
         },
