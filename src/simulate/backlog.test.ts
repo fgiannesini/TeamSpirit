@@ -161,23 +161,11 @@ describe('Backlog', () => {
     return { id, name: '', power };
   };
 
-  test('should not generate a bug in the first turn', () => {
-    expect(shouldGenerateBug(0)).toEqual(false);
+  test('should generate a bug', () => {
+    expect(shouldGenerateBug(() => 0)).toEqual(true);
   });
 
-  test('should not generate a bug in the second turn', () => {
-    expect(shouldGenerateBug(1, () => 0.5)).toEqual(false);
-  });
-
-  test('should generate a bug in the second turn', () => {
-    expect(shouldGenerateBug(1, () => 1)).toEqual(true);
-  });
-
-  test('should generate a bug in the third turn', () => {
-    expect(shouldGenerateBug(2, () => 0.5)).toEqual(true);
-  });
-
-  test('should not generate a bug in the third turn', () => {
-    expect(shouldGenerateBug(2, () => 0.51)).toEqual(true);
+  test('should not generate a bug', () => {
+    expect(shouldGenerateBug(() => 1)).toEqual(false);
   });
 });

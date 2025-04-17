@@ -32,6 +32,6 @@ export class EnsembleTeam implements Team {
       .map((thread) => thread.power)
       .reduce((acc, val) => acc + val, 0);
     const mean = Math.round(sum / this.threads.length);
-    return [{ id: 1, name: 'mob', power: mean }];
+    return [{ id: 0, name: 'mob', power: mean }];
   }
 }

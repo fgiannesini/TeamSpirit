@@ -1,10 +1,10 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vitest } from 'vitest';
 import {
   Backlog,
   getUserStoriesDone,
   getUserStoriesRemainings,
 } from './backlog.ts';
-import { todo } from './factory.ts';
+import { done, todo } from './factory.ts';
 import { simulate } from './simulation.ts';
 import { EnsembleTeam } from './team.ts';
 
@@ -31,5 +31,39 @@ describe('Simulation', () => {
     ]);
     const { structureEvents } = simulate(backlog, team);
     expect(structureEvents.length).toBeGreaterThan(0);
+  });
+
+  test('Should generate a bug during the second turn', () => {
+    const team = new EnsembleTeam([{ id: 0, name: 'thread0', power: 1 }]);
+    const backlog = new Backlog([
+      todo({
+        id: 0,
+        name: 'US1',
+        complexity: 1,
+      }),
+      todo({
+        id: 1,
+        name: 'US2',
+        complexity: 1,
+      }),
+    ]);
+    const randomMock = vitest
+      .fn()
+      .mockReturnValueOnce(1)
+      .mockReturnValueOnce(0)
+      .mockReturnValue(1);
+    const { structureEvents } = simulate(backlog, team, randomMock);
+    expect(structureEvents.pop()).toEqual({
+      id: 2,
+      name: 'bug-0',
+      time: 2,
+      action: 'CreateUserStory',
+    });
+    expect(backlog.userStoriesDone.pop()).toEqual(
+      done({
+        id: 2,
+        name: 'bug-0',
+      }),
+    );
   });
 });
