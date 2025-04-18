@@ -20,7 +20,7 @@ describe('simulation time', () => {
   test('should have a thread idle', () => {
     const team = new ParallelTeam([{ id: 0, name: 'thread0', power: 1 }]);
     const backlog = new Backlog([]);
-    const timeEvents = simulateTimeEvents(team, backlog, 0);
+    const timeEvents = simulateTimeEvents(team, backlog, 1);
     expect(timeEvents).toEqual([idleEvent()]);
   });
 
@@ -30,7 +30,7 @@ describe('simulation time', () => {
       { id: 1, name: 'thread1', power: 1 },
     ]);
     const backlog = new Backlog([]);
-    const timeEvents = simulateTimeEvents(team, backlog, 0);
+    const timeEvents = simulateTimeEvents(team, backlog, 1);
     expect(timeEvents).toEqual([
       idleEvent({ threadId: 0 }),
       idleEvent({ threadId: 1 }),
@@ -40,7 +40,7 @@ describe('simulation time', () => {
   test('should have a thread develop and done a user story', () => {
     const team = new ParallelTeam([{ id: 0, name: 'thread0', power: 1 }]);
     const backlog = new Backlog([todo()]);
-    const timeEvents = simulateTimeEvents(team, backlog, 0);
+    const timeEvents = simulateTimeEvents(team, backlog, 1);
     expect(timeEvents).toEqual([inProgressEvent(), doneEvent()]);
     expect(getUserStoriesDone(backlog)).toHaveLength(1);
     expect(getUserStoriesRemainings(backlog)).toHaveLength(0);
@@ -49,7 +49,7 @@ describe('simulation time', () => {
   test('should have a thread develop a user story', () => {
     const team = new ParallelTeam([{ id: 0, name: 'thread0', power: 1 }]);
     const backlog = new Backlog([todo({ complexity: 3 })]);
-    const timeEvents = simulateTimeEvents(team, backlog, 0);
+    const timeEvents = simulateTimeEvents(team, backlog, 1);
     expect(timeEvents).toEqual([inProgressEvent()]);
     expect(getUserStoriesDone(backlog)).toHaveLength(0);
     expect(getUserStoriesRemainings(backlog)).toHaveLength(1);
@@ -58,7 +58,7 @@ describe('simulation time', () => {
   test('should have an efficient thread develop a complex user story', () => {
     const team = new ParallelTeam([{ id: 0, name: 'thread0', power: 3 }]);
     const backlog = new Backlog([todo({ complexity: 3 })]);
-    const timeEvents = simulateTimeEvents(team, backlog, 0);
+    const timeEvents = simulateTimeEvents(team, backlog, 1);
     expect(timeEvents).toEqual([inProgressEvent(), doneEvent()]);
     expect(getUserStoriesDone(backlog)).toHaveLength(1);
     expect(getUserStoriesRemainings(backlog)).toHaveLength(0);
@@ -69,7 +69,7 @@ describe('simulation time', () => {
     const backlog = new Backlog([
       todo({ review: { reviewersNeeded: 1, reviewers: new Map() } }),
     ]);
-    const timeEvents = simulateTimeEvents(team, backlog, 0);
+    const timeEvents = simulateTimeEvents(team, backlog, 1);
     expect(timeEvents).toEqual([inProgressEvent(), toReviewEvent()]);
     expect(getUserStoriesDone(backlog)).toHaveLength(0);
     expect(getUserStoriesRemainings(backlog)).toHaveLength(1);
@@ -83,7 +83,7 @@ describe('simulation time', () => {
         review: { reviewersNeeded: 1, reviewers: new Map() },
       }),
     ]);
-    const timeEvents = simulateTimeEvents(team, backlog, 0);
+    const timeEvents = simulateTimeEvents(team, backlog, 1);
     expect(timeEvents).toEqual([inProgressEvent(), toReviewEvent()]);
     expect(getUserStoriesDone(backlog)).toHaveLength(0);
     expect(getUserStoriesRemainings(backlog)).toHaveLength(1);
@@ -97,7 +97,7 @@ describe('simulation time', () => {
         review: { reviewersNeeded: 1, reviewers: new Map() },
       }),
     ]);
-    const timeEvents = simulateTimeEvents(team, backlog, 0);
+    const timeEvents = simulateTimeEvents(team, backlog, 1);
     expect(timeEvents).toEqual([reviewEvent(), doneEvent({ threadId: 1 })]);
     expect(getUserStoriesDone(backlog)).toHaveLength(1);
     expect(getUserStoriesRemainings(backlog)).toHaveLength(0);
@@ -112,7 +112,7 @@ describe('simulation time', () => {
         review: { reviewersNeeded: 1, reviewers: new Map() },
       }),
     ]);
-    const timeEvents = simulateTimeEvents(team, backlog, 0);
+    const timeEvents = simulateTimeEvents(team, backlog, 1);
     expect(timeEvents).toEqual([reviewEvent()]);
     expect(getUserStoriesDone(backlog)).toHaveLength(0);
     expect(getUserStoriesRemainings(backlog)).toHaveLength(1);
@@ -126,7 +126,7 @@ describe('simulation time', () => {
         review: { reviewersNeeded: 1, reviewers: new Map() },
       }),
     ]);
-    const timeEvents = simulateTimeEvents(team, backlog, 0);
+    const timeEvents = simulateTimeEvents(team, backlog, 1);
     expect(timeEvents).toEqual([reviewEvent(), doneEvent({ threadId: 1 })]);
     expect(getUserStoriesDone(backlog)).toHaveLength(1);
     expect(getUserStoriesRemainings(backlog)).toHaveLength(0);
@@ -141,7 +141,7 @@ describe('simulation time', () => {
         review: { reviewersNeeded: 2, reviewers: new Map([[2, 1]]) },
       }),
     ]);
-    const timeEvents = simulateTimeEvents(team, backlog, 0);
+    const timeEvents = simulateTimeEvents(team, backlog, 1);
     expect(timeEvents).toEqual([reviewEvent(), doneEvent({ threadId: 1 })]);
     expect(getUserStoriesDone(backlog)).toHaveLength(1);
     expect(getUserStoriesRemainings(backlog)).toHaveLength(0);
@@ -159,7 +159,7 @@ describe('simulation time', () => {
         review: { reviewersNeeded: 2, reviewers: new Map() },
       }),
     ]);
-    const timeEvents = simulateTimeEvents(team, backlog, 0);
+    const timeEvents = simulateTimeEvents(team, backlog, 1);
     expect(timeEvents).toEqual([
       reviewEvent({ threadId: 0 }),
       reviewEvent({ threadId: 1 }),
@@ -181,7 +181,7 @@ describe('simulation time', () => {
         review: { reviewersNeeded: 2, reviewers: new Map() },
       }),
     ]);
-    const timeEvents = simulateTimeEvents(team, backlog, 0);
+    const timeEvents = simulateTimeEvents(team, backlog, 1);
     expect(timeEvents).toEqual([
       reviewEvent({ threadId: 0 }),
       reviewEvent({ threadId: 1 }),

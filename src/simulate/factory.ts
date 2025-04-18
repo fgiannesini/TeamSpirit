@@ -81,7 +81,7 @@ export const done = (options: Partial<UserStory> = {}): UserStory => {
 
 export const idleEvent = (options: Partial<TimeEvent> = {}): TimeEvent => {
   return {
-    time: 0,
+    time: 1,
     userStoryId: -1,
     threadId: 0,
     state: 'Done',
@@ -93,7 +93,7 @@ export const inProgressEvent = (options: Partial<TimeEvent> = {}) => {
   return {
     state: 'InProgress',
     threadId: 0,
-    time: 0,
+    time: 1,
     userStoryId: 0,
     ...options,
   };
@@ -103,7 +103,7 @@ export const toReviewEvent = (options: Partial<TimeEvent> = {}) => {
   return {
     state: 'ToReview',
     threadId: 0,
-    time: 0,
+    time: 1,
     userStoryId: 0,
     ...options,
   };
@@ -113,7 +113,7 @@ export const doneEvent = (options: Partial<TimeEvent> = {}) => {
   return {
     state: 'Done',
     threadId: 0,
-    time: 0,
+    time: 1,
     userStoryId: 0,
     ...options,
   };
@@ -123,7 +123,7 @@ export const reviewEvent = (options: Partial<TimeEvent> = {}) => {
   return {
     state: 'Review',
     threadId: 0,
-    time: 0,
+    time: 1,
     userStoryId: 0,
     ...options,
   };

@@ -261,6 +261,21 @@ describe('Flow', () => {
       expect(userStory2?.textContent).toEqual('userStory1');
     });
 
+    test('Should add a user story after initialization', async () => {
+      saveStructureEvents(
+        [
+          createUserStory({ id: 0, time: 1 }),
+          createUserStory({ id: 1, time: 1 }),
+          createUserStory({ id: 2, time: 2 }),
+        ],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
+      await import('./flow.ts');
+
+      const userStory2 = getUserStory(2);
+      expect(userStory2).toBeNull();
+    });
+
     test('Should move userStories to thread when in progress, then done', async () => {
       saveStructureEvents(
         [createThread0(), createUserStory({ id: 0 })],
