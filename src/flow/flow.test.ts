@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { doneEvent } from '../simulate/factory.ts';
 import type { StructureEvent } from '../simulate/simulation-structure.ts';
 import {
   getCompute,
@@ -27,6 +28,7 @@ describe('Flow', () => {
     const htmlPath = resolve(__dirname, './flow.html');
     document.body.innerHTML = readFileSync(htmlPath, 'utf-8');
     vi.useFakeTimers();
+    sessionStorage.clear();
   });
 
   test('Should render the page without time events', async () => {
@@ -272,6 +274,25 @@ describe('Flow', () => {
 
       getCompute()?.click();
       await vi.advanceTimersToNextTimerAsync();
+
+      expect(getUserStory(0)).not.toBeNull();
+    });
+
+    test('Should add a user story on all computation click', async () => {
+      saveStructureEvents(
+        [createUserStory({ id: 0, time: 2 })],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
+      saveTimeEvents(
+        [doneEvent({ time: 2 })],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
+      await import('./flow.ts');
+
+      expect(getUserStory(0)).toBeNull();
+
+      getComputeAll()?.click();
+      await vi.runAllTimersAsync();
 
       expect(getUserStory(0)).not.toBeNull();
     });

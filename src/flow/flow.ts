@@ -68,6 +68,7 @@ const render = (
       time++;
       await renderTimeEvents(events, time, 300);
       renderStatEvents(statEvents, time, maxTime);
+      buildUserStories(structureEvents, time + 1);
     }
     computeButtonAll.disabled = true;
   });

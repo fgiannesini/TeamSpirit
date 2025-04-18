@@ -89,7 +89,9 @@ export const idleEvent = (options: Partial<TimeEvent> = {}): TimeEvent => {
   };
 };
 
-export const inProgressEvent = (options: Partial<TimeEvent> = {}) => {
+export const inProgressEvent = (
+  options: Partial<TimeEvent> = {},
+): TimeEvent => {
   return {
     state: 'InProgress',
     threadId: 0,
@@ -99,7 +101,7 @@ export const inProgressEvent = (options: Partial<TimeEvent> = {}) => {
   };
 };
 
-export const toReviewEvent = (options: Partial<TimeEvent> = {}) => {
+export const toReviewEvent = (options: Partial<TimeEvent> = {}): TimeEvent => {
   return {
     state: 'ToReview',
     threadId: 0,
@@ -109,7 +111,7 @@ export const toReviewEvent = (options: Partial<TimeEvent> = {}) => {
   };
 };
 
-export const doneEvent = (options: Partial<TimeEvent> = {}) => {
+export const doneEvent = (options: Partial<TimeEvent> = {}): TimeEvent => {
   return {
     state: 'Done',
     threadId: 0,
