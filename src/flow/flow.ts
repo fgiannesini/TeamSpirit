@@ -18,6 +18,19 @@ import {
   loadTimeEvents,
 } from './storage/session-storage.ts';
 
+const buildUserStories = (
+  structureEvents: StructureEvent[],
+  timeCount: number,
+) => {
+  const backlog = getBacklog();
+  if (backlog) {
+    const initStructureEvents = structureEvents.filter(
+      ({ time }) => time === timeCount,
+    );
+    addUserStories(backlog, initStructureEvents);
+  }
+};
+
 const render = (
   events: TimeEvent[],
   statEvents: StatEvent[],
@@ -43,6 +56,7 @@ const render = (
     time++;
     await renderTimeEvents(events, time, 1000);
     renderStatEvents(statEvents, time, maxTime);
+    buildUserStories(structureEvents, time + 1);
     if (maxTime !== time) {
       computeButton.disabled = false;
     }
