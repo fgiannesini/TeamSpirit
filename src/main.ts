@@ -79,7 +79,7 @@ export const buildEnsembleTeam = (): Team => {
 };
 
 const runSimulation = (backlog: Backlog, team: Team) => {
-  const { timeEvents, structureEvents } = simulate(backlog, team);
+  const { timeEvents, structureEvents } = simulate(backlog, team, []);
   const randomKey = crypto.randomUUID();
   saveTimeEvents(timeEvents, randomKey);
   saveStructureEvents(structureEvents, randomKey);
