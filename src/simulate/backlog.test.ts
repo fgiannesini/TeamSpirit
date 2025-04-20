@@ -162,10 +162,14 @@ describe('Backlog', () => {
   };
 
   test('should generate a bug', () => {
-    expect(shouldGenerateBug(() => 0)).toEqual(true);
+    expect(shouldGenerateBug([0, 1])).toEqual(true);
   });
 
   test('should not generate a bug', () => {
-    expect(shouldGenerateBug(() => 1)).toEqual(false);
+    expect(shouldGenerateBug([1])).toEqual(false);
+  });
+
+  test('should not generate a bug if no random numbers are provided', () => {
+    expect(shouldGenerateBug([])).toEqual(false);
   });
 });
