@@ -98,5 +98,5 @@ export const hasMoreUserStories = (backlog: Backlog) => {
 
 export const shouldGenerateBug = (random: number[]) => {
   const number = random.shift();
-  return number !== undefined && number < 0.1;
+  return number !== undefined && number < 0.01;
 };

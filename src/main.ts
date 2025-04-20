@@ -5,7 +5,7 @@ import {
   saveTimeEvents,
 } from './flow/storage/session-storage.ts';
 import { generateDevForm, generateUserStoriesForm } from './form/form.ts';
-import { Backlog } from './simulate/backlog.ts';
+import { Backlog, getUserStories } from './simulate/backlog.ts';
 import { noReview } from './simulate/review.ts';
 import { simulate } from './simulate/simulation.ts';
 import { computeStatEvents } from './simulate/stats.ts';
@@ -79,7 +79,14 @@ export const buildEnsembleTeam = (): Team => {
 };
 
 const runSimulation = (backlog: Backlog, team: Team) => {
-  const { timeEvents, structureEvents } = simulate(backlog, team, []);
+  const randomNumbers = new Array(getUserStories(backlog).length * 10)
+    .fill(0)
+    .map((_) => Math.random());
+  const { timeEvents, structureEvents } = simulate(
+    backlog,
+    team,
+    randomNumbers,
+  );
   const randomKey = crypto.randomUUID();
   saveTimeEvents(timeEvents, randomKey);
   saveStructureEvents(structureEvents, randomKey);
