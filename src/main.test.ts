@@ -9,6 +9,7 @@ import {
 } from './main.ts';
 import { Backlog } from './simulate/backlog.ts';
 import type { TimeEvent } from './simulate/events.ts';
+import { thread } from './simulate/factory.ts';
 import { noReview } from './simulate/review.ts';
 import type { StructureEvent } from './simulate/simulation-structure.ts';
 import type { StatEvent } from './simulate/stats.ts';
@@ -267,6 +268,16 @@ describe('Main', () => {
       new ParallelTeam([
         { id: 0, name: 'thread0', power: 5 },
         { id: 1, name: 'thread1', power: 10 },
+      ]),
+    );
+  });
+
+  test('Should build a default parallel team', () => {
+    setValueTo('#dev-count-input', '2');
+    expect(buildParallelTeam()).toStrictEqual(
+      new ParallelTeam([
+        thread({ id: 0, name: 'thread0', power: 1 }),
+        thread({ id: 1, name: 'thread1', power: 1 }),
       ]),
     );
   });
