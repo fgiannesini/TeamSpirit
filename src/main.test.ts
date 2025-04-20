@@ -35,16 +35,6 @@ describe('Main', () => {
     document.querySelector<HTMLButtonElement>(buttonId)?.click();
   };
 
-  const select = (selectId: string, optionValue: string) => {
-    const select = document.querySelector<HTMLSelectElement>(selectId);
-    const option = select?.querySelector<HTMLOptionElement>(
-      `option[value="${optionValue}"]`,
-    );
-    if (option) {
-      option.selected = true;
-    }
-  };
-
   test('Should compute and store time events in sessionStorage', () => {
     const randomUuidSpy = vi.spyOn(crypto, 'randomUUID');
     randomUuidSpy
@@ -287,7 +277,6 @@ describe('Main', () => {
     clickOn('#generate-devs-button');
     setValueTo('#power-input-0', '5');
     setValueTo('#power-input-1', '10');
-    select('#team-type-select', 'ensemble');
     expect(buildEnsembleTeam()).toStrictEqual(
       new EnsembleTeam([
         { id: 0, name: 'thread0', power: 5 },
