@@ -41,7 +41,7 @@ export const getOrCreateUserStoryInThread = (
 };
 
 export const getOrCreateUserStory = (userStoryId: number): HTMLDivElement =>
-  getUserStory(userStoryId) ?? createUserStory(userStoryId);
+  getUserStory(userStoryId) ?? createUserStory(userStoryId, '');
 
 export const getDuplicatedUserStories = (
   userStoryId: number,

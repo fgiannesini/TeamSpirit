@@ -1,10 +1,10 @@
 import type { StructureEvent } from '../simulate/simulation-structure.ts';
 
-export const createUserStory = (id: number) => {
+export const createUserStory = (id: number, name: string) => {
   const userStoryHtmlElement = document.createElement('div');
   userStoryHtmlElement.id = `user-story-${id}`;
   userStoryHtmlElement.className = 'userStory';
-  userStoryHtmlElement.textContent = `userStory${id}`;
+  userStoryHtmlElement.textContent = name;
   return userStoryHtmlElement;
 };
 
@@ -23,12 +23,10 @@ export const addUserStories = (
   parent: Element,
   structureEvents: StructureEvent[],
 ) => {
-  const userStoryIds = structureEvents
+  structureEvents
     .filter(({ action }) => action === 'CreateUserStory')
-    .map(({ id }) => id);
-  userStoryIds
-    .filter((userStoryId) => userStoryId !== -1)
-    .map((userStoryId) => createUserStory(userStoryId))
+    .filter(({ id }) => id !== -1)
+    .map(({ id, name }) => createUserStory(id, name))
     .forEach((userStoryElement) => {
       parent.appendChild(userStoryElement);
     });

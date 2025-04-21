@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { doneEvent } from '../simulate/factory.ts';
+import { doneEvent, inProgressEvent } from '../simulate/factory.ts';
 import type { StructureEvent } from '../simulate/simulation-structure.ts';
 import {
   getCompute,
@@ -233,34 +233,27 @@ describe('Flow', () => {
   describe('User story', () => {
     test('Should initialize 2 userStories elements', async () => {
       saveStructureEvents(
-        [createUserStory({ id: 0 }), createUserStory({ id: 1 })],
+        [
+          createUserStory({ id: 0, name: 'US0' }),
+          createUserStory({ id: 1, name: 'US1' }),
+        ],
         'e4567-e89b-12d3-a456-426614174000',
       );
       saveTimeEvents(
         [
-          {
-            time: 1,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'InProgress',
-          },
-          {
-            time: 1,
-            userStoryId: 1,
-            threadId: 1,
-            state: 'InProgress',
-          },
+          inProgressEvent({ userStoryId: 0 }),
+          inProgressEvent({ userStoryId: 1 }),
         ],
         'e4567-e89b-12d3-a456-426614174000',
       );
       await import('./flow.ts');
       const userStory1 = getUserStory(0);
       expect(userStory1?.className).toEqual('userStory');
-      expect(userStory1?.textContent).toEqual('userStory0');
+      expect(userStory1?.textContent).toEqual('US0');
 
       const userStory2 = getUserStory(1);
       expect(userStory2?.className).toEqual('userStory');
-      expect(userStory2?.textContent).toEqual('userStory1');
+      expect(userStory2?.textContent).toEqual('US1');
     });
 
     test('Should add a user story on computation click', async () => {
