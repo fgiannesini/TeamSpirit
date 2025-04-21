@@ -1,7 +1,12 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { doneEvent, inProgressEvent } from '../simulate/factory.ts';
+import {
+  doneEvent,
+  inProgressEvent,
+  reviewEvent,
+  toReviewEvent,
+} from '../simulate/factory.ts';
 import type { StructureEvent } from '../simulate/simulation-structure.ts';
 import {
   getCompute,
@@ -105,20 +110,7 @@ describe('Flow', () => {
         'e4567-e89b-12d3-a456-426614174000',
       );
       saveTimeEvents(
-        [
-          {
-            time: 1,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'InProgress',
-          },
-          {
-            time: 1,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'Done',
-          },
-        ],
+        [inProgressEvent(), doneEvent()],
         'e4567-e89b-12d3-a456-426614174000',
       );
       await import('./flow.ts');
@@ -137,20 +129,7 @@ describe('Flow', () => {
         'e4567-e89b-12d3-a456-426614174000',
       );
       saveTimeEvents(
-        [
-          {
-            time: 1,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'Review',
-          },
-          {
-            time: 1,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'Done',
-          },
-        ],
+        [reviewEvent(), doneEvent()],
         'e4567-e89b-12d3-a456-426614174000',
       );
       await import('./flow.ts');
@@ -169,20 +148,7 @@ describe('Flow', () => {
         'e4567-e89b-12d3-a456-426614174000',
       );
       saveTimeEvents(
-        [
-          {
-            time: 1,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'InProgress',
-          },
-          {
-            time: 1,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'ToReview',
-          },
-        ],
+        [inProgressEvent(), toReviewEvent()],
         'e4567-e89b-12d3-a456-426614174000',
       );
       await import('./flow.ts');
@@ -200,24 +166,9 @@ describe('Flow', () => {
       );
       saveTimeEvents(
         [
-          {
-            time: 1,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'InProgress',
-          },
-          {
-            time: 1,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'ToReview',
-          },
-          {
-            time: 2,
-            userStoryId: -1,
-            threadId: 0,
-            state: 'Done',
-          },
+          inProgressEvent(),
+          toReviewEvent(),
+          doneEvent({ time: 2, userStoryId: -1 }),
         ],
         'e4567-e89b-12d3-a456-426614174000',
       );
@@ -296,20 +247,7 @@ describe('Flow', () => {
         'e4567-e89b-12d3-a456-426614174000',
       );
       saveTimeEvents(
-        [
-          {
-            time: 1,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'InProgress',
-          },
-          {
-            time: 1,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'Done',
-          },
-        ],
+        [inProgressEvent(), doneEvent()],
         'e4567-e89b-12d3-a456-426614174000',
       );
       await import('./flow.ts');
@@ -330,20 +268,7 @@ describe('Flow', () => {
         'e4567-e89b-12d3-a456-426614174000',
       );
       saveTimeEvents(
-        [
-          {
-            time: 1,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'Review',
-          },
-          {
-            time: 1,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'Done',
-          },
-        ],
+        [reviewEvent(), doneEvent()],
         'e4567-e89b-12d3-a456-426614174000',
       );
       await import('./flow.ts');
@@ -363,17 +288,7 @@ describe('Flow', () => {
         [createThread0(), createUserStory({ id: 0 })],
         'e4567-e89b-12d3-a456-426614174000',
       );
-      saveTimeEvents(
-        [
-          {
-            time: 1,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'ToReview',
-          },
-        ],
-        'e4567-e89b-12d3-a456-426614174000',
-      );
+      saveTimeEvents([toReviewEvent()], 'e4567-e89b-12d3-a456-426614174000');
       await import('./flow.ts');
 
       getCompute()?.click();
@@ -387,20 +302,7 @@ describe('Flow', () => {
         'e4567-e89b-12d3-a456-426614174000',
       );
       saveTimeEvents(
-        [
-          {
-            time: 1,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'Review',
-          },
-          {
-            time: 1,
-            userStoryId: 0,
-            threadId: 1,
-            state: 'Review',
-          },
-        ],
+        [reviewEvent({ threadId: 0 }), reviewEvent({ threadId: 1 })],
         'e4567-e89b-12d3-a456-426614174000',
       );
       await import('./flow.ts');
@@ -423,30 +325,10 @@ describe('Flow', () => {
       );
       saveTimeEvents(
         [
-          {
-            time: 1,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'Review',
-          },
-          {
-            time: 1,
-            userStoryId: 0,
-            threadId: 1,
-            state: 'Review',
-          },
-          {
-            time: 2,
-            userStoryId: -1,
-            threadId: 0,
-            state: 'Done',
-          },
-          {
-            time: 2,
-            userStoryId: 0,
-            threadId: 1,
-            state: 'Review',
-          },
+          reviewEvent({ threadId: 0 }),
+          reviewEvent({ threadId: 1 }),
+          doneEvent({ time: 2, threadId: 0, userStoryId: -1 }),
+          reviewEvent({ time: 2, threadId: 1 }),
         ],
         'e4567-e89b-12d3-a456-426614174000',
       );
@@ -476,30 +358,10 @@ describe('Flow', () => {
       );
       saveTimeEvents(
         [
-          {
-            time: 1,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'Review',
-          },
-          {
-            time: 1,
-            userStoryId: 0,
-            threadId: 1,
-            state: 'Review',
-          },
-          {
-            time: 2,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'Review',
-          },
-          {
-            time: 2,
-            userStoryId: 0,
-            threadId: 1,
-            state: 'Review',
-          },
+          reviewEvent({ time: 1, threadId: 0 }),
+          reviewEvent({ time: 1, threadId: 1 }),
+          reviewEvent({ time: 2, threadId: 0 }),
+          reviewEvent({ time: 2, threadId: 1 }),
         ],
         'e4567-e89b-12d3-a456-426614174000',
       );
@@ -529,26 +391,11 @@ describe('Flow', () => {
       );
       saveTimeEvents(
         [
-          {
-            time: 1,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'InProgress',
-          },
-          { time: 1, userStoryId: -1, threadId: 1, state: 'Done' },
-          {
-            time: 2,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'InProgress',
-          },
-          {
-            time: 2,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'Done',
-          },
-          { time: 2, userStoryId: -1, threadId: 1, state: 'Done' },
+          inProgressEvent({ time: 1, threadId: 0 }),
+          doneEvent({ time: 1, threadId: 1, userStoryId: -1 }),
+          inProgressEvent({ time: 2, threadId: 0 }),
+          doneEvent({ time: 2, threadId: 0 }),
+          doneEvent({ time: 2, threadId: 1, userStoryId: -1 }),
         ],
         'e4567-e89b-12d3-a456-426614174000',
       );
@@ -570,24 +417,9 @@ describe('Flow', () => {
       );
       saveTimeEvents(
         [
-          {
-            time: 1,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'InProgress',
-          },
-          {
-            time: 2,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'InProgress',
-          },
-          {
-            time: 2,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'Done',
-          },
+          inProgressEvent({ time: 1 }),
+          inProgressEvent({ time: 2 }),
+          doneEvent({ time: 2 }),
         ],
         'e4567-e89b-12d3-a456-426614174000',
       );
@@ -607,24 +439,9 @@ describe('Flow', () => {
       );
       saveTimeEvents(
         [
-          {
-            time: 1,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'InProgress',
-          },
-          {
-            time: 2,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'InProgress',
-          },
-          {
-            time: 2,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'Done',
-          },
+          inProgressEvent({ time: 1 }),
+          inProgressEvent({ time: 2 }),
+          doneEvent({ time: 2 }),
         ],
         'e4567-e89b-12d3-a456-426614174000',
       );
@@ -644,20 +461,7 @@ describe('Flow', () => {
         'e4567-e89b-12d3-a456-426614174000',
       );
       saveTimeEvents(
-        [
-          {
-            time: 1,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'InProgress',
-          },
-          {
-            time: 1,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'Done',
-          },
-        ],
+        [inProgressEvent(), doneEvent()],
         'e4567-e89b-12d3-a456-426614174000',
       );
 
@@ -675,20 +479,7 @@ describe('Flow', () => {
         'e4567-e89b-12d3-a456-426614174000',
       );
       saveTimeEvents(
-        [
-          {
-            time: 1,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'InProgress',
-          },
-          {
-            time: 1,
-            userStoryId: 0,
-            threadId: 0,
-            state: 'Done',
-          },
-        ],
+        [inProgressEvent(), doneEvent()],
         'e4567-e89b-12d3-a456-426614174000',
       );
 

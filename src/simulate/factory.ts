@@ -121,7 +121,7 @@ export const doneEvent = (options: Partial<TimeEvent> = {}): TimeEvent => {
   };
 };
 
-export const reviewEvent = (options: Partial<TimeEvent> = {}) => {
+export const reviewEvent = (options: Partial<TimeEvent> = {}): TimeEvent => {
   return {
     state: 'Review',
     threadId: 0,
