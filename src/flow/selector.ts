@@ -26,6 +26,9 @@ export const getDone = (): HTMLDivElement | null =>
 export const getUserStory = (userStoryId: number): HTMLDivElement | null =>
   document.querySelector<HTMLDivElement>(`[id^="user-story-${userStoryId}"]`);
 
+export const getAllUserStories = (userStoryId: number): HTMLDivElement[] =>
+  Array.from(document.querySelectorAll(`[id^="user-story-${userStoryId}"]`));
+
 export const getUserStoryOfThread = (
   userStoryId: number,
   threadId: number,
