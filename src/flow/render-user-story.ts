@@ -11,11 +11,12 @@ export const createUserStory = (id: number, name: string) => {
 export const createUserStoryInThread = (
   userStoryId: number,
   threadId: number,
+  name: string,
 ) => {
   const userStoryHtmlElement = document.createElement('div');
   userStoryHtmlElement.id = `user-story-${userStoryId}_${threadId}`;
   userStoryHtmlElement.className = 'userStory';
-  userStoryHtmlElement.textContent = `userStory${userStoryId}`;
+  userStoryHtmlElement.textContent = name;
   return userStoryHtmlElement;
 };
 

@@ -14,7 +14,7 @@ import {
   getThread,
   getThreadState,
   getThreadTitle,
-  getThreadUserStory,
+  getThreadUserStoryContainer,
   getUserStory,
 } from './selector.ts';
 import {
@@ -85,7 +85,7 @@ describe('Flow', () => {
       const threadTitle0 = getThreadTitle(0);
       expect(threadTitle0?.textContent).toEqual('dev0');
 
-      const threadUserStory0 = getThreadUserStory(0);
+      const threadUserStory0 = getThreadUserStoryContainer(0);
       expect(threadUserStory0).not.toBeNull();
 
       const threadState0 = getThreadState(0);
@@ -97,7 +97,7 @@ describe('Flow', () => {
       const threadTitle1 = getThreadTitle(1);
       expect(threadTitle1?.textContent).toEqual('dev1');
 
-      const threadUserStory1 = getThreadUserStory(1);
+      const threadUserStory1 = getThreadUserStoryContainer(1);
       expect(threadUserStory1).not.toBeNull();
 
       const threadState1 = getThreadState(1);
@@ -255,7 +255,7 @@ describe('Flow', () => {
       getCompute()?.click();
       await vi.advanceTimersToNextTimerAsync();
       expect(
-        document.querySelector('#thread-user-story-0 #user-story-0'),
+        document.querySelector('#thread-user-story-0 #user-story-0-0'),
       ).not.toBeNull();
 
       await vi.advanceTimersToNextTimerAsync();
@@ -264,11 +264,11 @@ describe('Flow', () => {
 
     test('Should move userStories to thread when in review, then done', async () => {
       saveStructureEvents(
-        [createThread0(), createUserStory({ id: 0 })],
+        [createThread1(), createUserStory({ id: 0 })],
         'e4567-e89b-12d3-a456-426614174000',
       );
       saveTimeEvents(
-        [reviewEvent(), doneEvent()],
+        [reviewEvent({ threadId: 1 }), doneEvent({ threadId: 0 })],
         'e4567-e89b-12d3-a456-426614174000',
       );
       await import('./flow.ts');
@@ -276,7 +276,7 @@ describe('Flow', () => {
       getCompute()?.click();
       await vi.advanceTimersToNextTimerAsync();
       expect(
-        document.querySelector('#thread-user-story-0 #user-story-0'),
+        document.querySelector('#thread-user-story-1 #user-story-0-1'),
       ).not.toBeNull();
 
       await vi.advanceTimersToNextTimerAsync();
@@ -288,17 +288,25 @@ describe('Flow', () => {
         [createThread0(), createUserStory({ id: 0 })],
         'e4567-e89b-12d3-a456-426614174000',
       );
-      saveTimeEvents([toReviewEvent()], 'e4567-e89b-12d3-a456-426614174000');
+      saveTimeEvents(
+        [inProgressEvent(), toReviewEvent()],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
       await import('./flow.ts');
 
       getCompute()?.click();
+      await vi.runAllTimersAsync();
 
       expect(document.querySelector('#backlog #user-story-0')).not.toBeNull();
     });
 
     test('Should move userStories to the corresponding threads when reviewed by several threads', async () => {
       saveStructureEvents(
-        [createThread0(), createThread1(), createUserStory({ id: 0 })],
+        [
+          createThread0(),
+          createThread1(),
+          createUserStory({ id: 0, name: 'US0' }),
+        ],
         'e4567-e89b-12d3-a456-426614174000',
       );
       saveTimeEvents(
@@ -309,12 +317,16 @@ describe('Flow', () => {
 
       getCompute()?.click();
       await vi.runAllTimersAsync();
-      expect(
-        document.querySelector('#thread-user-story-0 #user-story-0_0'),
-      ).not.toBeNull();
-      expect(
-        document.querySelector('#thread-user-story-1 #user-story-0_1'),
-      ).not.toBeNull();
+      const firstDiv = document.querySelector(
+        '#thread-user-story-0 #user-story-0-0',
+      );
+      expect(firstDiv).not.toBeNull();
+      expect(firstDiv?.textContent).toEqual('US0');
+      const secondDiv = document.querySelector(
+        '#thread-user-story-1 #user-story-0-1',
+      );
+      expect(secondDiv).not.toBeNull();
+      expect(secondDiv?.textContent).toEqual('US0');
       expect(document.querySelector('#backlog #user-story-0')).toBeNull();
     });
 
@@ -341,13 +353,10 @@ describe('Flow', () => {
       await vi.runAllTimersAsync();
 
       expect(
-        document.querySelector('#thread-user-story-1 #user-story-0'),
+        document.querySelector('#thread-user-story-1 #user-story-0-1'),
       ).not.toBeNull();
       expect(
-        document.querySelector('#thread-user-story-0 #user-story-0_0'),
-      ).toBeNull();
-      expect(
-        document.querySelector('#thread-user-story-1 #user-story-0_1'),
+        document.querySelector('#thread-user-story-0 #user-story-0-0'),
       ).toBeNull();
     });
 
@@ -374,11 +383,11 @@ describe('Flow', () => {
       await vi.runAllTimersAsync();
 
       expect(
-        document.querySelectorAll('#thread-user-story-0 #user-story-0_0')
+        document.querySelectorAll('#thread-user-story-0 #user-story-0-0')
           .length,
       ).toEqual(1);
       expect(
-        document.querySelectorAll('#thread-user-story-1 #user-story-0_1')
+        document.querySelectorAll('#thread-user-story-1 #user-story-0-1')
           .length,
       ).toEqual(1);
       expect(document.querySelector('#user-story-0')).toBeNull();
