@@ -68,14 +68,13 @@ export const renderTimeEvents = async (
         break;
       }
       case 'ToReview': {
-        const userStory = getUserStoryOfThread(
-          currentEvent.userStoryId,
-          currentEvent.threadId,
-        );
+        const allUserStories = getAllUserStories(currentEvent.userStoryId);
+        const userStory = allUserStories.shift();
         if (userStory) {
           getBacklog()?.appendChild(userStory);
           userStory.id = `user-story-${currentEvent.userStoryId}`;
         }
+        allUserStories.forEach((userStory) => userStory.remove());
         break;
       }
       case 'Done': {

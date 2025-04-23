@@ -309,6 +309,32 @@ describe('Flow', () => {
       expect(document.querySelector('#done #user-story-2')).not.toBeNull();
     });
 
+    test('Should remove userStories from thread that was in review when to review', async () => {
+      saveStructureEvents(
+        [createThread0(), createThread1(), createUserStory({ id: 2 })],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
+      saveTimeEvents(
+        [
+          reviewEvent({ threadId: 0, userStoryId: 2 }),
+          reviewEvent({ threadId: 1, userStoryId: 2 }),
+          toReviewEvent({ threadId: 2, userStoryId: 2 }),
+        ],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
+      await import('./flow.ts');
+
+      getCompute()?.click();
+      await vi.runAllTimersAsync();
+      expect(
+        document.querySelector('#thread-user-story-1 #user-story-2-1'),
+      ).toBeNull();
+      expect(
+        document.querySelector('#thread-user-story-0 #user-story-2-0'),
+      ).toBeNull();
+      expect(document.querySelector('#backlog #user-story-2')).not.toBeNull();
+    });
+
     test('Should move userStories to the backlog area when to review', async () => {
       saveStructureEvents(
         [createThread0(), createUserStory({ id: 0 })],
