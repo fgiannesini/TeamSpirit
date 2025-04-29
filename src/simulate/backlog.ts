@@ -7,6 +7,7 @@ import {
   isInReviewBy,
   isToDo,
   isToReviewBy,
+  needReviewBy,
 } from './user-story.ts';
 
 export class Backlog {
@@ -33,6 +34,12 @@ export const getNextUserStory = (
   if (threadUserStoryIndex === -1) {
     threadUserStoryIndex = backlog.userStoriesRemaining.findIndex((userStory) =>
       isInReviewBy(userStory, thread),
+    );
+  }
+
+  if (threadUserStoryIndex === -1) {
+    threadUserStoryIndex = backlog.userStoriesRemaining.findIndex((userStory) =>
+      needReviewBy(userStory, thread),
     );
   }
 

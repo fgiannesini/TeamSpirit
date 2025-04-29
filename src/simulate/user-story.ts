@@ -1,8 +1,9 @@
 import {
   type Review,
+  canReview,
   getReviewPoints,
   hasAllReviews,
-  needReview,
+  hasReviewStarted,
   noReview,
 } from './review.ts';
 import type { Thread } from './team.ts';
@@ -110,10 +111,20 @@ export const isInProgressBy: (userStory: UserStory, thread: Thread) => boolean =
 export const isInReviewBy: (userStory: UserStory, thread: Thread) => boolean = (
   userStory: UserStory,
   thread: Thread,
+) => {
+  if (userStory.state !== 'Review' || userStory.threadId === thread.id) {
+    return false;
+  }
+  return hasReviewStarted(userStory.review, thread, userStory.reviewComplexity);
+};
+
+export const needReviewBy: (userStory: UserStory, thread: Thread) => boolean = (
+  userStory: UserStory,
+  thread: Thread,
 ) =>
   userStory.state === 'Review' &&
   userStory.threadId !== thread.id &&
-  needReview(userStory.review, thread, userStory.reviewComplexity);
+  canReview(userStory.review, thread);
 
 export const isToReviewBy: (userStory: UserStory, thread: Thread) => boolean = (
   userStory: UserStory,

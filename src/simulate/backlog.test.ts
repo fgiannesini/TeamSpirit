@@ -78,6 +78,7 @@ describe('Backlog', () => {
 
   test('Should get IN_REVIEW with a running review', () => {
     const backlog = new Backlog([
+      inReviewWith(1, []),
       inReviewWith(1, [
         [0, 1],
         [2, 2],

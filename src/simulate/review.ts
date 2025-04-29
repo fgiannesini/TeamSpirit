@@ -11,20 +11,22 @@ export const noReview: Review = {
 export const getReviewPoints = (review: Review, dev: Thread): number =>
   review.reviewers.get(dev.id) ?? 0;
 
-export const needReview = (
-  review: Review,
-  dev: Thread,
-  reviewComplexity: number,
-): boolean => {
+export const canReview = (review: Review, dev: Thread): boolean => {
   const { reviewers, reviewersNeeded } = review;
-  const currentComplexity = reviewers.get(dev.id);
-  const hasReviewed = reviewers.has(dev.id);
-  const isFull = reviewers.size === reviewersNeeded;
-
-  return isFull
-    ? hasReviewed && currentComplexity !== reviewComplexity
-    : !hasReviewed || currentComplexity !== reviewComplexity;
+  return reviewers.size !== reviewersNeeded && !reviewers.has(dev.id);
 };
+
+export const hasReviewStarted = (
+  review: Review,
+  thread: Thread,
+  reviewComplexity: number,
+) => {
+  const reviewers = review.reviewers;
+  const currentComplexity = reviewers.get(thread.id);
+  const hasReviewed = reviewers.has(thread.id);
+  return hasReviewed && currentComplexity !== reviewComplexity;
+};
+
 export const hasAllReviews = (
   review: Review,
   reviewComplexity: number,

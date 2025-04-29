@@ -14,6 +14,7 @@ import {
   isReviewed,
   isToDo,
   isToReviewBy,
+  needReviewBy,
   setDone,
   setDoneBy,
   setInProgress,
@@ -286,12 +287,26 @@ describe('user-story', () => {
   });
 
   test('Should be reviewed by an other thread', () => {
-    const result = isInReviewBy(
+    const result = needReviewBy(
       inReview({
         reviewComplexity: 2,
         review: {
           reviewersNeeded: 2,
           reviewers: new Map([[1, 2]]),
+        },
+      }),
+      thread({ id: 2 }),
+    );
+    expect(result).toEqual(true);
+  });
+
+  test('Should continue review', () => {
+    const result = isInReviewBy(
+      inReview({
+        reviewComplexity: 2,
+        review: {
+          reviewersNeeded: 2,
+          reviewers: new Map([[2, 1]]),
         },
       }),
       thread({ id: 2 }),
