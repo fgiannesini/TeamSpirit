@@ -412,6 +412,41 @@ describe('Flow', () => {
       ).toBeNull();
     });
 
+    test('Should remove ended review when another one starts', async () => {
+      saveStructureEvents(
+        [
+          createThread0(),
+          createThread1(),
+          createUserStory({ id: 0 }),
+          createUserStory({ id: 1 }),
+        ],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
+      saveTimeEvents(
+        [
+          reviewEvent({ threadId: 0 }),
+          reviewEvent({ threadId: 1 }),
+          reviewEvent({ time: 2, threadId: 0, userStoryId: 1 }),
+          reviewEvent({ time: 2, threadId: 1 }),
+        ],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
+      await import('./flow.ts');
+
+      getCompute()?.click();
+      await vi.runAllTimersAsync();
+
+      getCompute()?.click();
+      await vi.runAllTimersAsync();
+
+      expect(
+        document.querySelector('#thread-user-story-1 #user-story-0-1'),
+      ).not.toBeNull();
+      expect(
+        document.querySelector('#thread-user-story-0 #user-story-0-0'),
+      ).toBeNull();
+    });
+
     test('Should keep two reviews when reviews last', async () => {
       saveStructureEvents(
         [createThread0(), createThread1(), createUserStory({ id: 0 })],
