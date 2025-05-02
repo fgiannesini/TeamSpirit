@@ -36,12 +36,18 @@ export const renderTimeEvents = async (
     }
     switch (currentEvent.state) {
       case 'InProgress': {
+        const id = `user-story-${currentEvent.userStoryId}-${currentEvent.threadId}`;
+        Array.from(
+          getThreadUserStoryContainer(currentEvent.threadId)?.children ?? [],
+        )
+          .filter((child) => child.id !== id)
+          .forEach((child) => child.remove());
         const userStory = getUserStory(currentEvent.userStoryId);
         if (userStory) {
           getThreadUserStoryContainer(currentEvent.threadId)?.appendChild(
             userStory,
           );
-          userStory.id = `user-story-${currentEvent.userStoryId}-${currentEvent.threadId}`;
+          userStory.id = id;
         }
         setThreadStateTo(currentEvent.threadId, 'Develop');
         break;

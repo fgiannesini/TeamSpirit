@@ -262,6 +262,24 @@ describe('Flow', () => {
       expect(document.querySelector('#done #user-story-0')).not.toBeNull();
     });
 
+    test('Should keep userStories to thread when in progress', async () => {
+      saveStructureEvents(
+        [createThread0(), createUserStory({ id: 0 })],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
+      saveTimeEvents(
+        [inProgressEvent(), inProgressEvent()],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
+      await import('./flow.ts');
+
+      getCompute()?.click();
+      await vi.runAllTimersAsync();
+      expect(
+        document.querySelector('#thread-user-story-0 #user-story-0-0'),
+      ).not.toBeNull();
+    });
+
     test('Should move userStories to thread when in review, then done', async () => {
       saveStructureEvents(
         [createThread1(), createUserStory({ id: 0 })],
@@ -412,7 +430,7 @@ describe('Flow', () => {
       ).toBeNull();
     });
 
-    test('Should remove ended review when another one review starts', async () => {
+    test('Should remove ended review when a in progress task starts', async () => {
       saveStructureEvents(
         [
           createThread0(),
@@ -426,7 +444,7 @@ describe('Flow', () => {
         [
           reviewEvent({ threadId: 0 }),
           reviewEvent({ threadId: 1 }),
-          reviewEvent({ time: 2, threadId: 0, userStoryId: 1 }),
+          inProgressEvent({ time: 2, threadId: 0, userStoryId: 1 }),
           reviewEvent({ time: 2, threadId: 1 }),
         ],
         'e4567-e89b-12d3-a456-426614174000',
