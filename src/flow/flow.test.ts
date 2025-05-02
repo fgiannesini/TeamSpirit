@@ -412,7 +412,7 @@ describe('Flow', () => {
       ).toBeNull();
     });
 
-    test('Should remove ended review when another one starts', async () => {
+    test('Should remove ended review when another one review starts', async () => {
       saveStructureEvents(
         [
           createThread0(),

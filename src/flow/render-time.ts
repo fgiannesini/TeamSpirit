@@ -16,6 +16,12 @@ const setThreadStateTo = (threadIndex: number, textContent: string) => {
   }
 };
 
+function removeCurrentTaskOfThread(currentEvent: TimeEvent) {
+  Array.from(
+    getThreadUserStoryContainer(currentEvent.threadId)?.children ?? [],
+  ).forEach((child) => child.remove());
+}
+
 export const renderTimeEvents = async (
   events: TimeEvent[],
   time: number,
@@ -24,9 +30,7 @@ export const renderTimeEvents = async (
   const currentEvents = events.filter((event) => event.time === time);
   for (const currentEvent of currentEvents) {
     if (currentEvent.userStoryId === -1) {
-      Array.from(
-        getThreadUserStoryContainer(currentEvent.threadId)?.children ?? [],
-      ).forEach((child) => child.remove());
+      removeCurrentTaskOfThread(currentEvent);
       setThreadStateTo(currentEvent.threadId, 'Wait');
       continue;
     }
@@ -48,6 +52,7 @@ export const renderTimeEvents = async (
         ) {
           continue;
         }
+        removeCurrentTaskOfThread(currentEvent);
         const newUserStory = getUserStory(currentEvent.userStoryId)?.cloneNode(
           true,
         ) as HTMLElement;
