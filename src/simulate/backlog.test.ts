@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vitest } from 'vitest';
 import {
   Backlog,
   computeBugProbability,
@@ -164,15 +164,16 @@ describe('Backlog', () => {
   };
 
   test('should generate a bug', () => {
-    expect(shouldGenerateBug([0, 1])).toEqual(true);
+    const randomProvider = vitest
+      .fn()
+      .mockReturnValueOnce(0)
+      .mockReturnValue(1);
+    expect(shouldGenerateBug(randomProvider)).toEqual(true);
   });
 
   test('should not generate a bug', () => {
-    expect(shouldGenerateBug([1])).toEqual(false);
-  });
-
-  test('should not generate a bug if no random numbers are provided', () => {
-    expect(shouldGenerateBug([])).toEqual(false);
+    const randomProvider = vitest.fn().mockReturnValue(1);
+    expect(shouldGenerateBug(randomProvider)).toEqual(false);
   });
 
   test.each([

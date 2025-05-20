@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vitest } from 'vitest';
 import {
   Backlog,
   getUserStoriesDone,
@@ -16,7 +16,7 @@ describe('Simulation', () => {
         complexity: 2,
       }),
     ]);
-    const { timeEvents } = simulate(backlog, team, []);
+    const { timeEvents } = simulate(backlog, team, () => 1);
     expect(timeEvents.pop()?.time).toEqual(2);
     expect(getUserStoriesDone(backlog)).toHaveLength(1);
     expect(getUserStoriesRemainings(backlog)).toHaveLength(0);
@@ -29,7 +29,7 @@ describe('Simulation', () => {
         complexity: 2,
       }),
     ]);
-    const { structureEvents } = simulate(backlog, team, []);
+    const { structureEvents } = simulate(backlog, team, () => 1);
     expect(structureEvents.length).toBeGreaterThan(0);
   });
 
@@ -42,7 +42,12 @@ describe('Simulation', () => {
         complexity: 2,
       }),
     ]);
-    const { structureEvents } = simulate(backlog, team, [0, 0.05, 1]);
+    const randomProvider = vitest
+      .fn()
+      .mockReturnValueOnce(0)
+      .mockReturnValueOnce(0.05)
+      .mockReturnValue(1);
+    const { structureEvents } = simulate(backlog, team, randomProvider);
     expect(structureEvents.slice(-2)).toEqual([
       {
         id: 1,
@@ -74,7 +79,12 @@ describe('Simulation', () => {
         complexity: 1,
       }),
     ]);
-    const { structureEvents } = simulate(backlog, team, [1, 0, 1]);
+    const randomProvider = vitest
+      .fn()
+      .mockReturnValueOnce(1)
+      .mockReturnValueOnce(0)
+      .mockReturnValue(1);
+    const { structureEvents } = simulate(backlog, team, randomProvider);
     expect(structureEvents.pop()).toEqual({
       id: 2,
       name: 'bug-0',

@@ -11,13 +11,17 @@ import { structureEventsOnInitialization } from './simulation-structure.ts';
 import { simulateTimeEvents } from './simulation-time.ts';
 import type { Team } from './team.ts';
 
-export const simulate = (backlog: Backlog, team: Team, random: number[]) => {
+export const simulate = (
+  backlog: Backlog,
+  team: Team,
+  randomProvider: () => number,
+) => {
   const timeEvents: TimeEvent[] = [];
   let time = 1;
   let bugCount = 0;
   const structureEvents = structureEventsOnInitialization(backlog, team);
   while (hasMoreUserStories(backlog)) {
-    if (shouldGenerateBug(random)) {
+    if (shouldGenerateBug(randomProvider)) {
       const id = getUserStories(backlog).length;
       const name = `bug-${bugCount}`;
       structureEvents.push({
