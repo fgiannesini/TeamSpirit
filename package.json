@@ -11,7 +11,8 @@
     "lint": "npx @biomejs/biome check src",
     "lint:fix": "npx @biomejs/biome check --write src",
     "lint:fix-unsafe": "npx @biomejs/biome check --write --unsafe src",
-    "test": "vitest run"
+    "test": "vitest run",
+    "type-check": "tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",

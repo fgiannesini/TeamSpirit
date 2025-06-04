@@ -43,6 +43,7 @@ export const simulate = (
           review: noReview,
           threadId: undefined,
           state: 'Todo',
+          timeDone: 0,
         },
         backlog,
       );

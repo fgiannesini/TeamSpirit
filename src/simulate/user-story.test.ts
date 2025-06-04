@@ -44,12 +44,12 @@ describe('user-story', () => {
   });
 
   test('Should set Done', () => {
-    const result = setDone(inProgress());
+    const result = setDone(inProgress(), 1);
     expect(result).toEqual(done());
   });
 
   test('Should set Done By a specific thread', () => {
-    const result = setDoneBy(inProgress(), 1);
+    const result = setDoneBy(inProgress(), 1, 1);
     expect(result).toEqual(done({ threadId: 1 }));
   });
 

@@ -9,8 +9,7 @@ import {
 } from './main.ts';
 import { Backlog } from './simulate/backlog.ts';
 import type { TimeEvent } from './simulate/events.ts';
-import { thread } from './simulate/factory.ts';
-import { noReview } from './simulate/review.ts';
+import { thread, todo } from './simulate/factory.ts';
 import type { StructureEvent } from './simulate/simulation-structure.ts';
 import type { StatEvent } from './simulate/stats.ts';
 import { EnsembleTeam, ParallelTeam } from './simulate/team.ts';
@@ -152,26 +151,18 @@ describe('Main', () => {
 
     expect(buildBacklogForEnsembleTeam()).toEqual(
       new Backlog([
-        {
+        todo({
           id: 0,
           name: 'US0',
           complexity: 5,
-          review: noReview,
           reviewComplexity: 2,
-          state: 'Todo',
-          threadId: undefined,
-          progression: 0,
-        },
-        {
+        }),
+        todo({
           id: 1,
           name: 'US1',
           complexity: 5,
-          review: noReview,
           reviewComplexity: 2,
-          state: 'Todo',
-          threadId: undefined,
-          progression: 0,
-        },
+        }),
       ]),
     );
   });
@@ -183,7 +174,7 @@ describe('Main', () => {
 
     expect(buildBacklogForParallelTeam()).toEqual(
       new Backlog([
-        {
+        todo({
           id: 0,
           name: 'US0',
           complexity: 5,
@@ -192,10 +183,7 @@ describe('Main', () => {
             reviewers: new Map<number, number>(),
           },
           reviewComplexity: 2,
-          state: 'Todo',
-          threadId: undefined,
-          progression: 0,
-        },
+        }),
       ]),
     );
   });
@@ -206,16 +194,12 @@ describe('Main', () => {
 
     expect(buildBacklogForParallelTeam()).toEqual(
       new Backlog([
-        {
+        todo({
           id: 0,
           name: 'US0',
           complexity: 5,
-          review: noReview,
           reviewComplexity: 2,
-          state: 'Todo',
-          threadId: undefined,
-          progression: 0,
-        },
+        }),
       ]),
     );
   });
@@ -331,26 +315,18 @@ describe('Main', () => {
     setValueTo('#review-complexity-input-1', '2');
     expect(buildBacklogForEnsembleTeam()).toEqual(
       new Backlog([
-        {
+        todo({
           id: 0,
           name: 'US0',
           complexity: 2,
-          review: noReview,
           reviewComplexity: 1,
-          state: 'Todo',
-          threadId: undefined,
-          progression: 0,
-        },
-        {
+        }),
+        todo({
           id: 1,
           name: 'US1',
           complexity: 4,
-          review: noReview,
           reviewComplexity: 2,
-          state: 'Todo',
-          threadId: undefined,
-          progression: 0,
-        },
+        }),
       ]),
     );
   });

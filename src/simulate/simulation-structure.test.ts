@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { Backlog } from './backlog.ts';
-import { noReview } from './review.ts';
+import { todo } from './factory.ts';
 import {
   type Action,
   structureEventsOnInitialization,
@@ -17,26 +17,14 @@ type StructureEvent = {
 describe('simulation-structure', () => {
   test('should create 2 user stories and 2 threads', () => {
     const backlog = new Backlog([
-      {
+      todo({
         id: 0,
         name: 'userStory0',
-        complexity: 1,
-        reviewComplexity: 0,
-        review: noReview,
-        state: 'Todo',
-        threadId: undefined,
-        progression: 0,
-      },
-      {
+      }),
+      todo({
         id: 1,
         name: 'userStory1',
-        complexity: 1,
-        reviewComplexity: 0,
-        review: noReview,
-        state: 'Todo',
-        threadId: undefined,
-        progression: 0,
-      },
+      }),
     ]);
 
     const team = new ParallelTeam([

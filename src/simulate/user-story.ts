@@ -18,6 +18,7 @@ export type UserStory = {
   review: Review;
   threadId?: number;
   state: State;
+  timeDone: number;
 };
 
 export const idle: UserStory = {
@@ -29,6 +30,7 @@ export const idle: UserStory = {
   review: noReview,
   threadId: undefined,
   state: 'Done',
+  timeDone: 0,
 };
 
 export const setInProgress = (userStory: UserStory, dev: Thread): UserStory => {
@@ -46,12 +48,21 @@ export const setInProgress = (userStory: UserStory, dev: Thread): UserStory => {
 export const setDoneBy = (
   userStory: UserStory,
   threadId: number,
+  currentTime: number,
 ): UserStory => {
-  return { ...userStory, state: 'Done', threadId: threadId };
+  return {
+    ...userStory,
+    state: 'Done',
+    threadId: threadId,
+    timeDone: currentTime,
+  };
 };
 
-export const setDone = (userStory: UserStory): UserStory => {
-  return { ...userStory, state: 'Done' };
+export const setDone = (
+  userStory: UserStory,
+  currentTime: number,
+): UserStory => {
+  return { ...userStory, state: 'Done', timeDone: currentTime };
 };
 
 export const setToReview = (

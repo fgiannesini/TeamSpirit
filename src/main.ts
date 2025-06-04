@@ -34,6 +34,7 @@ export const buildBacklogForParallelTeam = () => {
       state: 'Todo',
       threadId: undefined,
       progression: 0,
+      timeDone: 0,
     })),
   );
 };
@@ -50,6 +51,7 @@ export const buildBacklogForEnsembleTeam = () => {
       state: 'Todo',
       threadId: undefined,
       progression: 0,
+      timeDone: 0,
     })),
   );
 };
