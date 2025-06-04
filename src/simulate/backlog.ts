@@ -1,5 +1,6 @@
+import { computeBugProbability } from './probability.ts';
 import { hasSomeReviews } from './review.ts';
-import type { Thread } from './team.ts';
+import type { Team, Thread } from './team.ts';
 import {
   type UserStory,
   idle,
@@ -103,27 +104,14 @@ export const hasMoreUserStories = (backlog: Backlog) => {
   return backlog.userStoriesRemaining.length > 0;
 };
 
-export const shouldGenerateBug = (randomProvider: () => number) => {
-  const number = randomProvider();
-  return number < 0.1;
-};
-
-export const computeBugProbability = (
-  complexity: number,
-  turn: number,
-  experience: number,
+export const shouldGenerateBug = (
+  randomProvider: () => number,
+  userStory: UserStory,
+  team: Team,
 ) => {
-  const duration = 2 + complexity;
-  const mu = duration / 2;
-  const sigma = duration / 2.5;
-  const timeInfluence = Math.exp(-(((turn - mu) / sigma) ** 2));
-
-  const maxExperience = 5;
-  const experienceFactor = (6 - experience) / maxExperience;
-  const maxComplexity = 5;
-  const complexityFactor = complexity / maxComplexity;
-
-  const baseProb = 0.4 * experienceFactor * complexityFactor;
-
-  return baseProb * timeInfluence;
+  const number = randomProvider();
+  const experience =
+    team.getThreads().find((thread) => thread.id === userStory.threadId)
+      ?.power ?? 0;
+  return number < computeBugProbability(userStory.complexity, 0, experience);
 };

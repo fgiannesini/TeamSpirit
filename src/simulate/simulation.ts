@@ -21,7 +21,10 @@ export const simulate = (
   let bugCount = 0;
   const structureEvents = structureEventsOnInitialization(backlog, team);
   while (hasMoreUserStories(backlog)) {
-    if (shouldGenerateBug(randomProvider)) {
+    if (
+      backlog.userStoriesDone.length > 0 &&
+      shouldGenerateBug(randomProvider, backlog.userStoriesDone[0], team)
+    ) {
       const id = getUserStories(backlog).length;
       const name = `bug-${bugCount}`;
       structureEvents.push({

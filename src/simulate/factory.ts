@@ -1,6 +1,6 @@
 import type { TimeEvent } from './events.ts';
 import { noReview } from './review.ts';
-import type { Thread } from './team.ts';
+import { EnsembleTeam, type Thread } from './team.ts';
 import type { UserStory } from './user-story.ts';
 
 export const todo = (options: Partial<UserStory> = {}): UserStory => {
@@ -138,4 +138,8 @@ export const thread = (options: Partial<Thread> = {}) => {
     power: 1,
     ...options,
   };
+};
+
+export const ensembleTeam = (): EnsembleTeam => {
+  return new EnsembleTeam([thread()]);
 };

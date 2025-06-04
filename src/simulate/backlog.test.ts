@@ -1,12 +1,18 @@
 import { describe, expect, test, vitest } from 'vitest';
 import {
   Backlog,
-  computeBugProbability,
   getNextUserStory,
   shouldGenerateBug,
   userStoriesWithSomeReviews,
 } from './backlog.ts';
-import { inProgress, inReview, toReview, todo } from './factory.ts';
+import {
+  done,
+  ensembleTeam,
+  inProgress,
+  inReview,
+  toReview,
+  todo,
+} from './factory.ts';
 import type { Thread } from './team.ts';
 import { type UserStory, idle } from './user-story.ts';
 
@@ -168,73 +174,15 @@ describe('Backlog', () => {
       .fn()
       .mockReturnValueOnce(0)
       .mockReturnValue(1);
-    expect(shouldGenerateBug(randomProvider)).toEqual(true);
+    expect(shouldGenerateBug(randomProvider, done(), ensembleTeam())).toEqual(
+      true,
+    );
   });
 
   test('should not generate a bug', () => {
     const randomProvider = vitest.fn().mockReturnValue(1);
-    expect(shouldGenerateBug(randomProvider)).toEqual(false);
+    expect(shouldGenerateBug(randomProvider, done(), ensembleTeam())).toEqual(
+      false,
+    );
   });
-
-  test.each([
-    [1, 0.18],
-    [2, 0.3],
-    [3, 0.39],
-    [5, 0.3],
-    [7, 0.08],
-    [10, 0],
-  ])(
-    'should compute probability for a junior to work on a complex task after %s turns',
-    (turn: number, probability: number) => {
-      expect(computeBugProbability(5, turn, 1)).toBeCloseTo(probability, 2);
-    },
-  );
-
-  test.each([
-    [1, 0.07],
-    [2, 0.07],
-    [3, 0.02],
-  ])(
-    'should compute probability for a junior to work on a simple task after %s turns',
-    (turn: number, probability: number) => {
-      expect(computeBugProbability(1, turn, 1)).toBeCloseTo(probability, 2);
-    },
-  );
-
-  test.each([
-    [1, 0.08],
-    [2, 0.14],
-    [3, 0.14],
-    [4, 0.08],
-  ])(
-    'should compute probability for a confirmed to work on a intermediate task after %s turns',
-    (turn: number, probability: number) => {
-      expect(computeBugProbability(3, turn, 3)).toBeCloseTo(probability, 2);
-    },
-  );
-
-  test.each([
-    [1, 0.04],
-    [2, 0.06],
-    [3, 0.08],
-    [4, 0.08],
-    [5, 0.06],
-    [6, 0.04],
-  ])(
-    'should compute probability for an expert to work on a complex task after %s turns',
-    (turn: number, probability: number) => {
-      expect(computeBugProbability(5, turn, 5)).toBeCloseTo(probability, 2);
-    },
-  );
-
-  test.each([
-    [1, 0.01],
-    [2, 0.01],
-    [3, 0],
-  ])(
-    'should compute probability for an expert to work on a simple task after %s turns',
-    (turn: number, probability: number) => {
-      expect(computeBugProbability(1, turn, 5)).toBeCloseTo(probability, 2);
-    },
-  );
 });

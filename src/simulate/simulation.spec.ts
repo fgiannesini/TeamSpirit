@@ -1,6 +1,7 @@
 import { describe, expect, test, vitest } from 'vitest';
 import {
   Backlog,
+  addUserStory,
   getUserStoriesDone,
   getUserStoriesRemainings,
 } from './backlog.ts';
@@ -42,60 +43,27 @@ describe('Simulation', () => {
         complexity: 2,
       }),
     ]);
+    addUserStory(done(), backlog);
     const randomProvider = vitest
       .fn()
       .mockReturnValueOnce(0)
-      .mockReturnValueOnce(0.05)
+      .mockReturnValueOnce(0)
       .mockReturnValue(1);
     const { structureEvents } = simulate(backlog, team, randomProvider);
     expect(structureEvents.slice(-2)).toEqual([
       {
-        id: 1,
+        id: 2,
         name: 'bug-0',
         time: 1,
         action: 'CreateUserStory',
       },
       {
-        id: 2,
+        id: 3,
         name: 'bug-1',
         time: 2,
         action: 'CreateUserStory',
       },
     ]);
-    expect(backlog.userStoriesDone.length).toEqual(3);
-  });
-
-  test('Should generate a bug during the second turn', () => {
-    const team = new EnsembleTeam([{ id: 0, name: 'thread0', power: 1 }]);
-    const backlog = new Backlog([
-      todo({
-        id: 0,
-        name: 'US1',
-        complexity: 1,
-      }),
-      todo({
-        id: 1,
-        name: 'US2',
-        complexity: 1,
-      }),
-    ]);
-    const randomProvider = vitest
-      .fn()
-      .mockReturnValueOnce(1)
-      .mockReturnValueOnce(0)
-      .mockReturnValue(1);
-    const { structureEvents } = simulate(backlog, team, randomProvider);
-    expect(structureEvents.pop()).toEqual({
-      id: 2,
-      name: 'bug-0',
-      time: 2,
-      action: 'CreateUserStory',
-    });
-    expect(backlog.userStoriesDone.pop()).toEqual(
-      done({
-        id: 2,
-        name: 'bug-0',
-      }),
-    );
+    expect(backlog.userStoriesDone.length).toEqual(4);
   });
 });
