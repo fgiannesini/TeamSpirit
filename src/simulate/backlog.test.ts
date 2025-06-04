@@ -174,15 +174,15 @@ describe('Backlog', () => {
       .fn()
       .mockReturnValueOnce(0)
       .mockReturnValue(1);
-    expect(shouldGenerateBug(randomProvider, done(), ensembleTeam())).toEqual(
-      true,
-    );
+    expect(
+      shouldGenerateBug(randomProvider, done(), ensembleTeam(), 0),
+    ).toEqual(true);
   });
 
   test('should not generate a bug', () => {
     const randomProvider = vitest.fn().mockReturnValue(1);
-    expect(shouldGenerateBug(randomProvider, done(), ensembleTeam())).toEqual(
-      false,
-    );
+    expect(
+      shouldGenerateBug(randomProvider, done(), ensembleTeam(), 0),
+    ).toEqual(false);
   });
 });

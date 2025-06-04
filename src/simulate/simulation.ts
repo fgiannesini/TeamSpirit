@@ -23,7 +23,7 @@ export const simulate = (
   while (hasMoreUserStories(backlog)) {
     if (
       backlog.userStoriesDone.length > 0 &&
-      shouldGenerateBug(randomProvider, backlog.userStoriesDone[0], team)
+      shouldGenerateBug(randomProvider, backlog.userStoriesDone[0], team, time)
     ) {
       const id = getUserStories(backlog).length;
       const name = `bug-${bugCount}`;

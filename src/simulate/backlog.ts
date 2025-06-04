@@ -108,10 +108,18 @@ export const shouldGenerateBug = (
   randomProvider: () => number,
   userStory: UserStory,
   team: Team,
+  time: number,
 ) => {
   const number = randomProvider();
   const experience =
     team.getThreads().find((thread) => thread.id === userStory.threadId)
       ?.power ?? 0;
-  return number < computeBugProbability(userStory.complexity, 0, experience);
+  return (
+    number <
+    computeBugProbability(
+      userStory.complexity,
+      time - userStory.timeDone,
+      experience,
+    )
+  );
 };
