@@ -6,6 +6,10 @@ import {
 } from './flow/storage/session-storage.ts';
 import { generateDevForm, generateUserStoriesForm } from './form/form.ts';
 import { Backlog } from './simulate/backlog.ts';
+import {
+  type BugGenerator,
+  BugGeneratorHandler,
+} from './simulate/bug-generator.ts';
 import { noReview } from './simulate/review.ts';
 import { simulate } from './simulate/simulation.ts';
 import { computeStatEvents } from './simulate/stats.ts';
@@ -80,8 +84,12 @@ export const buildEnsembleTeam = (): Team => {
   return new EnsembleTeam(threads);
 };
 
-const runSimulation = (backlog: Backlog, team: Team) => {
-  const { timeEvents, structureEvents } = simulate(backlog, team);
+const runSimulation = (
+  backlog: Backlog,
+  team: Team,
+  bugGenerator: BugGenerator,
+) => {
+  const { timeEvents, structureEvents } = simulate(backlog, team, bugGenerator);
   const randomKey = crypto.randomUUID();
   saveTimeEvents(timeEvents, randomKey);
   saveStructureEvents(structureEvents, randomKey);
@@ -98,6 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const ensembleRandomKey = runSimulation(
         ensembleTeamBacklog,
         buildEnsembleTeam(),
+        new BugGeneratorHandler(() => Math.random()),
       );
       window.open(`/TeamSpirit/flow/flow.html?id=${ensembleRandomKey}`);
       window.open(
@@ -107,6 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const parallelRandomKey = runSimulation(
         parallelTeamBacklog,
         buildParallelTeam(),
+        new BugGeneratorHandler(() => Math.random()),
       );
       window.open(`/TeamSpirit/flow/flow.html?id=${parallelRandomKey}`);
       window.open(
