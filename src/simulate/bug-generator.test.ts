@@ -67,7 +67,10 @@ describe('probability', () => {
   );
 
   test('should generate two bugs', () => {
-    const bugGenerator = new BugGeneratorHandler(() => 0);
+    const bugGenerator = new BugGeneratorHandler(
+      () => 0,
+      () => 1,
+    );
     const backlog = new Backlog([]);
     addUserStory(done({ id: 0 }), backlog);
     addUserStory(done({ id: 1 }), backlog);
@@ -79,7 +82,10 @@ describe('probability', () => {
   });
 
   test('should not generate a bug', () => {
-    const bugGenerator = new BugGeneratorHandler(() => 1);
+    const bugGenerator = new BugGeneratorHandler(
+      () => 1,
+      () => 1,
+    );
     const backlog = new Backlog([]);
     addUserStory(done({ id: 0 }), backlog);
     addUserStory(done({ id: 1 }), backlog);

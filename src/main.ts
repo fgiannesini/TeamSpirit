@@ -106,7 +106,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const ensembleRandomKey = runSimulation(
         ensembleTeamBacklog,
         buildEnsembleTeam(),
-        new BugGeneratorHandler(() => Math.random()),
+        new BugGeneratorHandler(
+          () => Math.random(),
+          () => Math.random(),
+        ),
       );
       window.open(`/TeamSpirit/flow/flow.html?id=${ensembleRandomKey}`);
       window.open(
@@ -116,7 +119,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const parallelRandomKey = runSimulation(
         parallelTeamBacklog,
         buildParallelTeam(),
-        new BugGeneratorHandler(() => Math.random()),
+        new BugGeneratorHandler(
+          () => Math.random(),
+          () => Math.random(),
+        ),
       );
       window.open(`/TeamSpirit/flow/flow.html?id=${parallelRandomKey}`);
       window.open(

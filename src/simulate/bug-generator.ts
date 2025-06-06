@@ -29,16 +29,21 @@ export type BugGenerator = {
 
 export class BugGeneratorHandler implements BugGenerator {
   bugCount = 0;
-  constructor(private readonly randomProvider: () => number) {}
+
+  constructor(
+    private readonly creationRandomProvider: () => number,
+    private readonly complexityRandomProvider: () => number,
+  ) {}
   generate(backlog: Backlog, team: Team, time: number): UserStory[] {
     return backlog.userStoriesDone
       .map((userStory) =>
-        shouldGenerateBug(this.randomProvider, userStory, team, time),
+        shouldGenerateBug(this.creationRandomProvider, userStory, team, time),
       )
       .filter((result) => result)
       .map((_, index) => {
         const id = getUserStories(backlog).length + index;
         const name = `bug-${this.bugCount++}`;
+        this.complexityRandomProvider();
         return {
           id,
           name,
