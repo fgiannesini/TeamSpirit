@@ -81,6 +81,37 @@ describe('probability', () => {
     ]);
   });
 
+  test.each([
+    [1, 1, 2, 2],
+    [1, 1, 1, 1],
+    [3, 2, 6, 4],
+    [2, 1, 5, 3],
+  ])(
+    'should compute the bug complexity %s and review complexity %s based on the user story complexity %s and review complexity %s',
+    (
+      bugComplexity: number,
+      bugReviewComplexity: number,
+      complexity: number,
+      reviewComplexity: number,
+    ) => {
+      const bugGenerator = new BugGeneratorHandler(
+        () => 0,
+        () => 0.5,
+      );
+      const backlog = new Backlog([]);
+      addUserStory(done({ id: 0, complexity, reviewComplexity }), backlog);
+      const bugs = bugGenerator.generate(backlog, ensembleTeam(), 0);
+      expect(bugs).toEqual([
+        todo({
+          id: 1,
+          name: 'bug-0',
+          complexity: bugComplexity,
+          reviewComplexity: bugReviewComplexity,
+        }),
+      ]);
+    },
+  );
+
   test('should not generate a bug', () => {
     const bugGenerator = new BugGeneratorHandler(
       () => 1,

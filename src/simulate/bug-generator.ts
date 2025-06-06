@@ -37,18 +37,26 @@ export class BugGeneratorHandler implements BugGenerator {
   generate(backlog: Backlog, team: Team, time: number): UserStory[] {
     return backlog.userStoriesDone
       .map((userStory) =>
-        shouldGenerateBug(this.creationRandomProvider, userStory, team, time),
+        shouldGenerateBug(this.creationRandomProvider, userStory, team, time)
+          ? userStory
+          : null,
       )
-      .filter((result) => result)
-      .map((_, index) => {
+      .filter((result) => result !== null)
+      .map((userStory, index) => {
         const id = getUserStories(backlog).length + index;
         const name = `bug-${this.bugCount++}`;
-        this.complexityRandomProvider();
+        const complexityRandom = this.complexityRandomProvider();
         return {
           id,
           name,
-          complexity: 1,
-          reviewComplexity: 1,
+          complexity: Math.max(
+            1,
+            Math.floor(complexityRandom * userStory.complexity),
+          ),
+          reviewComplexity: Math.max(
+            1,
+            Math.floor(complexityRandom * userStory.reviewComplexity),
+          ),
           progression: 0,
           review: noReview,
           threadId: undefined,
