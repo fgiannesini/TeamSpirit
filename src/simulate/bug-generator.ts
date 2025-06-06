@@ -1,3 +1,8 @@
+import { type Backlog, getUserStories, shouldGenerateBug } from './backlog.ts';
+import { noReview } from './review.ts';
+import type { Team } from './team.ts';
+import type { UserStory } from './user-story.ts';
+
 export const computeBugProbability = (
   complexity: number,
   turn: number,
@@ -17,3 +22,35 @@ export const computeBugProbability = (
 
   return baseProb * timeInfluence;
 };
+
+export type BugGenerator = {
+  generate(backlog: Backlog, team: Team, time: number): UserStory[];
+};
+
+export class BugGeneratorHandler implements BugGenerator {
+  bugCount = 0;
+  constructor(private readonly randomProvider: () => number) {}
+  generate(backlog: Backlog, team: Team, time: number): UserStory[] {
+    return backlog.userStoriesDone
+      .map((userStory) =>
+        shouldGenerateBug(this.randomProvider, userStory, team, time),
+      )
+      .filter((result) => result)
+      .map(() => {
+        const id = getUserStories(backlog).length;
+        const name = `bug-${this.bugCount}`;
+        this.bugCount++;
+        return {
+          id,
+          name,
+          complexity: 1,
+          reviewComplexity: 1,
+          progression: 0,
+          review: noReview,
+          threadId: undefined,
+          state: 'Todo',
+          timeDone: 0,
+        };
+      });
+  }
+}

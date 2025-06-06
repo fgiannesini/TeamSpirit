@@ -1,21 +1,14 @@
-import {
-  type Backlog,
-  addUserStory,
-  getUserStories,
-  hasMoreUserStories,
-  shouldGenerateBug,
-} from './backlog.ts';
+import { type Backlog, addUserStory, hasMoreUserStories } from './backlog.ts';
+import { BugGeneratorHandler } from './bug-generator.ts';
 import type { TimeEvent } from './events.ts';
-import { noReview } from './review.ts';
 import { structureEventsOnInitialization } from './simulation-structure.ts';
 import { simulateTimeEvents } from './simulation-time.ts';
 import type { Team } from './team.ts';
-import type { UserStory } from './user-story.ts';
 
 export const simulate = (
   backlog: Backlog,
   team: Team,
-  randomProvider: () => number,
+  randomProvider: () => number = () => Math.random(),
 ) => {
   const timeEvents: TimeEvent[] = [];
   let time = 1;
@@ -37,35 +30,3 @@ export const simulate = (
   }
   return { timeEvents, structureEvents };
 };
-
-type BugGenerator = {
-  generate(backlog: Backlog, team: Team, time: number): UserStory[];
-};
-
-class BugGeneratorHandler implements BugGenerator {
-  bugCount = 0;
-  constructor(private readonly randomProvider: () => number) {}
-  generate(backlog: Backlog, team: Team, time: number): UserStory[] {
-    return backlog.userStoriesDone
-      .map((userStory) =>
-        shouldGenerateBug(this.randomProvider, userStory, team, time),
-      )
-      .filter((result) => result)
-      .map(() => {
-        const id = getUserStories(backlog).length;
-        const name = `bug-${this.bugCount}`;
-        this.bugCount++;
-        return {
-          id,
-          name,
-          complexity: 1,
-          reviewComplexity: 1,
-          progression: 0,
-          review: noReview,
-          threadId: undefined,
-          state: 'Todo',
-          timeDone: 0,
-        };
-      });
-  }
-}
