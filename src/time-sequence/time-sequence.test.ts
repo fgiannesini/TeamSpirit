@@ -65,7 +65,10 @@ describe('Time sequence', () => {
 
   test('Should render the page with two user stories', async () => {
     saveStructureEvents(
-      [createUserStory({ id: 0 }), createUserStory({ id: 1 })],
+      [
+        createUserStory({ id: 0, name: 'US0' }),
+        createUserStory({ id: 1, name: 'US1' }),
+      ],
       'e4567-e89b-12d3-a456-426614174000',
     );
     saveTimeEvents(
@@ -108,7 +111,7 @@ describe('Time sequence', () => {
     const userStoriesTitle = Array.from(
       document.querySelectorAll('.user-story span'),
     ).map((div) => div.textContent);
-    expect(userStoriesTitle).toEqual(['userStory0', 'userStory1']);
+    expect(userStoriesTitle).toEqual(['US0', 'US1']);
   });
 
   test('Should render the page with two user stories in progress and done at different time', async () => {

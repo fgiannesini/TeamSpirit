@@ -7,13 +7,13 @@ import type { TimeEvent } from '../simulate/events.ts';
 import type { StructureEvent } from '../simulate/simulation-structure.ts';
 import type { State } from '../simulate/user-story.ts';
 
-const createUserStory = (id: number) => {
+const createUserStory = (id: number, name: string) => {
   const userStoryHtmlElement = document.createElement('div');
   userStoryHtmlElement.id = `user-story-${id}`;
   userStoryHtmlElement.className = 'user-story';
 
   const userStoryTitle = document.createElement('span');
-  userStoryTitle.textContent = `userStory${id}`;
+  userStoryTitle.textContent = name;
   userStoryTitle.className = 'user-story-title';
   userStoryHtmlElement.appendChild(userStoryTitle);
 
@@ -132,16 +132,17 @@ const renderTimeSequence = (
   if (!parent) {
     return;
   }
-  const userStoryIds = structureEvents
-    .filter(({ action }) => action === 'CreateUserStory')
-    .map(({ id }) => id);
-  userStoryIds
-    .filter((userStoryId) => userStoryId !== -1)
-    .map((userStoryId) => createUserStory(userStoryId))
+  const userStoryCreations = structureEvents.filter(
+    ({ action }) => action === 'CreateUserStory',
+  );
+  userStoryCreations
+    .filter(({ id }) => id !== -1)
+    .map(({ id, name }) => createUserStory(id, name))
     .forEach((userStoryElement) => {
       parent.appendChild(userStoryElement);
     });
-  const userStoriesSequence = generateSequences(timeEvents, userStoryIds);
+  const userStoriesIds = userStoryCreations.map(({ id }) => id);
+  const userStoriesSequence = generateSequences(timeEvents, userStoriesIds);
   const cleanedUserStoriesSequence =
     cleanConsecutiveVerticals(userStoriesSequence);
   addSequencesToDom(cleanedUserStoriesSequence);
