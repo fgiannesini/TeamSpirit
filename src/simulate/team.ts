@@ -18,6 +18,10 @@ export class ParallelTeam implements Team {
   getThreads(): Thread[] {
     return this.threads;
   }
+
+  addThread(thread: Thread): ParallelTeam {
+    return new ParallelTeam([...this.threads, thread]);
+  }
 }
 
 export class EnsembleTeam implements Team {

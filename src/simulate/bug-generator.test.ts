@@ -1,8 +1,7 @@
 import { describe, expect, test } from 'vitest';
-import { buildParallelTeam } from '../main.ts';
 import { Backlog, addUserStory } from './backlog.ts';
 import { BugGeneratorHandler, computeBugProbability } from './bug-generator.ts';
-import { done, ensembleTeam, todo } from './factory.ts';
+import { done, ensembleTeam, parallelTeam, todo } from './factory.ts';
 
 describe('probability', () => {
   test.each([
@@ -98,7 +97,7 @@ describe('probability', () => {
       }),
       backlog,
     );
-    const bugs = bugGenerator.generate(backlog, buildParallelTeam(), 0);
+    const bugs = bugGenerator.generate(backlog, parallelTeam(), 0);
     expect(bugs).toEqual([
       todo({
         id: 1,
