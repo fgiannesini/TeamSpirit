@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { computeBugProbability } from './probability.ts';
+import { computeBugProbability } from './bug-generator.ts';
 
 describe('probability', () => {
   test.each([

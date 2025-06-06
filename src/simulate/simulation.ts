@@ -22,14 +22,14 @@ export const simulate = (
   const structureEvents = structureEventsOnInitialization(backlog, team);
   const bugGeneratorHandler = new BugGeneratorHandler(randomProvider);
   while (hasMoreUserStories(backlog)) {
-    bugGeneratorHandler.generate(backlog, team, time).forEach((userStory) => {
+    bugGeneratorHandler.generate(backlog, team, time).forEach((bug) => {
       structureEvents.push({
         time,
-        name: userStory.name,
-        id: userStory.id,
+        name: bug.name,
+        id: bug.id,
         action: 'CreateUserStory',
       });
-      addUserStory(userStory, backlog);
+      addUserStory(bug, backlog);
     });
 
     timeEvents.push(...simulateTimeEvents(team, backlog, time));
