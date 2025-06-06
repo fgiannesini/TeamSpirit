@@ -1,5 +1,7 @@
 import { describe, expect, test } from 'vitest';
-import { computeBugProbability } from './bug-generator.ts';
+import { Backlog, addUserStory } from './backlog.ts';
+import { BugGeneratorHandler, computeBugProbability } from './bug-generator.ts';
+import { done, ensembleTeam, todo } from './factory.ts';
 
 describe('probability', () => {
   test.each([
@@ -63,4 +65,16 @@ describe('probability', () => {
       expect(computeBugProbability(1, turn, 5)).toBeCloseTo(probability, 2);
     },
   );
+
+  test('should generate two bugs', () => {
+    const bugGenerator = new BugGeneratorHandler(() => 0);
+    const backlog = new Backlog([]);
+    addUserStory(done({ id: 0 }), backlog);
+    addUserStory(done({ id: 1 }), backlog);
+    const bugs = bugGenerator.generate(backlog, ensembleTeam(), 0);
+    expect(bugs).toEqual([
+      todo({ id: 2, name: 'bug-0' }),
+      todo({ id: 3, name: 'bug-1' }),
+    ]);
+  });
 });

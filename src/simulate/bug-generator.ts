@@ -36,10 +36,9 @@ export class BugGeneratorHandler implements BugGenerator {
         shouldGenerateBug(this.randomProvider, userStory, team, time),
       )
       .filter((result) => result)
-      .map(() => {
-        const id = getUserStories(backlog).length;
-        const name = `bug-${this.bugCount}`;
-        this.bugCount++;
+      .map((_, index) => {
+        const id = getUserStories(backlog).length + index;
+        const name = `bug-${this.bugCount++}`;
         return {
           id,
           name,
