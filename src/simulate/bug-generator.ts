@@ -1,5 +1,4 @@
 import { type Backlog, getUserStories, shouldGenerateBug } from './backlog.ts';
-import { noReview } from './review.ts';
 import type { Team } from './team.ts';
 import type { UserStory } from './user-story.ts';
 
@@ -58,7 +57,7 @@ export class BugGeneratorHandler implements BugGenerator {
             Math.floor(complexityRandom * userStory.reviewComplexity),
           ),
           progression: 0,
-          review: noReview,
+          review: userStory.review,
           threadId: undefined,
           state: 'Todo',
           timeDone: 0,

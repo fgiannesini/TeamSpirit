@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest';
+import { buildParallelTeam } from '../main.ts';
 import { Backlog, addUserStory } from './backlog.ts';
 import { BugGeneratorHandler, computeBugProbability } from './bug-generator.ts';
 import { done, ensembleTeam, todo } from './factory.ts';
@@ -78,6 +79,35 @@ describe('probability', () => {
     expect(bugs).toEqual([
       todo({ id: 2, name: 'bug-0' }),
       todo({ id: 3, name: 'bug-1' }),
+    ]);
+  });
+
+  test('should generate one bug with review', () => {
+    const bugGenerator = new BugGeneratorHandler(
+      () => 0,
+      () => 1,
+    );
+    const backlog = new Backlog([]);
+    addUserStory(
+      done({
+        id: 0,
+        review: {
+          reviewersNeeded: 2,
+          reviewers: new Map<number, number>(),
+        },
+      }),
+      backlog,
+    );
+    const bugs = bugGenerator.generate(backlog, buildParallelTeam(), 0);
+    expect(bugs).toEqual([
+      todo({
+        id: 1,
+        name: 'bug-0',
+        review: {
+          reviewersNeeded: 2,
+          reviewers: new Map<number, number>(),
+        },
+      }),
     ]);
   });
 
