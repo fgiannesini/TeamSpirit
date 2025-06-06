@@ -77,4 +77,13 @@ describe('probability', () => {
       todo({ id: 3, name: 'bug-1' }),
     ]);
   });
+
+  test('should not generate a bug', () => {
+    const bugGenerator = new BugGeneratorHandler(() => 1);
+    const backlog = new Backlog([]);
+    addUserStory(done({ id: 0 }), backlog);
+    addUserStory(done({ id: 1 }), backlog);
+    const bugs = bugGenerator.generate(backlog, ensembleTeam(), 0);
+    expect(bugs).toEqual([]);
+  });
 });
