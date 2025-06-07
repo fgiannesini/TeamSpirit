@@ -3,10 +3,10 @@ import { ensembleTeam, parallelTeam, thread } from './factory.ts';
 import { ParallelTeam, type Team } from './team.ts';
 
 class TeamModificator {
-  constructor(private readonly creationRandomProvider: () => number) {}
+  constructor(private readonly randomProvider: () => number) {}
 
   addTo(team: Team) {
-    this.creationRandomProvider();
+    this.randomProvider();
     const threadToAdd = thread({ id: 1 });
     return {
       team: team.addThread(threadToAdd),
@@ -33,4 +33,8 @@ describe('Team modificator', () => {
     expect(team).toEqual(ensembleTeam([thread({ id: 0 }), thread({ id: 1 })]));
     expect(addedThreads).toEqual([thread({ id: 1 })]);
   });
+
+  test.todo('should remove a thread from a parallel team');
+
+  test.todo('should remove a thread from an ensemble team');
 });
