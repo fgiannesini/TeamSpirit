@@ -145,10 +145,10 @@ export const thread = (options: Partial<Thread> = {}) => {
   };
 };
 
-export const ensembleTeam = (): EnsembleTeam => {
-  return new EnsembleTeam([thread()]);
+export const ensembleTeam = (threads: Thread[] = [thread()]): EnsembleTeam => {
+  return new EnsembleTeam(threads);
 };
 
-export const parallelTeam = (): ParallelTeam => {
-  return new ParallelTeam([thread()]);
+export const parallelTeam = (threads: Thread[] = [thread()]): ParallelTeam => {
+  return new ParallelTeam(threads);
 };

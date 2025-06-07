@@ -6,6 +6,7 @@ export type Thread = {
 
 export type Team = {
   getThreads(): Thread[];
+  addThread(thread: Thread): Team;
 };
 
 export class ParallelTeam implements Team {
@@ -19,7 +20,7 @@ export class ParallelTeam implements Team {
     return this.threads;
   }
 
-  addThread(thread: Thread): ParallelTeam {
+  addThread(thread: Thread): Team {
     return new ParallelTeam([...this.threads, thread]);
   }
 }
@@ -37,5 +38,9 @@ export class EnsembleTeam implements Team {
       .reduce((acc, val) => acc + val, 0);
     const mean = Math.round(sum / this.threads.length);
     return [{ id: 0, name: 'mob', power: mean }];
+  }
+
+  addThread(thread: Thread): Team {
+    return new EnsembleTeam([...this.threads, thread]);
   }
 }
