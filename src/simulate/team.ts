@@ -6,7 +6,9 @@ export type Thread = {
 
 export type Team = {
   getThreads(): Thread[];
+  getDetailedThreads(): Thread[];
   addThread(thread: Thread): Team;
+  removeThread(threadId: number): Team;
 };
 
 export class ParallelTeam implements Team {
@@ -14,6 +16,14 @@ export class ParallelTeam implements Team {
 
   constructor(threads: Thread[]) {
     this.threads = threads;
+  }
+
+  removeThread(threadId: number): Team {
+    return new ParallelTeam(this.threads.filter(({ id }) => id !== threadId));
+  }
+
+  getDetailedThreads(): Thread[] {
+    return this.threads;
   }
 
   getThreads(): Thread[] {
@@ -30,6 +40,14 @@ export class EnsembleTeam implements Team {
 
   constructor(threads: Thread[]) {
     this.threads = threads;
+  }
+
+  removeThread(threadId: number): Team {
+    return new ParallelTeam(this.threads.filter(({ id }) => id !== threadId));
+  }
+
+  getDetailedThreads(): Thread[] {
+    return this.threads;
   }
 
   getThreads(): Thread[] {
