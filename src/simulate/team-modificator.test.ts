@@ -15,7 +15,7 @@ class TeamModificator {
   }
 
   removeFrom(team: Team) {
-    const removedThread = team.getDetailedThreads()[1];
+    const removedThread = team.getRealThreads()[1];
     return {
       team: team.removeThread(1),
       removedThreads: [removedThread],

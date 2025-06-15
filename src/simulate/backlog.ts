@@ -112,8 +112,9 @@ export const shouldGenerateBug = (
 ) => {
   const number = randomProvider();
   const experience =
-    team.getThreads().find((thread) => thread.id === userStory.threadId)
-      ?.power ?? 0;
+    team
+      .getEffectiveThreads()
+      .find((thread) => thread.id === userStory.threadId)?.power ?? 0;
   return (
     number <
     computeBugProbability(

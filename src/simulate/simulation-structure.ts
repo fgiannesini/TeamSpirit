@@ -24,7 +24,7 @@ export const structureEventsOnInitialization = (
     };
   });
   const threadStructureEvents: StructureEvent[] = team
-    .getThreads()
+    .getEffectiveThreads()
     .map((thread) => {
       return {
         time: 1,

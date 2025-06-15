@@ -5,8 +5,8 @@ export type Thread = {
 };
 
 export type Team = {
-  getThreads(): Thread[];
-  getDetailedThreads(): Thread[];
+  getEffectiveThreads(): Thread[];
+  getRealThreads(): Thread[];
   addThread(thread: Thread): Team;
   removeThread(threadId: number): Team;
 };
@@ -22,11 +22,11 @@ export class ParallelTeam implements Team {
     return new ParallelTeam(this.threads.filter(({ id }) => id !== threadId));
   }
 
-  getDetailedThreads(): Thread[] {
+  getRealThreads(): Thread[] {
     return this.threads;
   }
 
-  getThreads(): Thread[] {
+  getEffectiveThreads(): Thread[] {
     return this.threads;
   }
 
@@ -46,11 +46,11 @@ export class EnsembleTeam implements Team {
     return new ParallelTeam(this.threads.filter(({ id }) => id !== threadId));
   }
 
-  getDetailedThreads(): Thread[] {
+  getRealThreads(): Thread[] {
     return this.threads;
   }
 
-  getThreads(): Thread[] {
+  getEffectiveThreads(): Thread[] {
     const sum = this.threads
       .map((thread) => thread.power)
       .reduce((acc, val) => acc + val, 0);

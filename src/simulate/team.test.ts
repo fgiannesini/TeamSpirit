@@ -8,7 +8,7 @@ describe('Team', () => {
       { id: 1, name: 'thread1', power: 25 },
       { id: 2, name: 'thread2', power: 15 },
     ]);
-    expect(team.getThreads()).toEqual([
+    expect(team.getEffectiveThreads()).toEqual([
       { id: 0, name: 'thread0', power: 10 },
       { id: 1, name: 'thread1', power: 25 },
       { id: 2, name: 'thread2', power: 15 },
@@ -21,6 +21,8 @@ describe('Team', () => {
       { id: 1, name: 'mob', power: 25 },
       { id: 2, name: 'mob', power: 15 },
     ]);
-    expect(team.getThreads()).toEqual([{ id: 0, name: 'mob', power: 17 }]);
+    expect(team.getEffectiveThreads()).toEqual([
+      { id: 0, name: 'mob', power: 17 },
+    ]);
   });
 });
