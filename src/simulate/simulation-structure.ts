@@ -12,7 +12,7 @@ export type StructureEvent = {
 export const structureEventsOnInitialization = (
   backlog: Backlog,
   team: Team,
-) => {
+): StructureEvent[] => {
   const userStoryStructureEvents: StructureEvent[] = getUserStories(
     backlog,
   ).map((userStory) => {
