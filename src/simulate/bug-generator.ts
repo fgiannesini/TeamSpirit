@@ -6,7 +6,7 @@ export const computeBugProbability = (
   complexity: number,
   turn: number,
   experience: number,
-) => {
+): number => {
   const duration = 2 + complexity;
   const mu = duration / 2;
   const sigma = duration / 2.5;
@@ -28,11 +28,15 @@ export type BugGenerator = {
 
 export class BugGeneratorHandler implements BugGenerator {
   bugCount = 0;
-
+  private readonly creationRandomProvider: () => number;
+  private readonly complexityRandomProvider: () => number;
   constructor(
-    private readonly creationRandomProvider: () => number,
-    private readonly complexityRandomProvider: () => number,
-  ) {}
+    creationRandomProvider: () => number,
+    complexityRandomProvider: () => number,
+  ) {
+    this.creationRandomProvider = creationRandomProvider;
+    this.complexityRandomProvider = complexityRandomProvider;
+  }
   generate(backlog: Backlog, team: Team, time: number): UserStory[] {
     return backlog.userStoriesDone
       .map((userStory) =>
