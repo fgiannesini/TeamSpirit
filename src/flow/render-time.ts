@@ -9,24 +9,29 @@ import {
   getUserStoryOfThread,
 } from './selector.ts';
 
-const setThreadStateTo = (threadIndex: number, textContent: string) => {
+const setThreadStateTo = (threadIndex: number, textContent: string): void => {
   const threadState = getThreadState(threadIndex);
   if (threadState) {
     threadState.textContent = textContent;
   }
 };
 
-function removeCurrentTaskOfThread(currentEvent: TimeEvent) {
+const removeCurrentTaskOfThread = (currentEvent: TimeEvent): void => {
   Array.from(
     getThreadUserStoryContainer(currentEvent.threadId)?.children ?? [],
-  ).forEach((child) => child.remove());
-}
+  ).forEach((child) => {
+    child.remove();
+  });
+};
+
+const sleep = (ms: number): Promise<unknown> =>
+  new Promise((resolve) => setTimeout(resolve, ms));
 
 export const renderTimeEvents = async (
   events: TimeEvent[],
   time: number,
   animationTime: number,
-) => {
+): Promise<void> => {
   const currentEvents = events.filter((event) => event.time === time);
   for (const currentEvent of currentEvents) {
     if (currentEvent.userStoryId === -1) {
@@ -41,7 +46,9 @@ export const renderTimeEvents = async (
           getThreadUserStoryContainer(currentEvent.threadId)?.children ?? [],
         )
           .filter((child) => child.id !== id)
-          .forEach((child) => child.remove());
+          .forEach((child) => {
+            child.remove();
+          });
         const userStory = getUserStory(currentEvent.userStoryId);
         if (userStory) {
           getThreadUserStoryContainer(currentEvent.threadId)?.appendChild(
@@ -85,7 +92,9 @@ export const renderTimeEvents = async (
           getBacklog()?.appendChild(userStory);
           userStory.id = `user-story-${currentEvent.userStoryId}`;
         }
-        allUserStories.forEach((userStory) => userStory.remove());
+        allUserStories.forEach((userStoryToRemove) => {
+          userStoryToRemove.remove();
+        });
         break;
       }
       case 'Done': {
@@ -95,7 +104,9 @@ export const renderTimeEvents = async (
           getDone()?.appendChild(userStory);
           userStory.id = `user-story-${currentEvent.userStoryId}`;
         }
-        allUserStories.forEach((userStory) => userStory.remove());
+        allUserStories.forEach((userStoryToRemove) => {
+          userStoryToRemove.remove();
+        });
         break;
       }
       default:
@@ -104,5 +115,3 @@ export const renderTimeEvents = async (
     await sleep(animationTime);
   }
 };
-
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
