@@ -1,4 +1,4 @@
-﻿import type { Thread } from './team.ts';
+﻿﻿import type { Thread } from './team.ts';
 
 export type Review = {
   reviewersNeeded: number;
@@ -20,7 +20,7 @@ export const hasReviewStarted = (
   review: Review,
   thread: Thread,
   reviewComplexity: number,
-) => {
+): boolean => {
   const reviewers = review.reviewers;
   const currentComplexity = reviewers.get(thread.id);
   const hasReviewed = reviewers.has(thread.id);
@@ -32,11 +32,18 @@ export const hasAllReviews = (
   reviewComplexity: number,
 ): boolean =>
   review.reviewersNeeded === review.reviewers.size &&
-  review.reviewers.values().every((review) => review === reviewComplexity);
+  review.reviewers
+    .values()
+    .every((reviewValue) => reviewValue === reviewComplexity);
 
-export const hasSomeReviews = (review: Review, reviewComplexity: number) => {
+export const hasSomeReviews = (
+  review: Review,
+  reviewComplexity: number,
+): boolean => {
   return (
     review.reviewersNeeded !== review.reviewers.size &&
-    review.reviewers.values().every((review) => review === reviewComplexity)
+    review.reviewers
+      .values()
+      .every((reviewValue) => reviewValue === reviewComplexity)
   );
 };
