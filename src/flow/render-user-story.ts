@@ -1,20 +1,8 @@
 import type { StructureEvent } from '../simulate/simulation-structure.ts';
 
-export const createUserStory = (id: number, name: string) => {
+export const createUserStory = (id: number, name: string): HTMLDivElement => {
   const userStoryHtmlElement = document.createElement('div');
   userStoryHtmlElement.id = `user-story-${id}`;
-  userStoryHtmlElement.className = 'userStory';
-  userStoryHtmlElement.textContent = name;
-  return userStoryHtmlElement;
-};
-
-export const createUserStoryInThread = (
-  userStoryId: number,
-  threadId: number,
-  name: string,
-) => {
-  const userStoryHtmlElement = document.createElement('div');
-  userStoryHtmlElement.id = `user-story-${userStoryId}_${threadId}`;
   userStoryHtmlElement.className = 'userStory';
   userStoryHtmlElement.textContent = name;
   return userStoryHtmlElement;
@@ -23,7 +11,7 @@ export const createUserStoryInThread = (
 export const addUserStories = (
   parent: Element,
   structureEvents: StructureEvent[],
-) => {
+): void => {
   structureEvents
     .filter(({ action }) => action === 'CreateUserStory')
     .filter(({ id }) => id !== -1)

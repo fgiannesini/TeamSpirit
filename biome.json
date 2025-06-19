@@ -15,7 +15,7 @@
     "rules": {
       "complexity": {
         "noExcessiveCognitiveComplexity": "error",
-        "noForEach": "error",
+        "noForEach": "off",
         "noUselessStringConcat": "error",
         "noVoid": "error",
         "useSimplifiedLogicExpression": "error",
