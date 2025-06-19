@@ -18,6 +18,7 @@ import { EnsembleTeam, ParallelTeam, type Team } from './simulate/team.ts';
 const getInputValueOf = (selector: string) => {
   const number = Number.parseInt(
     document.querySelector<HTMLInputElement>(selector)?.value ?? '1',
+    10,
   );
   return Number.isNaN(number) ? 0 : number;
 };

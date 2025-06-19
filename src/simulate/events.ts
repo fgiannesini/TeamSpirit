@@ -12,8 +12,8 @@ export const createTimeEvent = (
   userStory: UserStory,
   threadId: number,
 ): TimeEvent => ({
-  time: time,
+  time,
   userStoryId: userStory.id,
-  threadId: threadId,
+  threadId,
   state: userStory.state,
 });

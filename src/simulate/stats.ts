@@ -55,7 +55,7 @@ export const computeStatEvents = (timeEvents: TimeEvent[]): StatEvent[] => {
     const leadTime = mean(dones);
     statEvents.push({
       time,
-      leadTime: leadTime,
+      leadTime,
     });
     time++;
   }

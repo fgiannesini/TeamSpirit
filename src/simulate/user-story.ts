@@ -53,7 +53,7 @@ export const setDoneBy = (
   return {
     ...userStory,
     state: 'Done',
-    threadId: threadId,
+    threadId,
     timeDone: currentTime,
   };
 };
@@ -72,7 +72,7 @@ export const setToReview = (
   return {
     ...userStory,
     state: 'ToReview',
-    threadId: threadId,
+    threadId,
   };
 };
 

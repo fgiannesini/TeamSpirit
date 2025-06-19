@@ -31,7 +31,7 @@ const getDeduplicatesEventsStates = (currentEvents: TimeEvent[]) => {
     .reduce<Map<string, { userStoryId: number; state: State }>>(
       (acc, { userStoryId, state }) => {
         const key = `${userStoryId}_${state}`;
-        acc.set(key, { userStoryId: userStoryId, state });
+        acc.set(key, { userStoryId, state });
         return acc;
       },
       new Map(),
