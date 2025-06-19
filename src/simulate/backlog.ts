@@ -19,7 +19,7 @@ export class Backlog {
   }
 }
 
-export const getUserStories = (backlog: Backlog) => [
+export const getUserStories = (backlog: Backlog): UserStory[] => [
   ...backlog.userStoriesRemaining,
   ...backlog.userStoriesDone,
 ];
@@ -84,7 +84,7 @@ export const userStoriesWithSomeReviews = (backlog: Backlog): UserStory[] => {
     );
 };
 
-export const addUserStory = (userStory: UserStory, backlog: Backlog) => {
+export const addUserStory = (userStory: UserStory, backlog: Backlog): void => {
   if (userStory.state === 'Done') {
     backlog.userStoriesDone.push(userStory);
   } else {
@@ -100,7 +100,7 @@ export const getUserStoriesRemainings = (backlog: Backlog): UserStory[] => {
   return backlog.userStoriesRemaining;
 };
 
-export const hasMoreUserStories = (backlog: Backlog) => {
+export const hasMoreUserStories = (backlog: Backlog): boolean => {
   return backlog.userStoriesRemaining.length > 0;
 };
 
@@ -109,7 +109,7 @@ export const shouldGenerateBug = (
   userStory: UserStory,
   team: Team,
   time: number,
-) => {
+): boolean => {
   const number = randomProvider();
   const experience =
     team
