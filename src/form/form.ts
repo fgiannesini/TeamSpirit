@@ -1,4 +1,19 @@
-export const generateDevForm = (id: number) => {
+const generateInput = (id: string, value: number): HTMLInputElement => {
+  const input = document.createElement('input');
+  input.id = id;
+  input.type = 'number';
+  input.min = '1';
+  input.value = value.toString();
+  return input;
+};
+
+const generateLabel = (content: string): HTMLLabelElement => {
+  const labelElement = document.createElement('label');
+  labelElement.textContent = content;
+  return labelElement;
+};
+
+export const generateDevForm = (id: number): HTMLDivElement => {
   const identifier = document.createElement('span');
   identifier.id = `dev-identifier-${id}`;
   identifier.textContent = id.toString();
@@ -11,22 +26,7 @@ export const generateDevForm = (id: number) => {
   return dev;
 };
 
-const generateInput = (id: string, value: number) => {
-  const input = document.createElement('input');
-  input.id = id;
-  input.type = 'number';
-  input.min = '1';
-  input.value = value.toString();
-  return input;
-};
-
-const generateLabel = (content: string) => {
-  const labelElement = document.createElement('label');
-  labelElement.textContent = content;
-  return labelElement;
-};
-
-export const generateUserStoriesForm = (id: number) => {
+export const generateUserStoriesForm = (id: number): HTMLDivElement => {
   const identifier = document.createElement('span');
   identifier.id = `user-story-identifier-${id}`;
   identifier.textContent = id.toString();
