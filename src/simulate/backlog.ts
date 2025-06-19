@@ -2,13 +2,13 @@ import { computeBugProbability } from './bug-generator.ts';
 import { hasSomeReviews } from './review.ts';
 import type { Team, Thread } from './team.ts';
 import {
-  type UserStory,
   idle,
   isInProgressBy,
   isInReviewBy,
   isToDo,
   isToReviewBy,
   needReviewBy,
+  type UserStory,
 } from './user-story.ts';
 
 export class Backlog {

@@ -4,8 +4,8 @@ import {
   inProgress,
   inReview,
   thread,
-  toReview,
   todo,
+  toReview,
 } from './factory.ts';
 import {
   isDeveloped,

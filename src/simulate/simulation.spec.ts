@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import {
-  Backlog,
   addUserStory,
+  Backlog,
   getUserStoriesDone,
   getUserStoriesRemainings,
 } from './backlog.ts';

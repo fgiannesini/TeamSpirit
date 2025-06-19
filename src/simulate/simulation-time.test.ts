@@ -9,9 +9,9 @@ import {
   idleEvent,
   inProgressEvent,
   reviewEvent,
+  todo,
   toReview,
   toReviewEvent,
-  todo,
 } from './factory.ts';
 import { simulateTimeEvents } from './simulation-time.ts';
 import { ParallelTeam } from './team.ts';

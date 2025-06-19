@@ -10,11 +10,11 @@ import {
   ensembleTeam,
   inProgress,
   inReview,
-  toReview,
   todo,
+  toReview,
 } from './factory.ts';
 import type { Thread } from './team.ts';
-import { type UserStory, idle } from './user-story.ts';
+import { idle, type UserStory } from './user-story.ts';
 
 describe('Backlog', () => {
   test('Should get idle by default', () => {

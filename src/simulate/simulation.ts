@@ -1,4 +1,4 @@
-import { type Backlog, addUserStory, hasMoreUserStories } from './backlog.ts';
+import { addUserStory, type Backlog, hasMoreUserStories } from './backlog.ts';
 import type { BugGenerator } from './bug-generator.ts';
 import type { TimeEvent } from './events.ts';
 import { structureEventsOnInitialization } from './simulation-structure.ts';

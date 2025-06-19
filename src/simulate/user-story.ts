@@ -1,10 +1,10 @@
 import {
-  type Review,
   canReview,
   getReviewPoints,
   hasAllReviews,
   hasReviewStarted,
   noReview,
+  type Review,
 } from './review.ts';
 import type { Thread } from './team.ts';
 
