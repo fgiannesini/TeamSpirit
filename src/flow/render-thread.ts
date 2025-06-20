@@ -1,6 +1,6 @@
 import type { StructureEvent } from '../simulate/simulation-structure.ts';
 
-const addThread = (threadNumber: number, name: string) => {
+const addThread = (threadNumber: number, name: string): HTMLDivElement => {
   const threadHtmlElement = document.createElement('div');
   threadHtmlElement.id = `thread${threadNumber}`;
   threadHtmlElement.className = 'thread';
@@ -23,7 +23,7 @@ const addThread = (threadNumber: number, name: string) => {
 export const addThreads = (
   parent: Element,
   structureEvents: StructureEvent[],
-) => {
+): void => {
   structureEvents
     .filter((event) => event.action === 'CreateThread')
     .forEach((event) => {

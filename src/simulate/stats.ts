@@ -1,13 +1,13 @@
 import type { TimeEvent } from './events.ts';
 
+const mean = (times: number[]): number => {
+  const somme = times.reduce((acc, val) => acc + val, 0);
+  return somme / times.length;
+};
+
 export type StatEvent = {
   time: number;
   leadTime: number;
-};
-
-const mean = (times: number[]) => {
-  const somme = times.reduce((acc, val) => acc + val, 0);
-  return somme / times.length;
 };
 
 export const computeStatEvents = (timeEvents: TimeEvent[]): StatEvent[] => {

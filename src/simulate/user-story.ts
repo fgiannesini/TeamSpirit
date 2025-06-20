@@ -8,6 +8,21 @@ import {
 } from './review.ts';
 import type { Thread } from './team.ts';
 
+const updateReviewPoints = (
+  review: Review,
+  dev: Thread,
+  newReviewPoints: number,
+): Review => {
+  const newReviewers = new Map<number, number>(review.reviewers).set(
+    dev.id,
+    newReviewPoints,
+  );
+  return {
+    ...review,
+    reviewers: newReviewers,
+  };
+};
+
 export type State = 'Todo' | 'InProgress' | 'ToReview' | 'Review' | 'Done';
 export type UserStory = {
   id: number;
@@ -73,21 +88,6 @@ export const setToReview = (
     ...userStory,
     state: 'ToReview',
     threadId,
-  };
-};
-
-const updateReviewPoints = (
-  review: Review,
-  dev: Thread,
-  newReviewPoints: number,
-): Review => {
-  const newReviewers = new Map<number, number>(review.reviewers).set(
-    dev.id,
-    newReviewPoints,
-  );
-  return {
-    ...review,
-    reviewers: newReviewers,
   };
 };
 

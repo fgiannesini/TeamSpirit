@@ -15,7 +15,7 @@ import { simulate } from './simulate/simulation.ts';
 import { computeStatEvents } from './simulate/stats.ts';
 import { EnsembleTeam, ParallelTeam, type Team } from './simulate/team.ts';
 
-const getInputValueOf = (selector: string) => {
+const getInputValueOf = (selector: string): number => {
   const number = Number.parseInt(
     document.querySelector<HTMLInputElement>(selector)?.value ?? '1',
     10,
@@ -23,73 +23,11 @@ const getInputValueOf = (selector: string) => {
   return Number.isNaN(number) ? 0 : number;
 };
 
-export const buildBacklogForParallelTeam = () => {
-  const userStoryCount = getInputValueOf('#user-story-count-input');
-  const reviewersCount = getInputValueOf('#reviewers-input');
-  return new Backlog(
-    Array.from({ length: userStoryCount }, (_, i) => ({
-      id: i,
-      name: `US${i}`,
-      complexity: getInputValueOf(`#complexity-input-${i}`),
-      review: {
-        reviewersNeeded: reviewersCount,
-        reviewers: new Map<number, number>(),
-      },
-      reviewComplexity: getInputValueOf(`#review-complexity-input-${i}`),
-      state: 'Todo',
-      threadId: undefined,
-      progression: 0,
-      timeDone: 0,
-    })),
-  );
-};
-
-export const buildBacklogForEnsembleTeam = () => {
-  const userStoryCount = getInputValueOf('#user-story-count-input');
-  return new Backlog(
-    Array.from({ length: userStoryCount }, (_, i) => ({
-      id: i,
-      name: `US${i}`,
-      complexity: getInputValueOf(`#complexity-input-${i}`),
-      review: noReview,
-      reviewComplexity: getInputValueOf(`#review-complexity-input-${i}`),
-      state: 'Todo',
-      threadId: undefined,
-      progression: 0,
-      timeDone: 0,
-    })),
-  );
-};
-
-export const buildParallelTeam = (): Team => {
-  const devCount = getInputValueOf('#dev-count-input');
-  const threads = Array.from({ length: devCount }, (_, i) => {
-    return {
-      id: i,
-      name: `thread${i}`,
-      power: getInputValueOf(`#power-input-${i}`),
-    };
-  });
-  return new ParallelTeam(threads);
-};
-
-export const buildEnsembleTeam = (): Team => {
-  const devCount = getInputValueOf('#dev-count-input');
-  const threads = Array.from({ length: devCount }, (_, i) => {
-    return {
-      id: i,
-      name: `thread${i}`,
-      power: getInputValueOf(`#power-input-${i}`),
-    };
-  });
-  return new EnsembleTeam(threads);
-};
-
 const runSimulation = (
   backlog: Backlog,
   team: Team,
   bugGenerator: BugGenerator,
-) => {
+): string => {
   const { timeEvents, structureEvents } = simulate(backlog, team, bugGenerator);
   const randomKey = crypto.randomUUID();
   saveTimeEvents(timeEvents, randomKey);
@@ -155,3 +93,65 @@ document.addEventListener('DOMContentLoaded', () => {
       userStoriesContainer?.replaceChildren(...userStories);
     });
 });
+
+export const buildBacklogForParallelTeam = (): Backlog => {
+  const userStoryCount = getInputValueOf('#user-story-count-input');
+  const reviewersCount = getInputValueOf('#reviewers-input');
+  return new Backlog(
+    Array.from({ length: userStoryCount }, (_, i) => ({
+      id: i,
+      name: `US${i}`,
+      complexity: getInputValueOf(`#complexity-input-${i}`),
+      review: {
+        reviewersNeeded: reviewersCount,
+        reviewers: new Map<number, number>(),
+      },
+      reviewComplexity: getInputValueOf(`#review-complexity-input-${i}`),
+      state: 'Todo',
+      threadId: undefined,
+      progression: 0,
+      timeDone: 0,
+    })),
+  );
+};
+
+export const buildBacklogForEnsembleTeam = (): Backlog => {
+  const userStoryCount = getInputValueOf('#user-story-count-input');
+  return new Backlog(
+    Array.from({ length: userStoryCount }, (_, i) => ({
+      id: i,
+      name: `US${i}`,
+      complexity: getInputValueOf(`#complexity-input-${i}`),
+      review: noReview,
+      reviewComplexity: getInputValueOf(`#review-complexity-input-${i}`),
+      state: 'Todo',
+      threadId: undefined,
+      progression: 0,
+      timeDone: 0,
+    })),
+  );
+};
+
+export const buildParallelTeam = (): Team => {
+  const devCount = getInputValueOf('#dev-count-input');
+  const threads = Array.from({ length: devCount }, (_, i) => {
+    return {
+      id: i,
+      name: `thread${i}`,
+      power: getInputValueOf(`#power-input-${i}`),
+    };
+  });
+  return new ParallelTeam(threads);
+};
+
+export const buildEnsembleTeam = (): Team => {
+  const devCount = getInputValueOf('#dev-count-input');
+  const threads = Array.from({ length: devCount }, (_, i) => {
+    return {
+      id: i,
+      name: `thread${i}`,
+      power: getInputValueOf(`#power-input-${i}`),
+    };
+  });
+  return new EnsembleTeam(threads);
+};

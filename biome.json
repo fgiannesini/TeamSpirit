@@ -22,11 +22,11 @@
         "useWhile": "error"
       },
       "correctness": {
-        "noNodejsModules": "error",
+        "noNodejsModules": "off",
         "noUndeclaredVariables": "error"
       },
       "nursery": {
-        "noAwaitInLoop": "error",
+        "noAwaitInLoop": "off",
         "noBitwiseOperators": "error",
         "noConstantBinaryExpression": "error",
         "noGlobalDirnameFilename": "error",

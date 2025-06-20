@@ -22,7 +22,7 @@ export const simulateTimeEvents = (
   team: Team,
   backlog: Backlog,
   time: number,
-) => {
+): TimeEvent[] => {
   const events: TimeEvent[] = [];
   const toAddBacklog: UserStory[] = [];
   for (const thread of team.getEffectiveThreads()) {
@@ -73,6 +73,8 @@ export const simulateTimeEvents = (
     const toReview = setToReview(review, review.threadId as number);
     events.push(createTimeEvent(time, toReview, review.threadId as number));
   });
-  toAddBacklog.forEach((userStory) => addUserStory(userStory, backlog));
+  toAddBacklog.forEach((userStory) => {
+    addUserStory(userStory, backlog);
+  });
   return events;
 };

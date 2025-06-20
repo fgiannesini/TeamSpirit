@@ -356,7 +356,7 @@ describe('Time sequence', () => {
     ]);
   });
 
-  const userStoryClassNames = (userStoryId: string) =>
+  const userStoryClassNames = (userStoryId: string): string[] =>
     Array.from(document.querySelectorAll(`#${userStoryId} div`)).map(
       (div) => div.className,
     );

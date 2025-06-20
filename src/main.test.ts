@@ -24,13 +24,13 @@ describe('Main', () => {
     document.dispatchEvent(event);
   });
 
-  const setValueTo = (selectors: string, value: string) => {
+  const setValueTo = (selectors: string, value: string): void => {
     const taskCountInput = document.querySelector<HTMLInputElement>(selectors);
     if (taskCountInput) {
       taskCountInput.value = value;
     }
   };
-  const clickOn = (buttonId: string) => {
+  const clickOn = (buttonId: string): void => {
     document.querySelector<HTMLButtonElement>(buttonId)?.click();
   };
 

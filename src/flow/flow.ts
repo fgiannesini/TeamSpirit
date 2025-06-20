@@ -21,7 +21,7 @@ import {
 const buildUserStories = (
   structureEvents: StructureEvent[],
   timeCount: number,
-) => {
+): void => {
   const backlog = getBacklog();
   if (backlog) {
     const initStructureEvents = structureEvents.filter(
@@ -35,7 +35,7 @@ const render = (
   events: TimeEvent[],
   statEvents: StatEvent[],
   structureEvents: StructureEvent[],
-) => {
+): void => {
   const threads = getThreads();
   if (threads) {
     addThreads(threads, structureEvents);
@@ -49,33 +49,37 @@ const render = (
   }
 
   const maxTime = Math.max(...events.map((event) => event.time));
-  let time = 0;
+  let currentTime = 0;
   const computeButton = getCompute();
   computeButton?.addEventListener('click', async () => {
     computeButton.disabled = true;
-    time++;
-    await renderTimeEvents(events, time, 1000);
-    renderStatEvents(statEvents, time, maxTime);
-    buildUserStories(structureEvents, time + 1);
-    if (maxTime !== time) {
+    currentTime++;
+    await renderTimeEvents(events, currentTime, 1000);
+    renderStatEvents(statEvents, currentTime, maxTime);
+    buildUserStories(structureEvents, currentTime + 1);
+    if (maxTime !== currentTime) {
       computeButton.disabled = false;
     }
   });
 
   const computeButtonAll = getComputeAll();
   computeButtonAll?.addEventListener('click', async () => {
-    while (maxTime !== time) {
-      time++;
-      await renderTimeEvents(events, time, 300);
-      renderStatEvents(statEvents, time, maxTime);
-      buildUserStories(structureEvents, time + 1);
+    while (maxTime !== currentTime) {
+      currentTime++;
+      await renderTimeEvents(events, currentTime, 300);
+      renderStatEvents(statEvents, currentTime, maxTime);
+      buildUserStories(structureEvents, currentTime + 1);
     }
     computeButtonAll.disabled = true;
   });
 };
 
-const params = new URLSearchParams(window.location.search);
-const id = params.get('id');
-if (id) {
-  render(loadTimeEvents(id), loadStatEvents(id), loadStructureEvents(id));
+const params: URLSearchParams = new URLSearchParams(window.location.search);
+const idFromParams: string | null = params.get('id');
+if (idFromParams) {
+  render(
+    loadTimeEvents(idFromParams),
+    loadStatEvents(idFromParams),
+    loadStructureEvents(idFromParams),
+  );
 }

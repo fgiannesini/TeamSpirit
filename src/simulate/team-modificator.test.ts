@@ -1,11 +1,14 @@
 import { describe, expect, test } from 'vitest';
 import { ensembleTeam, parallelTeam, thread } from './factory.ts';
-import type { Team } from './team.ts';
+import type { Team, Thread } from './team.ts';
 
 class TeamModificator {
-  constructor(private readonly randomProvider: () => number) {}
+  private readonly randomProvider: () => number;
+  constructor(randomProvider: () => number) {
+    this.randomProvider = randomProvider;
+  }
 
-  addTo(team: Team) {
+  addTo(team: Team): { team: Team; addedThreads: Thread[] } {
     this.randomProvider();
     const threadToAdd = thread({ id: 1 });
     return {
@@ -14,7 +17,7 @@ class TeamModificator {
     };
   }
 
-  removeFrom(team: Team) {
+  removeFrom(team: Team): { team: Team; removedThreads: Thread[] } {
     const removedThread = team.getRealThreads()[1];
     return {
       team: team.removeThread(1),
