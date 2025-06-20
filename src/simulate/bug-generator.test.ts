@@ -92,7 +92,7 @@ describe('probability', () => {
         id: 0,
         review: {
           reviewersNeeded: 2,
-          reviewers: new Map<number, number>(),
+          reviewers: new Map([[0, 1]]),
         },
       }),
       backlog,

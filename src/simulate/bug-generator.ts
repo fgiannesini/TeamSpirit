@@ -61,7 +61,10 @@ export class BugGeneratorHandler implements BugGenerator {
             Math.floor(complexityRandom * userStory.reviewComplexity),
           ),
           progression: 0,
-          review: userStory.review,
+          review: {
+            reviewersNeeded:userStory.review.reviewersNeeded,
+            reviewers : new Map<number, number>()
+          },
           threadId: undefined,
           state: 'Todo',
           timeDone: 0,
