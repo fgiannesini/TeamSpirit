@@ -136,7 +136,7 @@ export const reviewEvent = (options: Partial<TimeEvent> = {}): TimeEvent => {
   };
 };
 
-export const thread = (options: Partial<Thread> = {}) => {
+export const thread = (options: Partial<Thread> = {}): Thread => {
   return {
     id: 0,
     name: 'thread',
