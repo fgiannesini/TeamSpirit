@@ -26,6 +26,52 @@ class TeamModificator {
   }
 }
 
+type TeamProbabilities = {
+  memberRemovalProbs: Map<string, number>; // Probability per member
+  teamCreateProb: number; // Team-wide addition chance
+};
+
+function computeTeamProbabilities(
+  team: TeamMember[],
+  time: number,
+  maxCapacity: number,
+  config = {
+    baseRemoveRate: 0.1, // Base chance of leaving (lowest experience member)
+    baseCreateRate: 0.2, // Base chance of adding a member
+    timeDecayFactor: 0.5, // How much time reduces removal rate
+    experienceWeight: 2.0, // How strongly experience reduces removal
+  },
+): TeamProbabilities {
+  const currentSize = team.length;
+  const memberRemovalProbs = new Map<string, number>();
+
+  // ---- 1. Compute per-member removal probabilities ----
+  let totalExperience = 0;
+  team.forEach((member) => {
+    totalExperience += member.experience;
+    // Higher experience = lower removal chance (scaled exponentially)
+    const experienceFactor = Math.exp(
+      -config.experienceWeight * member.experience,
+    );
+    const timeFactor = 1 / Math.log(time + 2) ** config.timeDecayFactor;
+    const pRemove = config.baseRemoveRate * experienceFactor * timeFactor;
+    memberRemovalProbs.set(member.id, pRemove);
+  });
+
+  // ---- 2. Compute team-wide creation probability ----
+  let teamCreateProb = 0;
+  if (currentSize < maxCapacity) {
+    const avgExperience = totalExperience / currentSize || 1;
+    const capacityFactor = 1 - currentSize / maxCapacity;
+    // More experienced teams hire slower (optional)
+    const experiencePenalty = 1 / avgExperience ** 0.5;
+    teamCreateProb =
+      (config.baseCreateRate * capacityFactor * experiencePenalty) /
+      Math.sqrt(time + 1);
+  }
+
+  return { memberRemovalProbs, teamCreateProb };
+}
 describe('Team modificator', () => {
   test('should add a new thread in a parallel team', () => {
     const initialTeam = parallelTeam();
