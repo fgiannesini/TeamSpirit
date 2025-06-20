@@ -7,9 +7,9 @@ import type { TimeEvent } from '../simulate/events.ts';
 import type { StructureEvent } from '../simulate/simulation-structure.ts';
 import type { State } from '../simulate/user-story.ts';
 
-const createUserStory = (id: number, name: string) => {
+const createUserStory = (userStoryId: number, name: string): HTMLDivElement => {
   const userStoryHtmlElement = document.createElement('div');
-  userStoryHtmlElement.id = `user-story-${id}`;
+  userStoryHtmlElement.id = `user-story-${userStoryId}`;
   userStoryHtmlElement.className = 'user-story';
 
   const userStoryTitle = document.createElement('span');
@@ -20,13 +20,18 @@ const createUserStory = (id: number, name: string) => {
   return userStoryHtmlElement;
 };
 
-const timeSequenceElement = (className: string) => {
+const createTimeSequenceElement = (className: string): HTMLDivElement => {
   const timeSequenceElement = document.createElement('div');
   timeSequenceElement.className = className;
   return timeSequenceElement;
 };
 
-const getDeduplicatesEventsStates = (currentEvents: TimeEvent[]) => {
+const getDeduplicatesEventsStates = (
+  currentEvents: TimeEvent[],
+): {
+  userStoryId: number;
+  state: State;
+}[] => {
   const values = currentEvents
     .reduce<Map<string, { userStoryId: number; state: State }>>(
       (acc, { userStoryId, state }) => {
@@ -40,9 +45,12 @@ const getDeduplicatesEventsStates = (currentEvents: TimeEvent[]) => {
   return Array.from(values);
 };
 
-const generateSequences = (timeEvents: TimeEvent[], userStoryIds: number[]) => {
+const generateSequences = (
+  timeEvents: TimeEvent[],
+  userStoryIds: number[],
+): Map<number, string[]> => {
   const userStoriesSequence = new Map<number, string[]>(
-    userStoryIds.map((id) => [id, []]),
+    userStoryIds.map((userStoryId) => [userStoryId, []]),
   );
 
   const maxTime = Math.max(...timeEvents.map((event) => event.time));
@@ -79,7 +87,7 @@ const generateSequences = (timeEvents: TimeEvent[], userStoryIds: number[]) => {
 
 const cleanConsecutiveVerticals = (
   userStoriesSequence: Map<number, string[]>,
-) => {
+): Map<number, string[]> => {
   const newUserStoriesSequence = new Map<number, string[]>();
 
   userStoriesSequence.forEach((values, key) => {
@@ -112,22 +120,22 @@ const cleanConsecutiveVerticals = (
 
 const addSequencesToDom = (
   cleanedUserStoriesSequence: Map<number, string[]>,
-) => {
+): void => {
   cleanedUserStoriesSequence.forEach((sequences, userStoryId) => {
     const userStory = document.querySelector(`#user-story-${userStoryId}`);
     if (!userStory) {
       return;
     }
-    sequences.forEach((element) =>
-      userStory.appendChild(timeSequenceElement(element)),
-    );
+    sequences.forEach((element) => {
+      userStory.appendChild(createTimeSequenceElement(element));
+    });
   });
 };
 
 const renderTimeSequence = (
   timeEvents: TimeEvent[],
   structureEvents: StructureEvent[],
-) => {
+): void => {
   const parent = document.querySelector('#user-stories');
   if (!parent) {
     return;
@@ -148,8 +156,8 @@ const renderTimeSequence = (
   addSequencesToDom(cleanedUserStoriesSequence);
 };
 
-const params = new URLSearchParams(window.location.search);
-const id = params.get('id');
-if (id) {
-  renderTimeSequence(loadTimeEvents(id), loadStructureEvents(id));
+const params: URLSearchParams = new URLSearchParams(window.location.search);
+const idFromUrl: string | null = params.get('id');
+if (idFromUrl) {
+  renderTimeSequence(loadTimeEvents(idFromUrl), loadStructureEvents(idFromUrl));
 }
