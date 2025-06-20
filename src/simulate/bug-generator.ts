@@ -62,8 +62,8 @@ export class BugGeneratorHandler implements BugGenerator {
           ),
           progression: 0,
           review: {
-            reviewersNeeded:userStory.review.reviewersNeeded,
-            reviewers : new Map<number, number>()
+            reviewersNeeded: userStory.review.reviewersNeeded,
+            reviewers: new Map<number, number>(),
           },
           threadId: undefined,
           state: 'Todo',
