@@ -25,7 +25,10 @@ export class ParallelTeam implements Team {
   }
 
   removeThread(threadId: number): Team {
-    return new ParallelTeam(this.threads.filter(({ id }) => id !== threadId));
+    return new ParallelTeam(
+      this.threads.filter(({ id }) => id !== threadId),
+      this.capacity,
+    );
   }
 
   getRealThreads(): Thread[] {
@@ -37,7 +40,7 @@ export class ParallelTeam implements Team {
   }
 
   addThread(thread: Thread): Team {
-    return new ParallelTeam([...this.threads, thread]);
+    return new ParallelTeam([...this.threads, thread], this.capacity);
   }
 }
 
@@ -55,7 +58,10 @@ export class EnsembleTeam implements Team {
   }
 
   removeThread(threadId: number): Team {
-    return new ParallelTeam(this.threads.filter(({ id }) => id !== threadId));
+    return new ParallelTeam(
+      this.threads.filter(({ id }) => id !== threadId),
+      this.capacity,
+    );
   }
 
   getRealThreads(): Thread[] {
@@ -71,6 +77,6 @@ export class EnsembleTeam implements Team {
   }
 
   addThread(thread: Thread): Team {
-    return new EnsembleTeam([...this.threads, thread]);
+    return new EnsembleTeam([...this.threads, thread], this.capacity);
   }
 }

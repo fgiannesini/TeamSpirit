@@ -147,12 +147,14 @@ export const createThread = (options: Partial<Thread> = {}): Thread => {
 
 export const ensembleTeam = (
   threads: Thread[] = [createThread()],
+  capacity: number = threads.length,
 ): EnsembleTeam => {
-  return new EnsembleTeam(threads);
+  return new EnsembleTeam(threads, capacity);
 };
 
 export const parallelTeam = (
   threads: Thread[] = [createThread()],
+  capacity: number = threads.length,
 ): ParallelTeam => {
-  return new ParallelTeam(threads);
+  return new ParallelTeam(threads, capacity);
 };

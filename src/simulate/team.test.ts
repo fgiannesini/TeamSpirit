@@ -27,20 +27,20 @@ describe('Team', () => {
     });
 
     test('Should add thread', () => {
-      const team: Team = new ParallelTeam([createThread({ id: 0 })]);
+      const team: Team = new ParallelTeam([createThread({ id: 0 })], 2);
       const newTeam = team.addThread(createThread({ id: 1 }));
       expect(newTeam).toEqual(
-        new ParallelTeam([createThread({ id: 0 }), createThread({ id: 1 })]),
+        new ParallelTeam([createThread({ id: 0 }), createThread({ id: 1 })], 2),
       );
     });
 
     test('Should remove thread', () => {
-      const team: Team = new ParallelTeam([
-        createThread({ id: 0 }),
-        createThread({ id: 1 }),
-      ]);
+      const team: Team = new ParallelTeam(
+        [createThread({ id: 0 }), createThread({ id: 1 })],
+        2,
+      );
       const newTeam = team.removeThread(1);
-      expect(newTeam).toEqual(new ParallelTeam([createThread({ id: 0 })]));
+      expect(newTeam).toEqual(new ParallelTeam([createThread({ id: 0 })], 2));
     });
 
     test('Should get capacity', () => {
@@ -77,20 +77,20 @@ describe('Team', () => {
     });
 
     test('Should add thread', () => {
-      const team: Team = new EnsembleTeam([createThread({ id: 0 })]);
+      const team: Team = new EnsembleTeam([createThread({ id: 0 })], 2);
       const newTeam = team.addThread(createThread({ id: 1 }));
       expect(newTeam).toEqual(
-        new EnsembleTeam([createThread({ id: 0 }), createThread({ id: 1 })]),
+        new EnsembleTeam([createThread({ id: 0 }), createThread({ id: 1 })], 2),
       );
     });
 
     test('Should remove thread', () => {
-      const team: Team = new EnsembleTeam([
-        createThread({ id: 0 }),
-        createThread({ id: 1 }),
-      ]);
+      const team: Team = new EnsembleTeam(
+        [createThread({ id: 0 }), createThread({ id: 1 })],
+        2,
+      );
       const newTeam = team.removeThread(1);
-      expect(newTeam).toEqual(new EnsembleTeam([createThread({ id: 0 })]));
+      expect(newTeam).toEqual(new EnsembleTeam([createThread({ id: 0 })], 2));
     });
 
     test('Should get capacity', () => {

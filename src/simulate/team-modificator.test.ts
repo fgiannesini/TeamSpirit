@@ -4,7 +4,7 @@ import { TeamModificator } from './team-modificator.ts';
 
 describe('Team modificator', () => {
   test('should add a new thread in a parallel team', () => {
-    const initialTeam = parallelTeam();
+    const initialTeam = parallelTeam([createThread({ id: 0 })], 2);
     const teamModificator = new TeamModificator(() => 0);
     const { team, addedThreads } = teamModificator.addTo(initialTeam);
     expect(team).toEqual(
@@ -14,7 +14,7 @@ describe('Team modificator', () => {
   });
 
   test('should add a new thread in an ensemble team', () => {
-    const initialTeam = ensembleTeam();
+    const initialTeam = ensembleTeam([createThread({ id: 0 })], 2);
     const teamModificator = new TeamModificator(() => 0);
     const { team, addedThreads } = teamModificator.addTo(initialTeam);
     expect(team).toEqual(
@@ -24,24 +24,24 @@ describe('Team modificator', () => {
   });
 
   test('should remove a thread from a parallel team', () => {
-    const initialTeam = parallelTeam([
-      createThread({ id: 0 }),
-      createThread({ id: 1 }),
-    ]);
+    const initialTeam = parallelTeam(
+      [createThread({ id: 0 }), createThread({ id: 1 })],
+      2,
+    );
     const teamModificator = new TeamModificator(() => 0);
     const { team, removedThreads } = teamModificator.removeFrom(initialTeam);
-    expect(team).toEqual(parallelTeam([createThread({ id: 0 })]));
+    expect(team).toEqual(parallelTeam([createThread({ id: 0 })], 2));
     expect(removedThreads).toEqual([createThread({ id: 1 })]);
   });
 
   test('should remove a thread from an ensemble team', () => {
-    const initialTeam = ensembleTeam([
-      createThread({ id: 0 }),
-      createThread({ id: 1 }),
-    ]);
+    const initialTeam = ensembleTeam(
+      [createThread({ id: 0 }), createThread({ id: 1 })],
+      2,
+    );
     const teamModificator = new TeamModificator(() => 0);
     const { team, removedThreads } = teamModificator.removeFrom(initialTeam);
-    expect(team).toEqual(ensembleTeam([createThread({ id: 0 })]));
+    expect(team).toEqual(ensembleTeam([createThread({ id: 0 })], 2));
     expect(removedThreads).toEqual([createThread({ id: 1 })]);
   });
 });
