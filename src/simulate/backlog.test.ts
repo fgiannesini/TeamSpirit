@@ -19,7 +19,7 @@ import { idle, type UserStory } from './user-story.ts';
 describe('Backlog', () => {
   test('Should get idle by default', () => {
     const backlog = new Backlog([]);
-    const userStory = getNextUserStory(backlog, thread(0));
+    const userStory = getNextUserStory(backlog, createThread(0));
     expect(userStory).toEqual(idle);
   });
 
@@ -29,17 +29,17 @@ describe('Backlog', () => {
       todo({ complexity: 5 }),
       todo({ complexity: 1 }),
     ]);
-    const userStory = getNextUserStory(backlog, thread(0, 2));
+    const userStory = getNextUserStory(backlog, createThread(0, 2));
     expect(userStory).toEqual(todo({ complexity: 1 }));
   });
 
-  test('Should get IN_PROGRESS by the corresponding thread', () => {
+  test('Should get IN_PROGRESS by the corresponding createThread', () => {
     const backlog = new Backlog([
       todo(),
       inProgress({ threadId: 0 }),
       inProgress({ threadId: 1 }),
     ]);
-    const userStory = getNextUserStory(backlog, thread(1));
+    const userStory = getNextUserStory(backlog, createThread(1));
     expect(userStory).toEqual(inProgress({ threadId: 1 }));
   });
 
@@ -52,7 +52,7 @@ describe('Backlog', () => {
       }),
       toReview({ threadId: 1, reviewComplexity: 1 }),
     ]);
-    const userStory = getNextUserStory(backlog, thread(0, 2));
+    const userStory = getNextUserStory(backlog, createThread(0, 2));
     expect(userStory).toEqual(toReview({ threadId: 1, reviewComplexity: 1 }));
   });
 
@@ -62,7 +62,7 @@ describe('Backlog', () => {
       toReview({ threadId: 1, reviewComplexity: 1 }),
       inReviewWith(1, []),
     ]);
-    const userStory = getNextUserStory(backlog, thread(0));
+    const userStory = getNextUserStory(backlog, createThread(0));
     expect(userStory).toEqual(inReviewWith(1, []));
   });
 
@@ -73,13 +73,13 @@ describe('Backlog', () => {
       inReviewWith(1, []),
       inProgress({ threadId: 0 }),
     ]);
-    const userStory = getNextUserStory(backlog, thread(0));
+    const userStory = getNextUserStory(backlog, createThread(0));
     expect(userStory).toEqual(inProgress({ threadId: 0 }));
   });
 
   test('Should get IN_REVIEW with a missing review', () => {
     const backlog = new Backlog([inReviewWith(1, [[0, 2]])]);
-    const userStory = getNextUserStory(backlog, thread(2));
+    const userStory = getNextUserStory(backlog, createThread(2));
     expect(userStory).toEqual(inReviewWith(1, [[0, 2]]));
   });
 
@@ -91,7 +91,7 @@ describe('Backlog', () => {
         [2, 2],
       ]),
     ]);
-    const userStory = getNextUserStory(backlog, thread(0));
+    const userStory = getNextUserStory(backlog, createThread(0));
     expect(userStory).toEqual(
       inReviewWith(1, [
         [0, 1],
@@ -102,7 +102,7 @@ describe('Backlog', () => {
 
   test('Should not get IN_REVIEW when review is done', () => {
     const backlog = new Backlog([inReviewWith(1, [[0, 2]])]);
-    const userStory = getNextUserStory(backlog, thread(0));
+    const userStory = getNextUserStory(backlog, createThread(0));
     expect(userStory).toEqual(idle);
   });
 
@@ -113,7 +113,7 @@ describe('Backlog', () => {
         [2, 2],
       ]),
     ]);
-    const userStory = getNextUserStory(backlog, thread(0));
+    const userStory = getNextUserStory(backlog, createThread(0));
     expect(userStory).toEqual(idle);
   });
 
@@ -124,13 +124,13 @@ describe('Backlog', () => {
         [2, 2],
       ]),
     ]);
-    const userStory = getNextUserStory(backlog, thread(3));
+    const userStory = getNextUserStory(backlog, createThread(3));
     expect(userStory).toEqual(idle);
   });
 
   test('Should not get self IN_REVIEW', () => {
     const backlog = new Backlog([inReviewWith(1, [])]);
-    const userStory = getNextUserStory(backlog, thread(1));
+    const userStory = getNextUserStory(backlog, createThread(1));
     expect(userStory).toEqual(idle);
   });
 
@@ -165,7 +165,7 @@ describe('Backlog', () => {
     });
   };
 
-  const thread = (id: number, power = 1): Thread => {
+  const createThread = (id: number, power = 1): Thread => {
     return { id, name: '', power };
   };
 

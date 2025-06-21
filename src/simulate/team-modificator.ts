@@ -13,7 +13,7 @@ const _computeTeamProbabilities = (
   },
 ): TeamProbabilities => {
   const currentSize = threads.length;
-  const memberRemovalProbs = new Map<number, number>();
+  const memberRemovalProbabilities = new Map<number, number>();
 
   // ---- 1. Compute per-member removal probabilities ----
   let totalExperience = 0;
@@ -23,22 +23,22 @@ const _computeTeamProbabilities = (
     const experienceFactor = Math.exp(-config.experienceWeight * thread.power);
     const timeFactor = 1 / Math.log(time + 2) ** config.timeDecayFactor;
     const pRemove = config.baseRemoveRate * experienceFactor * timeFactor;
-    memberRemovalProbs.set(thread.id, pRemove);
+    memberRemovalProbabilities.set(thread.id, pRemove);
   });
 
   // ---- 2. Compute team-wide creation probability ----
-  let teamCreateProb = 0;
+  let teamCreateProbability = 0;
   if (currentSize < maxCapacity) {
     const avgExperience = totalExperience / currentSize || 1;
     const capacityFactor = 1 - currentSize / maxCapacity;
     // More experienced teams hire slower (optional)
     const experiencePenalty = 1 / avgExperience ** 0.5;
-    teamCreateProb =
+    teamCreateProbability =
       (config.baseCreateRate * capacityFactor * experiencePenalty) /
       Math.sqrt(time + 1);
   }
 
-  return { memberRemovalProbs, teamCreateProb };
+  return { memberRemovalProbabilities, teamCreateProbability };
 };
 
 export class TeamModificator {
@@ -66,6 +66,6 @@ export class TeamModificator {
 }
 
 export type TeamProbabilities = {
-  memberRemovalProbs: Map<number, number>; // Probability per member
-  teamCreateProb: number; // Team-wide addition chance
+  memberRemovalProbabilities: Map<number, number>; // Probability per member
+  teamCreateProbability: number; // Team-wide addition chance
 };
