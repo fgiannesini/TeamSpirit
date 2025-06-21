@@ -136,7 +136,7 @@ export const reviewEvent = (options: Partial<TimeEvent> = {}): TimeEvent => {
   };
 };
 
-export const thread = (options: Partial<Thread> = {}): Thread => {
+export const createThread = (options: Partial<Thread> = {}): Thread => {
   return {
     id: 0,
     name: 'thread',
@@ -145,10 +145,14 @@ export const thread = (options: Partial<Thread> = {}): Thread => {
   };
 };
 
-export const ensembleTeam = (threads: Thread[] = [thread()]): EnsembleTeam => {
+export const ensembleTeam = (
+  threads: Thread[] = [createThread()],
+): EnsembleTeam => {
   return new EnsembleTeam(threads);
 };
 
-export const parallelTeam = (threads: Thread[] = [thread()]): ParallelTeam => {
+export const parallelTeam = (
+  threads: Thread[] = [createThread()],
+): ParallelTeam => {
   return new ParallelTeam(threads);
 };

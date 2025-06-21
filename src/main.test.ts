@@ -9,7 +9,7 @@ import {
 } from './main.ts';
 import { Backlog } from './simulate/backlog.ts';
 import type { TimeEvent } from './simulate/events.ts';
-import { thread, todo } from './simulate/factory.ts';
+import { createThread, todo } from './simulate/factory.ts';
 import type { StructureEvent } from './simulate/simulation-structure.ts';
 import type { StatEvent } from './simulate/stats.ts';
 import { EnsembleTeam, ParallelTeam } from './simulate/team.ts';
@@ -250,8 +250,8 @@ describe('Main', () => {
     setValueTo('#dev-count-input', '2');
     expect(buildParallelTeam()).toStrictEqual(
       new ParallelTeam([
-        thread({ id: 0, name: 'thread0', power: 1 }),
-        thread({ id: 1, name: 'thread1', power: 1 }),
+        createThread({ id: 0, name: 'thread0', power: 1 }),
+        createThread({ id: 1, name: 'thread1', power: 1 }),
       ]),
     );
   });

@@ -1,4 +1,4 @@
-import { thread } from './factory.ts';
+import { createThread } from './factory.ts';
 import type { Team, Thread } from './team.ts';
 
 const _computeTeamProbabilities = (
@@ -49,7 +49,7 @@ export class TeamModificator {
 
   addTo(team: Team): { team: Team; addedThreads: Thread[] } {
     this.randomProvider();
-    const threadToAdd = thread({ id: 1 });
+    const threadToAdd = createThread({ id: 1 });
     return {
       team: team.addThread(threadToAdd),
       addedThreads: [threadToAdd],

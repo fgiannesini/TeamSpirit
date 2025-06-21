@@ -1,58 +1,69 @@
 import { describe, expect, test } from 'vitest';
+import { createThread } from './factory.ts';
 import { EnsembleTeam, ParallelTeam, type Team } from './team.ts';
 
 describe('Team', () => {
   describe('Parallel team', () => {
     test('Should get effective threads', () => {
       const team: Team = new ParallelTeam([
-        { id: 0, name: 'thread0', power: 10 },
-        { id: 1, name: 'thread1', power: 25 },
-        { id: 2, name: 'thread2', power: 15 },
+        createThread({ id: 0 }),
+        createThread({ id: 1 }),
       ]);
       expect(team.getEffectiveThreads()).toEqual([
-        { id: 0, name: 'thread0', power: 10 },
-        { id: 1, name: 'thread1', power: 25 },
-        { id: 2, name: 'thread2', power: 15 },
+        createThread({ id: 0 }),
+        createThread({ id: 1 }),
       ]);
     });
 
     test('Should get real threads team', () => {
       const team: Team = new ParallelTeam([
-        { id: 0, name: 'thread0', power: 10 },
-        { id: 1, name: 'thread1', power: 25 },
-        { id: 2, name: 'thread2', power: 15 },
+        createThread({ id: 0 }),
+        createThread({ id: 1 }),
       ]);
       expect(team.getRealThreads()).toEqual([
-        { id: 0, name: 'thread0', power: 10 },
-        { id: 1, name: 'thread1', power: 25 },
-        { id: 2, name: 'thread2', power: 15 },
+        createThread({ id: 0 }),
+        createThread({ id: 1 }),
       ]);
+    });
+
+    test('Should add thread', () => {
+      const team: Team = new ParallelTeam([createThread({ id: 0 })]);
+      const newTeam = team.addThread(createThread({ id: 1 }));
+      expect(newTeam).toEqual(
+        new ParallelTeam([createThread({ id: 0 }), createThread({ id: 1 })]),
+      );
     });
   });
 
   describe('Ensemble team', () => {
     test('Should get effective threads', () => {
       const team: Team = new EnsembleTeam([
-        { id: 0, name: 'mob', power: 10 },
-        { id: 1, name: 'mob', power: 25 },
-        { id: 2, name: 'mob', power: 15 },
+        createThread({ id: 0, power: 10 }),
+        createThread({ id: 1, power: 25 }),
+        createThread({ id: 2, power: 15 }),
       ]);
       expect(team.getEffectiveThreads()).toEqual([
-        { id: 0, name: 'mob', power: 17 },
+        createThread({ id: 0, name: 'mob', power: 17 }),
       ]);
     });
-  });
 
-  test('Should get reals threads', () => {
-    const team: Team = new EnsembleTeam([
-      { id: 0, name: 'mob', power: 10 },
-      { id: 1, name: 'mob', power: 25 },
-      { id: 2, name: 'mob', power: 15 },
-    ]);
-    expect(team.getRealThreads()).toEqual([
-      { id: 0, name: 'mob', power: 10 },
-      { id: 1, name: 'mob', power: 25 },
-      { id: 2, name: 'mob', power: 15 },
-    ]);
+    test('Should get reals threads', () => {
+      const team: Team = new EnsembleTeam([
+        createThread({ id: 0 }),
+        createThread({ id: 1 }),
+      ]);
+      expect(team.getRealThreads()).toEqual([
+        createThread({ id: 0 }),
+        createThread({ id: 1 }),
+      ]);
+    });
+
+    test('Should add thread', () => {
+      const team: Team = new EnsembleTeam([createThread({ id: 0 })]);
+      const newTeam = team.addThread(createThread({ id: 1 }));
+      expect(newTeam).toEqual(
+        new EnsembleTeam([createThread({ id: 0 }), createThread({ id: 1 })]),
+      );
+    });
   });
 });

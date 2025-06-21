@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'vitest';
 import {
+  createThread,
   done,
   inProgress,
   inReview,
-  thread,
   todo,
   toReview,
 } from './factory.ts';
@@ -26,7 +26,7 @@ describe('user-story', () => {
   test('should set in Progress', () => {
     const result = setInProgress(
       todo({ complexity: 3, progression: 0 }),
-      thread({ id: 0 }),
+      createThread({ id: 0 }),
     );
     expect(result).toEqual(
       inProgress({ complexity: 3, progression: 1, threadId: 0 }),
@@ -36,7 +36,7 @@ describe('user-story', () => {
   test('should set in Progress with by an experimented thread', () => {
     const result = setInProgress(
       todo({ complexity: 1, progression: 0 }),
-      thread({ id: 0, power: 3 }),
+      createThread({ id: 0, power: 3 }),
     );
     expect(result).toEqual(
       inProgress({ complexity: 1, progression: 1, threadId: 0 }),
@@ -67,7 +67,7 @@ describe('user-story', () => {
         review: { reviewersNeeded: 1, reviewers: new Map() },
         reviewComplexity: 1,
       }),
-      thread({ power: 1 }),
+      createThread({ power: 1 }),
     );
     expect(result).toEqual(
       inReview({
@@ -82,7 +82,7 @@ describe('user-story', () => {
         review: { reviewersNeeded: 2, reviewers: new Map([[1, 1]]) },
         reviewComplexity: 1,
       }),
-      thread({ power: 3 }),
+      createThread({ power: 3 }),
     );
     expect(result).toEqual(
       inReview({
@@ -181,20 +181,23 @@ describe('user-story', () => {
   test('Should be in progress by a thread', () => {
     const result = isInProgressBy(
       inProgress({ threadId: 0 }),
-      thread({ id: 0 }),
+      createThread({ id: 0 }),
     );
     expect(result).toEqual(true);
   });
 
   test('Should not be in progress', () => {
-    const result = isInProgressBy(inReview({ threadId: 0 }), thread({ id: 0 }));
+    const result = isInProgressBy(
+      inReview({ threadId: 0 }),
+      createThread({ id: 0 }),
+    );
     expect(result).toEqual(false);
   });
 
   test('Should not be in progress by a thread', () => {
     const result = isInProgressBy(
       inProgress({ threadId: 1 }),
-      thread({ id: 0 }),
+      createThread({ id: 0 }),
     );
     expect(result).toEqual(false);
   });
@@ -210,17 +213,26 @@ describe('user-story', () => {
   });
 
   test('Should be to review by a thread', () => {
-    const result = isToReviewBy(toReview({ threadId: 0 }), thread({ id: 1 }));
+    const result = isToReviewBy(
+      toReview({ threadId: 0 }),
+      createThread({ id: 1 }),
+    );
     expect(result).toEqual(true);
   });
 
   test('Should not be to review', () => {
-    const result = isToReviewBy(inReview({ threadId: 0 }), thread({ id: 1 }));
+    const result = isToReviewBy(
+      inReview({ threadId: 0 }),
+      createThread({ id: 1 }),
+    );
     expect(result).toEqual(false);
   });
 
   test('Should not be to review by a thread', () => {
-    const result = isToReviewBy(toReview({ threadId: 1 }), thread({ id: 1 }));
+    const result = isToReviewBy(
+      toReview({ threadId: 1 }),
+      createThread({ id: 1 }),
+    );
     expect(result).toEqual(false);
   });
 
@@ -236,7 +248,7 @@ describe('user-story', () => {
           ]),
         },
       }),
-      thread({ id: 2 }),
+      createThread({ id: 2 }),
     );
     expect(result).toEqual(true);
   });
@@ -250,7 +262,7 @@ describe('user-story', () => {
           reviewers: new Map([[2, 2]]),
         },
       }),
-      thread({ id: 2 }),
+      createThread({ id: 2 }),
     );
     expect(result).toEqual(false);
   });
@@ -267,7 +279,7 @@ describe('user-story', () => {
           ]),
         },
       }),
-      thread({ id: 3 }),
+      createThread({ id: 3 }),
     );
     expect(result).toEqual(false);
   });
@@ -281,7 +293,7 @@ describe('user-story', () => {
           reviewers: new Map([[1, 2]]),
         },
       }),
-      thread({ id: 0 }),
+      createThread({ id: 0 }),
     );
     expect(result).toEqual(false);
   });
@@ -295,7 +307,7 @@ describe('user-story', () => {
           reviewers: new Map([[1, 2]]),
         },
       }),
-      thread({ id: 2 }),
+      createThread({ id: 2 }),
     );
     expect(result).toEqual(true);
   });
@@ -309,7 +321,7 @@ describe('user-story', () => {
           reviewers: new Map([[2, 1]]),
         },
       }),
-      thread({ id: 2 }),
+      createThread({ id: 2 }),
     );
     expect(result).toEqual(true);
   });
