@@ -9,13 +9,19 @@ export type Team = {
   getRealThreads(): Thread[];
   addThread(thread: Thread): Team;
   removeThread(threadId: number): Team;
+  getCapacity(): number;
 };
 
 export class ParallelTeam implements Team {
   private readonly threads: Thread[] = [];
-
-  constructor(threads: Thread[]) {
+  private readonly capacity: number;
+  constructor(threads: Thread[], capacity: number = threads.length) {
     this.threads = threads;
+    this.capacity = capacity;
+  }
+
+  getCapacity(): number {
+    return this.capacity;
   }
 
   removeThread(threadId: number): Team {
@@ -37,9 +43,15 @@ export class ParallelTeam implements Team {
 
 export class EnsembleTeam implements Team {
   private readonly threads: Thread[];
+  private readonly capacity: number;
 
-  constructor(threads: Thread[]) {
+  constructor(threads: Thread[], capacity: number = threads.length) {
     this.threads = threads;
+    this.capacity = capacity;
+  }
+
+  getCapacity(): number {
+    return this.capacity;
   }
 
   removeThread(threadId: number): Team {

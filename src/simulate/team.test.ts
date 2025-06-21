@@ -42,6 +42,15 @@ describe('Team', () => {
       const newTeam = team.removeThread(1);
       expect(newTeam).toEqual(new ParallelTeam([createThread({ id: 0 })]));
     });
+
+    test('Should get capacity', () => {
+      const team: Team = new ParallelTeam([
+        createThread({ id: 0 }),
+        createThread({ id: 1 }),
+      ]);
+      const capacity = team.getCapacity();
+      expect(capacity).toBe(2);
+    });
   });
 
   describe('Ensemble team', () => {
@@ -82,6 +91,15 @@ describe('Team', () => {
       ]);
       const newTeam = team.removeThread(1);
       expect(newTeam).toEqual(new EnsembleTeam([createThread({ id: 0 })]));
+    });
+
+    test('Should get capacity', () => {
+      const team: Team = new EnsembleTeam([
+        createThread({ id: 0 }),
+        createThread({ id: 1 }),
+      ]);
+      const capacity = team.getCapacity();
+      expect(capacity).toBe(2);
     });
   });
 });
