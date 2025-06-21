@@ -1,10 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import {
-  addUserStory,
-  Backlog,
-  getUserStoriesDone,
-  getUserStoriesRemainings,
-} from './backlog.ts';
+import { addUserStory, Backlog, getUserStoriesDone, getUserStoriesRemainings } from './backlog.ts';
 import type { BugGenerator } from './bug-generator.ts';
 import { done, todo } from './factory.ts';
 import { simulate } from './simulation.ts';

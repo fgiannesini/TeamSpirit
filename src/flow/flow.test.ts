@@ -1,12 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import {
-  doneEvent,
-  inProgressEvent,
-  reviewEvent,
-  toReviewEvent,
-} from '../simulate/factory.ts';
+import { doneEvent, inProgressEvent, reviewEvent, toReviewEvent } from '../simulate/factory.ts';
 import type { StructureEvent } from '../simulate/simulation-structure.ts';
 import {
   getCompute,
@@ -17,11 +12,7 @@ import {
   getThreadUserStoryContainer,
   getUserStory,
 } from './selector.ts';
-import {
-  saveStatEvents,
-  saveStructureEvents,
-  saveTimeEvents,
-} from './storage/session-storage.ts';
+import { saveStatEvents, saveStructureEvents, saveTimeEvents } from './storage/session-storage.ts';
 
 describe('Flow', () => {
   beforeEach(() => {

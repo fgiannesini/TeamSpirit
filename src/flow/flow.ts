@@ -6,17 +6,8 @@ import { renderStatEvents } from './render-stats.ts';
 import { addThreads } from './render-thread.ts';
 import { renderTimeEvents } from './render-time.ts';
 import { addUserStories } from './render-user-story.ts';
-import {
-  getBacklog,
-  getCompute,
-  getComputeAll,
-  getThreads,
-} from './selector.ts';
-import {
-  loadStatEvents,
-  loadStructureEvents,
-  loadTimeEvents,
-} from './storage/session-storage.ts';
+import { getBacklog, getCompute, getComputeAll, getThreads } from './selector.ts';
+import { loadStatEvents, loadStructureEvents, loadTimeEvents } from './storage/session-storage.ts';
 
 const buildUserStories = (
   structureEvents: StructureEvent[],

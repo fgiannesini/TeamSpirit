@@ -1,12 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import {
-  createThread,
-  done,
-  inProgress,
-  inReview,
-  todo,
-  toReview,
-} from './factory.ts';
+import { createThread, done, inProgress, inReview, todo, toReview } from './factory.ts';
 import {
   isDeveloped,
   isInProgressBy,

@@ -1,11 +1,4 @@
-import {
-  canReview,
-  getReviewPoints,
-  hasAllReviews,
-  hasReviewStarted,
-  noReview,
-  type Review,
-} from './review.ts';
+import { canReview, getReviewPoints, hasAllReviews, hasReviewStarted, noReview, type Review } from './review.ts';
 import type { Thread } from './team.ts';
 
 const updateReviewPoints = (

@@ -1,9 +1,4 @@
-import {
-  addUserStory,
-  type Backlog,
-  getNextUserStory,
-  userStoriesWithSomeReviews,
-} from './backlog.ts';
+import { addUserStory, type Backlog, getNextUserStory, userStoriesWithSomeReviews } from './backlog.ts';
 import { createTimeEvent, type TimeEvent } from './events.ts';
 import type { Team } from './team.ts';
 import {

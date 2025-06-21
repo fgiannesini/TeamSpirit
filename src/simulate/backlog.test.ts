@@ -1,18 +1,6 @@
 import { describe, expect, test, vitest } from 'vitest';
-import {
-  Backlog,
-  getNextUserStory,
-  shouldGenerateBug,
-  userStoriesWithSomeReviews,
-} from './backlog.ts';
-import {
-  done,
-  ensembleTeam,
-  inProgress,
-  inReview,
-  todo,
-  toReview,
-} from './factory.ts';
+import { Backlog, getNextUserStory, shouldGenerateBug, userStoriesWithSomeReviews } from './backlog.ts';
+import { done, ensembleTeam, inProgress, inReview, todo, toReview } from './factory.ts';
 import type { Thread } from './team.ts';
 import { idle, type UserStory } from './user-story.ts';
 

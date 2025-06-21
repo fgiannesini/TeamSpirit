@@ -1,18 +1,6 @@
 import { describe, expect, test } from 'vitest';
-import {
-  Backlog,
-  getUserStoriesDone,
-  getUserStoriesRemainings,
-} from './backlog.ts';
-import {
-  doneEvent,
-  idleEvent,
-  inProgressEvent,
-  reviewEvent,
-  todo,
-  toReview,
-  toReviewEvent,
-} from './factory.ts';
+import { Backlog, getUserStoriesDone, getUserStoriesRemainings } from './backlog.ts';
+import { doneEvent, idleEvent, inProgressEvent, reviewEvent, todo, toReview, toReviewEvent } from './factory.ts';
 import { simulateTimeEvents } from './simulation-time.ts';
 import { ParallelTeam } from './team.ts';
 

@@ -1,15 +1,8 @@
 import './style.scss';
-import {
-  saveStatEvents,
-  saveStructureEvents,
-  saveTimeEvents,
-} from './flow/storage/session-storage.ts';
+import { saveStatEvents, saveStructureEvents, saveTimeEvents } from './flow/storage/session-storage.ts';
 import { generateDevForm, generateUserStoriesForm } from './form/form.ts';
 import { Backlog } from './simulate/backlog.ts';
-import {
-  type BugGenerator,
-  BugGeneratorHandler,
-} from './simulate/bug-generator.ts';
+import { type BugGenerator, BugGeneratorHandler } from './simulate/bug-generator.ts';
 import { noReview } from './simulate/review.ts';
 import { simulate } from './simulate/simulation.ts';
 import { computeStatEvents } from './simulate/stats.ts';
