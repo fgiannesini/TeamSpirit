@@ -5,13 +5,13 @@ const _computeTeamProbabilities = (
   threads: Thread[],
   time: number,
   maxCapacity: number,
-  config = {
+): TeamProbabilities => {
+  const config = {
     baseRemoveRate: 0.1, // Base chance of leaving (lowest experience member)
     baseCreateRate: 0.2, // Base chance of adding a member
     timeDecayFactor: 0.5, // How much time reduces removal rate
     experienceWeight: 2.0, // How strongly experience reduces removal
-  },
-): TeamProbabilities => {
+  };
   const currentSize = threads.length;
   const memberRemovalProbabilities = new Map<number, number>();
 
