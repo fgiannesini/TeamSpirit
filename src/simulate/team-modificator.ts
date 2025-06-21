@@ -1,44 +1,49 @@
 import { createThread } from './factory.ts';
 import type { Team, Thread } from './team.ts';
 
-const _computeTeamProbabilities = (
+type DepartureProbabilities = Record<number, number>;
+
+export const computeThreadsRemovalProbabilities = (
+  threads: Thread[],
+  time: number,
+): DepartureProbabilities => {
+  const maxTime = 30;
+  const maxProb = 0.5;
+  const probabilities: DepartureProbabilities = {};
+  const timeFactor = Math.min(1, (time / maxTime) ** 2.2); // entre 0 et 1
+
+  for (const thread of threads) {
+    const experienceFactor = (6 - thread.power) / 5; // entre 0.2 et 1
+    probabilities[thread.id] = Math.min(
+      maxProb,
+      timeFactor * experienceFactor * maxProb,
+    );
+  }
+
+  return probabilities;
+};
+
+export const computeTeamAddingProbability = (
   threads: Thread[],
   time: number,
   maxCapacity: number,
-): TeamProbabilities => {
-  const config = {
-    baseRemoveRate: 0.1, // Base chance of leaving (lowest experience member)
-    baseCreateRate: 0.2, // Base chance of adding a member
-    timeDecayFactor: 0.5, // How much time reduces removal rate
-    experienceWeight: 2.0, // How strongly experience reduces removal
-  };
+): number => {
   const currentSize = threads.length;
-  const memberRemovalProbabilities = new Map<number, number>();
-
-  // ---- 1. Compute per-member removal probabilities ----
-  let totalExperience = 0;
-  threads.forEach((thread) => {
-    totalExperience += thread.power;
-    // Higher experience = lower removal chance (scaled exponentially)
-    const experienceFactor = Math.exp(-config.experienceWeight * thread.power);
-    const timeFactor = 1 / Math.log(time + 2) ** config.timeDecayFactor;
-    const pRemove = config.baseRemoveRate * experienceFactor * timeFactor;
-    memberRemovalProbabilities.set(thread.id, pRemove);
-  });
-
-  // ---- 2. Compute team-wide creation probability ----
-  let teamCreateProbability = 0;
-  if (currentSize < maxCapacity) {
-    const avgExperience = totalExperience / currentSize || 1;
-    const capacityFactor = 1 - currentSize / maxCapacity;
-    // More experienced teams hire slower (optional)
-    const experiencePenalty = 1 / avgExperience ** 0.5;
-    teamCreateProbability =
-      (config.baseCreateRate * capacityFactor * experiencePenalty) /
-      Math.sqrt(time + 1);
+  if (currentSize >= maxCapacity) {
+    return 0;
   }
-
-  return { memberRemovalProbabilities, teamCreateProbability };
+  let totalExperience = 0;
+  for (const thread of threads) {
+    totalExperience += thread.power;
+  }
+  const avgExperience = totalExperience / currentSize || 1;
+  // More experienced teams hire slower (optional)
+  const experiencePenalty = 1 / avgExperience ** 0.5;
+  const capacityFactor = 1 - currentSize / maxCapacity;
+  const baseCreateRate = 0.2; // Base chance of adding a member
+  return (
+    (baseCreateRate * capacityFactor * experiencePenalty) / Math.sqrt(time + 1)
+  );
 };
 
 export class TeamModificator {
@@ -64,8 +69,3 @@ export class TeamModificator {
     };
   }
 }
-
-export type TeamProbabilities = {
-  memberRemovalProbabilities: Map<number, number>; // Probability per member
-  teamCreateProbability: number; // Team-wide addition chance
-};
