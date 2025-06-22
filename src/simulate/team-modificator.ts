@@ -37,11 +37,19 @@ export class TeamModificator {
     };
   }
 
-  removeFrom(team: Team): { team: Team; removedThreads: Thread[] } {
-    const removedThread = team.getRealThreads()[1];
+  removeFrom(team: Team, time: number): { team: Team; removedThreads: Thread[] } {
+    let newTeam = team;
+    const removedThreads: Thread[] = [];
+    const probabilities = computeThreadsRemovalProbabilities(team.getRealThreads(), time);
+    team.getRealThreads().forEach(thread => {
+      if (this.randomProvider() < probabilities[thread.id]) {
+        removedThreads.push(thread);
+        newTeam = team.removeThread(thread.id);
+      }
+    });
     return {
-      team: team.removeThread(1),
-      removedThreads: [removedThread],
+      team: newTeam,
+      removedThreads: removedThreads,
     };
   }
 }
