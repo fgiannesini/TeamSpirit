@@ -6,7 +6,7 @@ import { type BugGenerator, BugGeneratorHandler } from './simulate/bug-generator
 import { noReview } from './simulate/review.ts';
 import { simulate } from './simulate/simulation.ts';
 import { computeStatEvents } from './simulate/stats.ts';
-import { EnsembleTeam, ParallelTeam, type Team } from './simulate/team.ts';
+import { EnsembleTeam, ParallelTeam, type Team, Thread } from './simulate/team.ts';
 
 const getInputValueOf = (selector: string): number => {
   const number = Number.parseInt(
@@ -127,11 +127,12 @@ export const buildBacklogForEnsembleTeam = (): Backlog => {
 
 export const buildParallelTeam = (): Team => {
   const devCount = getInputValueOf('#dev-count-input');
-  const threads = Array.from({ length: devCount }, (_, i) => {
+  const threads: Thread[] = Array.from({ length: devCount }, (_, i) => {
     return {
       id: i,
       name: `thread${i}`,
       power: getInputValueOf(`#power-input-${i}`),
+      startedTime: 0,
     };
   });
   return new ParallelTeam(threads);
@@ -139,11 +140,12 @@ export const buildParallelTeam = (): Team => {
 
 export const buildEnsembleTeam = (): Team => {
   const devCount = getInputValueOf('#dev-count-input');
-  const threads = Array.from({ length: devCount }, (_, i) => {
+  const threads: Thread[] = Array.from({ length: devCount }, (_, i) => {
     return {
       id: i,
       name: `thread${i}`,
       power: getInputValueOf(`#power-input-${i}`),
+      startedTime: 0,
     };
   });
   return new EnsembleTeam(threads);

@@ -23,29 +23,6 @@ export const computeThreadsRemovalProbabilities = (
   return probabilities;
 };
 
-export const computeTeamAddingProbability = (
-  threads: Thread[],
-  time: number,
-  maxCapacity: number,
-): number => {
-  const currentSize = threads.length;
-  if (currentSize >= maxCapacity) {
-    return 0;
-  }
-  let totalExperience = 0;
-  for (const thread of threads) {
-    totalExperience += thread.power;
-  }
-  const avgExperience = totalExperience / currentSize || 1;
-  // More experienced teams hire slower (optional)
-  const experiencePenalty = 1 / avgExperience ** 0.5;
-  const capacityFactor = 1 - currentSize / maxCapacity;
-  const baseCreateRate = 0.2; // Base chance of adding a member
-  return (
-    (baseCreateRate * capacityFactor * experiencePenalty) / Math.sqrt(time + 1)
-  );
-};
-
 export class TeamModificator {
   private readonly randomProvider: () => number;
   constructor(randomProvider: () => number) {

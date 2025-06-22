@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { Backlog } from './backlog.ts';
-import { todo } from './factory.ts';
+import { createThread, todo } from './factory.ts';
 import { type Action, structureEventsOnInitialization } from './simulation-structure.ts';
 import { ParallelTeam } from './team.ts';
 
@@ -25,8 +25,8 @@ describe('simulation-structure', () => {
     ]);
 
     const team = new ParallelTeam([
-      { id: 0, name: 'thread0', power: 1 },
-      { id: 1, name: 'thread1', power: 1 },
+      createThread({ id: 0, name: 'thread0', power: 1 }),
+      createThread({ id: 1, name: 'thread1', power: 1 }),
     ]);
     const events = structureEventsOnInitialization(backlog, team);
 

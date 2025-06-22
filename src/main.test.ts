@@ -240,8 +240,8 @@ describe('Main', () => {
     setValueTo('#power-input-1', '10');
     expect(buildParallelTeam()).toStrictEqual(
       new ParallelTeam([
-        { id: 0, name: 'thread0', power: 5 },
-        { id: 1, name: 'thread1', power: 10 },
+        createThread({ id: 0, name: 'thread0', power: 5 }),
+        createThread({ id: 1, name: 'thread1', power: 10 }),
       ]),
     );
   });
@@ -263,8 +263,8 @@ describe('Main', () => {
     setValueTo('#power-input-1', '10');
     expect(buildEnsembleTeam()).toStrictEqual(
       new EnsembleTeam([
-        { id: 0, name: 'thread0', power: 5 },
-        { id: 1, name: 'thread1', power: 10 },
+        createThread({ id: 0, name: 'thread0', power: 5 }),
+        createThread({ id: 1, name: 'thread1', power: 10 }),
       ]),
     );
   });

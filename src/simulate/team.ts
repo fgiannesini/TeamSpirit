@@ -2,6 +2,7 @@ export type Thread = {
   id: number;
   name: string;
   power: number;
+  startedTime: number;
 };
 
 export type Team = {
@@ -73,7 +74,7 @@ export class EnsembleTeam implements Team {
       .map((thread) => thread.power)
       .reduce((acc, val) => acc + val, 0);
     const mean = Math.round(sum / this.threads.length);
-    return [{ id: 0, name: 'mob', power: mean }];
+    return [{ id: 0, name: 'mob', power: mean, startedTime: 0 }];
   }
 
   addThread(thread: Thread): Team {

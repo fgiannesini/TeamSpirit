@@ -1,12 +1,21 @@
 import { describe, expect, test } from 'vitest';
 import { Backlog, getUserStoriesDone, getUserStoriesRemainings } from './backlog.ts';
-import { doneEvent, idleEvent, inProgressEvent, reviewEvent, todo, toReview, toReviewEvent } from './factory.ts';
+import {
+  createThread,
+  doneEvent,
+  idleEvent,
+  inProgressEvent,
+  reviewEvent,
+  todo,
+  toReview,
+  toReviewEvent,
+} from './factory.ts';
 import { simulateTimeEvents } from './simulation-time.ts';
 import { ParallelTeam } from './team.ts';
 
 describe('simulation time', () => {
   test('should have a thread idle', () => {
-    const team = new ParallelTeam([{ id: 0, name: 'thread0', power: 1 }]);
+    const team = new ParallelTeam([createThread({ id: 0, power: 1 })]);
     const backlog = new Backlog([]);
     const timeEvents = simulateTimeEvents(team, backlog, 1);
     expect(timeEvents).toEqual([idleEvent()]);
@@ -14,8 +23,8 @@ describe('simulation time', () => {
 
   test('should have two threads idle', () => {
     const team = new ParallelTeam([
-      { id: 0, name: 'thread0', power: 1 },
-      { id: 1, name: 'thread1', power: 1 },
+      createThread({ id: 0, power: 1 }),
+      createThread({ id: 1, power: 1 }),
     ]);
     const backlog = new Backlog([]);
     const timeEvents = simulateTimeEvents(team, backlog, 1);
@@ -26,7 +35,7 @@ describe('simulation time', () => {
   });
 
   test('should have a thread develop and done a user story', () => {
-    const team = new ParallelTeam([{ id: 0, name: 'thread0', power: 1 }]);
+    const team = new ParallelTeam([createThread({ id: 0, power: 1 })]);
     const backlog = new Backlog([todo()]);
     const timeEvents = simulateTimeEvents(team, backlog, 1);
     expect(timeEvents).toEqual([inProgressEvent(), doneEvent()]);
@@ -35,7 +44,7 @@ describe('simulation time', () => {
   });
 
   test('should have a thread develop a user story', () => {
-    const team = new ParallelTeam([{ id: 0, name: 'thread0', power: 1 }]);
+    const team = new ParallelTeam([createThread({ id: 0, power: 1 })]);
     const backlog = new Backlog([todo({ complexity: 3 })]);
     const timeEvents = simulateTimeEvents(team, backlog, 1);
     expect(timeEvents).toEqual([inProgressEvent()]);
@@ -44,7 +53,7 @@ describe('simulation time', () => {
   });
 
   test('should have an efficient thread develop a complex user story', () => {
-    const team = new ParallelTeam([{ id: 0, name: 'thread0', power: 3 }]);
+    const team = new ParallelTeam([createThread({ id: 0, power: 3 })]);
     const backlog = new Backlog([todo({ complexity: 3 })]);
     const timeEvents = simulateTimeEvents(team, backlog, 1);
     expect(timeEvents).toEqual([inProgressEvent(), doneEvent()]);
@@ -53,7 +62,7 @@ describe('simulation time', () => {
   });
 
   test('Should have a thread develop a user story with review', () => {
-    const team = new ParallelTeam([{ id: 0, name: 'thread0', power: 1 }]);
+    const team = new ParallelTeam([createThread({ id: 0, power: 1 })]);
     const backlog = new Backlog([
       todo({ review: { reviewersNeeded: 1, reviewers: new Map() } }),
     ]);
@@ -64,7 +73,7 @@ describe('simulation time', () => {
   });
 
   test('Should have an experimented thread develop a complex user story with review', () => {
-    const team = new ParallelTeam([{ id: 0, name: 'thread0', power: 3 }]);
+    const team = new ParallelTeam([createThread({ id: 0, power: 3 })]);
     const backlog = new Backlog([
       todo({
         complexity: 3,
@@ -78,7 +87,7 @@ describe('simulation time', () => {
   });
 
   test('Should have a thread review a user story', () => {
-    const team = new ParallelTeam([{ id: 0, name: 'thread0', power: 1 }]);
+    const team = new ParallelTeam([createThread({ id: 0, power: 1 })]);
     const backlog = new Backlog([
       toReview({
         threadId: 1,
@@ -92,7 +101,7 @@ describe('simulation time', () => {
   });
 
   test('Should have a thread review a complex user story', () => {
-    const team = new ParallelTeam([{ id: 0, name: 'thread0', power: 1 }]);
+    const team = new ParallelTeam([createThread({ id: 0, power: 1 })]);
     const backlog = new Backlog([
       toReview({
         threadId: 1,
@@ -106,7 +115,7 @@ describe('simulation time', () => {
     expect(getUserStoriesRemainings(backlog)).toHaveLength(1);
   });
   test('Should have an experimented thread review a simple user story', () => {
-    const team = new ParallelTeam([{ id: 0, name: 'thread0', power: 3 }]);
+    const team = new ParallelTeam([createThread({ id: 0, power: 3 })]);
     const backlog = new Backlog([
       toReview({
         threadId: 1,
@@ -121,7 +130,7 @@ describe('simulation time', () => {
   });
 
   test('Should have a thread review a partially reviewed user story', () => {
-    const team = new ParallelTeam([{ id: 0, name: 'thread0', power: 3 }]);
+    const team = new ParallelTeam([createThread({ id: 0, power: 3 })]);
     const backlog = new Backlog([
       toReview({
         threadId: 1,
@@ -137,8 +146,8 @@ describe('simulation time', () => {
 
   test('Should have two threads review a user story', () => {
     const team = new ParallelTeam([
-      { id: 0, name: 'thread0', power: 1 },
-      { id: 1, name: 'thread1', power: 1 },
+      createThread({ id: 0, power: 1 }),
+      createThread({ id: 1, power: 1 }),
     ]);
     const backlog = new Backlog([
       toReview({
@@ -159,8 +168,8 @@ describe('simulation time', () => {
 
   test('Should have two threads review partially a user story', () => {
     const team = new ParallelTeam([
-      { id: 0, name: 'thread0', power: 3 },
-      { id: 1, name: 'thread1', power: 1 },
+      createThread({ id: 0, power: 3 }),
+      createThread({ id: 1, power: 1 }),
     ]);
     const backlog = new Backlog([
       toReview({
