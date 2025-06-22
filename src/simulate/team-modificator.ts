@@ -10,9 +10,8 @@ export const computeThreadsRemovalProbabilities = (
   const maxTime = 30;
   const maxProb = 0.5;
   const probabilities: DepartureProbabilities = {};
-  const timeFactor = Math.min(1, (time / maxTime) ** 2.2); // entre 0 et 1
-
   for (const thread of threads) {
+    const timeFactor = Math.min(1, ((time - thread.startedTime) / maxTime) ** 2.2); // entre 0 et 1
     const experienceFactor = (6 - thread.power) / 5; // entre 0.2 et 1
     probabilities[thread.id] = Math.min(
       maxProb,
