@@ -3,19 +3,21 @@ export type Thread = {
   name: string;
   power: number;
   startedTime: number;
+  quit: boolean;
 };
 
 export type Team = {
   getEffectiveThreads(): Thread[];
   getRealThreads(): Thread[];
   addThread(thread: Thread): Team;
-  removeThread(threadId: number): Team;
+  quit(threadId: number): Team;
   getCapacity(): number;
 };
 
 export class ParallelTeam implements Team {
   private readonly threads: Thread[] = [];
   private readonly capacity: number;
+
   constructor(threads: Thread[], capacity: number = threads.length) {
     this.threads = threads;
     this.capacity = capacity;
@@ -25,11 +27,13 @@ export class ParallelTeam implements Team {
     return this.capacity;
   }
 
-  removeThread(threadId: number): Team {
-    return new ParallelTeam(
-      this.threads.filter(({ id }) => id !== threadId),
-      this.capacity,
+  quit(threadId: number): Team {
+    const index = this.threads.findIndex((thread) => thread.id === threadId);
+    const newThread = { ...this.threads[index], quit: true };
+    const newThreads = this.threads.map((item, i) =>
+      i === index ? newThread : item,
     );
+    return new ParallelTeam(newThreads, this.capacity);
   }
 
   getRealThreads(): Thread[] {
@@ -58,11 +62,13 @@ export class EnsembleTeam implements Team {
     return this.capacity;
   }
 
-  removeThread(threadId: number): Team {
-    return new ParallelTeam(
-      this.threads.filter(({ id }) => id !== threadId),
-      this.capacity,
+  quit(threadId: number): Team {
+    const index = this.threads.findIndex((thread) => thread.id === threadId);
+    const newThread = { ...this.threads[index], quit: true };
+    const newThreads = this.threads.map((item, i) =>
+      i === index ? newThread : item,
     );
+    return new EnsembleTeam(newThreads, this.capacity);
   }
 
   getRealThreads(): Thread[] {
@@ -74,7 +80,7 @@ export class EnsembleTeam implements Team {
       .map((thread) => thread.power)
       .reduce((acc, val) => acc + val, 0);
     const mean = Math.round(sum / this.threads.length);
-    return [{ id: 0, name: 'mob', power: mean, startedTime: 0 }];
+    return [{ id: 0, name: 'mob', power: mean, startedTime: 0, quit: false }];
   }
 
   addThread(thread: Thread): Team {

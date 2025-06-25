@@ -1,12 +1,24 @@
 import './style.scss';
-import { saveStatEvents, saveStructureEvents, saveTimeEvents } from './flow/storage/session-storage.ts';
+import {
+  saveStatEvents,
+  saveStructureEvents,
+  saveTimeEvents,
+} from './flow/storage/session-storage.ts';
 import { generateDevForm, generateUserStoriesForm } from './form/form.ts';
 import { Backlog } from './simulate/backlog.ts';
-import { type BugGenerator, BugGeneratorHandler } from './simulate/bug-generator.ts';
+import {
+  type BugGenerator,
+  BugGeneratorHandler,
+} from './simulate/bug-generator.ts';
 import { noReview } from './simulate/review.ts';
 import { simulate } from './simulate/simulation.ts';
 import { computeStatEvents } from './simulate/stats.ts';
-import { EnsembleTeam, ParallelTeam, type Team, Thread } from './simulate/team.ts';
+import {
+  EnsembleTeam,
+  ParallelTeam,
+  type Team,
+  type Thread,
+} from './simulate/team.ts';
 
 const getInputValueOf = (selector: string): number => {
   const number = Number.parseInt(
@@ -133,6 +145,7 @@ export const buildParallelTeam = (): Team => {
       name: `thread${i}`,
       power: getInputValueOf(`#power-input-${i}`),
       startedTime: 0,
+      quit: false,
     };
   });
   return new ParallelTeam(threads);
@@ -146,6 +159,7 @@ export const buildEnsembleTeam = (): Team => {
       name: `thread${i}`,
       power: getInputValueOf(`#power-input-${i}`),
       startedTime: 0,
+      quit: false,
     };
   });
   return new EnsembleTeam(threads);

@@ -11,7 +11,10 @@ export const computeThreadsRemovalProbabilities = (
   const maxProb = 0.5;
   const probabilities: DepartureProbabilities = {};
   for (const thread of threads) {
-    const timeFactor = Math.min(1, ((time - thread.startedTime) / maxTime) ** 2.2); // entre 0 et 1
+    const timeFactor = Math.min(
+      1,
+      ((time - thread.startedTime) / maxTime) ** 2.2,
+    ); // entre 0 et 1
     const experienceFactor = (6 - thread.power) / 5; // entre 0.2 et 1
     probabilities[thread.id] = Math.min(
       maxProb,
@@ -37,19 +40,25 @@ export class TeamModificator {
     };
   }
 
-  removeFrom(team: Team, time: number): { team: Team; removedThreads: Thread[] } {
+  removeFrom(
+    team: Team,
+    time: number,
+  ): { team: Team; removedThreadIds: number[] } {
     let newTeam = team;
-    const removedThreads: Thread[] = [];
-    const probabilities = computeThreadsRemovalProbabilities(team.getRealThreads(), time);
-    team.getRealThreads().forEach(thread => {
+    const removedThreadIds: number[] = [];
+    const probabilities = computeThreadsRemovalProbabilities(
+      team.getRealThreads(),
+      time,
+    );
+    team.getRealThreads().forEach((thread) => {
       if (this.randomProvider() < probabilities[thread.id]) {
-        removedThreads.push(thread);
-        newTeam = team.removeThread(thread.id);
+        removedThreadIds.push(thread.id);
+        newTeam = team.quit(thread.id);
       }
     });
     return {
       team: newTeam,
-      removedThreads: removedThreads,
+      removedThreadIds,
     };
   }
 }

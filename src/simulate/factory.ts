@@ -142,6 +142,7 @@ export const createThread = (options: Partial<Thread> = {}): Thread => {
     name: 'thread',
     power: 1,
     startedTime: 0,
+    quit: false,
     ...options,
   };
 };
