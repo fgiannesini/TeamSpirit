@@ -9,21 +9,27 @@ describe('Team modificator', () => {
   test('should add a new thread in a parallel team', () => {
     const initialTeam = parallelTeam([createThread({ id: 0 })], 2);
     const teamModificator = new TeamModificator(() => 0);
-    const { team, addedThreads } = teamModificator.addTo(initialTeam);
+    const { team, addedThreads } = teamModificator.addTo(initialTeam, 1);
     expect(team).toEqual(
-      parallelTeam([createThread({ id: 0 }), createThread({ id: 1 })]),
+      parallelTeam([
+        createThread({ id: 0 }),
+        createThread({ id: 1, startedTime: 1 }),
+      ]),
     );
-    expect(addedThreads).toEqual([createThread({ id: 1 })]);
+    expect(addedThreads).toEqual([createThread({ id: 1, startedTime: 1 })]);
   });
 
   test('should add a new thread in an ensemble team', () => {
     const initialTeam = ensembleTeam([createThread({ id: 0 })], 2);
     const teamModificator = new TeamModificator(() => 0);
-    const { team, addedThreads } = teamModificator.addTo(initialTeam);
+    const { team, addedThreads } = teamModificator.addTo(initialTeam, 1);
     expect(team).toEqual(
-      ensembleTeam([createThread({ id: 0 }), createThread({ id: 1 })]),
+      ensembleTeam([
+        createThread({ id: 0 }),
+        createThread({ id: 1, startedTime: 1 }),
+      ]),
     );
-    expect(addedThreads).toEqual([createThread({ id: 1 })]);
+    expect(addedThreads).toEqual([createThread({ id: 1, startedTime: 1 })]);
   });
 
   test('should set a thread quit in a parallel team', () => {

@@ -31,9 +31,12 @@ export class TeamModificator {
     this.randomProvider = randomProvider;
   }
 
-  addTo(team: Team): { team: Team; addedThreads: Thread[] } {
+  addTo(
+    team: Team,
+    startedTime: number,
+  ): { team: Team; addedThreads: Thread[] } {
     this.randomProvider();
-    const threadToAdd = createThread({ id: 1 });
+    const threadToAdd = createThread({ id: 1, startedTime });
     return {
       team: team.addThread(threadToAdd),
       addedThreads: [threadToAdd],
