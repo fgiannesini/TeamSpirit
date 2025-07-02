@@ -8,6 +8,7 @@ describe('Team', () => {
       const team: Team = parallelTeam([
         createThread({ id: 0 }),
         createThread({ id: 1 }),
+        createThread({ id: 2, quit: true }),
       ]);
       expect(team.getEffectiveThreads()).toEqual([
         createThread({ id: 0 }),
@@ -15,15 +16,23 @@ describe('Team', () => {
       ]);
     });
 
-    test('Should get real threads team', () => {
+    test('Should get all threads', () => {
       const team: Team = parallelTeam([
         createThread({ id: 0 }),
-        createThread({ id: 1 }),
+        createThread({ id: 1, quit: true }),
       ]);
-      expect(team.getRealThreads()).toEqual([
+      expect(team.getAllThreads()).toEqual([
         createThread({ id: 0 }),
-        createThread({ id: 1 }),
+        createThread({ id: 1, quit: true }),
       ]);
+    });
+
+    test('Should get all active threads', () => {
+      const team: Team = parallelTeam([
+        createThread({ id: 0 }),
+        createThread({ id: 1, quit: true }),
+      ]);
+      expect(team.getAllActiveThreads()).toEqual([createThread({ id: 0 })]);
     });
 
     test('Should add thread', () => {
@@ -68,21 +77,30 @@ describe('Team', () => {
         createThread({ id: 0, power: 10 }),
         createThread({ id: 1, power: 25 }),
         createThread({ id: 2, power: 15 }),
+        createThread({ id: 3, power: 50, quit: true }),
       ]);
       expect(team.getEffectiveThreads()).toEqual([
         createThread({ id: 0, name: 'mob', power: 17 }),
       ]);
     });
 
-    test('Should get reals threads', () => {
+    test('Should get all threads', () => {
       const team: Team = ensembleTeam([
         createThread({ id: 0 }),
-        createThread({ id: 1 }),
+        createThread({ id: 1, quit: true }),
       ]);
-      expect(team.getRealThreads()).toEqual([
+      expect(team.getAllThreads()).toEqual([
         createThread({ id: 0 }),
-        createThread({ id: 1 }),
+        createThread({ id: 1, quit: true }),
       ]);
+    });
+
+    test('Should get all active threads', () => {
+      const team: Team = ensembleTeam([
+        createThread({ id: 0 }),
+        createThread({ id: 1, quit: true }),
+      ]);
+      expect(team.getAllActiveThreads()).toEqual([createThread({ id: 0 })]);
     });
 
     test('Should add thread', () => {

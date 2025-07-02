@@ -8,7 +8,8 @@ export type Thread = {
 
 export type Team = {
   getEffectiveThreads(): Thread[];
-  getRealThreads(): Thread[];
+  getAllThreads(): Thread[];
+  getAllActiveThreads(): Thread[];
   addThread(thread: Thread): Team;
   quit(threadId: number): Team;
   getCapacity(): number;
@@ -36,12 +37,16 @@ export class ParallelTeam implements Team {
     return new ParallelTeam(newThreads, this.capacity);
   }
 
-  getRealThreads(): Thread[] {
+  getAllThreads(): Thread[] {
     return this.threads;
   }
 
+  getAllActiveThreads(): Thread[] {
+    return this.threads.filter((thread) => !thread.quit);
+  }
+
   getEffectiveThreads(): Thread[] {
-    return this.threads;
+    return this.getAllActiveThreads();
   }
 
   addThread(thread: Thread): Team {
@@ -71,15 +76,20 @@ export class EnsembleTeam implements Team {
     return new EnsembleTeam(newThreads, this.capacity);
   }
 
-  getRealThreads(): Thread[] {
+  getAllThreads(): Thread[] {
     return this.threads;
   }
 
+  getAllActiveThreads(): Thread[] {
+    return this.threads.filter((thread) => !thread.quit);
+  }
+
   getEffectiveThreads(): Thread[] {
-    const sum = this.threads
+    const allActiveThreads = this.getAllActiveThreads();
+    const sum = allActiveThreads
       .map((thread) => thread.power)
       .reduce((acc, val) => acc + val, 0);
-    const mean = Math.round(sum / this.threads.length);
+    const mean = Math.round(sum / allActiveThreads.length);
     return [{ id: 0, name: 'mob', power: mean, startedTime: 0, quit: false }];
   }
 
