@@ -1,3 +1,11 @@
+const buildMob = (allActiveThreads: Thread[]): Thread[] => {
+  const sum = allActiveThreads
+    .map((thread) => thread.power)
+    .reduce((acc, val) => acc + val, 0);
+  const mean = Math.round(sum / allActiveThreads.length);
+  return [{ id: 0, name: 'mob', power: mean, startedTime: 0, quit: false }];
+};
+
 export type Thread = {
   id: number;
   name: string;
@@ -8,8 +16,8 @@ export type Thread = {
 
 export type Team = {
   getEffectiveThreads(): Thread[];
-  getAllThreads(): Thread[];
   getAllActiveThreads(): Thread[];
+  getEffectiveActiveThreads(): Thread[];
   addThread(thread: Thread): Team;
   quit(threadId: number): Team;
   getCapacity(): number;
@@ -37,16 +45,16 @@ export class ParallelTeam implements Team {
     return new ParallelTeam(newThreads, this.capacity);
   }
 
-  getAllThreads(): Thread[] {
-    return this.threads;
-  }
-
   getAllActiveThreads(): Thread[] {
     return this.threads.filter((thread) => !thread.quit);
   }
 
-  getEffectiveThreads(): Thread[] {
+  getEffectiveActiveThreads(): Thread[] {
     return this.getAllActiveThreads();
+  }
+
+  getEffectiveThreads(): Thread[] {
+    return this.getEffectiveActiveThreads();
   }
 
   addThread(thread: Thread): Team {
@@ -76,21 +84,16 @@ export class EnsembleTeam implements Team {
     return new EnsembleTeam(newThreads, this.capacity);
   }
 
-  getAllThreads(): Thread[] {
-    return this.threads;
-  }
-
   getAllActiveThreads(): Thread[] {
     return this.threads.filter((thread) => !thread.quit);
   }
 
+  getEffectiveActiveThreads(): Thread[] {
+    return buildMob(this.getAllActiveThreads());
+  }
+
   getEffectiveThreads(): Thread[] {
-    const allActiveThreads = this.getAllActiveThreads();
-    const sum = allActiveThreads
-      .map((thread) => thread.power)
-      .reduce((acc, val) => acc + val, 0);
-    const mean = Math.round(sum / allActiveThreads.length);
-    return [{ id: 0, name: 'mob', power: mean, startedTime: 0, quit: false }];
+    return buildMob(this.threads);
   }
 
   addThread(thread: Thread): Team {

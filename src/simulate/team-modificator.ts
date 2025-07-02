@@ -50,10 +50,10 @@ export class TeamModificator {
     let newTeam = team;
     const removedThreadIds: number[] = [];
     const probabilities = computeThreadsRemovalProbabilities(
-      team.getAllThreads(),
+      team.getAllActiveThreads(),
       time,
     );
-    team.getAllThreads().forEach((thread) => {
+    team.getAllActiveThreads().forEach((thread) => {
       if (this.randomProvider() < probabilities[thread.id]) {
         removedThreadIds.push(thread.id);
         newTeam = team.quit(thread.id);

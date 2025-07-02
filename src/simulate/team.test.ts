@@ -16,23 +16,22 @@ describe('Team', () => {
       ]);
     });
 
-    test('Should get all threads', () => {
-      const team: Team = parallelTeam([
-        createThread({ id: 0 }),
-        createThread({ id: 1, quit: true }),
-      ]);
-      expect(team.getAllThreads()).toEqual([
-        createThread({ id: 0 }),
-        createThread({ id: 1, quit: true }),
-      ]);
-    });
-
     test('Should get all active threads', () => {
       const team: Team = parallelTeam([
         createThread({ id: 0 }),
         createThread({ id: 1, quit: true }),
       ]);
       expect(team.getAllActiveThreads()).toEqual([createThread({ id: 0 })]);
+    });
+
+    test('Should get all effective active threads', () => {
+      const team: Team = parallelTeam([
+        createThread({ id: 0 }),
+        createThread({ id: 1, quit: true }),
+      ]);
+      expect(team.getEffectiveActiveThreads()).toEqual([
+        createThread({ id: 0 }),
+      ]);
     });
 
     test('Should add thread', () => {
@@ -80,18 +79,7 @@ describe('Team', () => {
         createThread({ id: 3, power: 50, quit: true }),
       ]);
       expect(team.getEffectiveThreads()).toEqual([
-        createThread({ id: 0, name: 'mob', power: 17 }),
-      ]);
-    });
-
-    test('Should get all threads', () => {
-      const team: Team = ensembleTeam([
-        createThread({ id: 0 }),
-        createThread({ id: 1, quit: true }),
-      ]);
-      expect(team.getAllThreads()).toEqual([
-        createThread({ id: 0 }),
-        createThread({ id: 1, quit: true }),
+        createThread({ id: 0, name: 'mob', power: 25 }),
       ]);
     });
 
@@ -101,6 +89,17 @@ describe('Team', () => {
         createThread({ id: 1, quit: true }),
       ]);
       expect(team.getAllActiveThreads()).toEqual([createThread({ id: 0 })]);
+    });
+
+    test('Should get effective active threads', () => {
+      const team: Team = ensembleTeam([
+        createThread({ id: 0, power: 5 }),
+        createThread({ id: 1, power: 15 }),
+        createThread({ id: 1, quit: true }),
+      ]);
+      expect(team.getEffectiveActiveThreads()).toEqual([
+        createThread({ id: 0, name: 'mob', power: 10 }),
+      ]);
     });
 
     test('Should add thread', () => {

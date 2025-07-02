@@ -103,7 +103,7 @@ describe('Team modificator', () => {
         createThread({ id: 2, power: 5 }),
       ]);
       const actualProbabilities = computeThreadsRemovalProbabilities(
-        initialTeam.getAllThreads(),
+        initialTeam.getAllActiveThreads(),
         time,
       );
       expect(actualProbabilities[0]).toBeCloseTo(expectedProbabilities[0]);
