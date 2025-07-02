@@ -1,4 +1,9 @@
-import { addUserStory, type Backlog, getNextUserStory, userStoriesWithSomeReviews } from './backlog.ts';
+import {
+  addUserStory,
+  type Backlog,
+  getNextUserStory,
+  userStoriesWithSomeReviews,
+} from './backlog.ts';
 import { createTimeEvent, type TimeEvent } from './events.ts';
 import type { Team } from './team.ts';
 import {
@@ -20,7 +25,7 @@ export const simulateTimeEvents = (
 ): TimeEvent[] => {
   const events: TimeEvent[] = [];
   const toAddBacklog: UserStory[] = [];
-  for (const thread of team.getEffectiveThreads()) {
+  for (const thread of team.getEffectiveActiveThreads()) {
     const userStory: UserStory = getNextUserStory(backlog, thread);
     if (userStory === idle) {
       idle.threadId = thread.id;
