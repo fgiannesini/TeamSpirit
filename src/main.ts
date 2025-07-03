@@ -19,6 +19,10 @@ import {
   type Team,
   type Thread,
 } from './simulate/team.ts';
+import {
+  type TeamModificator,
+  TeamModificatorHandler,
+} from './simulate/team-modificator.ts';
 
 const getInputValueOf = (selector: string): number => {
   const number = Number.parseInt(
@@ -32,8 +36,14 @@ const runSimulation = (
   backlog: Backlog,
   team: Team,
   bugGenerator: BugGenerator,
+  teamModificator: TeamModificator,
 ): string => {
-  const { timeEvents, structureEvents } = simulate(backlog, team, bugGenerator);
+  const { timeEvents, structureEvents } = simulate(
+    backlog,
+    team,
+    bugGenerator,
+    teamModificator,
+  );
   const randomKey = crypto.randomUUID();
   saveTimeEvents(timeEvents, randomKey);
   saveStructureEvents(structureEvents, randomKey);
@@ -54,6 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
           () => Math.random(),
           () => Math.random(),
         ),
+        new TeamModificatorHandler(() => Math.random()),
       );
       window.open(`/TeamSpirit/flow/flow.html?id=${ensembleRandomKey}`);
       window.open(
@@ -67,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
           () => Math.random(),
           () => Math.random(),
         ),
+        new TeamModificatorHandler(() => Math.random()),
       );
       window.open(`/TeamSpirit/flow/flow.html?id=${parallelRandomKey}`);
       window.open(

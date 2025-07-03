@@ -2,13 +2,13 @@ import { describe, expect, test, vitest } from 'vitest';
 import { createThread, ensembleTeam, parallelTeam } from './factory.ts';
 import {
   computeThreadsRemovalProbabilities,
-  TeamModificator,
+  TeamModificatorHandler,
 } from './team-modificator.ts';
 
 describe('Team modificator', () => {
   test('should add a new thread in a parallel team', () => {
     const initialTeam = parallelTeam([createThread({ id: 0 })], 2);
-    const teamModificator = new TeamModificator(() => 0);
+    const teamModificator = new TeamModificatorHandler(() => 0);
     const { team, addedThreads } = teamModificator.addTo(initialTeam, 1);
     expect(team).toEqual(
       parallelTeam([
@@ -21,7 +21,7 @@ describe('Team modificator', () => {
 
   test('should add a new thread in an ensemble team', () => {
     const initialTeam = ensembleTeam([createThread({ id: 0 })], 2);
-    const teamModificator = new TeamModificator(() => 0);
+    const teamModificator = new TeamModificatorHandler(() => 0);
     const { team, addedThreads } = teamModificator.addTo(initialTeam, 1);
     expect(team).toEqual(
       ensembleTeam([
@@ -44,11 +44,8 @@ describe('Team modificator', () => {
       .fn<() => number>()
       .mockReturnValueOnce(1)
       .mockReturnValue(0);
-    const teamModificator = new TeamModificator(randomProvider);
-    const { team, removedThreadIds } = teamModificator.removeFrom(
-      initialTeam,
-      1,
-    );
+    const teamModificator = new TeamModificatorHandler(randomProvider);
+    const { team, removedThreads } = teamModificator.removeFrom(initialTeam, 1);
     expect(team).toEqual(
       parallelTeam(
         [
@@ -58,7 +55,7 @@ describe('Team modificator', () => {
         2,
       ),
     );
-    expect(removedThreadIds).toEqual([1]);
+    expect(removedThreads).toEqual([{ id: 1, name: 'thread' }]);
   });
 
   test('should set a thread quit of an ensemble team', () => {
@@ -73,11 +70,8 @@ describe('Team modificator', () => {
       .fn<() => number>()
       .mockReturnValueOnce(1)
       .mockReturnValue(0);
-    const teamModificator = new TeamModificator(randomProvider);
-    const { team, removedThreadIds } = teamModificator.removeFrom(
-      initialTeam,
-      1,
-    );
+    const teamModificator = new TeamModificatorHandler(randomProvider);
+    const { team, removedThreads } = teamModificator.removeFrom(initialTeam, 1);
     expect(team).toEqual(
       ensembleTeam(
         [
@@ -87,7 +81,7 @@ describe('Team modificator', () => {
         2,
       ),
     );
-    expect(removedThreadIds).toEqual([1]);
+    expect(removedThreads).toEqual([{ id: 1, name: 'thread' }]);
   });
 
   test.each([

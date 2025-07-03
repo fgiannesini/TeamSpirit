@@ -25,7 +25,19 @@ export const computeThreadsRemovalProbabilities = (
   return probabilities;
 };
 
-export class TeamModificator {
+export type TeamModificator = {
+  addTo(
+    team: Team,
+    startedTime: number,
+  ): { team: Team; addedThreads: Thread[] };
+
+  removeFrom(
+    team: Team,
+    time: number,
+  ): { team: Team; removedThreads: Pick<Thread, 'id' | 'name'>[] };
+};
+
+export class TeamModificatorHandler implements TeamModificator {
   private readonly randomProvider: () => number;
   constructor(randomProvider: () => number) {
     this.randomProvider = randomProvider;
@@ -46,22 +58,25 @@ export class TeamModificator {
   removeFrom(
     team: Team,
     time: number,
-  ): { team: Team; removedThreadIds: number[] } {
+  ): { team: Team; removedThreads: Pick<Thread, 'id' | 'name'>[] } {
     let newTeam = team;
-    const removedThreadIds: number[] = [];
+    const removedThreads: Pick<Thread, 'id' | 'name'>[] = [];
     const probabilities = computeThreadsRemovalProbabilities(
       team.getAllActiveThreads(),
       time,
     );
     team.getAllActiveThreads().forEach((thread) => {
       if (this.randomProvider() < probabilities[thread.id]) {
-        removedThreadIds.push(thread.id);
+        removedThreads.push({
+          id: thread.id,
+          name: thread.name,
+        });
         newTeam = team.quit(thread.id);
       }
     });
     return {
       team: newTeam,
-      removedThreadIds,
+      removedThreads,
     };
   }
 }

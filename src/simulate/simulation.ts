@@ -7,17 +7,20 @@ import {
 } from './simulation-structure.ts';
 import { simulateTimeEvents } from './simulation-time.ts';
 import type { Team } from './team.ts';
+import type { TeamModificator } from './team-modificator.ts';
 
 export const simulate = (
   backlog: Backlog,
-  team: Team,
+  originalTeam: Team,
   bugGenerator: BugGenerator,
+  teamModificator: TeamModificator,
 ): {
   timeEvents: TimeEvent[];
   structureEvents: StructureEvent[];
 } => {
   const timeEvents: TimeEvent[] = [];
   let time = 1;
+  let team = originalTeam;
   const structureEvents = structureEventsOnInitialization(backlog, team);
   while (hasMoreUserStories(backlog)) {
     bugGenerator.generate(backlog, team, time).forEach((bug) => {
@@ -29,7 +32,16 @@ export const simulate = (
       });
       addUserStory(bug, backlog);
     });
-
+    const teamModifications = teamModificator.removeFrom(team, time);
+    team = teamModifications.team;
+    teamModifications.removedThreads.forEach((thread) => {
+      structureEvents.push({
+        time,
+        name: thread.name,
+        id: thread.id,
+        action: 'RemoveThread',
+      });
+    });
     timeEvents.push(...simulateTimeEvents(team, backlog, time));
     time++;
   }
