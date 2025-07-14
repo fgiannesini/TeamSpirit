@@ -122,8 +122,8 @@ export const buildBacklogForParallelTeam = (): Backlog => {
       review: {
         reviewersNeeded: reviewersCount,
         reviewers: new Map<number, number>(),
+        reviewComplexity: getInputValueOf(`#review-complexity-input-${i}`),
       },
-      reviewComplexity: getInputValueOf(`#review-complexity-input-${i}`),
       state: 'Todo',
       threadId: undefined,
       progression: 0,
@@ -140,7 +140,6 @@ export const buildBacklogForEnsembleTeam = (): Backlog => {
       name: `US${i}`,
       complexity: getInputValueOf(`#complexity-input-${i}`),
       review: noReview,
-      reviewComplexity: getInputValueOf(`#review-complexity-input-${i}`),
       state: 'Todo',
       threadId: undefined,
       progression: 0,

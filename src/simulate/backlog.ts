@@ -48,7 +48,7 @@ export const getNextUserStory = (
     let minDiff = Number.MAX_VALUE;
     backlog.userStoriesRemaining.forEach((userStory, i) => {
       if (isToReviewBy(userStory, thread)) {
-        const diff = Math.abs(userStory.reviewComplexity - thread.power);
+        const diff = Math.abs(userStory.review.reviewComplexity - thread.power);
         if (diff < minDiff) {
           minDiff = diff;
           threadUserStoryIndex = i;
@@ -80,7 +80,7 @@ export const userStoriesWithSomeReviews = (backlog: Backlog): UserStory[] => {
   return backlog.userStoriesRemaining
     .filter((userStory) => userStory.state === 'Review')
     .filter((userStory) =>
-      hasSomeReviews(userStory.review, userStory.reviewComplexity),
+      hasSomeReviews(userStory.review, userStory.review.reviewComplexity),
     );
 };
 

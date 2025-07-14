@@ -91,6 +91,7 @@ describe('probability', () => {
       done({
         id: 0,
         review: {
+          reviewComplexity: 1,
           reviewersNeeded: 2,
           reviewers: new Map([[0, 1]]),
         },
@@ -103,6 +104,7 @@ describe('probability', () => {
         id: 1,
         name: 'bug-0',
         review: {
+          reviewComplexity: 1,
           reviewersNeeded: 2,
           reviewers: new Map<number, number>(),
         },
@@ -128,14 +130,29 @@ describe('probability', () => {
         () => 0.5,
       );
       const backlog = new Backlog([]);
-      addUserStory(done({ id: 0, complexity, reviewComplexity }), backlog);
+      addUserStory(
+        done({
+          id: 0,
+          complexity,
+          review: {
+            reviewers: new Map<number, number>(),
+            reviewComplexity,
+            reviewersNeeded: 1,
+          },
+        }),
+        backlog,
+      );
       const bugs = bugGenerator.generate(backlog, ensembleTeam(), 0);
       expect(bugs).toEqual([
         todo({
           id: 1,
           name: 'bug-0',
           complexity: bugComplexity,
-          reviewComplexity: bugReviewComplexity,
+          review: {
+            reviewersNeeded: 1,
+            reviewComplexity: bugReviewComplexity,
+            reviewers: new Map<number, number>(),
+          },
         }),
       ]);
     },

@@ -21,7 +21,6 @@ export type UserStory = {
   id: number;
   name: string;
   complexity: number;
-  reviewComplexity: number;
   progression: number;
   review: Review;
   threadId?: number;
@@ -34,7 +33,6 @@ export const idle: UserStory = {
   name: 'idle',
   complexity: 0,
   progression: 0,
-  reviewComplexity: 0,
   review: noReview,
   threadId: undefined,
   state: 'Done',
@@ -89,7 +87,7 @@ export const setReview = (userStory: UserStory, thread: Thread): UserStory => {
   const currentReviewPoints = getReviewPoints(currentReview, thread);
   const newReviewPoints = Math.min(
     currentReviewPoints + thread.power,
-    userStory.reviewComplexity,
+    currentReview.reviewComplexity,
   );
   const newReview = updateReviewPoints(currentReview, thread, newReviewPoints);
 
@@ -105,7 +103,7 @@ export const isDeveloped = (userStory: UserStory): boolean => {
 };
 
 export const isReviewed = (userStory: UserStory): boolean => {
-  return hasAllReviews(userStory.review, userStory.reviewComplexity);
+  return hasAllReviews(userStory.review, userStory.review.reviewComplexity);
 };
 
 export const isInProgressBy: (userStory: UserStory, thread: Thread) => boolean =
@@ -119,7 +117,11 @@ export const isInReviewBy: (userStory: UserStory, thread: Thread) => boolean = (
   if (userStory.state !== 'Review' || userStory.threadId === thread.id) {
     return false;
   }
-  return hasReviewStarted(userStory.review, thread, userStory.reviewComplexity);
+  return hasReviewStarted(
+    userStory.review,
+    thread,
+    userStory.review.reviewComplexity,
+  );
 };
 
 export const needReviewBy: (userStory: UserStory, thread: Thread) => boolean = (

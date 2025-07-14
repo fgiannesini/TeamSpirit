@@ -10,6 +10,7 @@ import {
 import { Backlog } from './simulate/backlog.ts';
 import type { TimeEvent } from './simulate/events.ts';
 import { createThread, todo } from './simulate/factory.ts';
+import { noReview } from './simulate/review.ts';
 import type { StructureEvent } from './simulate/simulation-structure.ts';
 import type { StatEvent } from './simulate/stats.ts';
 import { EnsembleTeam, ParallelTeam } from './simulate/team.ts';
@@ -155,13 +156,13 @@ describe('Main', () => {
           id: 0,
           name: 'US0',
           complexity: 5,
-          reviewComplexity: 2,
+          review: noReview,
         }),
         todo({
           id: 1,
           name: 'US1',
           complexity: 5,
-          reviewComplexity: 2,
+          review: noReview,
         }),
       ]),
     );
@@ -179,10 +180,10 @@ describe('Main', () => {
           name: 'US0',
           complexity: 5,
           review: {
+            reviewComplexity: 2,
             reviewersNeeded: 1,
             reviewers: new Map<number, number>(),
           },
-          reviewComplexity: 2,
         }),
       ]),
     );
@@ -198,7 +199,11 @@ describe('Main', () => {
           id: 0,
           name: 'US0',
           complexity: 5,
-          reviewComplexity: 2,
+          review: {
+            reviewComplexity: 2,
+            reviewersNeeded: 0,
+            reviewers: new Map<number, number>(),
+          },
         }),
       ]),
     );
@@ -319,13 +324,13 @@ describe('Main', () => {
           id: 0,
           name: 'US0',
           complexity: 2,
-          reviewComplexity: 1,
+          review: noReview,
         }),
         todo({
           id: 1,
           name: 'US1',
           complexity: 4,
-          reviewComplexity: 2,
+          review: noReview,
         }),
       ]),
     );

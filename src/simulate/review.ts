@@ -1,10 +1,12 @@
 ﻿﻿import type { Thread } from './team.ts';
 
 export type Review = {
+  reviewComplexity: number;
   reviewersNeeded: number;
   reviewers: Map<number, number>;
 };
 export const noReview: Review = {
+  reviewComplexity: 1,
   reviewersNeeded: 0,
   reviewers: new Map<number, number>(),
 };

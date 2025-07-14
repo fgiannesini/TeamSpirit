@@ -45,7 +45,7 @@ export class BugGeneratorHandler implements BugGenerator {
           : null,
       )
       .filter((result) => result !== null)
-      .map((userStory, index) => {
+      .map((userStory, index): UserStory => {
         const id = getUserStories(backlog).length + index;
         const name = `bug-${this.bugCount++}`;
         const complexityRandom = this.complexityRandomProvider();
@@ -56,12 +56,12 @@ export class BugGeneratorHandler implements BugGenerator {
             1,
             Math.floor(complexityRandom * userStory.complexity),
           ),
-          reviewComplexity: Math.max(
-            1,
-            Math.floor(complexityRandom * userStory.reviewComplexity),
-          ),
           progression: 0,
           review: {
+            reviewComplexity: Math.max(
+              1,
+              Math.floor(complexityRandom * userStory.review.reviewComplexity),
+            ),
             reviewersNeeded: userStory.review.reviewersNeeded,
             reviewers: new Map<number, number>(),
           },

@@ -1,5 +1,9 @@
 import { describe, expect, test } from 'vitest';
-import { Backlog, getUserStoriesDone, getUserStoriesRemainings } from './backlog.ts';
+import {
+  Backlog,
+  getUserStoriesDone,
+  getUserStoriesRemainings,
+} from './backlog.ts';
 import {
   createThread,
   doneEvent,
@@ -64,7 +68,13 @@ describe('simulation time', () => {
   test('Should have a thread develop a user story with review', () => {
     const team = new ParallelTeam([createThread({ id: 0, power: 1 })]);
     const backlog = new Backlog([
-      todo({ review: { reviewersNeeded: 1, reviewers: new Map() } }),
+      todo({
+        review: {
+          reviewComplexity: 1,
+          reviewersNeeded: 1,
+          reviewers: new Map(),
+        },
+      }),
     ]);
     const timeEvents = simulateTimeEvents(team, backlog, 1);
     expect(timeEvents).toEqual([inProgressEvent(), toReviewEvent()]);
@@ -77,7 +87,11 @@ describe('simulation time', () => {
     const backlog = new Backlog([
       todo({
         complexity: 3,
-        review: { reviewersNeeded: 1, reviewers: new Map() },
+        review: {
+          reviewComplexity: 1,
+          reviewersNeeded: 1,
+          reviewers: new Map(),
+        },
       }),
     ]);
     const timeEvents = simulateTimeEvents(team, backlog, 1);
@@ -91,7 +105,11 @@ describe('simulation time', () => {
     const backlog = new Backlog([
       toReview({
         threadId: 1,
-        review: { reviewersNeeded: 1, reviewers: new Map() },
+        review: {
+          reviewComplexity: 1,
+          reviewersNeeded: 1,
+          reviewers: new Map(),
+        },
       }),
     ]);
     const timeEvents = simulateTimeEvents(team, backlog, 1);
@@ -105,8 +123,11 @@ describe('simulation time', () => {
     const backlog = new Backlog([
       toReview({
         threadId: 1,
-        reviewComplexity: 2,
-        review: { reviewersNeeded: 1, reviewers: new Map() },
+        review: {
+          reviewComplexity: 2,
+          reviewersNeeded: 1,
+          reviewers: new Map(),
+        },
       }),
     ]);
     const timeEvents = simulateTimeEvents(team, backlog, 1);
@@ -119,8 +140,11 @@ describe('simulation time', () => {
     const backlog = new Backlog([
       toReview({
         threadId: 1,
-        reviewComplexity: 1,
-        review: { reviewersNeeded: 1, reviewers: new Map() },
+        review: {
+          reviewComplexity: 1,
+          reviewersNeeded: 1,
+          reviewers: new Map(),
+        },
       }),
     ]);
     const timeEvents = simulateTimeEvents(team, backlog, 1);
@@ -134,8 +158,11 @@ describe('simulation time', () => {
     const backlog = new Backlog([
       toReview({
         threadId: 1,
-        reviewComplexity: 1,
-        review: { reviewersNeeded: 2, reviewers: new Map([[2, 1]]) },
+        review: {
+          reviewComplexity: 1,
+          reviewersNeeded: 2,
+          reviewers: new Map([[2, 1]]),
+        },
       }),
     ]);
     const timeEvents = simulateTimeEvents(team, backlog, 1);
@@ -152,8 +179,11 @@ describe('simulation time', () => {
     const backlog = new Backlog([
       toReview({
         threadId: 2,
-        reviewComplexity: 1,
-        review: { reviewersNeeded: 2, reviewers: new Map() },
+        review: {
+          reviewComplexity: 1,
+          reviewersNeeded: 2,
+          reviewers: new Map(),
+        },
       }),
     ]);
     const timeEvents = simulateTimeEvents(team, backlog, 1);
@@ -174,8 +204,11 @@ describe('simulation time', () => {
     const backlog = new Backlog([
       toReview({
         threadId: 2,
-        reviewComplexity: 3,
-        review: { reviewersNeeded: 2, reviewers: new Map() },
+        review: {
+          reviewComplexity: 3,
+          reviewersNeeded: 2,
+          reviewers: new Map(),
+        },
       }),
     ]);
     const timeEvents = simulateTimeEvents(team, backlog, 1);

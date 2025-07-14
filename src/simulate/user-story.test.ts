@@ -1,5 +1,12 @@
 import { describe, expect, test } from 'vitest';
-import { createThread, done, inProgress, inReview, todo, toReview } from './factory.ts';
+import {
+  createThread,
+  done,
+  inProgress,
+  inReview,
+  todo,
+  toReview,
+} from './factory.ts';
 import {
   isDeveloped,
   isInProgressBy,
@@ -48,7 +55,13 @@ describe('user-story', () => {
 
   test('Should set toReview', () => {
     const result = setToReview(
-      inProgress({ review: { reviewers: new Map(), reviewersNeeded: 1 } }),
+      inProgress({
+        review: {
+          reviewComplexity: 1,
+          reviewers: new Map(),
+          reviewersNeeded: 1,
+        },
+      }),
       1,
     );
     expect(result).toEqual(toReview({ threadId: 1 }));
@@ -57,14 +70,21 @@ describe('user-story', () => {
   test('Should set review', () => {
     const result = setReview(
       toReview({
-        review: { reviewersNeeded: 1, reviewers: new Map() },
-        reviewComplexity: 1,
+        review: {
+          reviewComplexity: 1,
+          reviewersNeeded: 1,
+          reviewers: new Map(),
+        },
       }),
       createThread({ power: 1 }),
     );
     expect(result).toEqual(
       inReview({
-        review: { reviewersNeeded: 1, reviewers: new Map([[0, 1]]) },
+        review: {
+          reviewComplexity: 1,
+          reviewersNeeded: 1,
+          reviewers: new Map([[0, 1]]),
+        },
       }),
     );
   });
@@ -72,14 +92,18 @@ describe('user-story', () => {
   test('Should keep review by an experimented thread', () => {
     const result = setReview(
       inReview({
-        review: { reviewersNeeded: 2, reviewers: new Map([[1, 1]]) },
-        reviewComplexity: 1,
+        review: {
+          reviewComplexity: 1,
+          reviewersNeeded: 2,
+          reviewers: new Map([[1, 1]]),
+        },
       }),
       createThread({ power: 3 }),
     );
     expect(result).toEqual(
       inReview({
         review: {
+          reviewComplexity: 1,
           reviewersNeeded: 2,
           reviewers: new Map([
             [1, 1],
@@ -113,8 +137,8 @@ describe('user-story', () => {
   test('Should consider a user story reviewed', () => {
     const result = isReviewed(
       inReview({
-        reviewComplexity: 2,
         review: {
+          reviewComplexity: 2,
           reviewersNeeded: 2,
           reviewers: new Map([
             [0, 2],
@@ -129,8 +153,8 @@ describe('user-story', () => {
   test('Should consider a user story not reviewed if a viewer is missing', () => {
     const result = isReviewed(
       inReview({
-        reviewComplexity: 2,
         review: {
+          reviewComplexity: 2,
           reviewersNeeded: 2,
           reviewers: new Map([[0, 2]]),
         },
@@ -142,8 +166,8 @@ describe('user-story', () => {
   test('Should consider a user story not reviewed if review is not completed', () => {
     const result = isReviewed(
       inReview({
-        reviewComplexity: 2,
         review: {
+          reviewComplexity: 2,
           reviewersNeeded: 2,
           reviewers: new Map([
             [0, 1],
@@ -158,8 +182,8 @@ describe('user-story', () => {
   test('Should consider a user story not reviewed if review is not completed', () => {
     const result = isReviewed(
       inReview({
-        reviewComplexity: 2,
         review: {
+          reviewComplexity: 2,
           reviewersNeeded: 2,
           reviewers: new Map([
             [0, 1],
@@ -232,8 +256,8 @@ describe('user-story', () => {
   test('Should be reviewed by a thread', () => {
     const result = isInReviewBy(
       inReview({
-        reviewComplexity: 2,
         review: {
+          reviewComplexity: 2,
           reviewersNeeded: 2,
           reviewers: new Map([
             [1, 2],
@@ -249,8 +273,8 @@ describe('user-story', () => {
   test('Should not be reviewed by a thread if review is completed', () => {
     const result = isInReviewBy(
       inReview({
-        reviewComplexity: 2,
         review: {
+          reviewComplexity: 2,
           reviewersNeeded: 2,
           reviewers: new Map([[2, 2]]),
         },
@@ -263,8 +287,8 @@ describe('user-story', () => {
   test('Should not be reviewed by a thread if all reviews are started', () => {
     const result = isInReviewBy(
       inReview({
-        reviewComplexity: 2,
         review: {
+          reviewComplexity: 2,
           reviewersNeeded: 2,
           reviewers: new Map([
             [1, 2],
@@ -280,8 +304,8 @@ describe('user-story', () => {
   test('Should not be reviewed by the thread that developed the user story', () => {
     const result = isInReviewBy(
       inReview({
-        reviewComplexity: 2,
         review: {
+          reviewComplexity: 2,
           reviewersNeeded: 2,
           reviewers: new Map([[1, 2]]),
         },
@@ -294,8 +318,8 @@ describe('user-story', () => {
   test('Should be reviewed by an other thread', () => {
     const result = needReviewBy(
       inReview({
-        reviewComplexity: 2,
         review: {
+          reviewComplexity: 2,
           reviewersNeeded: 2,
           reviewers: new Map([[1, 2]]),
         },
@@ -308,8 +332,8 @@ describe('user-story', () => {
   test('Should continue review', () => {
     const result = isInReviewBy(
       inReview({
-        reviewComplexity: 2,
         review: {
+          reviewComplexity: 2,
           reviewersNeeded: 2,
           reviewers: new Map([[2, 1]]),
         },

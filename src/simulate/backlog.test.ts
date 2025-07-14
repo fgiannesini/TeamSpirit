@@ -1,6 +1,19 @@
 import { describe, expect, test, vitest } from 'vitest';
-import { Backlog, getNextUserStory, shouldGenerateBug, userStoriesWithSomeReviews } from './backlog.ts';
-import { createThread, done, ensembleTeam, inProgress, inReview, todo, toReview } from './factory.ts';
+import {
+  Backlog,
+  getNextUserStory,
+  shouldGenerateBug,
+  userStoriesWithSomeReviews,
+} from './backlog.ts';
+import {
+  createThread,
+  done,
+  ensembleTeam,
+  inProgress,
+  inReview,
+  todo,
+  toReview,
+} from './factory.ts';
 import { idle, type UserStory } from './user-story.ts';
 
 describe('Backlog', () => {
@@ -16,7 +29,10 @@ describe('Backlog', () => {
       todo({ complexity: 5 }),
       todo({ complexity: 1 }),
     ]);
-    const userStory = getNextUserStory(backlog, createThread({ id: 0, power: 2 }));
+    const userStory = getNextUserStory(
+      backlog,
+      createThread({ id: 0, power: 2 }),
+    );
     expect(userStory).toEqual(todo({ complexity: 1 }));
   });
 
@@ -35,18 +51,25 @@ describe('Backlog', () => {
       todo(),
       toReview({
         threadId: 1,
-        reviewComplexity: 5,
+        review: {
+          reviewComplexity: 5,
+          reviewersNeeded: 1,
+          reviewers: new Map<number, number>(),
+        },
       }),
-      toReview({ threadId: 1, reviewComplexity: 1 }),
+      toReview({ threadId: 1 }),
     ]);
-    const userStory = getNextUserStory(backlog, createThread({ id: 0, power: 2 }));
-    expect(userStory).toEqual(toReview({ threadId: 1, reviewComplexity: 1 }));
+    const userStory = getNextUserStory(
+      backlog,
+      createThread({ id: 0, power: 2 }),
+    );
+    expect(userStory).toEqual(toReview({ threadId: 1 }));
   });
 
   test('Should get first IN_REVIEW', () => {
     const backlog = new Backlog([
       todo(),
-      toReview({ threadId: 1, reviewComplexity: 1 }),
+      toReview({ threadId: 1 }),
       inReviewWith(1, []),
     ]);
     const userStory = getNextUserStory(backlog, createThread({ id: 0 }));
@@ -56,7 +79,7 @@ describe('Backlog', () => {
   test('Should get first IN_PROGRESS', () => {
     const backlog = new Backlog([
       todo(),
-      toReview({ threadId: 1, reviewComplexity: 1 }),
+      toReview({ threadId: 1 }),
       inReviewWith(1, []),
       inProgress({ threadId: 0 }),
     ]);
@@ -125,7 +148,7 @@ describe('Backlog', () => {
     const backlog = new Backlog([
       todo({ complexity: 0 }),
       inProgress({ threadId: 0 }),
-      toReview({ threadId: 0, reviewComplexity: 1 }),
+      toReview({ threadId: 0 }),
       inReviewWith(0, [[0, 1]]),
       inReviewWith(0, [[0, 2]]),
       inReviewWith(0, [
@@ -147,8 +170,11 @@ describe('Backlog', () => {
   ): UserStory => {
     return inReview({
       threadId,
-      reviewComplexity: 2,
-      review: { reviewersNeeded: 2, reviewers: new Map(reviewers) },
+      review: {
+        reviewComplexity: 2,
+        reviewersNeeded: 2,
+        reviewers: new Map(reviewers),
+      },
     });
   };
 
