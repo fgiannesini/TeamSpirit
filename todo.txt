@@ -1,3 +1,7 @@
+Si on enlève un thread, il est possible qu'il n'y ait pas assez de reviewers => déplacer la notion de reviewNeeded dans la team
+Bug generator devrait prendre en compte le nombre de review
+Avoir une méthode qui calcule le présent dans l'équipe pour chaque dev, temps courant - temps de création
+Ajouter un membre avec une proba qui augmente en fonction du temps et du nombre de dev à faire rentrer
 Départ/arrivée de nouveau dev
 Implémenter des évènements pour le changement de structure de l'équipe (création de user story, de thread, apprentissage)
 Afficher l'avancement de la tâche lors du rendu
