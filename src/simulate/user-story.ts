@@ -109,8 +109,15 @@ export const isDeveloped = (userStory: UserStory): boolean => {
   return userStory.progression === userStory.complexity;
 };
 
-export const isReviewed = (userStory: UserStory): boolean => {
-  return hasAllReviews(userStory.review, userStory.review.reviewComplexity);
+export const isReviewed = (
+  userStory: UserStory,
+  reviewersNeeded: number,
+): boolean => {
+  return hasAllReviews(
+    userStory.review,
+    userStory.review.reviewComplexity,
+    reviewersNeeded,
+  );
 };
 
 export const isInProgressBy: (userStory: UserStory, thread: Thread) => boolean =

@@ -36,8 +36,9 @@ export const hasReviewStarted = (
 export const hasAllReviews = (
   review: Review,
   reviewComplexity: number,
+  reviewersNeeded: number,
 ): boolean =>
-  review.reviewersNeeded === review.reviewers.size &&
+  reviewersNeeded === review.reviewers.size &&
   review.reviewers
     .values()
     .every((reviewValue) => reviewValue === reviewComplexity);

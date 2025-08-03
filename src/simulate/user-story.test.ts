@@ -146,6 +146,7 @@ describe('user-story', () => {
           ]),
         },
       }),
+      2,
     );
     expect(result).toEqual(true);
   });
@@ -159,6 +160,7 @@ describe('user-story', () => {
           reviewers: new Map([[0, 2]]),
         },
       }),
+      2,
     );
     expect(result).toEqual(false);
   });
@@ -175,6 +177,7 @@ describe('user-story', () => {
           ]),
         },
       }),
+      2,
     );
     expect(result).toEqual(false);
   });
@@ -191,6 +194,7 @@ describe('user-story', () => {
           ]),
         },
       }),
+      2,
     );
     expect(result).toEqual(false);
   });

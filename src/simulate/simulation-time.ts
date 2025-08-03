@@ -41,7 +41,7 @@ export const simulateTimeEvents = (
       case 'Review': {
         const review = setReview(userStory, thread);
         events.push(createTimeEvent(time, review, thread.id));
-        if (isReviewed(review)) {
+        if (isReviewed(review, team.getReviewersNeeded())) {
           const done = setDoneBy(userStory, review.threadId as number, time);
           events.push(createTimeEvent(time, done, done.threadId as number));
           toAddBacklog.push(done);
@@ -55,7 +55,7 @@ export const simulateTimeEvents = (
         const inProgress = setInProgress(userStory, thread);
         events.push(createTimeEvent(time, inProgress, thread.id));
         if (isDeveloped(inProgress)) {
-          if (isReviewed(inProgress)) {
+          if (isReviewed(inProgress, team.getReviewersNeeded())) {
             const done = setDone(inProgress, time);
             events.push(createTimeEvent(time, done, thread.id));
             toAddBacklog.push(done);
