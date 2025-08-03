@@ -39,7 +39,6 @@ export const toReview = (options: Partial<UserStory> = {}): UserStory => {
     review: {
       reviewComplexity: 1,
       reviewers: new Map(),
-      reviewersNeeded: 1,
     },
     state: 'ToReview',
     threadId: 0,
@@ -56,7 +55,6 @@ export const inReview = (options: Partial<UserStory> = {}): UserStory => {
     complexity: 1,
     review: {
       reviewComplexity: 1,
-      reviewersNeeded: 1,
       reviewers: new Map(),
     },
     state: 'Review',

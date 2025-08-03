@@ -92,7 +92,6 @@ describe('probability', () => {
         id: 0,
         review: {
           reviewComplexity: 1,
-          reviewersNeeded: 2,
           reviewers: new Map([[0, 1]]),
         },
       }),
@@ -105,7 +104,6 @@ describe('probability', () => {
         name: 'bug-0',
         review: {
           reviewComplexity: 1,
-          reviewersNeeded: 2,
           reviewers: new Map<number, number>(),
         },
       }),
@@ -137,7 +135,6 @@ describe('probability', () => {
           review: {
             reviewers: new Map<number, number>(),
             reviewComplexity,
-            reviewersNeeded: 1,
           },
         }),
         backlog,
@@ -149,7 +146,6 @@ describe('probability', () => {
           name: 'bug-0',
           complexity: bugComplexity,
           review: {
-            reviewersNeeded: 1,
             reviewComplexity: bugReviewComplexity,
             reviewers: new Map<number, number>(),
           },

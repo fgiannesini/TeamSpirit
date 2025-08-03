@@ -54,7 +54,6 @@ describe('Backlog', () => {
         threadId: 1,
         review: {
           reviewComplexity: 5,
-          reviewersNeeded: 1,
           reviewers: new Map<number, number>(),
         },
       }),
@@ -174,7 +173,6 @@ describe('Backlog', () => {
       threadId,
       review: {
         reviewComplexity: 2,
-        reviewersNeeded: 2,
         reviewers: new Map(reviewers),
       },
     });

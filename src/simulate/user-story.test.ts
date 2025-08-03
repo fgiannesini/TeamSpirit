@@ -1,12 +1,5 @@
-import { describe, expect, test } from 'vitest';
-import {
-  createThread,
-  done,
-  inProgress,
-  inReview,
-  todo,
-  toReview,
-} from './factory.ts';
+import {describe, expect, test} from 'vitest';
+import {createThread, done, inProgress, inReview, todo, toReview,} from './factory.ts';
 import {
   isDeveloped,
   isInProgressBy,
@@ -59,7 +52,6 @@ describe('user-story', () => {
         review: {
           reviewComplexity: 1,
           reviewers: new Map(),
-          reviewersNeeded: 1,
         },
       }),
       1,
@@ -72,7 +64,6 @@ describe('user-story', () => {
       toReview({
         review: {
           reviewComplexity: 1,
-          reviewersNeeded: 1,
           reviewers: new Map(),
         },
       }),
@@ -82,7 +73,6 @@ describe('user-story', () => {
       inReview({
         review: {
           reviewComplexity: 1,
-          reviewersNeeded: 1,
           reviewers: new Map([[0, 1]]),
         },
       }),
@@ -94,7 +84,6 @@ describe('user-story', () => {
       inReview({
         review: {
           reviewComplexity: 1,
-          reviewersNeeded: 2,
           reviewers: new Map([[1, 1]]),
         },
       }),
@@ -104,7 +93,6 @@ describe('user-story', () => {
       inReview({
         review: {
           reviewComplexity: 1,
-          reviewersNeeded: 2,
           reviewers: new Map([
             [1, 1],
             [0, 1],
@@ -139,7 +127,6 @@ describe('user-story', () => {
       inReview({
         review: {
           reviewComplexity: 2,
-          reviewersNeeded: 2,
           reviewers: new Map([
             [0, 2],
             [1, 2],
@@ -156,7 +143,6 @@ describe('user-story', () => {
       inReview({
         review: {
           reviewComplexity: 2,
-          reviewersNeeded: 2,
           reviewers: new Map([[0, 2]]),
         },
       }),
@@ -170,7 +156,6 @@ describe('user-story', () => {
       inReview({
         review: {
           reviewComplexity: 2,
-          reviewersNeeded: 2,
           reviewers: new Map([
             [0, 1],
             [1, 2],
@@ -187,7 +172,6 @@ describe('user-story', () => {
       inReview({
         review: {
           reviewComplexity: 2,
-          reviewersNeeded: 2,
           reviewers: new Map([
             [0, 1],
             [1, 2],
@@ -204,7 +188,6 @@ describe('user-story', () => {
       inReview({
         review: {
           reviewComplexity: 2,
-          reviewersNeeded: 1,
           reviewers: new Map([
             [0, 1],
             [1, 2],
@@ -279,7 +262,6 @@ describe('user-story', () => {
       inReview({
         review: {
           reviewComplexity: 2,
-          reviewersNeeded: 2,
           reviewers: new Map([
             [1, 2],
             [2, 1],
@@ -296,7 +278,6 @@ describe('user-story', () => {
       inReview({
         review: {
           reviewComplexity: 2,
-          reviewersNeeded: 2,
           reviewers: new Map([[2, 2]]),
         },
       }),
@@ -310,7 +291,6 @@ describe('user-story', () => {
       inReview({
         review: {
           reviewComplexity: 2,
-          reviewersNeeded: 2,
           reviewers: new Map([
             [1, 2],
             [2, 1],
@@ -327,7 +307,6 @@ describe('user-story', () => {
       inReview({
         review: {
           reviewComplexity: 2,
-          reviewersNeeded: 2,
           reviewers: new Map([[1, 2]]),
         },
       }),
@@ -341,7 +320,6 @@ describe('user-story', () => {
       inReview({
         review: {
           reviewComplexity: 2,
-          reviewersNeeded: 2,
           reviewers: new Map([[1, 2]]),
         },
       }),
@@ -356,7 +334,6 @@ describe('user-story', () => {
       inReview({
         review: {
           reviewComplexity: 2,
-          reviewersNeeded: 1,
           reviewers: new Map([
             [1, 2],
             [3, 2],
@@ -374,7 +351,6 @@ describe('user-story', () => {
       inReview({
         review: {
           reviewComplexity: 2,
-          reviewersNeeded: 2,
           reviewers: new Map([[2, 1]]),
         },
       }),

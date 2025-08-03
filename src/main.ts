@@ -113,14 +113,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 export const buildBacklogForParallelTeam = (): Backlog => {
   const userStoryCount = getInputValueOf('#user-story-count-input');
-  const reviewersCount = getInputValueOf('#reviewers-input');
   return new Backlog(
     Array.from({ length: userStoryCount }, (_, i) => ({
       id: i,
       name: `US${i}`,
       complexity: getInputValueOf(`#complexity-input-${i}`),
       review: {
-        reviewersNeeded: reviewersCount,
         reviewers: new Map<number, number>(),
         reviewComplexity: getInputValueOf(`#review-complexity-input-${i}`),
       },

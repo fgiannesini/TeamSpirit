@@ -181,7 +181,6 @@ describe('Main', () => {
           complexity: 5,
           review: {
             reviewComplexity: 2,
-            reviewersNeeded: 1,
             reviewers: new Map<number, number>(),
           },
         }),
@@ -201,7 +200,6 @@ describe('Main', () => {
           complexity: 5,
           review: {
             reviewComplexity: 2,
-            reviewersNeeded: 0,
             reviewers: new Map<number, number>(),
           },
         }),

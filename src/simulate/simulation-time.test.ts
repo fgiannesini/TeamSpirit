@@ -75,7 +75,6 @@ describe('simulation time', () => {
       todo({
         review: {
           reviewComplexity: 1,
-          reviewersNeeded: 1,
           reviewers: new Map(),
         },
       }),
@@ -100,7 +99,6 @@ describe('simulation time', () => {
         complexity: 3,
         review: {
           reviewComplexity: 1,
-          reviewersNeeded: 1,
           reviewers: new Map(),
         },
       }),
@@ -125,7 +123,6 @@ describe('simulation time', () => {
         threadId: 1,
         review: {
           reviewComplexity: 1,
-          reviewersNeeded: 1,
           reviewers: new Map(),
         },
       }),
@@ -150,7 +147,6 @@ describe('simulation time', () => {
         threadId: 1,
         review: {
           reviewComplexity: 2,
-          reviewersNeeded: 1,
           reviewers: new Map(),
         },
       }),
@@ -170,7 +166,6 @@ describe('simulation time', () => {
         threadId: 1,
         review: {
           reviewComplexity: 1,
-          reviewersNeeded: 1,
           reviewers: new Map(),
         },
       }),
@@ -196,7 +191,6 @@ describe('simulation time', () => {
         threadId: 1,
         review: {
           reviewComplexity: 1,
-          reviewersNeeded: 2,
           reviewers: new Map([[2, 1]]),
         },
       }),
@@ -223,7 +217,6 @@ describe('simulation time', () => {
         threadId: 2,
         review: {
           reviewComplexity: 1,
-          reviewersNeeded: 2,
           reviewers: new Map(),
         },
       }),
@@ -250,7 +243,6 @@ describe('simulation time', () => {
         threadId: 2,
         review: {
           reviewComplexity: 3,
-          reviewersNeeded: 2,
           reviewers: new Map(),
         },
       }),
