@@ -41,11 +41,11 @@ describe('Main', () => {
       .mockReturnValueOnce('e4567-e89b-12d3-a456-426614174000')
       .mockReturnValueOnce('e4567-e89b-12d3-a456-426614174001');
 
-    setValueTo('#user-story-count-input', '1');
+    setValueTo('#user-story-count-input', '3');
     setValueTo('#dev-count-input', '2');
     clickOn('#generate-devs-button');
 
-    setValueTo('#reviewers-input', '');
+    setValueTo('#reviewers-input', '2');
     clickOn('#calculate-button');
 
     const timeEventsForParallelTeam = JSON.parse(
@@ -242,16 +242,20 @@ describe('Main', () => {
     setValueTo('#power-input-0', '5');
     setValueTo('#power-input-1', '10');
     expect(buildParallelTeam()).toStrictEqual(
-      new ParallelTeam([
-        createThread({ id: 0, name: 'thread0', power: 5 }),
-        createThread({ id: 1, name: 'thread1', power: 10 }),
-      ]),
+      new ParallelTeam(
+        [
+          createThread({ id: 0, name: 'thread0', power: 5 }),
+          createThread({ id: 1, name: 'thread1', power: 10 }),
+        ],
+        2,
+        0,
+      ),
     );
   });
 
   test('Should build a default parallel team', () => {
     setValueTo('#dev-count-input', '3');
-    setValueTo('#reviewers-input', '1');
+    setValueTo('#reviewers-input', '2');
     expect(buildParallelTeam()).toStrictEqual(
       new ParallelTeam(
         [
@@ -260,7 +264,7 @@ describe('Main', () => {
           createThread({ id: 2, name: 'thread2', power: 1 }),
         ],
         3,
-        1,
+        2,
       ),
     );
   });
