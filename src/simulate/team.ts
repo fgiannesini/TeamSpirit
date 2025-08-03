@@ -21,15 +21,29 @@ export type Team = {
   addThread(thread: Thread): Team;
   quit(threadId: number): Team;
   getCapacity(): number;
+  getReviewersNeeded(): number;
 };
 
 export class ParallelTeam implements Team {
   private readonly threads: Thread[] = [];
   private readonly capacity: number;
+  private readonly reviewersNeeded: number;
 
-  constructor(threads: Thread[], capacity: number = threads.length) {
+  constructor(
+    threads: Thread[],
+    capacity: number = threads.length,
+    reviewersNeeded: number = Math.ceil(threads.length / 2),
+  ) {
     this.threads = threads;
     this.capacity = capacity;
+    this.reviewersNeeded = reviewersNeeded;
+  }
+
+  getReviewersNeeded(): number {
+    const effectiveThreadCount = this.getEffectiveActiveThreads().length;
+    return this.reviewersNeeded >= effectiveThreadCount
+      ? effectiveThreadCount - 1
+      : this.reviewersNeeded;
   }
 
   getCapacity(): number {
@@ -69,6 +83,10 @@ export class EnsembleTeam implements Team {
   constructor(threads: Thread[], capacity: number = threads.length) {
     this.threads = threads;
     this.capacity = capacity;
+  }
+
+  getReviewersNeeded(): number {
+    return 0;
   }
 
   getCapacity(): number {

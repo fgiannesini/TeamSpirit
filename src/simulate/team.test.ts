@@ -68,6 +68,32 @@ describe('Team', () => {
       const capacity = team.getCapacity();
       expect(capacity).toBe(2);
     });
+
+    test('Should init reviewers needed with half of developers, rounded up', () => {
+      const team: Team = parallelTeam([
+        createThread({ id: 0 }),
+        createThread({ id: 1 }),
+        createThread({ id: 2 }),
+      ]);
+
+      expect(team.getReviewersNeeded()).toStrictEqual(2);
+    });
+
+    test('Should have reviewers needed under developers count', () => {
+      const team: Team = parallelTeam([createThread({ id: 0 })]);
+
+      expect(team.getReviewersNeeded()).toStrictEqual(0);
+    });
+
+    test('Should have reviewers needed under active developers count', () => {
+      const team: Team = parallelTeam([
+        createThread({ id: 0 }),
+        createThread({ id: 1 }),
+        createThread({ id: 2, quit: true }),
+      ]);
+
+      expect(team.getReviewersNeeded()).toStrictEqual(1);
+    });
   });
 
   describe('Ensemble team', () => {
@@ -135,6 +161,12 @@ describe('Team', () => {
       ]);
       const capacity = team.getCapacity();
       expect(capacity).toBe(2);
+    });
+
+    test('Should get reviewers needed', () => {
+      const team: Team = ensembleTeam();
+      const capacity = team.getReviewersNeeded();
+      expect(capacity).toBe(0);
     });
   });
 });
