@@ -19,7 +19,7 @@ import { idle, type UserStory } from './user-story.ts';
 describe('Backlog', () => {
   test('Should get idle by default', () => {
     const backlog = new Backlog([]);
-    const userStory = getNextUserStory(backlog, createThread({ id: 0 }));
+    const userStory = getNextUserStory(backlog, createThread({ id: 0 }), 2);
     expect(userStory).toEqual(idle);
   });
 
@@ -32,6 +32,7 @@ describe('Backlog', () => {
     const userStory = getNextUserStory(
       backlog,
       createThread({ id: 0, power: 2 }),
+      2,
     );
     expect(userStory).toEqual(todo({ complexity: 1 }));
   });
@@ -42,7 +43,7 @@ describe('Backlog', () => {
       inProgress({ threadId: 0 }),
       inProgress({ threadId: 1 }),
     ]);
-    const userStory = getNextUserStory(backlog, createThread({ id: 1 }));
+    const userStory = getNextUserStory(backlog, createThread({ id: 1 }), 2);
     expect(userStory).toEqual(inProgress({ threadId: 1 }));
   });
 
@@ -62,6 +63,7 @@ describe('Backlog', () => {
     const userStory = getNextUserStory(
       backlog,
       createThread({ id: 0, power: 2 }),
+      2,
     );
     expect(userStory).toEqual(toReview({ threadId: 1 }));
   });
@@ -72,7 +74,7 @@ describe('Backlog', () => {
       toReview({ threadId: 1 }),
       inReviewWith(1, []),
     ]);
-    const userStory = getNextUserStory(backlog, createThread({ id: 0 }));
+    const userStory = getNextUserStory(backlog, createThread({ id: 0 }), 2);
     expect(userStory).toEqual(inReviewWith(1, []));
   });
 
@@ -83,13 +85,13 @@ describe('Backlog', () => {
       inReviewWith(1, []),
       inProgress({ threadId: 0 }),
     ]);
-    const userStory = getNextUserStory(backlog, createThread({ id: 0 }));
+    const userStory = getNextUserStory(backlog, createThread({ id: 0 }), 2);
     expect(userStory).toEqual(inProgress({ threadId: 0 }));
   });
 
   test('Should get IN_REVIEW with a missing review', () => {
     const backlog = new Backlog([inReviewWith(1, [[0, 2]])]);
-    const userStory = getNextUserStory(backlog, createThread({ id: 2 }));
+    const userStory = getNextUserStory(backlog, createThread({ id: 2 }), 2);
     expect(userStory).toEqual(inReviewWith(1, [[0, 2]]));
   });
 
@@ -101,7 +103,7 @@ describe('Backlog', () => {
         [2, 2],
       ]),
     ]);
-    const userStory = getNextUserStory(backlog, createThread({ id: 0 }));
+    const userStory = getNextUserStory(backlog, createThread({ id: 0 }), 2);
     expect(userStory).toEqual(
       inReviewWith(1, [
         [0, 1],
@@ -112,7 +114,7 @@ describe('Backlog', () => {
 
   test('Should not get IN_REVIEW when review is done', () => {
     const backlog = new Backlog([inReviewWith(1, [[0, 2]])]);
-    const userStory = getNextUserStory(backlog, createThread({ id: 0 }));
+    const userStory = getNextUserStory(backlog, createThread({ id: 0 }), 2);
     expect(userStory).toEqual(idle);
   });
 
@@ -123,7 +125,7 @@ describe('Backlog', () => {
         [2, 2],
       ]),
     ]);
-    const userStory = getNextUserStory(backlog, createThread({ id: 0 }));
+    const userStory = getNextUserStory(backlog, createThread({ id: 0 }), 2);
     expect(userStory).toEqual(idle);
   });
 
@@ -134,13 +136,13 @@ describe('Backlog', () => {
         [2, 2],
       ]),
     ]);
-    const userStory = getNextUserStory(backlog, createThread({ id: 3 }));
+    const userStory = getNextUserStory(backlog, createThread({ id: 3 }), 2);
     expect(userStory).toEqual(idle);
   });
 
   test('Should not get self IN_REVIEW', () => {
     const backlog = new Backlog([inReviewWith(1, [])]);
-    const userStory = getNextUserStory(backlog, createThread({ id: 1 }));
+    const userStory = getNextUserStory(backlog, createThread({ id: 1 }), 2);
     expect(userStory).toEqual(idle);
   });
 

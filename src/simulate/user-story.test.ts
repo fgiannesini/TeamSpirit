@@ -325,6 +325,7 @@ describe('user-story', () => {
         },
       }),
       createThread({ id: 2 }),
+      2,
     );
     expect(result).toEqual(true);
   });

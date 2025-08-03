@@ -1,4 +1,11 @@
-import { canReview, getReviewPoints, hasAllReviews, hasReviewStarted, noReview, type Review } from './review.ts';
+import {
+  canReview,
+  getReviewPoints,
+  hasAllReviews,
+  hasReviewStarted,
+  noReview,
+  type Review,
+} from './review.ts';
 import type { Thread } from './team.ts';
 
 const updateReviewPoints = (
@@ -124,13 +131,14 @@ export const isInReviewBy: (userStory: UserStory, thread: Thread) => boolean = (
   );
 };
 
-export const needReviewBy: (userStory: UserStory, thread: Thread) => boolean = (
+export const needReviewBy = (
   userStory: UserStory,
   thread: Thread,
-) =>
+  reviewersNeeded: number,
+): boolean =>
   userStory.state === 'Review' &&
   userStory.threadId !== thread.id &&
-  canReview(userStory.review, thread);
+  canReview(userStory.review, thread, reviewersNeeded);
 
 export const isToReviewBy: (userStory: UserStory, thread: Thread) => boolean = (
   userStory: UserStory,

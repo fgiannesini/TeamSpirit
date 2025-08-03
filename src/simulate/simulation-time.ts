@@ -26,7 +26,11 @@ export const simulateTimeEvents = (
   const events: TimeEvent[] = [];
   const toAddBacklog: UserStory[] = [];
   for (const thread of team.getEffectiveActiveThreads()) {
-    const userStory: UserStory = getNextUserStory(backlog, thread);
+    const userStory: UserStory = getNextUserStory(
+      backlog,
+      thread,
+      team.getReviewersNeeded(),
+    );
     if (userStory === idle) {
       idle.threadId = thread.id;
       events.push(createTimeEvent(time, idle, thread.id));

@@ -27,6 +27,7 @@ export const getUserStories = (backlog: Backlog): UserStory[] => [
 export const getNextUserStory = (
   backlog: Backlog,
   thread: Thread,
+  reviewersNeeded: number,
 ): UserStory => {
   let threadUserStoryIndex = backlog.userStoriesRemaining.findIndex(
     (userStory) => isInProgressBy(userStory, thread),
@@ -40,7 +41,7 @@ export const getNextUserStory = (
 
   if (threadUserStoryIndex === -1) {
     threadUserStoryIndex = backlog.userStoriesRemaining.findIndex((userStory) =>
-      needReviewBy(userStory, thread),
+      needReviewBy(userStory, thread, reviewersNeeded),
     );
   }
 

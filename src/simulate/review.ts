@@ -1,4 +1,4 @@
-﻿import type {Thread} from './team.ts';
+﻿import type { Thread } from './team.ts';
 
 export type Review = {
   reviewComplexity: number;
@@ -13,8 +13,12 @@ export const noReview: Review = {
 export const getReviewPoints = (review: Review, dev: Thread): number =>
   review.reviewers.get(dev.id) ?? 0;
 
-export const canReview = (review: Review, dev: Thread): boolean => {
-  const { reviewers, reviewersNeeded } = review;
+export const canReview = (
+  review: Review,
+  dev: Thread,
+  reviewersNeeded: number,
+): boolean => {
+  const { reviewers } = review;
   return reviewers.size !== reviewersNeeded && !reviewers.has(dev.id);
 };
 

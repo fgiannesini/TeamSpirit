@@ -9,6 +9,7 @@ import {
   doneEvent,
   idleEvent,
   inProgressEvent,
+  parallelTeam,
   reviewEvent,
   todo,
   toReview,
@@ -172,9 +173,10 @@ describe('simulation time', () => {
   });
 
   test('Should have two threads review a user story', () => {
-    const team = new ParallelTeam([
+    const team = parallelTeam([
       createThread({ id: 0, power: 1 }),
       createThread({ id: 1, power: 1 }),
+      createThread({ id: 2, power: 1 }),
     ]);
     const backlog = new Backlog([
       toReview({
@@ -191,15 +193,17 @@ describe('simulation time', () => {
       reviewEvent({ threadId: 0 }),
       reviewEvent({ threadId: 1 }),
       doneEvent({ threadId: 2 }),
+      idleEvent({ threadId: 2 }),
     ]);
     expect(getUserStoriesDone(backlog)).toHaveLength(1);
     expect(getUserStoriesRemainings(backlog)).toHaveLength(0);
   });
 
   test('Should have two threads review partially a user story', () => {
-    const team = new ParallelTeam([
+    const team = parallelTeam([
       createThread({ id: 0, power: 3 }),
       createThread({ id: 1, power: 1 }),
+      createThread({ id: 2, power: 1 }),
     ]);
     const backlog = new Backlog([
       toReview({
@@ -215,6 +219,7 @@ describe('simulation time', () => {
     expect(timeEvents).toEqual([
       reviewEvent({ threadId: 0 }),
       reviewEvent({ threadId: 1 }),
+      idleEvent({ threadId: 2 }),
     ]);
     expect(getUserStoriesDone(backlog)).toHaveLength(0);
     expect(getUserStoriesRemainings(backlog)).toHaveLength(1);
