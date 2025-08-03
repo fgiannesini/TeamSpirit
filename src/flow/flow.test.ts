@@ -126,6 +126,25 @@ describe('Flow', () => {
       expect(getThread(0)?.style.opacity).toEqual('50%');
     });
 
+    test('Should remove a thread on all computation click', async () => {
+      saveStructureEvents(
+        [createThread0(), removeThread({ id: 0, time: 2 })],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
+      saveTimeEvents(
+        [doneEvent({ time: 2 })],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
+      await import('./flow.ts');
+
+      expect(getThread(0)?.style.opacity).toEqual('');
+
+      getComputeAll()?.click();
+      await vi.runAllTimersAsync();
+
+      expect(getThread(0)?.style.opacity).toEqual('50%');
+    });
+
     test('Should set thread state to "Develop" when in progress', async () => {
       saveStructureEvents(
         [createThread0(), createUserStory({ id: 0 })],

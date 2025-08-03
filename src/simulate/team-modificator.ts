@@ -67,7 +67,6 @@ export class TeamModificatorHandler implements TeamModificator {
     );
     team.getAllActiveThreads().forEach((thread) => {
       if (this.randomProvider() < probabilities[thread.id]) {
-        console.log('Remove thread', thread.id);
         removedThreads.push({
           id: thread.id,
           name: thread.name,
