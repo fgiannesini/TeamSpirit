@@ -19,7 +19,7 @@ export const canReview = (
   reviewersNeeded: number,
 ): boolean => {
   const { reviewers } = review;
-  return reviewers.size !== reviewersNeeded && !reviewers.has(dev.id);
+  return reviewers.size < reviewersNeeded && !reviewers.has(dev.id);
 };
 
 export const hasReviewStarted = (

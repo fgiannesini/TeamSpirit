@@ -351,6 +351,24 @@ describe('user-story', () => {
     expect(result).toEqual(true);
   });
 
+  test('Should not be reviewed by an other thread if too much reviews', () => {
+    const result = needReviewBy(
+      inReview({
+        review: {
+          reviewComplexity: 2,
+          reviewersNeeded: 1,
+          reviewers: new Map([
+            [1, 2],
+            [3, 2],
+          ]),
+        },
+      }),
+      createThread({ id: 2 }),
+      1,
+    );
+    expect(result).toEqual(false);
+  });
+
   test('Should continue review', () => {
     const result = isInReviewBy(
       inReview({
