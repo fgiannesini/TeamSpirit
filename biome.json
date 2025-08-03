@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.1.1/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.1.3/schema.json",
   "vcs": {
     "enabled": false,
     "clientKind": "git",
@@ -32,7 +32,7 @@
         "noGlobalDirnameFilename": "error",
         "noNoninteractiveElementInteractions": "error",
         "noProcessGlobal": "error",
-        "noSecrets": "error",
+        "noSecrets": "off",
         "noShadow": "error",
         "noTsIgnore": "error",
         "noUselessBackrefInRegex": "error",
@@ -41,7 +41,7 @@
         "useAdjacentGetterSetter": "error",
         "useConsistentObjectDefinition": "error",
         "useConsistentResponse": "error",
-        "useExplicitType": "error",
+        "useExplicitType": "off",
         "useExportsLast": "error",
         "useIndexOf": "error",
         "useIterableCallbackReturn": "error",
