@@ -252,12 +252,18 @@ describe('Main', () => {
   });
 
   test('Should build a default parallel team', () => {
-    setValueTo('#dev-count-input', '2');
+    setValueTo('#dev-count-input', '3');
+    setValueTo('#reviewers-input', '1');
     expect(buildParallelTeam()).toStrictEqual(
-      new ParallelTeam([
-        createThread({ id: 0, name: 'thread0', power: 1 }),
-        createThread({ id: 1, name: 'thread1', power: 1 }),
-      ]),
+      new ParallelTeam(
+        [
+          createThread({ id: 0, name: 'thread0', power: 1 }),
+          createThread({ id: 1, name: 'thread1', power: 1 }),
+          createThread({ id: 2, name: 'thread2', power: 1 }),
+        ],
+        3,
+        1,
+      ),
     );
   });
 

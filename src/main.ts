@@ -150,6 +150,7 @@ export const buildBacklogForEnsembleTeam = (): Backlog => {
 
 export const buildParallelTeam = (): Team => {
   const devCount = getInputValueOf('#dev-count-input');
+  const reviewsCount = getInputValueOf('#reviews-input');
   const threads: Thread[] = Array.from({ length: devCount }, (_, i) => {
     return {
       id: i,
@@ -159,7 +160,7 @@ export const buildParallelTeam = (): Team => {
       quit: false,
     };
   });
-  return new ParallelTeam(threads);
+  return new ParallelTeam(threads, threads.length, reviewsCount);
 };
 
 export const buildEnsembleTeam = (): Team => {
