@@ -1,7 +1,12 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { doneEvent, inProgressEvent, reviewEvent, toReviewEvent } from '../simulate/factory.ts';
+import {
+  doneEvent,
+  inProgressEvent,
+  reviewEvent,
+  toReviewEvent,
+} from '../simulate/factory.ts';
 import type { StructureEvent } from '../simulate/simulation-structure.ts';
 import {
   getCompute,
@@ -12,7 +17,11 @@ import {
   getThreadUserStoryContainer,
   getUserStory,
 } from './selector.ts';
-import { saveStatEvents, saveStructureEvents, saveTimeEvents } from './storage/session-storage.ts';
+import {
+  saveStatEvents,
+  saveStructureEvents,
+  saveTimeEvents,
+} from './storage/session-storage.ts';
 
 describe('Flow', () => {
   beforeEach(() => {
@@ -52,6 +61,13 @@ describe('Flow', () => {
     time: 1,
   });
 
+  const removeThread = (options: Partial<StructureEvent>): StructureEvent => ({
+    id: 0,
+    name: 'dev0',
+    action: 'RemoveThread',
+    time: 1,
+    ...options,
+  });
   const createUserStory = (
     options: Partial<StructureEvent>,
   ): StructureEvent => ({
@@ -93,6 +109,21 @@ describe('Flow', () => {
 
       const threadState1 = getThreadState(1);
       expect(threadState1?.textContent).toEqual('Wait');
+    });
+
+    test('Should remove a thread on computation click', async () => {
+      saveStructureEvents(
+        [createThread0(), removeThread({ id: 0, time: 2 })],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
+      await import('./flow.ts');
+
+      expect(getThread(0)?.style.opacity).toEqual('');
+
+      getCompute()?.click();
+      await vi.advanceTimersToNextTimerAsync();
+
+      expect(getThread(0)?.style.opacity).toEqual('50%');
     });
 
     test('Should set thread state to "Develop" when in progress', async () => {
