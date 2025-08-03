@@ -77,11 +77,18 @@ export const getNextUserStory = (
   return idle;
 };
 
-export const userStoriesWithSomeReviews = (backlog: Backlog): UserStory[] => {
+export const userStoriesWithSomeReviews = (
+  backlog: Backlog,
+  reviewersNeeded: number,
+): UserStory[] => {
   return backlog.userStoriesRemaining
     .filter((userStory) => userStory.state === 'Review')
     .filter((userStory) =>
-      hasSomeReviews(userStory.review, userStory.review.reviewComplexity),
+      hasSomeReviews(
+        userStory.review,
+        userStory.review.reviewComplexity,
+        reviewersNeeded,
+      ),
     );
 };
 

@@ -162,7 +162,7 @@ describe('Backlog', () => {
         [1, 2],
       ]),
     ]);
-    const userStory = userStoriesWithSomeReviews(backlog);
+    const userStory = userStoriesWithSomeReviews(backlog, 2);
     expect(userStory).toEqual([inReviewWith(0, [[0, 2]])]);
   });
 

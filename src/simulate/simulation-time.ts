@@ -73,10 +73,12 @@ export const simulateTimeEvents = (
         break;
     }
   }
-  userStoriesWithSomeReviews(backlog).forEach((review: UserStory) => {
-    const toReview = setToReview(review, review.threadId as number);
-    events.push(createTimeEvent(time, toReview, review.threadId as number));
-  });
+  userStoriesWithSomeReviews(backlog, team.getReviewersNeeded()).forEach(
+    (review: UserStory) => {
+      const toReview = setToReview(review, review.threadId as number);
+      events.push(createTimeEvent(time, toReview, review.threadId as number));
+    },
+  );
   toAddBacklog.forEach((userStory) => {
     addUserStory(userStory, backlog);
   });

@@ -46,9 +46,10 @@ export const hasAllReviews = (
 export const hasSomeReviews = (
   review: Review,
   reviewComplexity: number,
+  reviewersNeeded: number,
 ): boolean => {
   return (
-    review.reviewersNeeded !== review.reviewers.size &&
+    reviewersNeeded !== review.reviewers.size &&
     review.reviewers
       .values()
       .every((reviewValue) => reviewValue === reviewComplexity)
