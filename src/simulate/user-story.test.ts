@@ -199,6 +199,23 @@ describe('user-story', () => {
     expect(result).toEqual(false);
   });
 
+  test('Should consider a user story reviewed if there are too much reviews', () => {
+    const result = isReviewed(
+      inReview({
+        review: {
+          reviewComplexity: 2,
+          reviewersNeeded: 1,
+          reviewers: new Map([
+            [0, 1],
+            [1, 2],
+          ]),
+        },
+      }),
+      1,
+    );
+    expect(result).toEqual(true);
+  });
+
   test('Should be in progress by a thread', () => {
     const result = isInProgressBy(
       inProgress({ threadId: 0 }),

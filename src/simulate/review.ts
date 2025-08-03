@@ -38,10 +38,11 @@ export const hasAllReviews = (
   reviewComplexity: number,
   reviewersNeeded: number,
 ): boolean =>
-  reviewersNeeded === review.reviewers.size &&
+  review.reviewers.size >= reviewersNeeded &&
   review.reviewers
     .values()
-    .every((reviewValue) => reviewValue === reviewComplexity);
+    .filter((reviewValue) => reviewValue === reviewComplexity)
+    .toArray().length >= reviewersNeeded;
 
 export const hasSomeReviews = (
   review: Review,

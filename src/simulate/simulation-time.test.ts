@@ -141,7 +141,10 @@ describe('simulation time', () => {
   });
 
   test('Should have a thread review a complex user story', () => {
-    const team = new ParallelTeam([createThread({ id: 0, power: 1 })]);
+    const team = parallelTeam([
+      createThread({ id: 0, power: 1 }),
+      createThread({ id: 1 }),
+    ]);
     const backlog = new Backlog([
       toReview({
         threadId: 1,
@@ -153,7 +156,7 @@ describe('simulation time', () => {
       }),
     ]);
     const timeEvents = simulateTimeEvents(team, backlog, 1);
-    expect(timeEvents).toEqual([reviewEvent()]);
+    expect(timeEvents).toEqual([reviewEvent(), idleEvent({ threadId: 1 })]);
     expect(getUserStoriesDone(backlog)).toHaveLength(0);
     expect(getUserStoriesRemainings(backlog)).toHaveLength(1);
   });
