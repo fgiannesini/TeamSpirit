@@ -3,15 +3,15 @@ const buildMob = (allActiveThreads: Thread[]): Thread[] => {
     .map((thread) => thread.power)
     .reduce((acc, val) => acc + val, 0);
   const mean = Math.round(sum / allActiveThreads.length);
-  return [{ id: 0, name: 'mob', power: mean, startedTime: 0, quit: false }];
+  return [{ id: 0, name: 'mob', power: mean, inTime: 0, off: false }];
 };
 
 export type Thread = {
   id: number;
   name: string;
   power: number;
-  startedTime: number;
-  quit: boolean;
+  inTime: number;
+  off: boolean;
 };
 
 export type Team = {
@@ -52,7 +52,7 @@ export class ParallelTeam implements Team {
 
   quit(threadId: number): Team {
     const index = this.threads.findIndex((thread) => thread.id === threadId);
-    const newThread = { ...this.threads[index], quit: true };
+    const newThread: Thread = { ...this.threads[index], off: true };
     const newThreads = this.threads.map((item, i) =>
       i === index ? newThread : item,
     );
@@ -60,7 +60,7 @@ export class ParallelTeam implements Team {
   }
 
   getAllActiveThreads(): Thread[] {
-    return this.threads.filter((thread) => !thread.quit);
+    return this.threads.filter((thread) => !thread.off);
   }
 
   getEffectiveActiveThreads(): Thread[] {
@@ -95,7 +95,7 @@ export class EnsembleTeam implements Team {
 
   quit(threadId: number): Team {
     const index = this.threads.findIndex((thread) => thread.id === threadId);
-    const newThread = { ...this.threads[index], quit: true };
+    const newThread: Thread = { ...this.threads[index], off: true };
     const newThreads = this.threads.map((item, i) =>
       i === index ? newThread : item,
     );
@@ -103,7 +103,7 @@ export class EnsembleTeam implements Team {
   }
 
   getAllActiveThreads(): Thread[] {
-    return this.threads.filter((thread) => !thread.quit);
+    return this.threads.filter((thread) => !thread.off);
   }
 
   getEffectiveActiveThreads(): Thread[] {

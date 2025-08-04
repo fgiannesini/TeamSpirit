@@ -154,8 +154,8 @@ export const buildParallelTeam = (): Team => {
       id: i,
       name: `thread${i}`,
       power: getInputValueOf(`#power-input-${i}`),
-      startedTime: 0,
-      quit: false,
+      inTime: 0,
+      off: false,
     };
   });
   return new ParallelTeam(threads, threads.length, reviewsCount);
@@ -168,8 +168,8 @@ export const buildEnsembleTeam = (): Team => {
       id: i,
       name: `thread${i}`,
       power: getInputValueOf(`#power-input-${i}`),
-      startedTime: 0,
-      quit: false,
+      inTime: 0,
+      off: false,
     };
   });
   return new EnsembleTeam(threads);

@@ -13,10 +13,10 @@ describe('Team modificator', () => {
     expect(team).toEqual(
       parallelTeam([
         createThread({ id: 0 }),
-        createThread({ id: 1, startedTime: 1 }),
+        createThread({ id: 1, inTime: 1 }),
       ]),
     );
-    expect(addedThreads).toEqual([createThread({ id: 1, startedTime: 1 })]);
+    expect(addedThreads).toEqual([createThread({ id: 1, inTime: 1 })]);
   });
 
   test('should add a new thread in an ensemble team', () => {
@@ -26,17 +26,17 @@ describe('Team modificator', () => {
     expect(team).toEqual(
       ensembleTeam([
         createThread({ id: 0 }),
-        createThread({ id: 1, startedTime: 1 }),
+        createThread({ id: 1, inTime: 1 }),
       ]),
     );
-    expect(addedThreads).toEqual([createThread({ id: 1, startedTime: 1 })]);
+    expect(addedThreads).toEqual([createThread({ id: 1, inTime: 1 })]);
   });
 
   test('should set a thread quit in a parallel team', () => {
     const initialTeam = parallelTeam(
       [
-        createThread({ id: 0, quit: false }),
-        createThread({ id: 1, quit: false }),
+        createThread({ id: 0, off: false }),
+        createThread({ id: 1, off: false }),
       ],
       2,
     );
@@ -49,8 +49,8 @@ describe('Team modificator', () => {
     expect(team).toEqual(
       parallelTeam(
         [
-          createThread({ id: 0, quit: false }),
-          createThread({ id: 1, quit: true }),
+          createThread({ id: 0, off: false }),
+          createThread({ id: 1, off: true }),
         ],
         2,
       ),
@@ -61,8 +61,8 @@ describe('Team modificator', () => {
   test('should set a thread quit of an ensemble team', () => {
     const initialTeam = ensembleTeam(
       [
-        createThread({ id: 0, quit: false }),
-        createThread({ id: 1, quit: false }),
+        createThread({ id: 0, off: false }),
+        createThread({ id: 1, off: false }),
       ],
       2,
     );
@@ -75,8 +75,8 @@ describe('Team modificator', () => {
     expect(team).toEqual(
       ensembleTeam(
         [
-          createThread({ id: 0, quit: false }),
-          createThread({ id: 1, quit: true }),
+          createThread({ id: 0, off: false }),
+          createThread({ id: 1, off: true }),
         ],
         2,
       ),

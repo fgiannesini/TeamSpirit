@@ -8,7 +8,7 @@ describe('Team', () => {
       const team: Team = parallelTeam([
         createThread({ id: 0 }),
         createThread({ id: 1 }),
-        createThread({ id: 2, quit: true }),
+        createThread({ id: 2, off: true }),
       ]);
       expect(team.getEffectiveThreads()).toEqual([
         createThread({ id: 0 }),
@@ -19,7 +19,7 @@ describe('Team', () => {
     test('Should get all active threads', () => {
       const team: Team = parallelTeam([
         createThread({ id: 0 }),
-        createThread({ id: 1, quit: true }),
+        createThread({ id: 1, off: true }),
       ]);
       expect(team.getAllActiveThreads()).toEqual([createThread({ id: 0 })]);
     });
@@ -27,7 +27,7 @@ describe('Team', () => {
     test('Should get all effective active threads', () => {
       const team: Team = parallelTeam([
         createThread({ id: 0 }),
-        createThread({ id: 1, quit: true }),
+        createThread({ id: 1, off: true }),
       ]);
       expect(team.getEffectiveActiveThreads()).toEqual([
         createThread({ id: 0 }),
@@ -52,8 +52,8 @@ describe('Team', () => {
       expect(newTeam).toEqual(
         parallelTeam(
           [
-            createThread({ id: 0, quit: false }),
-            createThread({ id: 1, quit: true }),
+            createThread({ id: 0, off: false }),
+            createThread({ id: 1, off: true }),
           ],
           2,
         ),
@@ -89,7 +89,7 @@ describe('Team', () => {
       const team: Team = parallelTeam([
         createThread({ id: 0 }),
         createThread({ id: 1 }),
-        createThread({ id: 2, quit: true }),
+        createThread({ id: 2, off: true }),
       ]);
 
       expect(team.getReviewersNeeded()).toStrictEqual(1);
@@ -102,7 +102,7 @@ describe('Team', () => {
         createThread({ id: 0, power: 10 }),
         createThread({ id: 1, power: 25 }),
         createThread({ id: 2, power: 15 }),
-        createThread({ id: 3, power: 50, quit: true }),
+        createThread({ id: 3, power: 50, off: true }),
       ]);
       expect(team.getEffectiveThreads()).toEqual([
         createThread({ id: 0, name: 'mob', power: 25 }),
@@ -112,7 +112,7 @@ describe('Team', () => {
     test('Should get all active threads', () => {
       const team: Team = ensembleTeam([
         createThread({ id: 0 }),
-        createThread({ id: 1, quit: true }),
+        createThread({ id: 1, off: true }),
       ]);
       expect(team.getAllActiveThreads()).toEqual([createThread({ id: 0 })]);
     });
@@ -121,7 +121,7 @@ describe('Team', () => {
       const team: Team = ensembleTeam([
         createThread({ id: 0, power: 5 }),
         createThread({ id: 1, power: 15 }),
-        createThread({ id: 1, quit: true }),
+        createThread({ id: 1, off: true }),
       ]);
       expect(team.getEffectiveActiveThreads()).toEqual([
         createThread({ id: 0, name: 'mob', power: 10 }),
@@ -145,8 +145,8 @@ describe('Team', () => {
       expect(newTeam).toEqual(
         ensembleTeam(
           [
-            createThread({ id: 0, quit: false }),
-            createThread({ id: 1, quit: true }),
+            createThread({ id: 0, off: false }),
+            createThread({ id: 1, off: true }),
           ],
           2,
         ),

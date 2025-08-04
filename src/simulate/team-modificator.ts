@@ -11,10 +11,7 @@ export const computeThreadsRemovalProbabilities = (
   const maxProb = 0.5;
   const probabilities: DepartureProbabilities = {};
   for (const thread of threads) {
-    const timeFactor = Math.min(
-      1,
-      ((time - thread.startedTime) / maxTime) ** 2.2,
-    ); // entre 0 et 1
+    const timeFactor = Math.min(1, ((time - thread.inTime) / maxTime) ** 2.2); // entre 0 et 1
     const experienceFactor = (6 - thread.power) / 5; // entre 0.2 et 1
     probabilities[thread.id] = Math.min(
       maxProb,
@@ -43,12 +40,9 @@ export class TeamModificatorHandler implements TeamModificator {
     this.randomProvider = randomProvider;
   }
 
-  addTo(
-    team: Team,
-    startedTime: number,
-  ): { team: Team; addedThreads: Thread[] } {
+  addTo(team: Team, time: number): { team: Team; addedThreads: Thread[] } {
     this.randomProvider();
-    const threadToAdd = createThread({ id: 1, startedTime });
+    const threadToAdd = createThread({ id: 1, inTime: time });
     return {
       team: team.addThread(threadToAdd),
       addedThreads: [threadToAdd],
