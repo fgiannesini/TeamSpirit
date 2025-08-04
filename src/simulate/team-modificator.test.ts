@@ -2,7 +2,7 @@ import { describe, expect, test, vitest } from 'vitest';
 import { createThread, ensembleTeam, parallelTeam } from './factory.ts';
 import {
   computeThreadsInProbabilities,
-  computeThreadsRemovalProbabilities,
+  computeThreadsOffProbabilities,
   TeamModificatorHandler,
 } from './team-modificator.ts';
 
@@ -102,7 +102,7 @@ describe('Team modificator', () => {
         createThread({ id: 1, power: 3, inTime }),
         createThread({ id: 2, power: 5, inTime }),
       ]);
-      const actualProbabilities = computeThreadsRemovalProbabilities(
+      const actualProbabilities = computeThreadsOffProbabilities(
         initialTeam.getAllActiveThreads(),
       );
       expect(actualProbabilities[0]).toBeCloseTo(expectedProbabilities[0]);

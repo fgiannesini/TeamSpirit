@@ -3,7 +3,7 @@ import type { Team, Thread } from './team.ts';
 
 type ThreadMoveProbabilities = Record<number, number>;
 
-export const computeThreadsRemovalProbabilities = (
+export const computeThreadsOffProbabilities = (
   threads: Thread[],
 ): ThreadMoveProbabilities => {
   const maxTime = 30;
@@ -81,7 +81,7 @@ export class TeamModificatorHandler implements TeamModificator {
     }
     let newTeam = team;
     const removedThreads: Pick<Thread, 'id' | 'name'>[] = [];
-    const probabilities = computeThreadsRemovalProbabilities(allActiveThreads);
+    const probabilities = computeThreadsOffProbabilities(allActiveThreads);
     allActiveThreads.forEach((thread) => {
       if (this.randomProvider() < probabilities[thread.id]) {
         removedThreads.push({
