@@ -12,12 +12,14 @@
     "lint:fix": "npx @biomejs/biome check --write src",
     "lint:fix-unsafe": "npx @biomejs/biome check --write --unsafe src",
     "test": "vitest run",
-    "type-check": "tsc -p tsconfig.json --noEmit"
+    "type-check": "tsc -p tsconfig.json --noEmit",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.0.0",
     "@types/node": "^24.0.3",
     "gh-pages": "^6.2.0",
+    "husky": "^9.1.7",
     "jsdom": "^26.0.0",
     "sass": "^1.81.0",
     "typescript": "^5.8.3",
