@@ -35,7 +35,7 @@ export type Team = {
   getEffectiveThreads(): Thread[];
   getAllActiveThreads(): Thread[];
   getEffectiveActiveThreads(): Thread[];
-  addThread(thread: Thread): Team;
+  setIn(threadId: number): Team;
   setOff(threadId: number): Team;
   getReviewersNeeded(): number;
   updateTimes(): Team;
@@ -73,6 +73,19 @@ export class ParallelTeam implements Team {
     return new ParallelTeam(newThreads);
   }
 
+  setIn(threadId: number): Team {
+    const index = this.threads.findIndex((thread) => thread.id === threadId);
+    const newThread: Thread = {
+      ...this.threads[index],
+      off: false,
+      offTime: 0,
+    };
+    const newThreads = this.threads.map((item, i) =>
+      i === index ? newThread : item,
+    );
+    return new ParallelTeam(newThreads);
+  }
+
   getAllActiveThreads(): Thread[] {
     return this.threads.filter((thread) => !thread.off);
   }
@@ -83,10 +96,6 @@ export class ParallelTeam implements Team {
 
   getEffectiveThreads(): Thread[] {
     return this.getEffectiveActiveThreads();
-  }
-
-  addThread(thread: Thread): Team {
-    return new ParallelTeam([...this.threads, thread]);
   }
 }
 
@@ -110,6 +119,19 @@ export class EnsembleTeam implements Team {
     return new EnsembleTeam(newThreads);
   }
 
+  setIn(threadId: number): Team {
+    const index = this.threads.findIndex((thread) => thread.id === threadId);
+    const newThread: Thread = {
+      ...this.threads[index],
+      off: false,
+      offTime: 0,
+    };
+    const newThreads = this.threads.map((item, i) =>
+      i === index ? newThread : item,
+    );
+    return new EnsembleTeam(newThreads);
+  }
+
   getAllActiveThreads(): Thread[] {
     return this.threads.filter((thread) => !thread.off);
   }
@@ -120,10 +142,6 @@ export class EnsembleTeam implements Team {
 
   getEffectiveThreads(): Thread[] {
     return buildMob(this.threads);
-  }
-
-  addThread(thread: Thread): Team {
-    return new EnsembleTeam([...this.threads, thread]);
   }
 
   updateTimes(): Team {

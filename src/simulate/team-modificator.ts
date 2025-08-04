@@ -63,7 +63,7 @@ export class TeamModificatorHandler implements TeamModificator {
     this.randomProvider();
     const threadToAdd = createThread({ id: 1, inTime: time });
     return {
-      team: team.addThread(threadToAdd),
+      team: team.setIn(threadToAdd.id),
       addedThreads: [threadToAdd],
     };
   }

@@ -34,11 +34,17 @@ describe('Team', () => {
       ]);
     });
 
-    test('Should add thread', () => {
-      const team: Team = parallelTeam([createThread({ id: 0 })]);
-      const newTeam = team.addThread(createThread({ id: 1 }));
+    test('Should set thread in', () => {
+      const team: Team = parallelTeam([
+        createThread({ id: 0, off: false, inTime: 1 }),
+        createThread({ id: 1, off: true, offTime: 2 }),
+      ]);
+      const newTeam = team.setIn(1);
       expect(newTeam).toEqual(
-        parallelTeam([createThread({ id: 0 }), createThread({ id: 1 })]),
+        parallelTeam([
+          createThread({ id: 0, off: false, inTime: 1 }),
+          createThread({ id: 1, off: false, offTime: 0 }),
+        ]),
       );
     });
 
@@ -130,11 +136,17 @@ describe('Team', () => {
       ]);
     });
 
-    test('Should add thread', () => {
-      const team: Team = ensembleTeam([createThread({ id: 0 })]);
-      const newTeam = team.addThread(createThread({ id: 1 }));
+    test('Should set thread in', () => {
+      const team: Team = ensembleTeam([
+        createThread({ id: 0, off: false, inTime: 1 }),
+        createThread({ id: 1, off: true, offTime: 2 }),
+      ]);
+      const newTeam = team.setIn(1);
       expect(newTeam).toEqual(
-        ensembleTeam([createThread({ id: 0 }), createThread({ id: 1 })]),
+        ensembleTeam([
+          createThread({ id: 0, off: false, inTime: 1 }),
+          createThread({ id: 1, off: false, offTime: 0 }),
+        ]),
       );
     });
 
