@@ -247,7 +247,6 @@ describe('Main', () => {
           createThread({ id: 0, name: 'thread0', power: 5 }),
           createThread({ id: 1, name: 'thread1', power: 10 }),
         ],
-        2,
         0,
       ),
     );
@@ -263,7 +262,6 @@ describe('Main', () => {
           createThread({ id: 1, name: 'thread1', power: 1 }),
           createThread({ id: 2, name: 'thread2', power: 1 }),
         ],
-        3,
         2,
       ),
     );

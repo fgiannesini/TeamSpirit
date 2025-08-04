@@ -23,22 +23,18 @@ export type Team = {
   getEffectiveActiveThreads(): Thread[];
   addThread(thread: Thread): Team;
   quit(threadId: number): Team;
-  getCapacity(): number;
   getReviewersNeeded(): number;
 };
 
 export class ParallelTeam implements Team {
   private readonly threads: Thread[] = [];
-  private readonly capacity: number;
   private readonly reviewersNeeded: number;
 
   constructor(
-    threads: Thread[],
-    capacity: number = threads.length,
-    reviewersNeeded: number = Math.ceil(threads.length / 2),
+      threads: Thread[],
+      reviewersNeeded: number = Math.ceil(threads.length / 2),
   ) {
     this.threads = threads;
-    this.capacity = capacity;
     this.reviewersNeeded = reviewersNeeded;
   }
 
@@ -49,17 +45,13 @@ export class ParallelTeam implements Team {
       : this.reviewersNeeded;
   }
 
-  getCapacity(): number {
-    return this.capacity;
-  }
-
   quit(threadId: number): Team {
     const index = this.threads.findIndex((thread) => thread.id === threadId);
     const newThread: Thread = { ...this.threads[index], off: true };
     const newThreads = this.threads.map((item, i) =>
       i === index ? newThread : item,
     );
-    return new ParallelTeam(newThreads, this.capacity);
+    return new ParallelTeam(newThreads);
   }
 
   getAllActiveThreads(): Thread[] {
@@ -75,25 +67,19 @@ export class ParallelTeam implements Team {
   }
 
   addThread(thread: Thread): Team {
-    return new ParallelTeam([...this.threads, thread], this.capacity);
+    return new ParallelTeam([...this.threads, thread]);
   }
 }
 
 export class EnsembleTeam implements Team {
   private readonly threads: Thread[];
-  private readonly capacity: number;
 
-  constructor(threads: Thread[], capacity: number = threads.length) {
+  constructor(threads: Thread[]) {
     this.threads = threads;
-    this.capacity = capacity;
   }
 
   getReviewersNeeded(): number {
     return 0;
-  }
-
-  getCapacity(): number {
-    return this.capacity;
   }
 
   quit(threadId: number): Team {
@@ -102,7 +88,7 @@ export class EnsembleTeam implements Team {
     const newThreads = this.threads.map((item, i) =>
       i === index ? newThread : item,
     );
-    return new EnsembleTeam(newThreads, this.capacity);
+    return new EnsembleTeam(newThreads);
   }
 
   getAllActiveThreads(): Thread[] {
@@ -118,6 +104,6 @@ export class EnsembleTeam implements Team {
   }
 
   addThread(thread: Thread): Team {
-    return new EnsembleTeam([...this.threads, thread], this.capacity);
+    return new EnsembleTeam([...this.threads, thread]);
   }
 }

@@ -159,7 +159,7 @@ export const buildParallelTeam = (): Team => {
       off: false,
     };
   });
-  return new ParallelTeam(threads, threads.length, reviewsCount);
+  return new ParallelTeam(threads, reviewsCount);
 };
 
 export const buildEnsembleTeam = (): Team => {

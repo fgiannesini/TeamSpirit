@@ -35,38 +35,26 @@ describe('Team', () => {
     });
 
     test('Should add thread', () => {
-      const team: Team = parallelTeam([createThread({ id: 0 })], 2);
+      const team: Team = parallelTeam([createThread({ id: 0 })]);
       const newTeam = team.addThread(createThread({ id: 1 }));
       expect(newTeam).toEqual(
-        parallelTeam([createThread({ id: 0 }), createThread({ id: 1 })], 2),
+        parallelTeam([createThread({ id: 0 }), createThread({ id: 1 })]),
       );
     });
 
     test('Should quit thread', () => {
-      const team: Team = parallelTeam(
-        [createThread({ id: 0 }), createThread({ id: 1 })],
-        2,
-      );
-      const newTeam = team.quit(1);
-      expect(newTeam).toBeInstanceOf(ParallelTeam);
-      expect(newTeam).toEqual(
-        parallelTeam(
-          [
-            createThread({ id: 0, off: false }),
-            createThread({ id: 1, off: true }),
-          ],
-          2,
-        ),
-      );
-    });
-
-    test('Should get capacity', () => {
       const team: Team = parallelTeam([
         createThread({ id: 0 }),
         createThread({ id: 1 }),
       ]);
-      const capacity = team.getCapacity();
-      expect(capacity).toBe(2);
+      const newTeam = team.quit(1);
+      expect(newTeam).toBeInstanceOf(ParallelTeam);
+      expect(newTeam).toEqual(
+        parallelTeam([
+          createThread({ id: 0, off: false }),
+          createThread({ id: 1, off: true }),
+        ]),
+      );
     });
 
     test('Should init reviewers needed with half of developers, rounded up', () => {
@@ -129,38 +117,26 @@ describe('Team', () => {
     });
 
     test('Should add thread', () => {
-      const team: Team = ensembleTeam([createThread({ id: 0 })], 2);
+      const team: Team = ensembleTeam([createThread({ id: 0 })]);
       const newTeam = team.addThread(createThread({ id: 1 }));
       expect(newTeam).toEqual(
-        ensembleTeam([createThread({ id: 0 }), createThread({ id: 1 })], 2),
+        ensembleTeam([createThread({ id: 0 }), createThread({ id: 1 })]),
       );
     });
 
     test('Should quit thread', () => {
-      const team: Team = ensembleTeam(
-        [createThread({ id: 0 }), createThread({ id: 1 })],
-        2,
-      );
-      const newTeam = team.quit(1);
-      expect(newTeam).toEqual(
-        ensembleTeam(
-          [
-            createThread({ id: 0, off: false }),
-            createThread({ id: 1, off: true }),
-          ],
-          2,
-        ),
-      );
-      expect(newTeam).toBeInstanceOf(EnsembleTeam);
-    });
-
-    test('Should get capacity', () => {
       const team: Team = ensembleTeam([
         createThread({ id: 0 }),
         createThread({ id: 1 }),
       ]);
-      const capacity = team.getCapacity();
-      expect(capacity).toBe(2);
+      const newTeam = team.quit(1);
+      expect(newTeam).toEqual(
+        ensembleTeam([
+          createThread({ id: 0, off: false }),
+          createThread({ id: 1, off: true }),
+        ]),
+      );
+      expect(newTeam).toBeInstanceOf(EnsembleTeam);
     });
 
     test('Should get reviewers needed', () => {
