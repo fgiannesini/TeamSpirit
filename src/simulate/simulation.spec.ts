@@ -129,7 +129,7 @@ describe('Simulation', () => {
         id: 0,
         name: 'thread',
         time: 1,
-        action: 'RemoveThread',
+        action: 'ThreadOff',
       },
     ]);
   });

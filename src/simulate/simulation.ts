@@ -36,7 +36,7 @@ export const simulate = (
         time,
         name: thread.name,
         id: thread.id,
-        action: 'RemoveThread',
+        action: 'ThreadOff',
       });
     });
 

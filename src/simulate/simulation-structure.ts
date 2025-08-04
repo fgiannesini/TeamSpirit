@@ -4,7 +4,7 @@ import type {Team} from './team.ts';
 export type Action =
   | 'CreateThread'
   | 'CreateUserStory'
-  | 'RemoveThread'
+  | 'ThreadOff'
   | 'ThreadIn';
 export type StructureEvent = {
   time: number;
