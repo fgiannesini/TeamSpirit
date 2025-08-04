@@ -1,6 +1,6 @@
-import { describe, expect, test } from 'vitest';
-import { createThread, ensembleTeam, parallelTeam } from './factory.ts';
-import { EnsembleTeam, ParallelTeam, type Team } from './team.ts';
+import {describe, expect, test} from 'vitest';
+import {createThread, ensembleTeam, parallelTeam} from './factory.ts';
+import {EnsembleTeam, ParallelTeam, type Team} from './team.ts';
 
 describe('Team', () => {
   describe('Parallel team', () => {
@@ -102,6 +102,16 @@ describe('Team', () => {
         ]),
       );
     });
+
+    test('Should get threads off', () => {
+      const team = parallelTeam([
+        createThread({ id: 0, off: false }),
+        createThread({ id: 1, off: true }),
+      ]);
+      expect(team.getThreadsOff()).toStrictEqual([
+        createThread({ id: 1, off: true }),
+      ]);
+    });
   });
 
   describe('Ensemble team', () => {
@@ -182,6 +192,16 @@ describe('Team', () => {
           createThread({ id: 1, off: true, inTime: 0, offTime: 2 }),
         ]),
       );
+    });
+
+    test('Should get threads off', () => {
+      const team = ensembleTeam([
+        createThread({ id: 0, off: false }),
+        createThread({ id: 1, off: true }),
+      ]);
+      expect(team.getThreadsOff()).toStrictEqual([
+        createThread({ id: 1, off: true }),
+      ]);
     });
   });
 });

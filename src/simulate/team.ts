@@ -39,6 +39,7 @@ export type Team = {
   setOff(threadId: number): Team;
   getReviewersNeeded(): number;
   updateTimes(): Team;
+  getThreadsOff(): Thread[];
 };
 
 export class ParallelTeam implements Team {
@@ -97,6 +98,10 @@ export class ParallelTeam implements Team {
   getEffectiveThreads(): Thread[] {
     return this.getEffectiveActiveThreads();
   }
+
+  getThreadsOff(): Thread[] {
+    return this.threads.filter((thread) => thread.off);
+  }
 }
 
 export class EnsembleTeam implements Team {
@@ -104,6 +109,10 @@ export class EnsembleTeam implements Team {
 
   constructor(threads: Thread[]) {
     this.threads = threads;
+  }
+
+  getThreadsOff(): Thread[] {
+    return this.threads.filter((thread) => thread.off);
   }
 
   getReviewersNeeded(): number {
