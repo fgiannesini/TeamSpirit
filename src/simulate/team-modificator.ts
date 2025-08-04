@@ -72,7 +72,7 @@ export class TeamModificatorHandler implements TeamModificator {
           id: thread.id,
           name: thread.name,
         });
-        newTeam = team.quit(thread.id);
+        newTeam = team.setOff(thread.id);
       }
     });
     return {

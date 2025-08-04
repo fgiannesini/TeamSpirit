@@ -22,7 +22,7 @@ export type Team = {
   getAllActiveThreads(): Thread[];
   getEffectiveActiveThreads(): Thread[];
   addThread(thread: Thread): Team;
-  quit(threadId: number): Team;
+  setOff(threadId: number): Team;
   getReviewersNeeded(): number;
 };
 
@@ -31,8 +31,8 @@ export class ParallelTeam implements Team {
   private readonly reviewersNeeded: number;
 
   constructor(
-      threads: Thread[],
-      reviewersNeeded: number = Math.ceil(threads.length / 2),
+    threads: Thread[],
+    reviewersNeeded: number = Math.ceil(threads.length / 2),
   ) {
     this.threads = threads;
     this.reviewersNeeded = reviewersNeeded;
@@ -45,9 +45,9 @@ export class ParallelTeam implements Team {
       : this.reviewersNeeded;
   }
 
-  quit(threadId: number): Team {
+  setOff(threadId: number): Team {
     const index = this.threads.findIndex((thread) => thread.id === threadId);
-    const newThread: Thread = { ...this.threads[index], off: true };
+    const newThread: Thread = { ...this.threads[index], off: true, inTime: 0 };
     const newThreads = this.threads.map((item, i) =>
       i === index ? newThread : item,
     );
@@ -82,7 +82,7 @@ export class EnsembleTeam implements Team {
     return 0;
   }
 
-  quit(threadId: number): Team {
+  setOff(threadId: number): Team {
     const index = this.threads.findIndex((thread) => thread.id === threadId);
     const newThread: Thread = { ...this.threads[index], off: true };
     const newThreads = this.threads.map((item, i) =>
