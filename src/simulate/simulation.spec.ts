@@ -15,14 +15,14 @@ describe('Simulation', () => {
   };
 
   const noTeamModificator: TeamModificator = {
-    addTo(team: Team): { team: Team; addedThreads: Thread[] } {
-      return { addedThreads: [], team };
+    setThreadsIn(team: Team): { team: Team; newThreadsIn: Thread[] } {
+      return { newThreadsIn: [], team };
     },
-    removeFrom(team: Team): {
+    setThreadsOff(team: Team): {
       team: Team;
-      removedThreads: Pick<Thread, 'id' | 'name'>[];
+      newThreadsOff: Pick<Thread, 'id' | 'name'>[];
     } {
-      return { removedThreads: [], team };
+      return { newThreadsOff: [], team };
     },
   };
 
@@ -99,14 +99,14 @@ describe('Simulation', () => {
 
   test('Should remove a thread', () => {
     const teamModificator: TeamModificator = {
-      removeFrom(team: Team): {
+      setThreadsOff(team: Team): {
         team: Team;
-        removedThreads: Pick<Thread, 'id' | 'name'>[];
+        newThreadsOff: Pick<Thread, 'id' | 'name'>[];
       } {
-        return { removedThreads: [{ id: 0, name: 'thread' }], team };
+        return { newThreadsOff: [{ id: 0, name: 'thread' }], team };
       },
-      addTo(team: Team): { team: Team; addedThreads: Thread[] } {
-        return { addedThreads: [], team };
+      setThreadsIn(team: Team): { team: Team; newThreadsIn: Thread[] } {
+        return { newThreadsIn: [], team };
       },
     };
     const teamToModify = ensembleTeam([createThread()]);

@@ -1,13 +1,10 @@
-import { addUserStory, type Backlog, hasMoreUserStories } from './backlog.ts';
-import type { BugGenerator } from './bug-generator.ts';
-import type { TimeEvent } from './events.ts';
-import {
-  type StructureEvent,
-  structureEventsOnInitialization,
-} from './simulation-structure.ts';
-import { simulateTimeEvents } from './simulation-time.ts';
-import type { Team } from './team.ts';
-import type { TeamModificator } from './team-modificator.ts';
+import {addUserStory, type Backlog, hasMoreUserStories} from './backlog.ts';
+import type {BugGenerator} from './bug-generator.ts';
+import type {TimeEvent} from './events.ts';
+import {type StructureEvent, structureEventsOnInitialization,} from './simulation-structure.ts';
+import {simulateTimeEvents} from './simulation-time.ts';
+import type {Team} from './team.ts';
+import type {TeamModificator} from './team-modificator.ts';
 
 export const simulate = (
   backlog: Backlog,
@@ -32,9 +29,9 @@ export const simulate = (
       });
       addUserStory(bug, backlog);
     });
-    const teamModifications = teamModificator.removeFrom(team);
+    const teamModifications = teamModificator.setThreadsOff(team);
     team = teamModifications.team;
-    teamModifications.removedThreads.forEach((thread) => {
+    teamModifications.newThreadsOff.forEach((thread) => {
       structureEvents.push({
         time,
         name: thread.name,

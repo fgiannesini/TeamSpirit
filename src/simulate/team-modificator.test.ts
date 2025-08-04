@@ -17,14 +17,14 @@ describe('Team modificator', () => {
       .mockReturnValueOnce(1)
       .mockReturnValue(0);
     const teamModificator = new TeamModificatorHandler(randomProvider);
-    const { team, addedThreads } = teamModificator.addTo(initialTeam);
+    const { team, newThreadsIn } = teamModificator.setThreadsIn(initialTeam);
     expect(team).toEqual(
       parallelTeam([
         createThread({ id: 0, off: true }),
         createThread({ id: 1, off: false }),
       ]),
     );
-    expect(addedThreads).toEqual([{ id: 1, name: 'thread' }]);
+    expect(newThreadsIn).toEqual([{ id: 1, name: 'thread' }]);
   });
 
   test('should a thread in in an ensemble team', () => {
@@ -37,14 +37,14 @@ describe('Team modificator', () => {
       .mockReturnValueOnce(1)
       .mockReturnValue(0);
     const teamModificator = new TeamModificatorHandler(randomProvider);
-    const { team, addedThreads } = teamModificator.addTo(initialTeam);
+    const { team, newThreadsIn } = teamModificator.setThreadsIn(initialTeam);
     expect(team).toEqual(
       ensembleTeam([
         createThread({ id: 0, off: true }),
         createThread({ id: 1, off: false }),
       ]),
     );
-    expect(addedThreads).toEqual([{ id: 1, name: 'thread' }]);
+    expect(newThreadsIn).toEqual([{ id: 1, name: 'thread' }]);
   });
 
   test('should set a thread off in a parallel team', () => {
@@ -57,14 +57,14 @@ describe('Team modificator', () => {
       .mockReturnValueOnce(1)
       .mockReturnValue(0);
     const teamModificator = new TeamModificatorHandler(randomProvider);
-    const { team, removedThreads } = teamModificator.removeFrom(initialTeam);
+    const { team, newThreadsOff } = teamModificator.setThreadsOff(initialTeam);
     expect(team).toEqual(
       parallelTeam([
         createThread({ id: 0, off: false, inTime: 1 }),
         createThread({ id: 1, off: true, inTime: 0 }),
       ]),
     );
-    expect(removedThreads).toEqual([{ id: 1, name: 'thread' }]);
+    expect(newThreadsOff).toEqual([{ id: 1, name: 'thread' }]);
   });
 
   test('should set a thread off of an ensemble team', () => {
@@ -77,14 +77,14 @@ describe('Team modificator', () => {
       .mockReturnValueOnce(1)
       .mockReturnValue(0);
     const teamModificator = new TeamModificatorHandler(randomProvider);
-    const { team, removedThreads } = teamModificator.removeFrom(initialTeam);
+    const { team, newThreadsOff } = teamModificator.setThreadsOff(initialTeam);
     expect(team).toEqual(
       ensembleTeam([
         createThread({ id: 0, off: false, inTime: 1 }),
         createThread({ id: 1, off: true, inTime: 0 }),
       ]),
     );
-    expect(removedThreads).toEqual([{ id: 1, name: 'thread' }]);
+    expect(newThreadsOff).toEqual([{ id: 1, name: 'thread' }]);
   });
 
   test('should not remove a thread if the team will be empty', () => {
@@ -94,14 +94,14 @@ describe('Team modificator', () => {
     ]);
     const randomProvider = vitest.fn<() => number>().mockReturnValue(0);
     const teamModificator = new TeamModificatorHandler(randomProvider);
-    const { team, removedThreads } = teamModificator.removeFrom(initialTeam);
+    const { team, newThreadsOff } = teamModificator.setThreadsOff(initialTeam);
     expect(team).toEqual(
       parallelTeam([
         createThread({ id: 0, off: true }),
         createThread({ id: 1, off: false }),
       ]),
     );
-    expect(removedThreads).toEqual([]);
+    expect(newThreadsOff).toEqual([]);
   });
 
   test.each([

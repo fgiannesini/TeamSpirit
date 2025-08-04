@@ -41,14 +41,14 @@ export const computeThreadsInProbabilities = (
 };
 
 export type TeamModificator = {
-  addTo(team: Team): {
+  setThreadsIn(team: Team): {
     team: Team;
-    addedThreads: Pick<Thread, 'id' | 'name'>[];
+    newThreadsIn: Pick<Thread, 'id' | 'name'>[];
   };
 
-  removeFrom(team: Team): {
+  setThreadsOff(team: Team): {
     team: Team;
-    removedThreads: Pick<Thread, 'id' | 'name'>[];
+    newThreadsOff: Pick<Thread, 'id' | 'name'>[];
   };
 };
 
@@ -58,9 +58,9 @@ export class TeamModificatorHandler implements TeamModificator {
     this.randomProvider = randomProvider;
   }
 
-  addTo(team: Team): {
+  setThreadsIn(team: Team): {
     team: Team;
-    addedThreads: Pick<Thread, 'id' | 'name'>[];
+    newThreadsIn: Pick<Thread, 'id' | 'name'>[];
   } {
     let newTeam = team;
     const offThreads = team.getThreadsOff();
@@ -77,19 +77,19 @@ export class TeamModificatorHandler implements TeamModificator {
     });
     return {
       team: newTeam,
-      addedThreads,
+      newThreadsIn: addedThreads,
     };
   }
 
-  removeFrom(team: Team): {
+  setThreadsOff(team: Team): {
     team: Team;
-    removedThreads: Pick<Thread, 'id' | 'name'>[];
+    newThreadsOff: Pick<Thread, 'id' | 'name'>[];
   } {
     const allActiveThreads = team.getAllActiveThreads();
     if (allActiveThreads.length === 1) {
       return {
         team,
-        removedThreads: [],
+        newThreadsOff: [],
       };
     }
     let newTeam = team;
@@ -106,7 +106,7 @@ export class TeamModificatorHandler implements TeamModificator {
     });
     return {
       team: newTeam,
-      removedThreads,
+      newThreadsOff: removedThreads,
     };
   }
 }
