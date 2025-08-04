@@ -1,5 +1,4 @@
-import { createThread } from './factory.ts';
-import type { Team, Thread } from './team.ts';
+import type {Team, Thread} from './team.ts';
 
 type ThreadMoveProbabilities = Record<number, number>;
 
@@ -42,10 +41,10 @@ export const computeThreadsInProbabilities = (
 };
 
 export type TeamModificator = {
-  addTo(
-    team: Team,
-    startedTime: number,
-  ): { team: Team; addedThreads: Thread[] };
+  addTo(team: Team): {
+    team: Team;
+    addedThreads: Pick<Thread, 'id' | 'name'>[];
+  };
 
   removeFrom(team: Team): {
     team: Team;
@@ -59,12 +58,26 @@ export class TeamModificatorHandler implements TeamModificator {
     this.randomProvider = randomProvider;
   }
 
-  addTo(team: Team, time: number): { team: Team; addedThreads: Thread[] } {
-    this.randomProvider();
-    const threadToAdd = createThread({ id: 1, inTime: time });
+  addTo(team: Team): {
+    team: Team;
+    addedThreads: Pick<Thread, 'id' | 'name'>[];
+  } {
+    let newTeam = team;
+    const offThreads = team.getThreadsOff();
+    const addedThreads: Pick<Thread, 'id' | 'name'>[] = [];
+    const probabilities = computeThreadsInProbabilities(offThreads);
+    offThreads.forEach((thread) => {
+      if (this.randomProvider() < probabilities[thread.id]) {
+        addedThreads.push({
+          id: thread.id,
+          name: thread.name,
+        });
+        newTeam = team.setIn(thread.id);
+      }
+    });
     return {
-      team: team.setIn(threadToAdd.id),
-      addedThreads: [threadToAdd],
+      team: newTeam,
+      addedThreads,
     };
   }
 

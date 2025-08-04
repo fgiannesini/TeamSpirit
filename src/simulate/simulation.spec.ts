@@ -1,16 +1,11 @@
-import { describe, expect, test, vi } from 'vitest';
-import {
-  addUserStory,
-  Backlog,
-  getUserStoriesDone,
-  getUserStoriesRemainings,
-} from './backlog.ts';
-import type { BugGenerator } from './bug-generator.ts';
-import { createThread, done, ensembleTeam, todo } from './factory.ts';
-import { simulate } from './simulation.ts';
-import type { Team, Thread } from './team.ts';
-import type { TeamModificator } from './team-modificator.ts';
-import type { UserStory } from './user-story.ts';
+import {describe, expect, test, vi} from 'vitest';
+import {addUserStory, Backlog, getUserStoriesDone, getUserStoriesRemainings,} from './backlog.ts';
+import type {BugGenerator} from './bug-generator.ts';
+import {createThread, done, ensembleTeam, todo} from './factory.ts';
+import {simulate} from './simulation.ts';
+import type {Team, Thread} from './team.ts';
+import type {TeamModificator} from './team-modificator.ts';
+import type {UserStory} from './user-story.ts';
 
 describe('Simulation', () => {
   const noBugGenerator: BugGenerator = {
@@ -20,10 +15,7 @@ describe('Simulation', () => {
   };
 
   const noTeamModificator: TeamModificator = {
-    addTo(
-      team: Team,
-      _startedTime: number,
-    ): { team: Team; addedThreads: Thread[] } {
+    addTo(team: Team): { team: Team; addedThreads: Thread[] } {
       return { addedThreads: [], team };
     },
     removeFrom(team: Team): {
