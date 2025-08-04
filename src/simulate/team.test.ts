@@ -124,16 +124,16 @@ describe('Team', () => {
       );
     });
 
-    test('Should quit thread', () => {
+    test('Should set thread off', () => {
       const team: Team = ensembleTeam([
         createThread({ id: 0 }),
-        createThread({ id: 1 }),
+        createThread({ id: 1, off: false, inTime: 1 }),
       ]);
       const newTeam = team.setOff(1);
       expect(newTeam).toEqual(
         ensembleTeam([
           createThread({ id: 0, off: false }),
-          createThread({ id: 1, off: true }),
+          createThread({ id: 1, off: true, inTime: 0 }),
         ]),
       );
       expect(newTeam).toBeInstanceOf(EnsembleTeam);

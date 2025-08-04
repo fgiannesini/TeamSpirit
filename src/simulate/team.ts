@@ -84,7 +84,7 @@ export class EnsembleTeam implements Team {
 
   setOff(threadId: number): Team {
     const index = this.threads.findIndex((thread) => thread.id === threadId);
-    const newThread: Thread = { ...this.threads[index], off: true };
+    const newThread: Thread = { ...this.threads[index], off: true, inTime: 0 };
     const newThreads = this.threads.map((item, i) =>
       i === index ? newThread : item,
     );
