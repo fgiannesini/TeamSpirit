@@ -32,7 +32,7 @@ describe('Team modificator', () => {
     expect(addedThreads).toEqual([createThread({ id: 1, inTime: 1 })]);
   });
 
-  test('should set a thread quit in a parallel team', () => {
+  test('should set a thread off in a parallel team', () => {
     const initialTeam = parallelTeam(
       [
         createThread({ id: 0, off: false }),
@@ -58,7 +58,7 @@ describe('Team modificator', () => {
     expect(removedThreads).toEqual([{ id: 1, name: 'thread' }]);
   });
 
-  test('should set a thread quit of an ensemble team', () => {
+  test('should set a thread off of an ensemble team', () => {
     const initialTeam = ensembleTeam(
       [
         createThread({ id: 0, off: false }),
@@ -82,6 +82,26 @@ describe('Team modificator', () => {
       ),
     );
     expect(removedThreads).toEqual([{ id: 1, name: 'thread' }]);
+  });
+
+  test('should not remove a thread if the team will be empty', () => {
+    const initialTeam = parallelTeam(
+      [createThread({ id: 0, off: true }), createThread({ id: 1, off: false })],
+      2,
+    );
+    const randomProvider = vitest.fn<() => number>().mockReturnValue(0);
+    const teamModificator = new TeamModificatorHandler(randomProvider);
+    const { team, removedThreads } = teamModificator.removeFrom(initialTeam, 1);
+    expect(team).toEqual(
+      parallelTeam(
+        [
+          createThread({ id: 0, off: true }),
+          createThread({ id: 1, off: false }),
+        ],
+        2,
+      ),
+    );
+    expect(removedThreads).toEqual([]);
   });
 
   test.each([

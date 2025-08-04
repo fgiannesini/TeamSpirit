@@ -53,13 +53,20 @@ export class TeamModificatorHandler implements TeamModificator {
     team: Team,
     time: number,
   ): { team: Team; removedThreads: Pick<Thread, 'id' | 'name'>[] } {
+    const allActiveThreads = team.getAllActiveThreads();
+    if (allActiveThreads.length === 1) {
+      return {
+        team,
+        removedThreads: [],
+      };
+    }
     let newTeam = team;
     const removedThreads: Pick<Thread, 'id' | 'name'>[] = [];
     const probabilities = computeThreadsRemovalProbabilities(
-      team.getAllActiveThreads(),
+      allActiveThreads,
       time,
     );
-    team.getAllActiveThreads().forEach((thread) => {
+    allActiveThreads.forEach((thread) => {
       if (this.randomProvider() < probabilities[thread.id]) {
         removedThreads.push({
           id: thread.id,
