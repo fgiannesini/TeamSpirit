@@ -59,7 +59,13 @@ describe('Flow', () => {
     time: 1,
     ...options,
   });
-
+  const setThreadIn = (options: Partial<StructureEvent>): StructureEvent => ({
+    id: 0,
+    name: 'dev0',
+    action: 'ThreadIn',
+    time: 1,
+    ...options,
+  });
   const createUserStory = (
     options: Partial<StructureEvent>,
   ): StructureEvent => ({
@@ -135,6 +141,40 @@ describe('Flow', () => {
       await vi.runAllTimersAsync();
 
       expect(getThread(0)?.style.opacity).toEqual('50%');
+    });
+
+    test('Should set thread in on computation click', async () => {
+      saveStructureEvents(
+        [createThread0(), setThreadIn({ id: 0, time: 2 })],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
+      await import('./flow.ts');
+
+      expect(getThread(0)?.style.opacity).toEqual('');
+
+      getCompute()?.click();
+      await vi.advanceTimersToNextTimerAsync();
+
+      expect(getThread(0)?.style.opacity).toEqual('100%');
+    });
+
+    test('Should set thread in on all computation click', async () => {
+      saveStructureEvents(
+        [createThread0(), setThreadIn({ id: 0, time: 2 })],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
+      saveTimeEvents(
+        [doneEvent({ time: 2 })],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
+      await import('./flow.ts');
+
+      expect(getThread(0)?.style.opacity).toEqual('');
+
+      getComputeAll()?.click();
+      await vi.runAllTimersAsync();
+
+      expect(getThread(0)?.style.opacity).toEqual('100%');
     });
 
     test('Should set thread state to "Develop" when in progress', async () => {

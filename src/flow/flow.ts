@@ -1,22 +1,13 @@
 import './flow.scss';
-import type { TimeEvent } from '../simulate/events.ts';
-import type { StructureEvent } from '../simulate/simulation-structure.ts';
-import type { StatEvent } from '../simulate/stats.ts';
-import { renderStatEvents } from './render-stats.ts';
-import { addThreads, removeThreads } from './render-thread.ts';
-import { renderTimeEvents } from './render-time.ts';
-import { addUserStories } from './render-user-story.ts';
-import {
-  getBacklog,
-  getCompute,
-  getComputeAll,
-  getThreads,
-} from './selector.ts';
-import {
-  loadStatEvents,
-  loadStructureEvents,
-  loadTimeEvents,
-} from './storage/session-storage.ts';
+import type {TimeEvent} from '../simulate/events.ts';
+import type {StructureEvent} from '../simulate/simulation-structure.ts';
+import type {StatEvent} from '../simulate/stats.ts';
+import {renderStatEvents} from './render-stats.ts';
+import {addThreads, setThreadsIn, setThreadsOff} from './render-thread.ts';
+import {renderTimeEvents} from './render-time.ts';
+import {addUserStories} from './render-user-story.ts';
+import {getBacklog, getCompute, getComputeAll, getThreads,} from './selector.ts';
+import {loadStatEvents, loadStructureEvents, loadTimeEvents,} from './storage/session-storage.ts';
 
 const buildUserStories = (
   structureEvents: StructureEvent[],
@@ -57,7 +48,8 @@ const render = (
     await renderTimeEvents(events, currentTime, 1000);
     renderStatEvents(statEvents, currentTime, maxTime);
     buildUserStories(structureEvents, currentTime + 1);
-    removeThreads(structureEvents, currentTime + 1);
+    setThreadsOff(structureEvents, currentTime + 1);
+    setThreadsIn(structureEvents, currentTime + 1);
     if (maxTime !== currentTime) {
       computeButton.disabled = false;
     }
@@ -70,7 +62,8 @@ const render = (
       await renderTimeEvents(events, currentTime, 300);
       renderStatEvents(statEvents, currentTime, maxTime);
       buildUserStories(structureEvents, currentTime + 1);
-      removeThreads(structureEvents, currentTime + 1);
+      setThreadsOff(structureEvents, currentTime + 1);
+      setThreadsIn(structureEvents, currentTime + 1);
     }
     computeButtonAll.disabled = true;
   });

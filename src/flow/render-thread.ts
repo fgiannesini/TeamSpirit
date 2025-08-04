@@ -33,7 +33,7 @@ export const addThreads = (
     });
 };
 
-export const removeThreads = (
+export const setThreadsOff = (
   structureEvents: StructureEvent[],
   timeCount: number,
 ) => {
@@ -43,6 +43,20 @@ export const removeThreads = (
       const thread = getThread(id);
       if (thread) {
         thread.style.opacity = '50%';
+      }
+    });
+};
+
+export const setThreadsIn = (
+  structureEvents: StructureEvent[],
+  timeCount: number,
+) => {
+  structureEvents
+    .filter(({ action, time }) => action === 'ThreadIn' && time === timeCount)
+    .forEach(({ id }) => {
+      const thread = getThread(id);
+      if (thread) {
+        thread.style.opacity = '100%';
       }
     });
 };
