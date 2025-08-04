@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import {
   addUserStory,
   Backlog,
@@ -133,5 +133,18 @@ describe('Simulation', () => {
         action: 'RemoveThread',
       },
     ]);
+  });
+
+  test('Should update time in team', () => {
+    const teamToUpdate = ensembleTeam([createThread()]);
+    const updateTimesMock = vi.spyOn(teamToUpdate, 'updateTimes');
+    simulate(
+      new Backlog([todo()]),
+      teamToUpdate,
+      noBugGenerator,
+      noTeamModificator,
+    );
+
+    expect(updateTimesMock).toHaveBeenCalled();
   });
 });

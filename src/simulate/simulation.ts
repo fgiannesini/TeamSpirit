@@ -44,6 +44,7 @@ export const simulate = (
     });
     timeEvents.push(...simulateTimeEvents(team, backlog, time));
     time++;
+    team = team.updateTimes();
   }
   return { timeEvents, structureEvents };
 };
