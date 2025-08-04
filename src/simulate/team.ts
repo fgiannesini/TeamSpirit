@@ -3,7 +3,9 @@ const buildMob = (allActiveThreads: Thread[]): Thread[] => {
     .map((thread) => thread.power)
     .reduce((acc, val) => acc + val, 0);
   const mean = Math.round(sum / allActiveThreads.length);
-  return [{ id: 0, name: 'mob', power: mean, inTime: 0, off: false }];
+  return [
+    { id: 0, name: 'mob', power: mean, inTime: 0, offTime: 0, off: false },
+  ];
 };
 
 export type Thread = {
@@ -11,6 +13,7 @@ export type Thread = {
   name: string;
   power: number;
   inTime: number;
+  offTime: number;
   off: boolean;
 };
 

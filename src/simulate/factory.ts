@@ -137,6 +137,7 @@ export const createThread = (options: Partial<Thread> = {}): Thread => {
     name: 'thread',
     power: 1,
     inTime: 0,
+    offTime: 0,
     off: false,
     ...options,
   };

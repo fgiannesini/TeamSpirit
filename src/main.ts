@@ -155,6 +155,7 @@ export const buildParallelTeam = (): Team => {
       name: `thread${i}`,
       power: getInputValueOf(`#power-input-${i}`),
       inTime: 0,
+      offTime: 0,
       off: false,
     };
   });
@@ -169,6 +170,7 @@ export const buildEnsembleTeam = (): Team => {
       name: `thread${i}`,
       power: getInputValueOf(`#power-input-${i}`),
       inTime: 0,
+      offTime: 0,
       off: false,
     };
   });
