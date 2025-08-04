@@ -82,6 +82,20 @@ describe('Team', () => {
 
       expect(team.getReviewersNeeded()).toStrictEqual(1);
     });
+
+    test('Should increments in time and off time', () => {
+      const team: Team = parallelTeam([
+        createThread({ id: 0, off: false, inTime: 1, offTime: 0 }),
+        createThread({ id: 1, off: true, inTime: 0, offTime: 1 }),
+      ]);
+      const updatedTeam = team.updateTimes();
+      expect(updatedTeam).toEqual(
+        parallelTeam([
+          createThread({ id: 0, off: false, inTime: 2, offTime: 0 }),
+          createThread({ id: 1, off: true, inTime: 0, offTime: 2 }),
+        ]),
+      );
+    });
   });
 
   describe('Ensemble team', () => {

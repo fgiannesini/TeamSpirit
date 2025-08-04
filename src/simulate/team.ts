@@ -24,6 +24,7 @@ export type Team = {
   addThread(thread: Thread): Team;
   setOff(threadId: number): Team;
   getReviewersNeeded(): number;
+  updateTimes(): Team;
 };
 
 export class ParallelTeam implements Team {
@@ -36,6 +37,23 @@ export class ParallelTeam implements Team {
   ) {
     this.threads = threads;
     this.reviewersNeeded = reviewersNeeded;
+  }
+
+  updateTimes(): Team {
+    return new ParallelTeam(
+      this.threads.map((thread) => {
+        if (thread.off) {
+          return {
+            ...thread,
+            offTime: thread.offTime + 1,
+          };
+        }
+        return {
+          ...thread,
+          inTime: thread.inTime + 1,
+        };
+      }),
+    );
   }
 
   getReviewersNeeded(): number {
@@ -76,6 +94,10 @@ export class EnsembleTeam implements Team {
 
   constructor(threads: Thread[]) {
     this.threads = threads;
+  }
+
+  updateTimes(): Team {
+    throw new Error('Method not implemented.');
   }
 
   getReviewersNeeded(): number {
