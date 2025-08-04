@@ -1,6 +1,7 @@
 import { describe, expect, test, vitest } from 'vitest';
 import { createThread, ensembleTeam, parallelTeam } from './factory.ts';
 import {
+  computeThreadsInProbabilities,
   computeThreadsRemovalProbabilities,
   TeamModificatorHandler,
 } from './team-modificator.ts';
@@ -94,7 +95,7 @@ describe('Team modificator', () => {
     [15, [0.11, 0.07, 0.02]],
     [30, [0.5, 0.3, 0.1]],
   ])(
-    'should compute probability to remove a thread at time %s',
+    'should compute probability to set a thread off at time %s',
     (inTime: number, expectedProbabilities: number[]) => {
       const initialTeam = parallelTeam([
         createThread({ id: 0, power: 1, inTime }),
@@ -107,6 +108,23 @@ describe('Team modificator', () => {
       expect(actualProbabilities[0]).toBeCloseTo(expectedProbabilities[0]);
       expect(actualProbabilities[1]).toBeCloseTo(expectedProbabilities[1]);
       expect(actualProbabilities[2]).toBeCloseTo(expectedProbabilities[2]);
+    },
+  );
+
+  test.each([
+    [1, 0.35],
+    [4, 0.5],
+    [7, 0.2],
+    [10, 0.2],
+    [15, 0.98],
+    [20, 1],
+  ])(
+    'should compute the probability to set a thread in at time %s',
+    (offTime: number, expectedProbability: number) => {
+      const actualProbabilities = computeThreadsInProbabilities([
+        createThread({ id: 1, power: 3, off: true, offTime }),
+      ]);
+      expect(actualProbabilities[1]).toBeCloseTo(expectedProbability);
     },
   );
 });
