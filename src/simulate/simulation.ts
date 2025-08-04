@@ -32,7 +32,7 @@ export const simulate = (
       });
       addUserStory(bug, backlog);
     });
-    const teamModifications = teamModificator.removeFrom(team, time);
+    const teamModifications = teamModificator.removeFrom(team);
     team = teamModifications.team;
     teamModifications.removedThreads.forEach((thread) => {
       structureEvents.push({

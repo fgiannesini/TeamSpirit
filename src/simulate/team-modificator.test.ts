@@ -34,19 +34,19 @@ describe('Team modificator', () => {
 
   test('should set a thread off in a parallel team', () => {
     const initialTeam = parallelTeam([
-      createThread({ id: 0, off: false }),
-      createThread({ id: 1, off: false }),
+      createThread({ id: 0, off: false, inTime: 1 }),
+      createThread({ id: 1, off: false, inTime: 1 }),
     ]);
     const randomProvider = vitest
       .fn<() => number>()
       .mockReturnValueOnce(1)
       .mockReturnValue(0);
     const teamModificator = new TeamModificatorHandler(randomProvider);
-    const { team, removedThreads } = teamModificator.removeFrom(initialTeam, 1);
+    const { team, removedThreads } = teamModificator.removeFrom(initialTeam);
     expect(team).toEqual(
       parallelTeam([
-        createThread({ id: 0, off: false }),
-        createThread({ id: 1, off: true }),
+        createThread({ id: 0, off: false, inTime: 1 }),
+        createThread({ id: 1, off: true, inTime: 0 }),
       ]),
     );
     expect(removedThreads).toEqual([{ id: 1, name: 'thread' }]);
@@ -54,19 +54,19 @@ describe('Team modificator', () => {
 
   test('should set a thread off of an ensemble team', () => {
     const initialTeam = ensembleTeam([
-      createThread({ id: 0, off: false }),
-      createThread({ id: 1, off: false }),
+      createThread({ id: 0, off: false, inTime: 1 }),
+      createThread({ id: 1, off: false, inTime: 1 }),
     ]);
     const randomProvider = vitest
       .fn<() => number>()
       .mockReturnValueOnce(1)
       .mockReturnValue(0);
     const teamModificator = new TeamModificatorHandler(randomProvider);
-    const { team, removedThreads } = teamModificator.removeFrom(initialTeam, 1);
+    const { team, removedThreads } = teamModificator.removeFrom(initialTeam);
     expect(team).toEqual(
       ensembleTeam([
-        createThread({ id: 0, off: false }),
-        createThread({ id: 1, off: true }),
+        createThread({ id: 0, off: false, inTime: 1 }),
+        createThread({ id: 1, off: true, inTime: 0 }),
       ]),
     );
     expect(removedThreads).toEqual([{ id: 1, name: 'thread' }]);
@@ -79,7 +79,7 @@ describe('Team modificator', () => {
     ]);
     const randomProvider = vitest.fn<() => number>().mockReturnValue(0);
     const teamModificator = new TeamModificatorHandler(randomProvider);
-    const { team, removedThreads } = teamModificator.removeFrom(initialTeam, 1);
+    const { team, removedThreads } = teamModificator.removeFrom(initialTeam);
     expect(team).toEqual(
       parallelTeam([
         createThread({ id: 0, off: true }),
@@ -95,15 +95,14 @@ describe('Team modificator', () => {
     [30, [0.5, 0.3, 0.1]],
   ])(
     'should compute probability to remove a thread at time %s',
-    (time: number, expectedProbabilities: number[]) => {
+    (inTime: number, expectedProbabilities: number[]) => {
       const initialTeam = parallelTeam([
-        createThread({ id: 0, power: 1 }),
-        createThread({ id: 1, power: 3 }),
-        createThread({ id: 2, power: 5 }),
+        createThread({ id: 0, power: 1, inTime }),
+        createThread({ id: 1, power: 3, inTime }),
+        createThread({ id: 2, power: 5, inTime }),
       ]);
       const actualProbabilities = computeThreadsRemovalProbabilities(
         initialTeam.getAllActiveThreads(),
-        time,
       );
       expect(actualProbabilities[0]).toBeCloseTo(expectedProbabilities[0]);
       expect(actualProbabilities[1]).toBeCloseTo(expectedProbabilities[1]);

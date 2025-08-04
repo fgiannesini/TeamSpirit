@@ -26,10 +26,10 @@ describe('Simulation', () => {
     ): { team: Team; addedThreads: Thread[] } {
       return { addedThreads: [], team };
     },
-    removeFrom(
-      team: Team,
-      _time: number,
-    ): { team: Team; removedThreads: Pick<Thread, 'id' | 'name'>[] } {
+    removeFrom(team: Team): {
+      team: Team;
+      removedThreads: Pick<Thread, 'id' | 'name'>[];
+    } {
       return { removedThreads: [], team };
     },
   };
@@ -107,10 +107,10 @@ describe('Simulation', () => {
 
   test('Should remove a thread', () => {
     const teamModificator: TeamModificator = {
-      removeFrom(
-        team: Team,
-        _time: number,
-      ): { team: Team; removedThreads: Pick<Thread, 'id' | 'name'>[] } {
+      removeFrom(team: Team): {
+        team: Team;
+        removedThreads: Pick<Thread, 'id' | 'name'>[];
+      } {
         return { removedThreads: [{ id: 0, name: 'thread' }], team };
       },
       addTo(team: Team): { team: Team; addedThreads: Thread[] } {

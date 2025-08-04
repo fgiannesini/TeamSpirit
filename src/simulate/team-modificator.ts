@@ -5,13 +5,12 @@ type DepartureProbabilities = Record<number, number>;
 
 export const computeThreadsRemovalProbabilities = (
   threads: Thread[],
-  time: number,
 ): DepartureProbabilities => {
   const maxTime = 30;
   const maxProb = 0.5;
   const probabilities: DepartureProbabilities = {};
   for (const thread of threads) {
-    const timeFactor = Math.min(1, ((time - thread.inTime) / maxTime) ** 2.2); // entre 0 et 1
+    const timeFactor = Math.min(1, (thread.inTime / maxTime) ** 2.2); // entre 0 et 1
     const experienceFactor = (6 - thread.power) / 5; // entre 0.2 et 1
     probabilities[thread.id] = Math.min(
       maxProb,
@@ -28,10 +27,10 @@ export type TeamModificator = {
     startedTime: number,
   ): { team: Team; addedThreads: Thread[] };
 
-  removeFrom(
-    team: Team,
-    time: number,
-  ): { team: Team; removedThreads: Pick<Thread, 'id' | 'name'>[] };
+  removeFrom(team: Team): {
+    team: Team;
+    removedThreads: Pick<Thread, 'id' | 'name'>[];
+  };
 };
 
 export class TeamModificatorHandler implements TeamModificator {
@@ -49,10 +48,10 @@ export class TeamModificatorHandler implements TeamModificator {
     };
   }
 
-  removeFrom(
-    team: Team,
-    time: number,
-  ): { team: Team; removedThreads: Pick<Thread, 'id' | 'name'>[] } {
+  removeFrom(team: Team): {
+    team: Team;
+    removedThreads: Pick<Thread, 'id' | 'name'>[];
+  } {
     const allActiveThreads = team.getAllActiveThreads();
     if (allActiveThreads.length === 1) {
       return {
@@ -62,10 +61,7 @@ export class TeamModificatorHandler implements TeamModificator {
     }
     let newTeam = team;
     const removedThreads: Pick<Thread, 'id' | 'name'>[] = [];
-    const probabilities = computeThreadsRemovalProbabilities(
-      allActiveThreads,
-      time,
-    );
+    const probabilities = computeThreadsRemovalProbabilities(allActiveThreads);
     allActiveThreads.forEach((thread) => {
       if (this.randomProvider() < probabilities[thread.id]) {
         removedThreads.push({
