@@ -8,6 +8,20 @@ const buildMob = (allActiveThreads: Thread[]): Thread[] => {
   ];
 };
 
+const updateThreadsTime = (threads: Thread[]) =>
+  threads.map((thread) => {
+    if (thread.off) {
+      return {
+        ...thread,
+        offTime: thread.offTime + 1,
+      };
+    }
+    return {
+      ...thread,
+      inTime: thread.inTime + 1,
+    };
+  });
+
 export type Thread = {
   id: number;
   name: string;
@@ -40,20 +54,7 @@ export class ParallelTeam implements Team {
   }
 
   updateTimes(): Team {
-    return new ParallelTeam(
-      this.threads.map((thread) => {
-        if (thread.off) {
-          return {
-            ...thread,
-            offTime: thread.offTime + 1,
-          };
-        }
-        return {
-          ...thread,
-          inTime: thread.inTime + 1,
-        };
-      }),
-    );
+    return new ParallelTeam(updateThreadsTime(this.threads));
   }
 
   getReviewersNeeded(): number {
@@ -96,10 +97,6 @@ export class EnsembleTeam implements Team {
     this.threads = threads;
   }
 
-  updateTimes(): Team {
-    throw new Error('Method not implemented.');
-  }
-
   getReviewersNeeded(): number {
     return 0;
   }
@@ -127,5 +124,9 @@ export class EnsembleTeam implements Team {
 
   addThread(thread: Thread): Team {
     return new EnsembleTeam([...this.threads, thread]);
+  }
+
+  updateTimes(): Team {
+    return new EnsembleTeam(updateThreadsTime(this.threads));
   }
 }
