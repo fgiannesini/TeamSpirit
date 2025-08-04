@@ -1,7 +1,11 @@
-import { type Backlog, getUserStories } from './backlog.ts';
-import type { Team } from './team.ts';
+import {type Backlog, getUserStories} from './backlog.ts';
+import type {Team} from './team.ts';
 
-export type Action = 'CreateThread' | 'CreateUserStory' | 'RemoveThread';
+export type Action =
+  | 'CreateThread'
+  | 'CreateUserStory'
+  | 'RemoveThread'
+  | 'ThreadIn';
 export type StructureEvent = {
   time: number;
   id: number;

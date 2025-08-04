@@ -29,9 +29,9 @@ export const simulate = (
       });
       addUserStory(bug, backlog);
     });
-    const teamModifications = teamModificator.setThreadsOff(team);
-    team = teamModifications.team;
-    teamModifications.newThreadsOff.forEach((thread) => {
+    const teamWithThreadsOff = teamModificator.setThreadsOff(team);
+    team = teamWithThreadsOff.team;
+    teamWithThreadsOff.newThreadsOff.forEach((thread) => {
       structureEvents.push({
         time,
         name: thread.name,
@@ -39,6 +39,18 @@ export const simulate = (
         action: 'RemoveThread',
       });
     });
+
+    const teamWithThreadsIn = teamModificator.setThreadsIn(team);
+    team = teamWithThreadsIn.team;
+    teamWithThreadsIn.newThreadsIn.forEach((thread) => {
+      structureEvents.push({
+        time,
+        name: thread.name,
+        id: thread.id,
+        action: 'ThreadIn',
+      });
+    });
+
     timeEvents.push(...simulateTimeEvents(team, backlog, time));
     time++;
     team = team.updateTimes();

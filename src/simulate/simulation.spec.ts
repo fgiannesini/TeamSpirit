@@ -3,6 +3,7 @@ import {addUserStory, Backlog, getUserStoriesDone, getUserStoriesRemainings,} fr
 import type {BugGenerator} from './bug-generator.ts';
 import {createThread, done, ensembleTeam, todo} from './factory.ts';
 import {simulate} from './simulation.ts';
+import type {StructureEvent} from './simulation-structure.ts';
 import type {Team, Thread} from './team.ts';
 import type {TeamModificator} from './team-modificator.ts';
 import type {UserStory} from './user-story.ts';
@@ -15,7 +16,10 @@ describe('Simulation', () => {
   };
 
   const noTeamModificator: TeamModificator = {
-    setThreadsIn(team: Team): { team: Team; newThreadsIn: Thread[] } {
+    setThreadsIn(team: Team): {
+      team: Team;
+      newThreadsIn: Pick<Thread, 'id' | 'name'>[];
+    } {
       return { newThreadsIn: [], team };
     },
     setThreadsOff(team: Team): {
@@ -97,7 +101,7 @@ describe('Simulation', () => {
     expect(backlog.userStoriesDone.length).toEqual(3);
   });
 
-  test('Should remove a thread', () => {
+  test('Should set a thread off', () => {
     const teamModificator: TeamModificator = {
       setThreadsOff(team: Team): {
         team: Team;
@@ -105,7 +109,10 @@ describe('Simulation', () => {
       } {
         return { newThreadsOff: [{ id: 0, name: 'thread' }], team };
       },
-      setThreadsIn(team: Team): { team: Team; newThreadsIn: Thread[] } {
+      setThreadsIn(team: Team): {
+        team: Team;
+        newThreadsIn: Pick<Thread, 'id' | 'name'>[];
+      } {
         return { newThreadsIn: [], team };
       },
     };
@@ -117,12 +124,45 @@ describe('Simulation', () => {
       teamModificator,
     );
 
-    expect(structureEvents.slice(-1)).toEqual([
+    expect(structureEvents.slice(-1)).toEqual<StructureEvent[]>([
       {
         id: 0,
         name: 'thread',
         time: 1,
         action: 'RemoveThread',
+      },
+    ]);
+  });
+
+  test('Should set a thread in', () => {
+    const teamModificator: TeamModificator = {
+      setThreadsOff(team: Team): {
+        team: Team;
+        newThreadsOff: Pick<Thread, 'id' | 'name'>[];
+      } {
+        return { newThreadsOff: [], team };
+      },
+      setThreadsIn(team: Team): {
+        team: Team;
+        newThreadsIn: Pick<Thread, 'id' | 'name'>[];
+      } {
+        return { newThreadsIn: [{ id: 0, name: 'thread' }], team };
+      },
+    };
+    const teamToModify = ensembleTeam([createThread()]);
+    const { structureEvents } = simulate(
+      new Backlog([todo()]),
+      teamToModify,
+      noBugGenerator,
+      teamModificator,
+    );
+
+    expect(structureEvents.slice(-1)).toEqual<StructureEvent[]>([
+      {
+        id: 0,
+        name: 'thread',
+        time: 1,
+        action: 'ThreadIn',
       },
     ]);
   });
