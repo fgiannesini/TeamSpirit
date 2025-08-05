@@ -110,3 +110,18 @@ export class TeamModificatorHandler implements TeamModificator {
     };
   }
 }
+
+export const noTeamModificator: TeamModificator = {
+  setThreadsIn(team: Team): {
+    team: Team;
+    newThreadsIn: Pick<Thread, 'id' | 'name'>[];
+  } {
+    return { newThreadsIn: [], team };
+  },
+  setThreadsOff(team: Team): {
+    team: Team;
+    newThreadsOff: Pick<Thread, 'id' | 'name'>[];
+  } {
+    return { newThreadsOff: [], team };
+  },
+};

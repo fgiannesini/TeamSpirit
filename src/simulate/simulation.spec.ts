@@ -5,28 +5,13 @@ import {createThread, done, ensembleTeam, todo} from './factory.ts';
 import {simulate} from './simulation.ts';
 import type {StructureEvent} from './simulation-structure.ts';
 import type {Team, Thread} from './team.ts';
-import type {TeamModificator} from './team-modificator.ts';
+import {noTeamModificator, type TeamModificator} from './team-modificator.ts';
 import type {UserStory} from './user-story.ts';
 
 describe('Simulation', () => {
   const noBugGenerator: BugGenerator = {
     generate(_: Backlog, _2: Team, _3: number): UserStory[] {
       return [];
-    },
-  };
-
-  const noTeamModificator: TeamModificator = {
-    setThreadsIn(team: Team): {
-      team: Team;
-      newThreadsIn: Pick<Thread, 'id' | 'name'>[];
-    } {
-      return { newThreadsIn: [], team };
-    },
-    setThreadsOff(team: Team): {
-      team: Team;
-      newThreadsOff: Pick<Thread, 'id' | 'name'>[];
-    } {
-      return { newThreadsOff: [], team };
     },
   };
 
