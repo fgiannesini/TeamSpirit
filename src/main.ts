@@ -1,28 +1,13 @@
 import './style.scss';
-import {
-  saveStatEvents,
-  saveStructureEvents,
-  saveTimeEvents,
-} from './flow/storage/session-storage.ts';
-import { generateDevForm, generateUserStoriesForm } from './form/form.ts';
-import { Backlog } from './simulate/backlog.ts';
-import {
-  type BugGenerator,
-  BugGeneratorHandler,
-} from './simulate/bug-generator.ts';
-import { noReview } from './simulate/review.ts';
-import { simulate } from './simulate/simulation.ts';
-import { computeStatEvents } from './simulate/stats.ts';
-import {
-  EnsembleTeam,
-  ParallelTeam,
-  type Team,
-  type Thread,
-} from './simulate/team.ts';
-import {
-  type TeamModificator,
-  TeamModificatorHandler,
-} from './simulate/team-modificator.ts';
+import {saveStatEvents, saveStructureEvents, saveTimeEvents,} from './flow/storage/session-storage.ts';
+import {generateDevForm, generateUserStoriesForm} from './form/form.ts';
+import {Backlog} from './simulate/backlog.ts';
+import {type BugGenerator, BugGeneratorHandler,} from './simulate/bug-generator.ts';
+import {noReview} from './simulate/review.ts';
+import {simulate} from './simulate/simulation.ts';
+import {computeStatEvents} from './simulate/stats.ts';
+import {EnsembleTeam, ParallelTeam, type Team, type Thread,} from './simulate/team.ts';
+import {noTeamModificator, type TeamModificator, TeamModificatorHandler,} from './simulate/team-modificator.ts';
 
 const getInputValueOf = (selector: string): number => {
   const number = Number.parseInt(
@@ -57,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .querySelector<HTMLButtonElement>('#calculate-button')
     ?.addEventListener('click', () => {
       const ensembleTeamBacklog = buildBacklogForEnsembleTeam();
+
       const ensembleRandomKey = runSimulation(
         ensembleTeamBacklog,
         buildEnsembleTeam(),
@@ -64,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
           () => Math.random(),
           () => Math.random(),
         ),
-        new TeamModificatorHandler(() => Math.random()),
+        getTeamModificator(),
       );
       window.open(`/TeamSpirit/flow/flow.html?id=${ensembleRandomKey}`);
       window.open(
@@ -78,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
           () => Math.random(),
           () => Math.random(),
         ),
-        new TeamModificatorHandler(() => Math.random()),
+        getTeamModificator(),
       );
       window.open(`/TeamSpirit/flow/flow.html?id=${parallelRandomKey}`);
       window.open(
@@ -110,6 +96,15 @@ document.addEventListener('DOMContentLoaded', () => {
       userStoriesContainer?.replaceChildren(...userStories);
     });
 });
+
+export const getTeamModificator = () => {
+  const modificator =
+    document.querySelector<HTMLSelectElement>('#team-modificator')?.value;
+  if (modificator === 'random') {
+    return new TeamModificatorHandler(() => Math.random());
+  }
+  return noTeamModificator;
+};
 
 export const buildBacklogForParallelTeam = (): Backlog => {
   const userStoryCount = getInputValueOf('#user-story-count-input');

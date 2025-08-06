@@ -1,29 +1,36 @@
 <!doctype html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Team Spirit</title>
-  </head>
-  <body>
-    <h3>Team Spirit</h3>
-    <div>
-      <label for="dev-count-input">Developers count</label>
-      <input id="dev-count-input" type="number" min="1" value="3" />
-      <button id="generate-devs-button">Generate</button>
-      <div id="devs-container"></div>
-    </div>
-    <div>
-      <label for="reviewers-input">Reviewers</label>
-      <input id="reviewers-input" type="number" min="0" value="0" />
-    </div>
-    <div>
-      <label for="user-story-count-input">User stories count</label>
-      <input id="user-story-count-input" type="number" min="1" value="5" />
-      <button id="generate-user-stories-button">Generate</button>
-      <div id="user-stories-container"></div>
-    </div>
-    <button id="calculate-button">Calculate</button>
-  </body>
-  <script type="module" src="main.ts"></script>
+</head>
+<body>
+<h3>Team Spirit</h3>
+<div>
+    <label for="dev-count-input">Developers count</label>
+    <input id="dev-count-input" min="1" type="number" value="3"/>
+    <button id="generate-devs-button">Generate</button>
+    <div id="devs-container"></div>
+</div>
+<div>
+    <label for="reviewers-input">Reviewers</label>
+    <input id="reviewers-input" min="0" type="number" value="0"/>
+</div>
+<div>
+    <label for="team-modificator">Team modificator</label>
+    <select id="team-modificator">
+        <option value=""></option>
+        <option value="random">Random</option>
+    </select>
+</div>
+<div>
+    <label for="user-story-count-input">User stories count</label>
+    <input id="user-story-count-input" min="1" type="number" value="5"/>
+    <button id="generate-user-stories-button">Generate</button>
+    <div id="user-stories-container"></div>
+</div>
+<button id="calculate-button">Calculate</button>
+</body>
+<script src="main.ts" type="module"></script>
 </html>

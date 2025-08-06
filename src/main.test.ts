@@ -1,19 +1,21 @@
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
-import { beforeEach, describe, expect, test, vi } from 'vitest';
+import {readFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {beforeEach, describe, expect, test, vi} from 'vitest';
 import {
-  buildBacklogForEnsembleTeam,
-  buildBacklogForParallelTeam,
-  buildEnsembleTeam,
-  buildParallelTeam,
+    buildBacklogForEnsembleTeam,
+    buildBacklogForParallelTeam,
+    buildEnsembleTeam,
+    buildParallelTeam,
+    getTeamModificator,
 } from './main.ts';
-import { Backlog } from './simulate/backlog.ts';
-import type { TimeEvent } from './simulate/events.ts';
-import { createThread, todo } from './simulate/factory.ts';
-import { noReview } from './simulate/review.ts';
-import type { StructureEvent } from './simulate/simulation-structure.ts';
-import type { StatEvent } from './simulate/stats.ts';
-import { EnsembleTeam, ParallelTeam } from './simulate/team.ts';
+import {Backlog} from './simulate/backlog.ts';
+import type {TimeEvent} from './simulate/events.ts';
+import {createThread, todo} from './simulate/factory.ts';
+import {noReview} from './simulate/review.ts';
+import type {StructureEvent} from './simulate/simulation-structure.ts';
+import type {StatEvent} from './simulate/stats.ts';
+import {EnsembleTeam, ParallelTeam} from './simulate/team.ts';
+import {noTeamModificator, TeamModificatorHandler,} from './simulate/team-modificator.ts';
 
 describe('Main', () => {
   beforeEach(async () => {
@@ -340,5 +342,21 @@ describe('Main', () => {
         }),
       ]),
     );
+  });
+
+  describe('Team modificator', () => {
+    test('Should create a no team modificator', () => {
+      expect(getTeamModificator()).toEqual(noTeamModificator);
+    });
+
+    test('Should create a random team modificator', () => {
+      const querySelector = document.querySelector<HTMLOptionElement>(
+        '#team-modificator [value="random"]',
+      );
+      if (querySelector) {
+        querySelector.selected = true;
+      }
+      expect(getTeamModificator()).instanceof(TeamModificatorHandler);
+    });
   });
 });
