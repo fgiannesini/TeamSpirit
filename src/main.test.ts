@@ -18,11 +18,10 @@ import {EnsembleTeam, ParallelTeam} from './simulate/team.ts';
 import {CustomTeamModificator, noTeamModificator, TeamModificatorHandler,} from './simulate/team-modificator.ts';
 
 const setSelectOption = (selectId: string, optionValue: string) => {
-  const querySelector = document.querySelector<HTMLOptionElement>(
-    `#${selectId} [value=${optionValue}]`,
-  );
-  if (querySelector) {
-    querySelector.selected = true;
+  const select = document.querySelector<HTMLSelectElement>(`#${selectId}`);
+  if (select) {
+    select.value = optionValue;
+    select.dispatchEvent(new Event('change'));
   }
 };
 
@@ -363,7 +362,22 @@ describe('Main', () => {
       expect(getTeamModificator()).instanceof(TeamModificatorHandler);
     });
 
-    test('Should create a custom team modificator', () => {
+    test('Should not propose team modificator events if not custom', () => {
+      expect(
+        document.querySelector<HTMLDivElement>('#team-modificator-events')
+          ?.style.display,
+      ).toEqual('none');
+    });
+
+    test('Should create a custom team modification', () => {
+      setSelectOption('team-modificator', 'custom');
+      expect(
+        document.querySelector<HTMLDivElement>('#team-modificator-events')
+          ?.style.display,
+      ).toEqual('block');
+    });
+
+    test('Should propose custom team modificator', () => {
       setSelectOption('team-modificator', 'custom');
       expect(getTeamModificator()).instanceof(CustomTeamModificator);
     });

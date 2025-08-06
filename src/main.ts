@@ -100,6 +100,20 @@ document.addEventListener('DOMContentLoaded', () => {
       );
       userStoriesContainer?.replaceChildren(...userStories);
     });
+
+  document
+    .querySelector<HTMLSelectElement>('#team-modificator')
+    ?.addEventListener('change', (event) => {
+      const target = event.target as HTMLSelectElement;
+      if (target.value === 'custom') {
+        const modificatorEventsDiv = document.querySelector<HTMLDivElement>(
+          '#team-modificator-events',
+        );
+        if (modificatorEventsDiv) {
+          modificatorEventsDiv.style.display = 'block';
+        }
+      }
+    });
 });
 
 export const getTeamModificator = () => {
