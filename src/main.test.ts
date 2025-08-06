@@ -17,6 +17,15 @@ import type {StatEvent} from './simulate/stats.ts';
 import {EnsembleTeam, ParallelTeam} from './simulate/team.ts';
 import {CustomTeamModificator, noTeamModificator, TeamModificatorHandler,} from './simulate/team-modificator.ts';
 
+const setSelectOption = (selectId: string, optionValue: string) => {
+  const querySelector = document.querySelector<HTMLOptionElement>(
+    `#${selectId} [value=${optionValue}]`,
+  );
+  if (querySelector) {
+    querySelector.selected = true;
+  }
+};
+
 describe('Main', () => {
   beforeEach(async () => {
     vi.spyOn(window, 'open').mockImplementation(vi.fn());
@@ -350,22 +359,12 @@ describe('Main', () => {
     });
 
     test('Should create a random team modificator', () => {
-      const querySelector = document.querySelector<HTMLOptionElement>(
-        '#team-modificator [value="random"]',
-      );
-      if (querySelector) {
-        querySelector.selected = true;
-      }
+      setSelectOption('team-modificator', 'random');
       expect(getTeamModificator()).instanceof(TeamModificatorHandler);
     });
 
     test('Should create a custom team modificator', () => {
-      const querySelector = document.querySelector<HTMLOptionElement>(
-        '#team-modificator [value="custom"]',
-      );
-      if (querySelector) {
-        querySelector.selected = true;
-      }
+      setSelectOption('team-modificator', 'custom');
       expect(getTeamModificator()).instanceof(CustomTeamModificator);
     });
   });
