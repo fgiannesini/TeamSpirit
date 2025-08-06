@@ -112,6 +112,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (modificatorEventsDiv) {
           modificatorEventsDiv.style.display = 'block';
         }
+      } else {
+        const modificatorEventsDiv = document.querySelector<HTMLDivElement>(
+          '#team-modificator-events',
+        );
+        if (modificatorEventsDiv) {
+          modificatorEventsDiv.style.display = 'none';
+        }
       }
     });
 });

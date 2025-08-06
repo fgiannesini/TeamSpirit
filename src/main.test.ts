@@ -377,6 +377,15 @@ describe('Main', () => {
       ).toEqual('block');
     });
 
+    test('Should hide team modificator events when random is selected after custom', () => {
+      setSelectOption('team-modificator', 'custom');
+      setSelectOption('team-modificator', 'random');
+      expect(
+        document.querySelector<HTMLDivElement>('#team-modificator-events')
+          ?.style.display,
+      ).toEqual('none');
+    });
+
     test('Should propose custom team modificator', () => {
       setSelectOption('team-modificator', 'custom');
       expect(getTeamModificator()).instanceof(CustomTeamModificator);
