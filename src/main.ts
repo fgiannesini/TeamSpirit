@@ -7,7 +7,12 @@ import {noReview} from './simulate/review.ts';
 import {simulate} from './simulate/simulation.ts';
 import {computeStatEvents} from './simulate/stats.ts';
 import {EnsembleTeam, ParallelTeam, type Team, type Thread,} from './simulate/team.ts';
-import {noTeamModificator, type TeamModificator, TeamModificatorHandler,} from './simulate/team-modificator.ts';
+import {
+    CustomTeamModificator,
+    noTeamModificator,
+    type TeamModificator,
+    TeamModificatorHandler,
+} from './simulate/team-modificator.ts';
 
 const getInputValueOf = (selector: string): number => {
   const number = Number.parseInt(
@@ -102,6 +107,9 @@ export const getTeamModificator = () => {
     document.querySelector<HTMLSelectElement>('#team-modificator')?.value;
   if (modificator === 'random') {
     return new TeamModificatorHandler(() => Math.random());
+  }
+  if (modificator === 'custom') {
+    return new CustomTeamModificator();
   }
   return noTeamModificator;
 };

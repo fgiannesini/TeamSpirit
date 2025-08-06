@@ -15,7 +15,7 @@ import {noReview} from './simulate/review.ts';
 import type {StructureEvent} from './simulate/simulation-structure.ts';
 import type {StatEvent} from './simulate/stats.ts';
 import {EnsembleTeam, ParallelTeam} from './simulate/team.ts';
-import {noTeamModificator, TeamModificatorHandler,} from './simulate/team-modificator.ts';
+import {CustomTeamModificator, noTeamModificator, TeamModificatorHandler,} from './simulate/team-modificator.ts';
 
 describe('Main', () => {
   beforeEach(async () => {
@@ -357,6 +357,16 @@ describe('Main', () => {
         querySelector.selected = true;
       }
       expect(getTeamModificator()).instanceof(TeamModificatorHandler);
+    });
+
+    test('Should create a custom team modificator', () => {
+      const querySelector = document.querySelector<HTMLOptionElement>(
+        '#team-modificator [value="custom"]',
+      );
+      if (querySelector) {
+        querySelector.selected = true;
+      }
+      expect(getTeamModificator()).instanceof(CustomTeamModificator);
     });
   });
 });
