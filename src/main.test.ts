@@ -352,7 +352,11 @@ describe('Main', () => {
         );
     });
 
+
     describe('Team modificator', () => {
+
+        const getAddEventButton = () => document.querySelector<HTMLButtonElement>('#team-modificator-add-event-button');
+
         test('Should create a no team modificator', () => {
             expect(getTeamModificator()).toEqual(noTeamModificator);
         });
@@ -364,7 +368,7 @@ describe('Main', () => {
 
         test('Should not propose team modificator events if not custom', () => {
             expect(
-                document.querySelector<HTMLDivElement>('#team-modificator-events')
+                getTeamModificatorDivEvents()
                     ?.style.display,
             ).toEqual('none');
         });
@@ -372,16 +376,20 @@ describe('Main', () => {
         test('Should create a custom team modification', () => {
             setSelectOption('team-modificator', 'custom');
             expect(
-                document.querySelector<HTMLDivElement>('#team-modificator-events')
+                getTeamModificatorDivEvents()
                     ?.style.display,
             ).toEqual('block');
         });
+
+        function getTeamModificatorDivEvents() {
+            return document.querySelector<HTMLDivElement>('#team-modificator-events');
+        }
 
         test('Should hide team modificator events when random is selected after custom', () => {
             setSelectOption('team-modificator', 'custom');
             setSelectOption('team-modificator', 'random');
             expect(
-                document.querySelector<HTMLDivElement>('#team-modificator-events')
+                getTeamModificatorDivEvents()
                     ?.style.display,
             ).toEqual('none');
         });
@@ -393,7 +401,13 @@ describe('Main', () => {
 
         test('Should display a button to add event', () => {
             setSelectOption('team-modificator', 'custom');
-            expect(document.querySelector<HTMLButtonElement>('#team-modificator-add-event-button')).not.toBeNull()
+            expect(getAddEventButton()).not.toBeNull()
+        })
+
+        test('Should add a line on click of the button to add event', () => {
+            setSelectOption('team-modificator', 'custom');
+            getAddEventButton()?.click()
+            expect(getTeamModificatorDivEvents()?.querySelectorAll<HTMLDivElement>('div').length).toEqual(1)
         })
     });
 });
