@@ -1,5 +1,5 @@
-import type {StructureEvent} from '../simulate/simulation-structure.ts';
-import {getThread} from './selector.ts';
+import type { StructureEvent } from '../simulate/simulation-structure.ts';
+import { getThread } from './selector.ts';
 
 const addThread = (threadNumber: number, name: string): HTMLDivElement => {
   const threadHtmlElement = document.createElement('div');
