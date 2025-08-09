@@ -7,9 +7,10 @@ const generateInput = (id: string, value: number): HTMLInputElement => {
   return input;
 };
 
-const generateLabel = (content: string): HTMLLabelElement => {
+const generateLabel = (content: string, htmlFor: string): HTMLLabelElement => {
   const labelElement = document.createElement('label');
   labelElement.textContent = content;
+  labelElement.htmlFor = htmlFor;
   return labelElement;
 };
 
@@ -18,8 +19,9 @@ export const generateDevForm = (id: number): HTMLDivElement => {
   identifier.id = `dev-identifier-${id}`;
   identifier.textContent = id.toString();
 
-  const powerLabel = generateLabel('Power');
-  const powerInput = generateInput(`power-input-${id}`, 1);
+  const powerInputId = `power-input-${id}`;
+  const powerLabel = generateLabel('Power', powerInputId);
+  const powerInput = generateInput(powerInputId, 1);
 
   const dev = document.createElement('div');
   dev.append(identifier, powerLabel, powerInput);
@@ -31,13 +33,15 @@ export const generateUserStoriesForm = (id: number): HTMLDivElement => {
   identifier.id = `user-story-identifier-${id}`;
   identifier.textContent = id.toString();
 
-  const complexityLabel = generateLabel('Complexity');
-  const complexityInput = generateInput(`complexity-input-${id}`, 5);
-  const reviewComplexityLabel = generateLabel('Review complexity');
-  const reviewComplexityInput = generateInput(
-    `review-complexity-input-${id}`,
-    2,
+  const complexityInputId = `complexity-input-${id}`;
+  const complexityLabel = generateLabel('Complexity', complexityInputId);
+  const complexityInput = generateInput(complexityInputId, 5);
+  const reviewComplexityInputId = `review-complexity-input-${id}`;
+  const reviewComplexityLabel = generateLabel(
+    'Review complexity',
+    reviewComplexityInputId,
   );
+  const reviewComplexityInput = generateInput(reviewComplexityInputId, 2);
 
   const userStory = document.createElement('div');
   userStory.append(
@@ -48,4 +52,16 @@ export const generateUserStoriesForm = (id: number): HTMLDivElement => {
     reviewComplexityInput,
   );
   return userStory;
+};
+
+export const generateTeamModificatorEventsForm = (eventCount: number) => {
+  const inInputId = `in-input-${eventCount}`;
+  const inInput = generateInput(inInputId, eventCount);
+  const inLabel = generateLabel('In', inInputId);
+  const offInputId = `off-input-${eventCount}`;
+  const offInput = generateInput(offInputId, eventCount);
+  const offLabel = generateLabel('Off', offInputId);
+  const divElement = document.createElement('div');
+  divElement.append(offLabel, offInput, inLabel, inInput);
+  return divElement;
 };
