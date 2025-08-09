@@ -157,7 +157,7 @@ export const getTeamModificator = () => {
     return new RandomTeamModificator(() => Math.random());
   }
   if (modificator === 'custom') {
-    return new CustomTeamModificator();
+    return new CustomTeamModificator([]);
   }
   return noTeamModificator;
 };

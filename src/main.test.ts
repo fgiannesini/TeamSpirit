@@ -400,7 +400,7 @@ describe('Main', () => {
     test.skip('Should bind custom team modificator', () => {
       setSelectOption('team-modificator', 'custom');
       getAddEventButton()?.click();
-      expect(getTeamModificator()).toMatchObject(new CustomTeamModificator());
+      expect(getTeamModificator()).toMatchObject(new CustomTeamModificator([]));
     });
 
     test('Should display a button to add event', () => {

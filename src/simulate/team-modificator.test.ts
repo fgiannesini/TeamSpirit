@@ -161,13 +161,69 @@ describe('Team modificator', () => {
   });
 
   describe('CustomTeamModificator', () => {
-    test('should set a thread in in a parallel team', () => {
+    test('should set a thread off in a team', () => {
       const initialTeam = parallelTeam([
-        createThread({ id: 0, off: true }),
-        createThread({ id: 1, off: true }),
+        createThread({ id: 0, off: false }),
+        createThread({ id: 1, off: false }),
       ]);
 
-      new CustomTeamModificator().setThreadsIn(initialTeam, 1);
+      const customTeamModificator = new CustomTeamModificator([
+        {
+          out: 1,
+          in: 2,
+          threadId: 0,
+        },
+        {
+          out: 1,
+          in: 3,
+          threadId: 1,
+        },
+      ]);
+      const threadsOff = customTeamModificator.setThreadsOff(initialTeam, 1);
+      expect(threadsOff).toStrictEqual({
+        team: parallelTeam([
+          createThread({ id: 0, off: true }),
+          createThread({ id: 1, off: true }),
+        ]),
+        newThreadsOff: [
+          { id: 0, name: 'thread' },
+          { id: 1, name: 'thread' },
+        ],
+      });
+    });
+
+    test('should not set a thread off in a team if time is before off', () => {
+      const initialTeam = parallelTeam([createThread({ id: 0, off: false })]);
+
+      const customTeamModificator = new CustomTeamModificator([
+        {
+          out: 1,
+          in: 2,
+          threadId: 0,
+        },
+      ]);
+      const threadsOff = customTeamModificator.setThreadsOff(initialTeam, 0);
+      expect(threadsOff).toStrictEqual({
+        team: initialTeam,
+        newThreadsOff: [],
+      });
+    });
+
+    test('should not set a thread off in a team if not threadId', () => {
+      const initialTeam = parallelTeam([createThread({ id: 0, off: false })]);
+
+      const customTeamModificator = new CustomTeamModificator([
+        {
+          out: 1,
+          in: 2,
+          threadId: 1,
+        },
+      ]);
+      const threadsOff = customTeamModificator.setThreadsOff(initialTeam, 1);
+      expect(threadsOff).toStrictEqual({
+        team: initialTeam,
+        newThreadsOff: [],
+      });
     });
   });
 });
