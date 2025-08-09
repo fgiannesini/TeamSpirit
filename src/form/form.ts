@@ -57,11 +57,11 @@ export const generateUserStoriesForm = (id: number): HTMLDivElement => {
 export const generateTeamModificatorEventsForm = (eventCount: number) => {
   const offInputId = `team-modificator-event-${eventCount}-off-input`;
   const offLabel = generateLabel('Off', offInputId);
-  const offInput = generateInput(offInputId, 1);
+  const offInput = generateInput(offInputId, 3);
 
   const inInputId = `team-modificator-event-${eventCount}-in-input`;
   const inLabel = generateLabel('In', inInputId);
-  const inInput = generateInput(inInputId, 2);
+  const inInput = generateInput(inInputId, 5);
 
   const threadNameInputId = `team-modificator-event-${eventCount}-thread-name-input`;
   const threadNameLabel = generateLabel('Thread name', threadNameInputId);

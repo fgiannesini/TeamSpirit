@@ -401,13 +401,13 @@ describe('Main', () => {
       setSelectOption('team-modificator', 'custom');
       getAddEventButton()?.click();
       setValueTo('#team-modificator-event-0-off-input', '2');
-      setValueTo('#team-modificator-event-0-in-input', '5');
+      setValueTo('#team-modificator-event-0-in-input', '6');
       setValueTo('#team-modificator-event-0-thread-name-input', 'thread0');
       expect(getTeamModificator()).toMatchObject(
         new CustomTeamModificator([
           {
             off: 2,
-            in: 5,
+            in: 6,
             threadName: 'thread0',
           },
         ]),
@@ -420,8 +420,8 @@ describe('Main', () => {
       expect(getTeamModificator()).toMatchObject(
         new CustomTeamModificator([
           {
-            off: 1,
-            in: 2,
+            off: 3,
+            in: 5,
             threadName: '',
           },
         ]),
