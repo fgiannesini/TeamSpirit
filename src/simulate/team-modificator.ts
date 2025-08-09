@@ -41,15 +41,15 @@ export const computeThreadsInProbabilities = (
 };
 
 export type TeamModificator = {
-  setThreadsIn(team: Team): {
-    team: Team;
-    newThreadsIn: Pick<Thread, 'id' | 'name'>[];
-  };
+  setThreadsIn(
+    team: Team,
+    time: number,
+  ): { team: Team; newThreadsIn: Pick<Thread, 'id' | 'name'>[] };
 
-  setThreadsOff(team: Team): {
-    team: Team;
-    newThreadsOff: Pick<Thread, 'id' | 'name'>[];
-  };
+  setThreadsOff(
+    team: Team,
+    time: number,
+  ): { team: Team; newThreadsOff: Pick<Thread, 'id' | 'name'>[] };
 };
 
 export class RandomTeamModificator implements TeamModificator {
@@ -59,10 +59,10 @@ export class RandomTeamModificator implements TeamModificator {
     this.randomProvider = randomProvider;
   }
 
-  setThreadsIn(team: Team): {
-    team: Team;
-    newThreadsIn: Pick<Thread, 'id' | 'name'>[];
-  } {
+  setThreadsIn(
+    team: Team,
+    _time: number,
+  ): { team: Team; newThreadsIn: Pick<Thread, 'id' | 'name'>[] } {
     let newTeam = team;
     const offThreads = team.getThreadsOff();
     const addedThreads: Pick<Thread, 'id' | 'name'>[] = [];
@@ -82,10 +82,10 @@ export class RandomTeamModificator implements TeamModificator {
     };
   }
 
-  setThreadsOff(team: Team): {
-    team: Team;
-    newThreadsOff: Pick<Thread, 'id' | 'name'>[];
-  } {
+  setThreadsOff(
+    team: Team,
+    _time: number,
+  ): { team: Team; newThreadsOff: Pick<Thread, 'id' | 'name'>[] } {
     const allActiveThreads = team.getAllActiveThreads();
     if (allActiveThreads.length === 1) {
       return {
@@ -128,17 +128,17 @@ export const noTeamModificator: TeamModificator = {
 };
 
 export class CustomTeamModificator implements TeamModificator {
-  setThreadsIn(team: Team): {
-    team: Team;
-    newThreadsIn: Pick<Thread, 'id' | 'name'>[];
-  } {
+  setThreadsIn(
+    team: Team,
+    _time: number,
+  ): { team: Team; newThreadsIn: Pick<Thread, 'id' | 'name'>[] } {
     return { newThreadsIn: [], team };
   }
 
-  setThreadsOff(team: Team): {
-    team: Team;
-    newThreadsOff: Pick<Thread, 'id' | 'name'>[];
-  } {
+  setThreadsOff(
+    team: Team,
+    _time: number,
+  ): { team: Team; newThreadsOff: Pick<Thread, 'id' | 'name'>[] } {
     return { newThreadsOff: [], team };
   }
 }

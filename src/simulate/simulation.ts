@@ -1,10 +1,13 @@
-import {addUserStory, type Backlog, hasMoreUserStories} from './backlog.ts';
-import type {BugGenerator} from './bug-generator.ts';
-import type {TimeEvent} from './events.ts';
-import {type StructureEvent, structureEventsOnInitialization,} from './simulation-structure.ts';
-import {simulateTimeEvents} from './simulation-time.ts';
-import type {Team} from './team.ts';
-import type {TeamModificator} from './team-modificator.ts';
+import { addUserStory, type Backlog, hasMoreUserStories } from './backlog.ts';
+import type { BugGenerator } from './bug-generator.ts';
+import type { TimeEvent } from './events.ts';
+import {
+  type StructureEvent,
+  structureEventsOnInitialization,
+} from './simulation-structure.ts';
+import { simulateTimeEvents } from './simulation-time.ts';
+import type { Team } from './team.ts';
+import type { TeamModificator } from './team-modificator.ts';
 
 export const simulate = (
   backlog: Backlog,
@@ -29,7 +32,7 @@ export const simulate = (
       });
       addUserStory(bug, backlog);
     });
-    const teamWithThreadsOff = teamModificator.setThreadsOff(team);
+    const teamWithThreadsOff = teamModificator.setThreadsOff(team, time);
     team = teamWithThreadsOff.team;
     teamWithThreadsOff.newThreadsOff.forEach((thread) => {
       structureEvents.push({
@@ -40,7 +43,7 @@ export const simulate = (
       });
     });
 
-    const teamWithThreadsIn = teamModificator.setThreadsIn(team);
+    const teamWithThreadsIn = teamModificator.setThreadsIn(team, time);
     team = teamWithThreadsIn.team;
     teamWithThreadsIn.newThreadsIn.forEach((thread) => {
       structureEvents.push({
