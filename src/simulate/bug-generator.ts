@@ -26,6 +26,34 @@ export type BugGenerator = {
   generate(backlog: Backlog, team: Team, time: number): UserStory[];
 };
 
+export type BugEvent = {
+  complexity: number;
+  reviewComplexity: number;
+  time: number;
+};
+export class CustomBugGenerator implements BugGenerator {
+  private readonly bugEvents: BugEvent[];
+  constructor(bugEvents: BugEvent[]) {
+    this.bugEvents = bugEvents;
+  }
+  generate(_backlog: Backlog, _team: Team, _time: number): UserStory[] {
+    return [
+      {
+        id: 0,
+        name: 'user-story',
+        complexity: this.bugEvents.length,
+        progression: 0,
+        review: {
+          reviewers: new Map(),
+          reviewComplexity: 1,
+        },
+        state: 'Todo',
+        threadId: undefined,
+        timeDone: 0,
+      },
+    ];
+  }
+}
 export class RandomBugGenerator implements BugGenerator {
   bugCount = 0;
   private readonly creationRandomProvider: () => number;
