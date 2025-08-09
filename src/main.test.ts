@@ -413,11 +413,19 @@ describe('Main', () => {
       setSelectOption('team-modificator', 'custom');
       getAddEventButton()?.click();
       const divEvent = getTeamModificatorDivEvents();
-      divEvent?.querySelector<HTMLDivElement>('div');
       expect(divEvent?.querySelector('[for=in-input-0]')).not.toBeNull();
       expect(divEvent?.querySelector('#in-input-0')).not.toBeNull();
       expect(divEvent?.querySelector('[for=off-input-0]')).not.toBeNull();
       expect(divEvent?.querySelector('#off-input-0')).not.toBeNull();
+    });
+
+    test('Should add two lines to add an event', () => {
+      setSelectOption('team-modificator', 'custom');
+      getAddEventButton()?.click();
+      getAddEventButton()?.click();
+      const divEvent = getTeamModificatorDivEvents();
+      divEvent?.querySelectorAll<HTMLDivElement>('div');
+      expect(divEvent?.querySelector('#in-input-1')).not.toBeNull();
     });
   });
 });

@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-  const eventCount = 0;
+  let eventCount = 0;
 
   document
     .querySelector<HTMLSelectElement>('#team-modificator-events')
@@ -146,6 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const form = generateTeamModificatorEventsForm(eventCount);
       const target = event.target as HTMLDivElement;
       target.parentElement?.append(form);
+      eventCount++;
     });
 });
 
