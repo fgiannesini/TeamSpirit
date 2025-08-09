@@ -129,8 +129,8 @@ export const noTeamModificator: TeamModificator = {
 
 export type TeamModificatorEvent = {
   in: number;
-  out: number;
-  threadId: number;
+  off: number;
+  threadName: string;
 };
 
 export class CustomTeamModificator implements TeamModificator {
@@ -148,7 +148,7 @@ export class CustomTeamModificator implements TeamModificator {
       if (event.in === time) {
         const thread = team
           .getThreadsOff()
-          .find(({ id }) => id === event.threadId);
+          .find(({ name }) => name === event.threadName);
         if (thread !== undefined) {
           team = team.setIn(thread.id);
           newThreadsIn.push({ id: thread.id, name: thread.name });
@@ -166,10 +166,10 @@ export class CustomTeamModificator implements TeamModificator {
     let team = originalTeam;
     const newThreadsOff: Pick<Thread, 'id' | 'name'>[] = [];
     for (const event of this.events) {
-      if (event.out === time) {
+      if (event.off === time) {
         const thread = team
           .getAllActiveThreads()
-          .find(({ id }) => id === event.threadId);
+          .find(({ name }) => name === event.threadName);
         if (thread !== undefined) {
           team = team.setOff(thread.id);
           newThreadsOff.push({ id: thread.id, name: thread.name });

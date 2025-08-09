@@ -55,13 +55,18 @@ export const generateUserStoriesForm = (id: number): HTMLDivElement => {
 };
 
 export const generateTeamModificatorEventsForm = (eventCount: number) => {
-  const inInputId = `in-input-${eventCount}`;
-  const inInput = generateInput(inInputId, eventCount);
-  const inLabel = generateLabel('In', inInputId);
-
-  const offInputId = `off-input-${eventCount}`;
-  const offInput = generateInput(offInputId, eventCount);
+  const offInputId = `team-modificator-event-${eventCount}-off-input`;
   const offLabel = generateLabel('Off', offInputId);
+  const offInput = generateInput(offInputId, 1);
+
+  const inInputId = `team-modificator-event-${eventCount}-in-input`;
+  const inLabel = generateLabel('In', inInputId);
+  const inInput = generateInput(inInputId, 2);
+
+  const threadNameInputId = `team-modificator-event-${eventCount}-thread-name-input`;
+  const threadNameLabel = generateLabel('Thread name', threadNameInputId);
+  const threadNameInput = document.createElement('input');
+  threadNameInput.id = threadNameInputId;
 
   const buttonElement = document.createElement('button');
   buttonElement.textContent = 'Remove';
@@ -72,6 +77,15 @@ export const generateTeamModificatorEventsForm = (eventCount: number) => {
   });
 
   const divElement = document.createElement('div');
-  divElement.append(offLabel, offInput, inLabel, inInput, buttonElement);
+  divElement.id = `team-modificator-event-${eventCount}`;
+  divElement.append(
+    threadNameLabel,
+    threadNameInput,
+    offLabel,
+    offInput,
+    inLabel,
+    inInput,
+    buttonElement,
+  );
   return divElement;
 };

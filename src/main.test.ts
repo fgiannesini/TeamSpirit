@@ -397,10 +397,35 @@ describe('Main', () => {
       expect(getTeamModificator()).instanceof(CustomTeamModificator);
     });
 
-    test.skip('Should bind custom team modificator', () => {
+    test('Should bind custom team modificator', () => {
       setSelectOption('team-modificator', 'custom');
       getAddEventButton()?.click();
-      expect(getTeamModificator()).toMatchObject(new CustomTeamModificator([]));
+      setValueTo('#team-modificator-event-0-off-input', '2');
+      setValueTo('#team-modificator-event-0-in-input', '5');
+      setValueTo('#team-modificator-event-0-thread-name-input', 'thread0');
+      expect(getTeamModificator()).toMatchObject(
+        new CustomTeamModificator([
+          {
+            off: 2,
+            in: 5,
+            threadName: 'thread0',
+          },
+        ]),
+      );
+    });
+
+    test('Should bind custom team modificator with default values', () => {
+      setSelectOption('team-modificator', 'custom');
+      getAddEventButton()?.click();
+      expect(getTeamModificator()).toMatchObject(
+        new CustomTeamModificator([
+          {
+            off: 1,
+            in: 2,
+            threadName: '',
+          },
+        ]),
+      );
     });
 
     test('Should display a button to add event', () => {
@@ -421,10 +446,26 @@ describe('Main', () => {
       setSelectOption('team-modificator', 'custom');
       getAddEventButton()?.click();
       const divEvent = getTeamModificatorDivEvents();
-      expect(divEvent?.querySelector('[for=in-input-0]')).not.toBeNull();
-      expect(divEvent?.querySelector('#in-input-0')).not.toBeNull();
-      expect(divEvent?.querySelector('[for=off-input-0]')).not.toBeNull();
-      expect(divEvent?.querySelector('#off-input-0')).not.toBeNull();
+      expect(
+        divEvent?.querySelector('[for=team-modificator-event-0-in-input]'),
+      ).not.toBeNull();
+      expect(
+        divEvent?.querySelector('#team-modificator-event-0-in-input'),
+      ).not.toBeNull();
+      expect(
+        divEvent?.querySelector('[for=team-modificator-event-0-off-input]'),
+      ).not.toBeNull();
+      expect(
+        divEvent?.querySelector('#team-modificator-event-0-off-input'),
+      ).not.toBeNull();
+      expect(
+        divEvent?.querySelector(
+          '[for=team-modificator-event-0-thread-name-input]',
+        ),
+      ).not.toBeNull();
+      expect(
+        divEvent?.querySelector('#team-modificator-event-0-thread-name-input'),
+      ).not.toBeNull();
     });
 
     test('Should add two lines to add an event', () => {
@@ -433,7 +474,9 @@ describe('Main', () => {
       getAddEventButton()?.click();
       const divEvent = getTeamModificatorDivEvents();
       divEvent?.querySelectorAll<HTMLDivElement>('div');
-      expect(divEvent?.querySelector('#in-input-1')).not.toBeNull();
+      expect(
+        divEvent?.querySelector('#team-modificator-event-1-in-input'),
+      ).not.toBeNull();
     });
 
     test('Should remove an event line', () => {

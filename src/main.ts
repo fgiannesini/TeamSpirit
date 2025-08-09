@@ -28,6 +28,7 @@ import {
   noTeamModificator,
   RandomTeamModificator,
   type TeamModificator,
+  type TeamModificatorEvent,
 } from './simulate/team-modificator.ts';
 
 const getInputValueOf = (selector: string): number => {
@@ -157,7 +158,21 @@ export const getTeamModificator = () => {
     return new RandomTeamModificator(() => Math.random());
   }
   if (modificator === 'custom') {
-    return new CustomTeamModificator([]);
+    const eventsDivContainer = document.querySelectorAll(
+      '#team-modificator-events div',
+    );
+    const events: TeamModificatorEvent[] = [];
+    for (const eventDiv of eventsDivContainer) {
+      events.push({
+        off: getInputValueOf(`#${eventDiv.id}-off-input`),
+        in: getInputValueOf(`#${eventDiv.id}-in-input`),
+        threadName:
+          document.querySelector<HTMLInputElement>(
+            `#${eventDiv.id}-thread-name-input`,
+          )?.value ?? '',
+      });
+    }
+    return new CustomTeamModificator(events);
   }
   return noTeamModificator;
 };
