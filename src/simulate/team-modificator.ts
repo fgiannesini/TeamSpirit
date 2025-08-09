@@ -139,10 +139,24 @@ export class CustomTeamModificator implements TeamModificator {
     this.events = events;
   }
   setThreadsIn(
-    team: Team,
-    _time: number,
+    originalTeam: Team,
+    time: number,
   ): { team: Team; newThreadsIn: Pick<Thread, 'id' | 'name'>[] } {
-    return { newThreadsIn: [], team };
+    let team = originalTeam;
+    const newThreadsIn: Pick<Thread, 'id' | 'name'>[] = [];
+    for (const event of this.events) {
+      if (event.in === time) {
+        const thread = team
+          .getThreadsOff()
+          .find(({ id }) => id === event.threadId);
+        if (thread !== undefined) {
+          team = team.setIn(thread.id);
+          newThreadsIn.push({ id: thread.id, name: thread.name });
+        }
+      }
+    }
+
+    return { newThreadsIn, team };
   }
 
   setThreadsOff(

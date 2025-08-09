@@ -209,7 +209,7 @@ describe('Team modificator', () => {
       });
     });
 
-    test('should not set a thread off in a team if not threadId', () => {
+    test('should not set a thread off in a team if event is not linked to the thread', () => {
       const initialTeam = parallelTeam([createThread({ id: 0, off: false })]);
 
       const customTeamModificator = new CustomTeamModificator([
@@ -223,6 +223,71 @@ describe('Team modificator', () => {
       expect(threadsOff).toStrictEqual({
         team: initialTeam,
         newThreadsOff: [],
+      });
+    });
+
+    test('should set a thread in in a team', () => {
+      const initialTeam = parallelTeam([
+        createThread({ id: 0, off: true }),
+        createThread({ id: 1, off: true }),
+      ]);
+
+      const customTeamModificator = new CustomTeamModificator([
+        {
+          out: 1,
+          in: 3,
+          threadId: 0,
+        },
+        {
+          out: 2,
+          in: 3,
+          threadId: 1,
+        },
+      ]);
+      const threadsIn = customTeamModificator.setThreadsIn(initialTeam, 3);
+      expect(threadsIn).toStrictEqual({
+        team: parallelTeam([
+          createThread({ id: 0, off: false }),
+          createThread({ id: 1, off: false }),
+        ]),
+        newThreadsIn: [
+          { id: 0, name: 'thread' },
+          { id: 1, name: 'thread' },
+        ],
+      });
+    });
+
+    test('should not set a thread in in a team if time is before in', () => {
+      const initialTeam = parallelTeam([createThread({ id: 0, off: true })]);
+
+      const customTeamModificator = new CustomTeamModificator([
+        {
+          out: 1,
+          in: 3,
+          threadId: 0,
+        },
+      ]);
+      const threadsIn = customTeamModificator.setThreadsIn(initialTeam, 2);
+      expect(threadsIn).toStrictEqual({
+        team: initialTeam,
+        newThreadsIn: [],
+      });
+    });
+
+    test('should not set a thread in in a team if event is not linked to the thread', () => {
+      const initialTeam = parallelTeam([createThread({ id: 0, off: true })]);
+
+      const customTeamModificator = new CustomTeamModificator([
+        {
+          out: 1,
+          in: 2,
+          threadId: 1,
+        },
+      ]);
+      const threadsIn = customTeamModificator.setThreadsIn(initialTeam, 2);
+      expect(threadsIn).toStrictEqual({
+        team: initialTeam,
+        newThreadsIn: [],
       });
     });
   });
