@@ -362,6 +362,9 @@ describe('Main', () => {
         '#team-modificator-add-event-button',
       );
 
+    const getRemoveEventButton = (id: number) =>
+      document.querySelector<HTMLButtonElement>(`#remove-event-button-${id}`);
+
     test('Should create a no team modificator', () => {
       expect(getTeamModificator()).toEqual(noTeamModificator);
     });
@@ -426,6 +429,14 @@ describe('Main', () => {
       const divEvent = getTeamModificatorDivEvents();
       divEvent?.querySelectorAll<HTMLDivElement>('div');
       expect(divEvent?.querySelector('#in-input-1')).not.toBeNull();
+    });
+
+    test('Should remove an event line', () => {
+      setSelectOption('team-modificator', 'custom');
+      getAddEventButton()?.click();
+      const removeButton = getRemoveEventButton(0);
+      removeButton?.click();
+      expect(document.querySelector('#in-input-0')).toBeNull();
     });
   });
 });

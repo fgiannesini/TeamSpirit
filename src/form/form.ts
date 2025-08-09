@@ -58,10 +58,20 @@ export const generateTeamModificatorEventsForm = (eventCount: number) => {
   const inInputId = `in-input-${eventCount}`;
   const inInput = generateInput(inInputId, eventCount);
   const inLabel = generateLabel('In', inInputId);
+
   const offInputId = `off-input-${eventCount}`;
   const offInput = generateInput(offInputId, eventCount);
   const offLabel = generateLabel('Off', offInputId);
+
+  const buttonElement = document.createElement('button');
+  buttonElement.textContent = 'Remove';
+  buttonElement.id = `remove-event-button-${eventCount}`;
+  buttonElement.addEventListener('click', (event) => {
+    const target = event.target as HTMLButtonElement;
+    target.parentElement?.remove();
+  });
+
   const divElement = document.createElement('div');
-  divElement.append(offLabel, offInput, inLabel, inInput);
+  divElement.append(offLabel, offInput, inLabel, inInput, buttonElement);
   return divElement;
 };
