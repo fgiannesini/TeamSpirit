@@ -26,7 +26,7 @@ export type BugGenerator = {
   generate(backlog: Backlog, team: Team, time: number): UserStory[];
 };
 
-export class BugGeneratorHandler implements BugGenerator {
+export class RandomBugGenerator implements BugGenerator {
   bugCount = 0;
   private readonly creationRandomProvider: () => number;
   private readonly complexityRandomProvider: () => number;

@@ -1,7 +1,7 @@
-import { describe, expect, test } from 'vitest';
-import { addUserStory, Backlog } from './backlog.ts';
-import { BugGeneratorHandler, computeBugProbability } from './bug-generator.ts';
-import { done, ensembleTeam, parallelTeam, todo } from './factory.ts';
+import {describe, expect, test} from 'vitest';
+import {addUserStory, Backlog} from './backlog.ts';
+import {computeBugProbability, RandomBugGenerator} from './bug-generator.ts';
+import {done, ensembleTeam, parallelTeam, todo} from './factory.ts';
 
 describe('probability', () => {
   test.each([
@@ -67,7 +67,7 @@ describe('probability', () => {
   );
 
   test('should generate two bugs', () => {
-    const bugGenerator = new BugGeneratorHandler(
+    const bugGenerator = new RandomBugGenerator(
       () => 0,
       () => 1,
     );
@@ -82,7 +82,7 @@ describe('probability', () => {
   });
 
   test('should generate one bug with review', () => {
-    const bugGenerator = new BugGeneratorHandler(
+    const bugGenerator = new RandomBugGenerator(
       () => 0,
       () => 1,
     );
@@ -123,7 +123,7 @@ describe('probability', () => {
       complexity: number,
       reviewComplexity: number,
     ) => {
-      const bugGenerator = new BugGeneratorHandler(
+      const bugGenerator = new RandomBugGenerator(
         () => 0,
         () => 0.5,
       );
@@ -155,7 +155,7 @@ describe('probability', () => {
   );
 
   test('should not generate a bug', () => {
-    const bugGenerator = new BugGeneratorHandler(
+    const bugGenerator = new RandomBugGenerator(
       () => 1,
       () => 1,
     );
