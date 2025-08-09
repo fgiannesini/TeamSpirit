@@ -26,8 +26,8 @@ import {
 import {
   CustomTeamModificator,
   noTeamModificator,
+  RandomTeamModificator,
   type TeamModificator,
-  TeamModificatorHandler,
 } from './simulate/team-modificator.ts';
 
 const getInputValueOf = (selector: string): number => {
@@ -154,7 +154,7 @@ export const getTeamModificator = () => {
   const modificator =
     document.querySelector<HTMLSelectElement>('#team-modificator')?.value;
   if (modificator === 'random') {
-    return new TeamModificatorHandler(() => Math.random());
+    return new RandomTeamModificator(() => Math.random());
   }
   if (modificator === 'custom') {
     return new CustomTeamModificator();

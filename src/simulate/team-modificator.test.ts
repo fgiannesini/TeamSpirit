@@ -1,9 +1,9 @@
-import {describe, expect, test, vitest} from 'vitest';
-import {createThread, ensembleTeam, parallelTeam} from './factory.ts';
+import { describe, expect, test, vitest } from 'vitest';
+import { createThread, ensembleTeam, parallelTeam } from './factory.ts';
 import {
-    computeThreadsInProbabilities,
-    computeThreadsOffProbabilities,
-    TeamModificatorHandler,
+  computeThreadsInProbabilities,
+  computeThreadsOffProbabilities,
+  RandomTeamModificator,
 } from './team-modificator.ts';
 
 describe('Team modificator', () => {
@@ -16,7 +16,7 @@ describe('Team modificator', () => {
       .fn<() => number>()
       .mockReturnValueOnce(1)
       .mockReturnValue(0);
-    const teamModificator = new TeamModificatorHandler(randomProvider);
+    const teamModificator = new RandomTeamModificator(randomProvider);
     const { team, newThreadsIn } = teamModificator.setThreadsIn(initialTeam);
     expect(team).toEqual(
       parallelTeam([
@@ -36,7 +36,7 @@ describe('Team modificator', () => {
       .fn<() => number>()
       .mockReturnValueOnce(1)
       .mockReturnValue(0);
-    const teamModificator = new TeamModificatorHandler(randomProvider);
+    const teamModificator = new RandomTeamModificator(randomProvider);
     const { team, newThreadsIn } = teamModificator.setThreadsIn(initialTeam);
     expect(team).toEqual(
       ensembleTeam([
@@ -56,7 +56,7 @@ describe('Team modificator', () => {
       .fn<() => number>()
       .mockReturnValueOnce(1)
       .mockReturnValue(0);
-    const teamModificator = new TeamModificatorHandler(randomProvider);
+    const teamModificator = new RandomTeamModificator(randomProvider);
     const { team, newThreadsOff } = teamModificator.setThreadsOff(initialTeam);
     expect(team).toEqual(
       parallelTeam([
@@ -76,7 +76,7 @@ describe('Team modificator', () => {
       .fn<() => number>()
       .mockReturnValueOnce(1)
       .mockReturnValue(0);
-    const teamModificator = new TeamModificatorHandler(randomProvider);
+    const teamModificator = new RandomTeamModificator(randomProvider);
     const { team, newThreadsOff } = teamModificator.setThreadsOff(initialTeam);
     expect(team).toEqual(
       ensembleTeam([
@@ -93,7 +93,7 @@ describe('Team modificator', () => {
       createThread({ id: 1, off: false }),
     ]);
     const randomProvider = vitest.fn<() => number>().mockReturnValue(0);
-    const teamModificator = new TeamModificatorHandler(randomProvider);
+    const teamModificator = new RandomTeamModificator(randomProvider);
     const { team, newThreadsOff } = teamModificator.setThreadsOff(initialTeam);
     expect(team).toEqual(
       parallelTeam([

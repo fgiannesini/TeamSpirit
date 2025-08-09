@@ -18,7 +18,7 @@ import { EnsembleTeam, ParallelTeam } from './simulate/team.ts';
 import {
   CustomTeamModificator,
   noTeamModificator,
-  TeamModificatorHandler,
+  RandomTeamModificator,
 } from './simulate/team-modificator.ts';
 
 const setSelectOption = (selectId: string, optionValue: string) => {
@@ -365,13 +365,16 @@ describe('Main', () => {
     const getRemoveEventButton = (id: number) =>
       document.querySelector<HTMLButtonElement>(`#remove-event-button-${id}`);
 
+    const getTeamModificatorDivEvents = () =>
+      document.querySelector<HTMLDivElement>('#team-modificator-events');
+
     test('Should create a no team modificator', () => {
       expect(getTeamModificator()).toEqual(noTeamModificator);
     });
 
     test('Should create a random team modificator', () => {
       setSelectOption('team-modificator', 'random');
-      expect(getTeamModificator()).instanceof(TeamModificatorHandler);
+      expect(getTeamModificator()).instanceof(RandomTeamModificator);
     });
 
     test('Should not propose team modificator events if not custom', () => {
@@ -383,10 +386,6 @@ describe('Main', () => {
       expect(getTeamModificatorDivEvents()?.style.display).toEqual('block');
     });
 
-    function getTeamModificatorDivEvents() {
-      return document.querySelector<HTMLDivElement>('#team-modificator-events');
-    }
-
     test('Should hide team modificator events when random is selected after custom', () => {
       setSelectOption('team-modificator', 'custom');
       setSelectOption('team-modificator', 'random');
@@ -396,6 +395,12 @@ describe('Main', () => {
     test('Should propose custom team modificator', () => {
       setSelectOption('team-modificator', 'custom');
       expect(getTeamModificator()).instanceof(CustomTeamModificator);
+    });
+
+    test.skip('Should bind custom team modificator', () => {
+      setSelectOption('team-modificator', 'custom');
+      getAddEventButton()?.click();
+      expect(getTeamModificator()).toMatchObject(new CustomTeamModificator());
     });
 
     test('Should display a button to add event', () => {

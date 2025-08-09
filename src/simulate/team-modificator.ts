@@ -1,4 +1,4 @@
-import type {Team, Thread} from './team.ts';
+import type { Team, Thread } from './team.ts';
 
 type ThreadMoveProbabilities = Record<number, number>;
 
@@ -52,7 +52,7 @@ export type TeamModificator = {
   };
 };
 
-export class TeamModificatorHandler implements TeamModificator {
+export class RandomTeamModificator implements TeamModificator {
   private readonly randomProvider: () => number;
 
   constructor(randomProvider: () => number) {
