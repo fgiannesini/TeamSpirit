@@ -36,12 +36,14 @@ export class CustomBugGenerator implements BugGenerator {
   constructor(bugEvents: BugEvent[]) {
     this.bugEvents = bugEvents;
   }
-  generate(_backlog: Backlog, _team: Team, _time: number): UserStory[] {
+
+  generate(backlog: Backlog, _team: Team, _time: number): UserStory[] {
     const bugEvent = this.bugEvents[0];
+    const userStories = getUserStories(backlog);
     return [
       {
-        id: 0,
-        name: 'user-story',
+        id: userStories.length,
+        name: 'bug-0',
         complexity: bugEvent.complexity,
         progression: 0,
         review: {

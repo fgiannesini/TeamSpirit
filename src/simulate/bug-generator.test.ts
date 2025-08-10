@@ -172,7 +172,7 @@ describe('Bug generator', () => {
     });
   });
   describe('Custom bug generator', () => {
-    test('should generate a bug', () => {
+    test('should generate two bugs', () => {
       const customBugGenerator = new CustomBugGenerator([
         {
           complexity: 1,
@@ -181,11 +181,11 @@ describe('Bug generator', () => {
         },
       ]);
       const userStories = customBugGenerator.generate(
-        new Backlog([]),
+        new Backlog([todo({ id: 0 })]),
         parallelTeam(),
         1,
       );
-      expect(userStories).toStrictEqual([todo()]);
+      expect(userStories).toStrictEqual([todo({ id: 1, name: 'bug-0' })]);
     });
 
     test('should generate another bug', () => {
@@ -203,6 +203,7 @@ describe('Bug generator', () => {
       );
       expect(userStories).toStrictEqual([
         todo({
+          name: 'bug-0',
           complexity: 2,
           review: {
             reviewComplexity: 2,
