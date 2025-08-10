@@ -33,28 +33,32 @@ export type BugEvent = {
 };
 export class CustomBugGenerator implements BugGenerator {
   private readonly bugEvents: BugEvent[];
+  private bugCount = 0;
   constructor(bugEvents: BugEvent[]) {
     this.bugEvents = bugEvents;
   }
 
-  generate(backlog: Backlog, _team: Team, _time: number): UserStory[] {
-    const bugEvent = this.bugEvents[0];
-    const userStories = getUserStories(backlog);
-    return [
-      {
-        id: userStories.length,
-        name: 'bug-0',
-        complexity: bugEvent.complexity,
-        progression: 0,
-        review: {
-          reviewers: new Map(),
-          reviewComplexity: bugEvent.reviewComplexity,
-        },
-        state: 'Todo',
-        threadId: undefined,
-        timeDone: 0,
-      },
-    ];
+  generate(backlog: Backlog, _team: Team, time: number): UserStory[] {
+    const userStoriesCount = getUserStories(backlog).length;
+    return this.bugEvents
+      .filter((bugEvent) => bugEvent.time === time)
+      .map((bugEvent) => {
+        const userStory: UserStory = {
+          id: userStoriesCount + this.bugCount,
+          name: `bug-${this.bugCount}`,
+          complexity: bugEvent.complexity,
+          progression: 0,
+          review: {
+            reviewers: new Map(),
+            reviewComplexity: bugEvent.reviewComplexity,
+          },
+          state: 'Todo',
+          threadId: undefined,
+          timeDone: 0,
+        };
+        this.bugCount++;
+        return userStory;
+      });
   }
 }
 export class RandomBugGenerator implements BugGenerator {

@@ -171,6 +171,7 @@ describe('Bug generator', () => {
       expect(bugs).toEqual([]);
     });
   });
+
   describe('Custom bug generator', () => {
     test('should generate two bugs', () => {
       const customBugGenerator = new CustomBugGenerator([
@@ -179,31 +180,29 @@ describe('Bug generator', () => {
           reviewComplexity: 1,
           time: 1,
         },
-      ]);
-      const userStories = customBugGenerator.generate(
-        new Backlog([todo({ id: 0 })]),
-        parallelTeam(),
-        1,
-      );
-      expect(userStories).toStrictEqual([todo({ id: 1, name: 'bug-0' })]);
-    });
-
-    test('should generate another bug', () => {
-      const customBugGenerator = new CustomBugGenerator([
         {
           complexity: 2,
           reviewComplexity: 2,
           time: 2,
         },
       ]);
-      const userStories = customBugGenerator.generate(
-        new Backlog([]),
-        parallelTeam(),
-        2,
-      );
-      expect(userStories).toStrictEqual([
+      expect(
+        customBugGenerator.generate(
+          new Backlog([todo({ id: 0 })]),
+          parallelTeam(),
+          1,
+        ),
+      ).toStrictEqual([todo({ id: 1, name: 'bug-0' })]);
+      expect(
+        customBugGenerator.generate(
+          new Backlog([todo({ id: 0 })]),
+          parallelTeam(),
+          2,
+        ),
+      ).toStrictEqual([
         todo({
-          name: 'bug-0',
+          id: 2,
+          name: 'bug-1',
           complexity: 2,
           review: {
             reviewComplexity: 2,
@@ -211,6 +210,22 @@ describe('Bug generator', () => {
           },
         }),
       ]);
+    });
+
+    test('should not generate a bug when not on time', () => {
+      const customBugGenerator = new CustomBugGenerator([
+        {
+          complexity: 1,
+          reviewComplexity: 1,
+          time: 1,
+        },
+      ]);
+      const userStories = customBugGenerator.generate(
+        new Backlog([]),
+        parallelTeam(),
+        3,
+      );
+      expect(userStories).toStrictEqual([]);
     });
   });
 });
