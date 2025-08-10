@@ -1,8 +1,9 @@
-Bug generator devrait prendre en compte le nombre de review
-Départ/arrivée de nouveau dev
+Random Bug generator devrait prendre en compte le nombre de review
+Voir d'autres métriques à ajouter
+Permettre simulation sur de nombreux lancements
+
 Afficher l'avancement de la tâche lors du rendu
 Afficher la montée compétence du développeur (échelle logarithmique)
-team binome
 implémenter statistiques lead time avec un graph qui se construit
 
 Feedback:
