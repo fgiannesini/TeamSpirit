@@ -1,18 +1,38 @@
 import './style.scss';
-import {saveStatEvents, saveStructureEvents, saveTimeEvents,} from './flow/storage/session-storage.ts';
-import {generateDevForm, generateTeamModificatorEventsForm, generateUserStoriesForm,} from './form/form.ts';
-import {Backlog} from './simulate/backlog.ts';
-import {type BugGenerator, RandomBugGenerator,} from './simulate/bug-generator.ts';
-import {noReview} from './simulate/review.ts';
-import {simulate} from './simulate/simulation.ts';
-import {computeStatEvents} from './simulate/stats.ts';
-import {EnsembleTeam, ParallelTeam, type Team, type Thread,} from './simulate/team.ts';
 import {
-    CustomTeamModificator,
-    noTeamModificator,
-    RandomTeamModificator,
-    type TeamModificator,
-    type TeamModificatorEvent,
+  saveStatEvents,
+  saveStructureEvents,
+  saveTimeEvents,
+} from './flow/storage/session-storage.ts';
+import {
+  generateBugGeneratorEventsForm,
+  generateDevForm,
+  generateTeamModificatorEventsForm,
+  generateUserStoriesForm,
+} from './form/form.ts';
+import { Backlog } from './simulate/backlog.ts';
+import {
+  type BugGenerator,
+  type BugGeneratorEvent,
+  CustomBugGenerator,
+  noBugGenerator,
+  RandomBugGenerator,
+} from './simulate/bug-generator.ts';
+import { noReview } from './simulate/review.ts';
+import { simulate } from './simulate/simulation.ts';
+import { computeStatEvents } from './simulate/stats.ts';
+import {
+  EnsembleTeam,
+  ParallelTeam,
+  type Team,
+  type Thread,
+} from './simulate/team.ts';
+import {
+  CustomTeamModificator,
+  noTeamModificator,
+  RandomTeamModificator,
+  type TeamModificator,
+  type TeamModificatorEvent,
 } from './simulate/team-modificator.ts';
 
 const getInputValueOf = (selector: string): number => {
@@ -52,10 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const ensembleRandomKey = runSimulation(
         ensembleTeamBacklog,
         buildEnsembleTeam(),
-        new RandomBugGenerator(
-          () => Math.random(),
-          () => Math.random(),
-        ),
+        getBugGenerator(),
         getTeamModificator(),
       );
       window.open(`/TeamSpirit/flow/flow.html?id=${ensembleRandomKey}`);
@@ -66,10 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const parallelRandomKey = runSimulation(
         parallelTeamBacklog,
         buildParallelTeam(),
-        new RandomBugGenerator(
-          () => Math.random(),
-          () => Math.random(),
-        ),
+        getBugGenerator(),
         getTeamModificator(),
       );
       window.open(`/TeamSpirit/flow/flow.html?id=${parallelRandomKey}`);
@@ -107,33 +121,93 @@ document.addEventListener('DOMContentLoaded', () => {
     ?.addEventListener('change', (event) => {
       const target = event.target as HTMLSelectElement;
       if (target.value === 'custom') {
-        const modificatorEventsDiv = document.querySelector<HTMLDivElement>(
+        const eventsDiv = document.querySelector<HTMLDivElement>(
           '#team-modificator-events',
         );
-        if (modificatorEventsDiv) {
-          modificatorEventsDiv.style.display = 'block';
+        if (eventsDiv) {
+          eventsDiv.style.display = 'block';
         }
       } else {
-        const modificatorEventsDiv = document.querySelector<HTMLDivElement>(
+        const eventsDiv = document.querySelector<HTMLDivElement>(
           '#team-modificator-events',
         );
-        if (modificatorEventsDiv) {
-          modificatorEventsDiv.style.display = 'none';
+        if (eventsDiv) {
+          eventsDiv.style.display = 'none';
         }
       }
     });
 
-  let eventCount = 0;
+  let teamModificatorEventCount = 0;
 
   document
     .querySelector<HTMLSelectElement>('#team-modificator-add-event-button')
     ?.addEventListener('click', (event) => {
-      const form = generateTeamModificatorEventsForm(eventCount);
+      const form = generateTeamModificatorEventsForm(teamModificatorEventCount);
       const target = event.target as HTMLDivElement;
       target.parentElement?.append(form);
-      eventCount++;
+      teamModificatorEventCount++;
+    });
+
+  document
+    .querySelector<HTMLSelectElement>('#bug-generator')
+    ?.addEventListener('change', (event) => {
+      const target = event.target as HTMLSelectElement;
+      if (target.value === 'custom') {
+        const eventsDiv = document.querySelector<HTMLDivElement>(
+          '#bug-generator-events',
+        );
+        if (eventsDiv) {
+          eventsDiv.style.display = 'block';
+        }
+      } else {
+        const eventsDiv = document.querySelector<HTMLDivElement>(
+          '#bug-generator-events',
+        );
+        if (eventsDiv) {
+          eventsDiv.style.display = 'none';
+        }
+      }
+    });
+
+  let bugGeneratorEventCount = 0;
+
+  document
+    .querySelector<HTMLSelectElement>('#bug-generator-add-event-button')
+    ?.addEventListener('click', (event) => {
+      const form = generateBugGeneratorEventsForm(bugGeneratorEventCount);
+      const target = event.target as HTMLDivElement;
+      target.parentElement?.append(form);
+      bugGeneratorEventCount++;
     });
 });
+
+export const getBugGenerator = () => {
+  const generator =
+    document.querySelector<HTMLSelectElement>('#bug-generator')?.value;
+  if (generator === 'random') {
+    return new RandomBugGenerator(
+      () => Math.random(),
+      () => Math.random(),
+    );
+  }
+  if (generator === 'custom') {
+    const eventsDivContainer = document.querySelectorAll(
+      '#bug-generator-events div',
+    );
+    const events: BugGeneratorEvent[] = [];
+    for (const eventDiv of eventsDivContainer) {
+      events.push({
+        time: getInputValueOf(`#${eventDiv.id}-time-input`),
+        complexity: getInputValueOf(`#${eventDiv.id}-complexity-input`),
+        reviewComplexity: getInputValueOf(
+          `#${eventDiv.id}-review-complexity-input`,
+        ),
+      });
+    }
+    return new CustomBugGenerator(events);
+  }
+  return noBugGenerator;
+};
 
 export const getTeamModificator = () => {
   const modificator =

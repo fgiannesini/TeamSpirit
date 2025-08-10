@@ -1,20 +1,14 @@
-import {describe, expect, test, vi} from 'vitest';
-import {addUserStory, Backlog, getUserStoriesDone, getUserStoriesRemainings,} from './backlog.ts';
-import type {BugGenerator} from './bug-generator.ts';
-import {createThread, done, ensembleTeam, todo} from './factory.ts';
-import {simulate} from './simulation.ts';
-import type {StructureEvent} from './simulation-structure.ts';
-import type {Team, Thread} from './team.ts';
-import {noTeamModificator, type TeamModificator} from './team-modificator.ts';
-import type {UserStory} from './user-story.ts';
+import { describe, expect, test, vi } from 'vitest';
+import { addUserStory, Backlog, getUserStoriesDone, getUserStoriesRemainings } from './backlog.ts';
+import { type BugGenerator, noBugGenerator } from './bug-generator.ts';
+import { createThread, done, ensembleTeam, todo } from './factory.ts';
+import { simulate } from './simulation.ts';
+import type { StructureEvent } from './simulation-structure.ts';
+import type { Team, Thread } from './team.ts';
+import { noTeamModificator, type TeamModificator } from './team-modificator.ts';
+import type { UserStory } from './user-story.ts';
 
 describe('Simulation', () => {
-  const noBugGenerator: BugGenerator = {
-    generate(_: Backlog, _2: Team, _3: number): UserStory[] {
-      return [];
-    },
-  };
-
   test('Should have one thread developing a user story', () => {
     const team = ensembleTeam([createThread({ power: 1 })]);
     const backlog = new Backlog([

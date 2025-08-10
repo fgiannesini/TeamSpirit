@@ -29,6 +29,17 @@
     </div>
 </div>
 <div>
+  <label for="bug-generator">Bug Generator</label>
+  <select id="bug-generator">
+    <option value=""></option>
+    <option value="custom">Custom</option>
+    <option value="random">Random</option>
+  </select>
+  <div id="bug-generator-events" style="display: none">
+    <button id="bug-generator-add-event-button" type="button">Add</button>
+  </div>
+</div>
+<div>
     <label for="user-story-count-input">User stories count</label>
     <input id="user-story-count-input" min="1" type="number" value="5"/>
     <button id="generate-user-stories-button">Generate</button>

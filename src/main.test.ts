@@ -6,9 +6,15 @@ import {
   buildBacklogForParallelTeam,
   buildEnsembleTeam,
   buildParallelTeam,
+  getBugGenerator,
   getTeamModificator,
 } from './main.ts';
 import { Backlog } from './simulate/backlog.ts';
+import {
+  CustomBugGenerator,
+  noBugGenerator,
+  RandomBugGenerator,
+} from './simulate/bug-generator.ts';
 import type { TimeEvent } from './simulate/events.ts';
 import { createThread, todo } from './simulate/factory.ts';
 import { noReview } from './simulate/review.ts';
@@ -485,6 +491,142 @@ describe('Main', () => {
       const removeButton = getRemoveEventButton(0);
       removeButton?.click();
       expect(document.querySelector('#in-input-0')).toBeNull();
+    });
+  });
+
+  describe('Bug generator', () => {
+    const getAddEventButton = () =>
+      document.querySelector<HTMLButtonElement>(
+        '#bug-generator-add-event-button',
+      );
+
+    const getRemoveEventButton = (id: number) =>
+      document.querySelector<HTMLButtonElement>(
+        `#bug-generator-remove-event-button-${id}`,
+      );
+
+    const getBugGeneratorDivEvents = () =>
+      document.querySelector<HTMLDivElement>('#bug-generator-events');
+
+    test('Should create a no bug generator', () => {
+      expect(getBugGenerator()).toEqual(noBugGenerator);
+    });
+
+    test('Should create a random bug generator', () => {
+      setSelectOption('bug-generator', 'random');
+      expect(getBugGenerator()).instanceof(RandomBugGenerator);
+    });
+
+    test('Should not propose bug generator events if not custom', () => {
+      expect(getBugGeneratorDivEvents()?.style.display).toEqual('none');
+    });
+
+    test('Should create a custom bug generator', () => {
+      setSelectOption('bug-generator', 'custom');
+      expect(getBugGeneratorDivEvents()?.style.display).toEqual('block');
+    });
+
+    test('Should hide bug generator events when random is selected after custom', () => {
+      setSelectOption('bug-generator', 'custom');
+      setSelectOption('bug-generator', 'random');
+      expect(getBugGeneratorDivEvents()?.style.display).toEqual('none');
+    });
+
+    test('Should propose custom bug generator', () => {
+      setSelectOption('bug-generator', 'custom');
+      expect(getBugGenerator()).instanceof(CustomBugGenerator);
+    });
+
+    test('Should bind custom bug generator', () => {
+      setSelectOption('bug-generator', 'custom');
+      getAddEventButton()?.click();
+      setValueTo('#bug-generator-event-0-time-input', '2');
+      setValueTo('#bug-generator-event-0-complexity-input', '6');
+      setValueTo('#bug-generator-event-0-review-complexity-input', '3');
+      expect(getBugGenerator()).toMatchObject(
+        new CustomBugGenerator([
+          {
+            time: 2,
+            complexity: 6,
+            reviewComplexity: 3,
+          },
+        ]),
+      );
+    });
+
+    test('Should bind custom bug generator with default values', () => {
+      setSelectOption('bug-generator', 'custom');
+      getAddEventButton()?.click();
+      expect(getBugGenerator()).toMatchObject(
+        new CustomBugGenerator([
+          {
+            time: 3,
+            complexity: 1,
+            reviewComplexity: 1,
+          },
+        ]),
+      );
+    });
+
+    test('Should display a button to add event', () => {
+      setSelectOption('bug-generator', 'custom');
+      expect(getAddEventButton()).not.toBeNull();
+    });
+
+    test('Should add a line on click of the button to add event', () => {
+      setSelectOption('bug-generator', 'custom');
+      getAddEventButton()?.click();
+      expect(
+        getBugGeneratorDivEvents()?.querySelectorAll<HTMLDivElement>('div')
+          .length,
+      ).toEqual(1);
+    });
+
+    test('Should display fields to add an event', () => {
+      setSelectOption('bug-generator', 'custom');
+      getAddEventButton()?.click();
+      const divEvent = getBugGeneratorDivEvents();
+      expect(
+        divEvent?.querySelector('[for=bug-generator-event-0-complexity-input]'),
+      ).not.toBeNull();
+      expect(
+        divEvent?.querySelector('#bug-generator-event-0-complexity-input'),
+      ).not.toBeNull();
+      expect(
+        divEvent?.querySelector('[for=bug-generator-event-0-time-input]'),
+      ).not.toBeNull();
+      expect(
+        divEvent?.querySelector('#bug-generator-event-0-time-input'),
+      ).not.toBeNull();
+      expect(
+        divEvent?.querySelector(
+          '[for=bug-generator-event-0-review-complexity-input]',
+        ),
+      ).not.toBeNull();
+      expect(
+        divEvent?.querySelector(
+          '#bug-generator-event-0-review-complexity-input',
+        ),
+      ).not.toBeNull();
+    });
+
+    test('Should add two lines to add an event', () => {
+      setSelectOption('bug-generator', 'custom');
+      getAddEventButton()?.click();
+      getAddEventButton()?.click();
+      const divEvent = getBugGeneratorDivEvents();
+      divEvent?.querySelectorAll<HTMLDivElement>('div');
+      expect(
+        divEvent?.querySelector('#bug-generator-event-1-complexity-input'),
+      ).not.toBeNull();
+    });
+
+    test('Should remove an event line', () => {
+      setSelectOption('bug-generator', 'custom');
+      getAddEventButton()?.click();
+      const removeButton = getRemoveEventButton(0);
+      removeButton?.click();
+      expect(document.querySelector('#complexity-input-0')).toBeNull();
     });
   });
 });

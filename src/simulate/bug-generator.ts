@@ -26,15 +26,22 @@ export type BugGenerator = {
   generate(backlog: Backlog, team: Team, time: number): UserStory[];
 };
 
-export type BugEvent = {
+export const noBugGenerator: BugGenerator = {
+  generate(_: Backlog, _2: Team, _3: number): UserStory[] {
+    return [];
+  },
+};
+
+export type BugGeneratorEvent = {
   complexity: number;
   reviewComplexity: number;
   time: number;
 };
 export class CustomBugGenerator implements BugGenerator {
-  private readonly bugEvents: BugEvent[];
+  private readonly bugEvents: BugGeneratorEvent[];
   private bugCount = 0;
-  constructor(bugEvents: BugEvent[]) {
+
+  constructor(bugEvents: BugGeneratorEvent[]) {
     this.bugEvents = bugEvents;
   }
 

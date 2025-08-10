@@ -89,3 +89,41 @@ export const generateTeamModificatorEventsForm = (eventCount: number) => {
   );
   return divElement;
 };
+
+export const generateBugGeneratorEventsForm = (eventCount: number) => {
+  const timeInputId = `bug-generator-event-${eventCount}-time-input`;
+  const timeLabel = generateLabel('Time', timeInputId);
+  const timeInput = generateInput(timeInputId, 3);
+
+  const complexityInputId = `bug-generator-event-${eventCount}-complexity-input`;
+  const complexityLabel = generateLabel('Complexity', complexityInputId);
+  const complexityInput = generateInput(complexityInputId, 1);
+
+  const reviewComplexityInputId = `bug-generator-event-${eventCount}-review-complexity-input`;
+  const reviewComplexityLabel = generateLabel(
+    'Review complexity',
+    reviewComplexityInputId,
+  );
+  const reviewComplexityInput = generateInput(reviewComplexityInputId, 1);
+
+  const buttonElement = document.createElement('button');
+  buttonElement.textContent = 'Remove';
+  buttonElement.id = `remove-event-button-${eventCount}`;
+  buttonElement.addEventListener('click', (event) => {
+    const target = event.target as HTMLButtonElement;
+    target.parentElement?.remove();
+  });
+
+  const divElement = document.createElement('div');
+  divElement.id = `bug-generator-event-${eventCount}`;
+  divElement.append(
+    timeLabel,
+    timeInput,
+    reviewComplexityLabel,
+    reviewComplexityInput,
+    complexityLabel,
+    complexityInput,
+    buttonElement,
+  );
+  return divElement;
+};
