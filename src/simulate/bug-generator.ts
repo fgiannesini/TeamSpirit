@@ -37,15 +37,16 @@ export class CustomBugGenerator implements BugGenerator {
     this.bugEvents = bugEvents;
   }
   generate(_backlog: Backlog, _team: Team, _time: number): UserStory[] {
+    const bugEvent = this.bugEvents[0];
     return [
       {
         id: 0,
         name: 'user-story',
-        complexity: this.bugEvents.length,
+        complexity: bugEvent.complexity,
         progression: 0,
         review: {
           reviewers: new Map(),
-          reviewComplexity: 1,
+          reviewComplexity: bugEvent.reviewComplexity,
         },
         state: 'Todo',
         threadId: undefined,

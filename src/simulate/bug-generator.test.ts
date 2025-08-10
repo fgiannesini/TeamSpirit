@@ -187,5 +187,29 @@ describe('Bug generator', () => {
       );
       expect(userStories).toStrictEqual([todo()]);
     });
+
+    test('should generate another bug', () => {
+      const customBugGenerator = new CustomBugGenerator([
+        {
+          complexity: 2,
+          reviewComplexity: 2,
+          time: 2,
+        },
+      ]);
+      const userStories = customBugGenerator.generate(
+        new Backlog([]),
+        parallelTeam(),
+        2,
+      );
+      expect(userStories).toStrictEqual([
+        todo({
+          complexity: 2,
+          review: {
+            reviewComplexity: 2,
+            reviewers: new Map(),
+          },
+        }),
+      ]);
+    });
   });
 });
