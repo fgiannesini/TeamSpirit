@@ -1,4 +1,6 @@
 Random Bug generator devrait prendre en compte le nombre de review
+On devrait ajouter le nombre de review sur les user story traitées en mob
+
 Voir d'autres métriques à ajouter
 Permettre simulation sur de nombreux lancements
 
