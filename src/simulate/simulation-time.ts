@@ -56,7 +56,8 @@ export const simulateTimeEvents = (
         events.push(createTimeEvent(time, inProgress, thread.id));
         if (isDeveloped(inProgress)) {
           if (isReviewed(inProgress, team.getReviewersNeeded())) {
-            const done = setDone(inProgress, time);
+            let done = setDone(inProgress, time);
+            done = team.addImplicitsReviewers(done);
             events.push(createTimeEvent(time, done, thread.id));
             toAddBacklog.push(done);
           } else {

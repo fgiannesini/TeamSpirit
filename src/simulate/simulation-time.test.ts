@@ -6,7 +6,9 @@ import {
 } from './backlog.ts';
 import {
   createThread,
+  done,
   doneEvent,
+  ensembleTeam,
   idleEvent,
   inProgressEvent,
   parallelTeam,
@@ -156,6 +158,7 @@ describe('simulation time', () => {
     expect(getUserStoriesDone(backlog)).toHaveLength(0);
     expect(getUserStoriesRemainings(backlog)).toHaveLength(1);
   });
+
   test('Should have an experimented thread review a simple user story', () => {
     const team = new ParallelTeam([
       createThread({ id: 0, power: 3 }),
@@ -255,5 +258,34 @@ describe('simulation time', () => {
     ]);
     expect(getUserStoriesDone(backlog)).toHaveLength(0);
     expect(getUserStoriesRemainings(backlog)).toHaveLength(1);
+  });
+
+  test('Should have a user story with reviewers when done by an ensemble team', () => {
+    const team = ensembleTeam([
+      createThread({ id: 0, power: 1 }),
+      createThread({ id: 1, power: 1 }),
+    ]);
+    const backlog = new Backlog([
+      todo({
+        threadId: 2,
+        review: {
+          reviewComplexity: 1,
+          reviewers: new Map(),
+        },
+      }),
+    ]);
+    const timeEvents = simulateTimeEvents(team, backlog, 1);
+    expect(timeEvents).toEqual([
+      inProgressEvent({ threadId: 0 }),
+      doneEvent({ threadId: 0 }),
+    ]);
+    expect(getUserStoriesDone(backlog)).toStrictEqual([
+      done({
+        review: {
+          reviewComplexity: 1,
+          reviewers: new Map([[1, 1]]),
+        },
+      }),
+    ]);
   });
 });
