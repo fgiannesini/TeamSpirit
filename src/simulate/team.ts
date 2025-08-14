@@ -1,3 +1,5 @@
+import type { UserStory } from './user-story.ts';
+
 const buildMob = (allActiveThreads: Thread[]): Thread[] => {
   const sum = allActiveThreads
     .map((thread) => thread.power)
@@ -40,6 +42,7 @@ export type Team = {
   getReviewersNeeded(): number;
   updateTimes(): Team;
   getThreadsOff(): Thread[];
+  addImplicitsReviewers(done: UserStory): UserStory;
 };
 
 export class ParallelTeam implements Team {
@@ -52,6 +55,10 @@ export class ParallelTeam implements Team {
   ) {
     this.threads = threads;
     this.reviewersNeeded = reviewersNeeded;
+  }
+
+  addImplicitsReviewers(userStory: UserStory): UserStory {
+    return userStory;
   }
 
   updateTimes(): Team {
@@ -109,6 +116,24 @@ export class EnsembleTeam implements Team {
 
   constructor(threads: Thread[]) {
     this.threads = threads;
+  }
+
+  addImplicitsReviewers(userStory: UserStory): UserStory {
+    const allActiveThreads = this.getAllActiveThreads();
+    allActiveThreads.shift();
+    const reviewers = new Map(
+      allActiveThreads.map((thread) => [
+        thread.id,
+        userStory.review.reviewComplexity,
+      ]),
+    );
+    return {
+      ...userStory,
+      review: {
+        ...userStory.review,
+        reviewers,
+      },
+    };
   }
 
   getThreadsOff(): Thread[] {

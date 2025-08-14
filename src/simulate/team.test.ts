@@ -1,6 +1,6 @@
-import {describe, expect, test} from 'vitest';
-import {createThread, ensembleTeam, parallelTeam} from './factory.ts';
-import {EnsembleTeam, ParallelTeam, type Team} from './team.ts';
+import { describe, expect, test } from 'vitest';
+import { createThread, done, ensembleTeam, parallelTeam } from './factory.ts';
+import { EnsembleTeam, ParallelTeam, type Team } from './team.ts';
 
 describe('Team', () => {
   describe('Parallel team', () => {
@@ -112,6 +112,14 @@ describe('Team', () => {
         createThread({ id: 1, off: true }),
       ]);
     });
+
+    test('Should not add implicit reviewers', () => {
+      const team = parallelTeam([
+        createThread({ id: 0, off: false }),
+        createThread({ id: 1, off: true }),
+      ]);
+      expect(team.addImplicitsReviewers(done())).toStrictEqual(done());
+    });
   });
 
   describe('Ensemble team', () => {
@@ -202,6 +210,22 @@ describe('Team', () => {
       expect(team.getThreadsOff()).toStrictEqual([
         createThread({ id: 1, off: true }),
       ]);
+    });
+
+    test('Should add implicit reviewers', () => {
+      const team = ensembleTeam([
+        createThread({ id: 0, off: false }),
+        createThread({ id: 1, off: false }),
+        createThread({ id: 2, off: true }),
+      ]);
+      expect(team.addImplicitsReviewers(done())).toStrictEqual(
+        done({
+          review: {
+            reviewComplexity: 1,
+            reviewers: new Map([[1, 1]]),
+          },
+        }),
+      );
     });
   });
 });
