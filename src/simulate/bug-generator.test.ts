@@ -19,7 +19,40 @@ describe('Bug generator', () => {
     ])(
       'should compute probability for a junior to work on a complex task after %s turns',
       (turn: number, probability: number) => {
-        expect(computeBugProbability(5, turn, 1)).toBeCloseTo(probability, 2);
+        expect(computeBugProbability(5, turn, 1, 1)).toBeCloseTo(
+          probability,
+          2,
+        );
+      },
+    );
+
+    test.each([
+      [0, 0.58],
+      [1, 0.39],
+      [2, 0.26],
+      [3, 0.18],
+    ])(
+      'should compute probability for a junior to work on a complex task with %s reviews',
+      (review: number, probability: number) => {
+        expect(computeBugProbability(5, 3, 1, review)).toBeCloseTo(
+          probability,
+          2,
+        );
+      },
+    );
+
+    test.each([
+      [0, 0.1],
+      [1, 0.07],
+      [2, 0.05],
+      [3, 0.03],
+    ])(
+      'should compute probability for a junior to work on a simple task with %s reviews',
+      (review: number, probability: number) => {
+        expect(computeBugProbability(1, 1, 1, review)).toBeCloseTo(
+          probability,
+          2,
+        );
       },
     );
 
@@ -30,7 +63,10 @@ describe('Bug generator', () => {
     ])(
       'should compute probability for a junior to work on a simple task after %s turns',
       (turn: number, probability: number) => {
-        expect(computeBugProbability(1, turn, 1)).toBeCloseTo(probability, 2);
+        expect(computeBugProbability(1, turn, 1, 1)).toBeCloseTo(
+          probability,
+          2,
+        );
       },
     );
 
@@ -42,7 +78,10 @@ describe('Bug generator', () => {
     ])(
       'should compute probability for a confirmed to work on a intermediate task after %s turns',
       (turn: number, probability: number) => {
-        expect(computeBugProbability(3, turn, 3)).toBeCloseTo(probability, 2);
+        expect(computeBugProbability(3, turn, 3, 1)).toBeCloseTo(
+          probability,
+          2,
+        );
       },
     );
 
@@ -56,7 +95,25 @@ describe('Bug generator', () => {
     ])(
       'should compute probability for an expert to work on a complex task after %s turns',
       (turn: number, probability: number) => {
-        expect(computeBugProbability(5, turn, 5)).toBeCloseTo(probability, 2);
+        expect(computeBugProbability(5, turn, 5, 1)).toBeCloseTo(
+          probability,
+          2,
+        );
+      },
+    );
+
+    test.each([
+      [0, 0.12],
+      [1, 0.08],
+      [2, 0.05],
+      [3, 0.04],
+    ])(
+      'should compute probability for an expert to work on a complex task with %s reviews',
+      (review: number, probability: number) => {
+        expect(computeBugProbability(5, 3, 5, review)).toBeCloseTo(
+          probability,
+          2,
+        );
       },
     );
 
@@ -67,7 +124,10 @@ describe('Bug generator', () => {
     ])(
       'should compute probability for an expert to work on a simple task after %s turns',
       (turn: number, probability: number) => {
-        expect(computeBugProbability(1, turn, 5)).toBeCloseTo(probability, 2);
+        expect(computeBugProbability(1, turn, 5, 1)).toBeCloseTo(
+          probability,
+          2,
+        );
       },
     );
 
