@@ -129,6 +129,7 @@ export const shouldGenerateBug = (
       userStory.complexity,
       time - userStory.timeDone,
       experience,
+      userStory.review.reviewers.size,
     )
   );
 };
