@@ -1,4 +1,5 @@
-On devrait ajouter le nombre de review sur les user story traitées en mob
+Retirer les bugs du calcul lead time
+Bug d'affichage à partir de 20 tâches
 
 Voir d'autres métriques à ajouter
 Permettre simulation sur de nombreux lancements
