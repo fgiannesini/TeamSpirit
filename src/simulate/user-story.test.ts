@@ -1,18 +1,25 @@
-import {describe, expect, test} from 'vitest';
-import {createThread, done, inProgress, inReview, todo, toReview,} from './factory.ts';
+import { describe, expect, test } from 'vitest';
 import {
-    isDeveloped,
-    isInProgressBy,
-    isInReviewBy,
-    isReviewed,
-    isToDo,
-    isToReviewBy,
-    needReviewBy,
-    setDone,
-    setDoneBy,
-    setInProgress,
-    setReview,
-    setToReview,
+  createThread,
+  done,
+  inProgress,
+  inReview,
+  todo,
+  toReview,
+} from './factory.ts';
+import {
+  isDeveloped,
+  isInProgressBy,
+  isInReviewBy,
+  isReviewed,
+  isToDo,
+  isToReviewBy,
+  needReviewBy,
+  setDone,
+  setDoneBy,
+  setInProgress,
+  setReview,
+  setToReview,
 } from './user-story.ts';
 
 describe('user-story', () => {

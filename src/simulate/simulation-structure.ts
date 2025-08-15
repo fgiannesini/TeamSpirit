@@ -1,5 +1,5 @@
-import {type Backlog, getUserStories} from './backlog.ts';
-import type {Team} from './team.ts';
+import { type Backlog, getUserStories } from './backlog.ts';
+import type { Team } from './team.ts';
 
 export type Action =
   | 'CreateThread'

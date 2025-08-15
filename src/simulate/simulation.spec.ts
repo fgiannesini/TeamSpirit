@@ -1,5 +1,10 @@
 import { describe, expect, test, vi } from 'vitest';
-import { addUserStory, Backlog, getUserStoriesDone, getUserStoriesRemainings } from './backlog.ts';
+import {
+  addUserStory,
+  Backlog,
+  getUserStoriesDone,
+  getUserStoriesRemainings,
+} from './backlog.ts';
 import { type BugGenerator, noBugGenerator } from './bug-generator.ts';
 import { createThread, done, ensembleTeam, todo } from './factory.ts';
 import { simulate } from './simulation.ts';
