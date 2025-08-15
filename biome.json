@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.1.3/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
   "vcs": {
     "enabled": false,
     "clientKind": "git",
@@ -15,44 +15,38 @@
     "rules": {
       "complexity": {
         "noExcessiveCognitiveComplexity": "error",
+        "noExcessiveLinesPerFunction": "error",
         "noForEach": "off",
+        "noImplicitCoercions": "error",
         "noUselessStringConcat": "error",
         "noVoid": "error",
         "useSimplifiedLogicExpression": "error",
         "useWhile": "error"
       },
       "correctness": {
+        "noGlobalDirnameFilename": "error",
+        "noNestedComponentDefinitions": "error",
         "noNodejsModules": "off",
-        "noUndeclaredVariables": "error"
+        "noProcessGlobal": "error",
+        "noUndeclaredVariables": "error",
+        "useParseIntRadix": "error",
+        "useSingleJsDocAsterisk": "error"
+      },
+      "a11y": {
+        "noNoninteractiveElementInteractions": "error"
       },
       "nursery": {
-        "noAwaitInLoop": "off",
-        "noBitwiseOperators": "error",
-        "noConstantBinaryExpression": "error",
-        "noGlobalDirnameFilename": "error",
-        "noNoninteractiveElementInteractions": "error",
-        "noProcessGlobal": "error",
+        "noNonNullAssertedOptionalChain": "error",
         "noSecrets": "off",
         "noShadow": "error",
-        "noTsIgnore": "error",
-        "noUselessBackrefInRegex": "error",
-        "noUselessEscapeInString": "error",
         "noUselessUndefined": "error",
-        "useAdjacentGetterSetter": "error",
-        "useConsistentObjectDefinition": "error",
-        "useConsistentResponse": "error",
         "useExplicitType": "off",
-        "useExportsLast": "error",
-        "useIndexOf": "error",
-        "useIterableCallbackReturn": "error",
-        "useNumericSeparators": "error",
-        "useObjectSpread": "error",
-        "useParseIntRadix": "error",
-        "useSingleJsDocAsterisk": "error",
-        "useSortedClasses": "error",
-        "useSymbolDescription": "error"
+        "useMaxParams": "off",
+        "useSortedClasses": "error"
+
       },
       "performance": {
+        "noAwaitInLoops": "off",
         "noBarrelFile": "error",
         "noDelete": "error",
         "noNamespaceImport": "error",
@@ -60,10 +54,6 @@
         "useTopLevelRegex": "error"
       },
       "style": {
-        "useSingleVarDeclarator": "error",
-        "useThrowNewError": "error",
-        "useThrowOnlyError": "error",
-        "useTrimStartEnd": "error",
         "noCommonJs": "error",
         "noDefaultExport": "error",
         "noDoneCallback": "error",
@@ -71,6 +61,7 @@
         "noExportedImports": "error",
         "noImplicitBoolean": "error",
         "noInferrableTypes": "error",
+        "noMagicNumbers": "error",
         "noNamespace": "error",
         "noNegationElse": "error",
         "noNestedTernary": "error",
@@ -94,28 +85,46 @@
         "useConsistentBuiltinInstantiation": "error",
         "useConsistentCurlyBraces": "error",
         "useConsistentMemberAccessibility": "error",
+        "useConsistentObjectDefinitions": "error",
         "useDefaultParameterLast": "error",
         "useDefaultSwitchClause": "error",
         "useEnumInitializers": "error",
         "useExplicitLengthCheck": "error",
+        "useExportsLast": "error",
         "useFilenamingConvention": "error",
         "useForOf": "error",
+        "useGroupedAccessorPairs": "error",
         "useNamingConvention": "error",
         "useNodeAssertStrict": "error",
         "useNumberNamespace": "error",
+        "useNumericSeparators": "error",
+        "useObjectSpread": "error",
+        "useReadonlyClassProperties": "error",
         "useSelfClosingElements": "error",
-        "useShorthandAssign": "error"
+        "useShorthandAssign": "error",
+        "useSingleVarDeclarator": "error",
+        "useSymbolDescription": "error",
+        "useThrowNewError": "error",
+        "useThrowOnlyError": "error",
+        "useTrimStartEnd": "error",
+        "useUnifiedTypeSignatures": "error"
       },
       "suspicious": {
+        "noAlert": "error",
+        "noBitwiseOperators": "error",
         "noConsole": "error",
+        "noConstantBinaryExpressions": "error",
         "noEmptyBlockStatements": "error",
         "noEvolvingTypes": "error",
         "noMisplacedAssertion": "error",
         "noSkippedTests": "error",
+        "noUnassignedVariables": "error",
+        "noVar": "error",
         "useAwait": "error",
         "useErrorMessage": "error",
         "useGuardForIn": "error",
         "useNumberToFixedDigitsArgument": "error",
+        "useStaticResponseMethods": "error",
         "useStrictMode": "error"
       }
     }
