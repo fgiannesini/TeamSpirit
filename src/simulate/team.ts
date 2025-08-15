@@ -62,7 +62,10 @@ export class ParallelTeam implements Team {
   }
 
   updateTimes(): Team {
-    return new ParallelTeam(updateThreadsTime(this.threads));
+    return new ParallelTeam(
+      updateThreadsTime(this.threads),
+      this.reviewersNeeded,
+    );
   }
 
   getReviewersNeeded(): number {
@@ -78,7 +81,7 @@ export class ParallelTeam implements Team {
     const newThreads = this.threads.map((item, i) =>
       i === index ? newThread : item,
     );
-    return new ParallelTeam(newThreads);
+    return new ParallelTeam(newThreads, this.reviewersNeeded);
   }
 
   setIn(threadId: number): Team {
@@ -91,7 +94,7 @@ export class ParallelTeam implements Team {
     const newThreads = this.threads.map((item, i) =>
       i === index ? newThread : item,
     );
-    return new ParallelTeam(newThreads);
+    return new ParallelTeam(newThreads, this.reviewersNeeded);
   }
 
   getAllActiveThreads(): Thread[] {

@@ -151,6 +151,7 @@ export const ensembleTeam = (
 
 export const parallelTeam = (
   threads: Thread[] = [createThread()],
+  reviewersNeeded?: number,
 ): ParallelTeam => {
-  return new ParallelTeam(threads);
+  return new ParallelTeam(threads, reviewersNeeded);
 };

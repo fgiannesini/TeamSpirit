@@ -35,31 +35,40 @@ describe('Team', () => {
     });
 
     test('Should set thread in', () => {
-      const team: Team = parallelTeam([
-        createThread({ id: 0, off: false, inTime: 1 }),
-        createThread({ id: 1, off: true, offTime: 2 }),
-      ]);
+      const team: Team = parallelTeam(
+        [
+          createThread({ id: 0, off: false, inTime: 1 }),
+          createThread({ id: 1, off: true, offTime: 2 }),
+        ],
+        0,
+      );
       const newTeam = team.setIn(1);
       expect(newTeam).toEqual(
-        parallelTeam([
-          createThread({ id: 0, off: false, inTime: 1 }),
-          createThread({ id: 1, off: false, offTime: 0 }),
-        ]),
+        parallelTeam(
+          [
+            createThread({ id: 0, off: false, inTime: 1 }),
+            createThread({ id: 1, off: false, offTime: 0 }),
+          ],
+          0,
+        ),
       );
     });
 
     test('Should set thread off', () => {
-      const team: Team = parallelTeam([
-        createThread({ id: 0 }),
-        createThread({ id: 1, inTime: 1 }),
-      ]);
+      const team: Team = parallelTeam(
+        [createThread({ id: 0 }), createThread({ id: 1, inTime: 1 })],
+        0,
+      );
       const newTeam = team.setOff(1);
       expect(newTeam).toBeInstanceOf(ParallelTeam);
       expect(newTeam).toEqual(
-        parallelTeam([
-          createThread({ id: 0, off: false }),
-          createThread({ id: 1, off: true, inTime: 0 }),
-        ]),
+        parallelTeam(
+          [
+            createThread({ id: 0, off: false }),
+            createThread({ id: 1, off: true, inTime: 0 }),
+          ],
+          0,
+        ),
       );
     });
 
@@ -90,16 +99,22 @@ describe('Team', () => {
     });
 
     test('Should increments in time and off time', () => {
-      const team: Team = parallelTeam([
-        createThread({ id: 0, off: false, inTime: 1, offTime: 0 }),
-        createThread({ id: 1, off: true, inTime: 0, offTime: 1 }),
-      ]);
+      const team: Team = parallelTeam(
+        [
+          createThread({ id: 0, off: false, inTime: 1, offTime: 0 }),
+          createThread({ id: 1, off: true, inTime: 0, offTime: 1 }),
+        ],
+        0,
+      );
       const updatedTeam = team.updateTimes();
       expect(updatedTeam).toEqual(
-        parallelTeam([
-          createThread({ id: 0, off: false, inTime: 2, offTime: 0 }),
-          createThread({ id: 1, off: true, inTime: 0, offTime: 2 }),
-        ]),
+        parallelTeam(
+          [
+            createThread({ id: 0, off: false, inTime: 2, offTime: 0 }),
+            createThread({ id: 1, off: true, inTime: 0, offTime: 2 }),
+          ],
+          0,
+        ),
       );
     });
 
