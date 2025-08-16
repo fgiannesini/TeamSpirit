@@ -228,7 +228,7 @@ describe('Main', () => {
   });
 
   test('Should generate developers', () => {
-    vi.spyOn(Math, 'random').mockReturnValueOnce(0).mockReturnValue(1);
+    vi.spyOn(Math, 'random').mockReturnValueOnce(0).mockReturnValue(0.99);
     setValueTo('#dev-count-input', '2');
     clickOn('#generate-devs-button');
     const devs = Array.from(document.querySelectorAll('#devs-container div'));
