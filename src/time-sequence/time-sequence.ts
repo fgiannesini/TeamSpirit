@@ -93,23 +93,17 @@ const cleanConsecutiveVerticals = (
   userStoriesSequence.forEach((values, key) => {
     const transformedList: string[] = [];
     for (let i = 0; i < values.length; i++) {
-      if (values[i] === 'vertical' && values[i + 1] === 'vertical') {
-        transformedList.push('vertical-dashed');
-        i++;
-      } else if (
-        values[i] === 'vertical-dashed' &&
-        values[i + 1] === 'vertical-dashed'
+      const current = values[i];
+      const next = values[i + 1];
+
+      if (
+        (current === 'vertical' || current === 'vertical-dashed') &&
+        (next === 'vertical' || next === 'vertical-dashed')
       ) {
-        transformedList.push('vertical-dashed');
-        i++;
-      } else if (
-        (values[i] === 'vertical' && values[i + 1] === 'vertical-dashed') ||
-        (values[i] === 'vertical-dashed' && values[i + 1] === 'vertical')
-      ) {
-        transformedList.push('vertical');
+        transformedList.push(current === next ? 'vertical-dashed' : 'vertical');
         i++;
       } else {
-        transformedList.push(values[i]);
+        transformedList.push(current);
       }
     }
     newUserStoriesSequence.set(key, transformedList);
