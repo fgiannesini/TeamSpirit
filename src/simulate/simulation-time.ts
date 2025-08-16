@@ -36,42 +36,31 @@ export const simulateTimeEvents = (
       events.push(createTimeEvent(time, idle, thread.id));
       continue;
     }
-    switch (userStory.state) {
-      case 'ToReview':
-      case 'Review': {
-        const review = setReview(userStory, thread);
-        events.push(createTimeEvent(time, review, thread.id));
-        if (isReviewed(review, team.getReviewersNeeded())) {
-          const done = setDoneBy(userStory, review.threadId as number, time);
-          events.push(createTimeEvent(time, done, done.threadId as number));
-          toAddBacklog.push(done);
-        } else {
-          addUserStory(review, backlog);
-        }
-        break;
+    if (['ToReview', 'Review'].includes(userStory.state)) {
+      const review = setReview(userStory, thread);
+      events.push(createTimeEvent(time, review, thread.id));
+      if (isReviewed(review, team.getReviewersNeeded())) {
+        const done = setDoneBy(userStory, review.threadId as number, time);
+        events.push(createTimeEvent(time, done, done.threadId as number));
+        toAddBacklog.push(done);
+      } else {
+        addUserStory(review, backlog);
       }
-      case 'Todo':
-      case 'InProgress': {
-        const inProgress = setInProgress(userStory, thread);
-        events.push(createTimeEvent(time, inProgress, thread.id));
-        if (isDeveloped(inProgress)) {
-          if (isReviewed(inProgress, team.getReviewersNeeded())) {
-            let done = setDone(inProgress, time);
-            done = team.addImplicitsReviewers(done);
-            events.push(createTimeEvent(time, done, thread.id));
-            toAddBacklog.push(done);
-          } else {
-            const toReview = setToReview(inProgress, thread.id);
-            events.push(createTimeEvent(time, toReview, thread.id));
-            toAddBacklog.push(toReview);
-          }
-        } else {
-          toAddBacklog.push(inProgress);
-        }
-        break;
+    } else if (['Todo', 'InProgress'].includes(userStory.state)) {
+      const inProgress = setInProgress(userStory, thread);
+      events.push(createTimeEvent(time, inProgress, thread.id));
+      if (!isDeveloped(inProgress)) {
+        toAddBacklog.push(inProgress);
+      } else if (isReviewed(inProgress, team.getReviewersNeeded())) {
+        let done = setDone(inProgress, time);
+        done = team.addImplicitsReviewers(done);
+        events.push(createTimeEvent(time, done, thread.id));
+        toAddBacklog.push(done);
+      } else {
+        const toReview = setToReview(inProgress, thread.id);
+        events.push(createTimeEvent(time, toReview, thread.id));
+        toAddBacklog.push(toReview);
       }
-      default:
-        break;
     }
   }
   userStoriesWithSomeReviews(backlog, team.getReviewersNeeded()).forEach(
