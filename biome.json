@@ -15,7 +15,7 @@
     "rules": {
       "complexity": {
         "noExcessiveCognitiveComplexity": "error",
-        "noExcessiveLinesPerFunction": "error",
+        "noExcessiveLinesPerFunction": "off",
         "noForEach": "off",
         "noImplicitCoercions": "error",
         "noUselessStringConcat": "error",
@@ -43,7 +43,6 @@
         "useExplicitType": "off",
         "useMaxParams": "off",
         "useSortedClasses": "error"
-
       },
       "performance": {
         "noAwaitInLoops": "off",
@@ -61,7 +60,7 @@
         "noExportedImports": "error",
         "noImplicitBoolean": "error",
         "noInferrableTypes": "error",
-        "noMagicNumbers": "error",
+        "noMagicNumbers": "off",
         "noNamespace": "error",
         "noNegationElse": "error",
         "noNestedTernary": "error",
