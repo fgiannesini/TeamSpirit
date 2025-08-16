@@ -21,7 +21,7 @@ export const generateDevForm = (id: number): HTMLDivElement => {
 
   const powerInputId = `power-input-${id}`;
   const powerLabel = generateLabel('Power', powerInputId);
-  const powerInput = generateInput(powerInputId, 1);
+  const powerInput = generateInput(powerInputId, Math.floor(1 + Math.random() * 4));
 
   const dev = document.createElement('div');
   dev.append(identifier, powerLabel, powerInput);

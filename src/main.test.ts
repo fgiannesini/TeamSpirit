@@ -228,6 +228,7 @@ describe('Main', () => {
   });
 
   test('Should generate developers', () => {
+    vi.spyOn(Math, 'random').mockReturnValueOnce(0).mockReturnValue(1);
     setValueTo('#dev-count-input', '2');
     clickOn('#generate-devs-button');
     const devs = Array.from(document.querySelectorAll('#devs-container div'));
@@ -245,7 +246,7 @@ describe('Main', () => {
     expect(
       document.querySelector<HTMLInputElement>('#devs-container #power-input-1')
         ?.value,
-    ).toEqual('1');
+    ).toEqual('5');
   });
 
   test('Should generate developers once', () => {
