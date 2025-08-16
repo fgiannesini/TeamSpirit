@@ -9,7 +9,7 @@
   "formatter": { "enabled": true, "indentStyle": "space" },
   "linter": {
     "domains": {
-      "project": "recommended",
+      "project": "all",
       "test": "all"
     },
     "rules": {
