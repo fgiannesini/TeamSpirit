@@ -27,7 +27,7 @@ import {
   RandomTeamModificator,
 } from './simulate/team-modificator.ts';
 
-const setSelectOption = (selectId: string, optionValue: string) => {
+const setSelectOption = (selectId: string, optionValue: string): void => {
   const select = document.querySelector<HTMLSelectElement>(`#${selectId}`);
   if (select) {
     select.value = optionValue;
@@ -363,15 +363,15 @@ describe('Main', () => {
   });
 
   describe('Team modificator', () => {
-    const getAddEventButton = () =>
+    const getAddEventButton = (): HTMLButtonElement | null =>
       document.querySelector<HTMLButtonElement>(
         '#team-modificator-add-event-button',
       );
 
-    const getRemoveEventButton = (id: number) =>
+    const getRemoveEventButton = (id: number): HTMLButtonElement | null =>
       document.querySelector<HTMLButtonElement>(`#remove-event-button-${id}`);
 
-    const getTeamModificatorDivEvents = () =>
+    const getTeamModificatorDivEvents = (): HTMLDivElement | null =>
       document.querySelector<HTMLDivElement>('#team-modificator-events');
 
     test('Should create a no team modificator', () => {
@@ -495,17 +495,17 @@ describe('Main', () => {
   });
 
   describe('Bug generator', () => {
-    const getAddEventButton = () =>
+    const getAddEventButton = (): HTMLButtonElement | null =>
       document.querySelector<HTMLButtonElement>(
         '#bug-generator-add-event-button',
       );
 
-    const getRemoveEventButton = (id: number) =>
+    const getRemoveEventButton = (id: number): HTMLButtonElement | null =>
       document.querySelector<HTMLButtonElement>(
         `#bug-generator-remove-event-button-${id}`,
       );
 
-    const getBugGeneratorDivEvents = () =>
+    const getBugGeneratorDivEvents = (): HTMLDivElement | null =>
       document.querySelector<HTMLDivElement>('#bug-generator-events');
 
     test('Should create a no bug generator', () => {

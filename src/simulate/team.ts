@@ -10,7 +10,7 @@ const buildMob = (allActiveThreads: Thread[]): Thread[] => {
   ];
 };
 
-const updateThreadsTime = (threads: Thread[]) =>
+const updateThreadsTime = (threads: Thread[]): Thread[] =>
   threads.map((thread) => {
     if (thread.off) {
       return {

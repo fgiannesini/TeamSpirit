@@ -27,7 +27,7 @@ const removeCurrentTaskOfThread = (currentEvent: TimeEvent): void => {
 const sleep = (ms: number): Promise<unknown> =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
-const handleInProgress = (currentEvent: TimeEvent) => {
+const handleInProgress = (currentEvent: TimeEvent): void => {
   const id = `user-story-${currentEvent.userStoryId}-${currentEvent.threadId}`;
   Array.from(getThreadUserStoryContainer(currentEvent.threadId)?.children ?? [])
     .filter((child) => child.id !== id)
@@ -41,7 +41,7 @@ const handleInProgress = (currentEvent: TimeEvent) => {
   }
 };
 
-const handleReview = (currentEvent: TimeEvent) => {
+const handleReview = (currentEvent: TimeEvent): void => {
   const newUserStory = getUserStory(currentEvent.userStoryId)?.cloneNode(
     true,
   ) as HTMLElement;
@@ -59,7 +59,7 @@ const handleReview = (currentEvent: TimeEvent) => {
     ?.remove();
 };
 
-const handleToReview = (currentEvent: TimeEvent) => {
+const handleToReview = (currentEvent: TimeEvent): void => {
   const allUserStories = getAllUserStories(currentEvent.userStoryId);
   const userStory = allUserStories.shift();
   if (userStory) {
@@ -71,7 +71,7 @@ const handleToReview = (currentEvent: TimeEvent) => {
   });
 };
 
-const handleDone = (currentEvent: TimeEvent) => {
+const handleDone = (currentEvent: TimeEvent): void => {
   const allUserStories = getAllUserStories(currentEvent.userStoryId);
   const userStory = allUserStories.shift();
   if (userStory) {

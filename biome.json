@@ -40,7 +40,7 @@
         "noSecrets": "off",
         "noShadow": "error",
         "noUselessUndefined": "error",
-        "useExplicitType": "off",
+        "useExplicitType": "error",
         "useMaxParams": "off",
         "useSortedClasses": "error"
       },

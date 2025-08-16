@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-export const getBugGenerator = () => {
+export const getBugGenerator = (): BugGenerator => {
   const generator =
     document.querySelector<HTMLSelectElement>('#bug-generator')?.value;
   if (generator === 'random') {
@@ -209,7 +209,7 @@ export const getBugGenerator = () => {
   return noBugGenerator;
 };
 
-export const getTeamModificator = () => {
+export const getTeamModificator = (): TeamModificator => {
   const modificator =
     document.querySelector<HTMLSelectElement>('#team-modificator')?.value;
   if (modificator === 'random') {

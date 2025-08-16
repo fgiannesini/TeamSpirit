@@ -36,7 +36,7 @@ export const addThreads = (
 export const setThreadsOff = (
   structureEvents: StructureEvent[],
   timeCount: number,
-) => {
+): void => {
   structureEvents
     .filter(({ action, time }) => action === 'ThreadOff' && time === timeCount)
     .forEach(({ id }) => {
@@ -50,7 +50,7 @@ export const setThreadsOff = (
 export const setThreadsIn = (
   structureEvents: StructureEvent[],
   timeCount: number,
-) => {
+): void => {
   structureEvents
     .filter(({ action, time }) => action === 'ThreadIn' && time === timeCount)
     .forEach(({ id }) => {

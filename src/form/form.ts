@@ -54,7 +54,9 @@ export const generateUserStoriesForm = (id: number): HTMLDivElement => {
   return userStory;
 };
 
-export const generateTeamModificatorEventsForm = (eventCount: number) => {
+export const generateTeamModificatorEventsForm = (
+  eventCount: number,
+): HTMLDivElement => {
   const offInputId = `team-modificator-event-${eventCount}-off-input`;
   const offLabel = generateLabel('Off', offInputId);
   const offInput = generateInput(offInputId, 3);
@@ -90,7 +92,9 @@ export const generateTeamModificatorEventsForm = (eventCount: number) => {
   return divElement;
 };
 
-export const generateBugGeneratorEventsForm = (eventCount: number) => {
+export const generateBugGeneratorEventsForm = (
+  eventCount: number,
+): HTMLDivElement => {
   const timeInputId = `bug-generator-event-${eventCount}-time-input`;
   const timeLabel = generateLabel('Time', timeInputId);
   const timeInput = generateInput(timeInputId, 3);

@@ -6,7 +6,7 @@ export const computeBugProbability = (
   complexity: number,
   turn: number,
   experience: number,
-  reviewCount = 1,
+  reviewCount: number,
 ): number => {
   const maxExperience = 5;
   const experienceFactor = (6 - experience) / maxExperience;
