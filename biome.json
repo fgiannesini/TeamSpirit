@@ -41,7 +41,7 @@
         "noShadow": "error",
         "noUselessUndefined": "error",
         "useExplicitType": "error",
-        "useMaxParams": "off",
+        "useMaxParams": "error",
         "useSortedClasses": "error"
       },
       "performance": {
