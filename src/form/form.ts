@@ -14,6 +14,8 @@ const generateLabel = (content: string, htmlFor: string): HTMLLabelElement => {
   return labelElement;
 };
 
+const randomInt = (max: number): number => Math.floor(Math.random() * max) + 1;
+
 export const generateDevForm = (id: number): HTMLDivElement => {
   const identifier = document.createElement('span');
   identifier.id = `dev-identifier-${id}`;
@@ -21,7 +23,7 @@ export const generateDevForm = (id: number): HTMLDivElement => {
 
   const powerInputId = `power-input-${id}`;
   const powerLabel = generateLabel('Power', powerInputId);
-  const powerInput = generateInput(powerInputId, Math.floor(Math.random() * 5) + 1);
+  const powerInput = generateInput(powerInputId, randomInt(5));
 
   const dev = document.createElement('div');
   dev.append(identifier, powerLabel, powerInput);
@@ -35,13 +37,17 @@ export const generateUserStoriesForm = (id: number): HTMLDivElement => {
 
   const complexityInputId = `complexity-input-${id}`;
   const complexityLabel = generateLabel('Complexity', complexityInputId);
-  const complexityInput = generateInput(complexityInputId, 5);
+  const complexity = randomInt(10);
+  const complexityInput = generateInput(complexityInputId, complexity);
   const reviewComplexityInputId = `review-complexity-input-${id}`;
   const reviewComplexityLabel = generateLabel(
     'Review complexity',
     reviewComplexityInputId,
   );
-  const reviewComplexityInput = generateInput(reviewComplexityInputId, 2);
+  const reviewComplexityInput = generateInput(
+    reviewComplexityInputId,
+    Math.max(1, randomInt(complexity - 1)),
+  );
 
   const userStory = document.createElement('div');
   userStory.append(

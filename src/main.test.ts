@@ -168,6 +168,8 @@ describe('Main', () => {
   test('Should build the backlog for ensemble team', () => {
     setValueTo('#user-story-count-input', '2');
     clickOn('#generate-user-stories-button');
+    setValueTo('#complexity-input-0', '5');
+    setValueTo('#complexity-input-1', '5');
     setValueTo('#reviewers-input', '1');
 
     expect(buildBacklogForEnsembleTeam()).toEqual(
@@ -191,6 +193,8 @@ describe('Main', () => {
   test('Should build the backlog for parallel team with reviewers', () => {
     setValueTo('#user-story-count-input', '1');
     clickOn('#generate-user-stories-button');
+    setValueTo('#complexity-input-0', '5');
+    setValueTo('#review-complexity-input-0', '2');
     setValueTo('#reviewers-input', '1');
 
     expect(buildBacklogForParallelTeam()).toEqual(
@@ -211,6 +215,8 @@ describe('Main', () => {
   test('Should build the backlog for parallel team without reviewers', () => {
     setValueTo('#user-story-count-input', '1');
     clickOn('#generate-user-stories-button');
+    setValueTo('#complexity-input-0', '5');
+    setValueTo('#review-complexity-input-0', '2');
 
     expect(buildBacklogForParallelTeam()).toEqual(
       new Backlog([
@@ -302,6 +308,11 @@ describe('Main', () => {
   });
 
   test('Should generate user stories', () => {
+    vi.spyOn(Math, 'random')
+      .mockReturnValueOnce(0)
+      .mockReturnValueOnce(0)
+      .mockReturnValueOnce(0.99)
+      .mockReturnValue(0.99);
     setValueTo('#user-story-count-input', '2');
     clickOn('#generate-user-stories-button');
     const userStories = Array.from(
@@ -316,12 +327,12 @@ describe('Main', () => {
       document.querySelector<HTMLInputElement>(
         '#user-stories-container #complexity-input-0',
       )?.value,
-    ).toEqual('5');
+    ).toEqual('1');
     expect(
       document.querySelector<HTMLInputElement>(
         '#user-stories-container #review-complexity-input-0',
       )?.value,
-    ).toEqual('2');
+    ).toEqual('1');
     expect(
       document.querySelector('#user-stories-container #user-story-identifier-1')
         ?.textContent,
@@ -330,12 +341,12 @@ describe('Main', () => {
       document.querySelector<HTMLInputElement>(
         '#user-stories-container #complexity-input-1',
       )?.value,
-    ).toEqual('5');
+    ).toEqual('10');
     expect(
       document.querySelector<HTMLInputElement>(
         '#user-stories-container #review-complexity-input-1',
       )?.value,
-    ).toEqual('2');
+    ).toEqual('9');
   });
 
   test('Should build the backlog for ensemble team with 2 user stories', () => {
