@@ -344,6 +344,44 @@ describe('Flow', () => {
       expect(document.querySelector('#done #user-story-0')).not.toBeNull();
     });
 
+    test('Should move userStories with id >10 to thread when in progress, then done', async () => {
+      saveStructureEvents(
+        [
+          createThread0(),
+          createThread1(),
+          createUserStory({ id: 1, name: 'US1' }),
+          createUserStory({ id: 10, name: 'US10' }),
+        ],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
+      saveTimeEvents(
+        [
+          inProgressEvent({ userStoryId: 1, threadId: 0 }),
+          inProgressEvent({ userStoryId: 10, threadId: 1 }),
+          doneEvent({ userStoryId: 1, threadId: 0 }),
+          doneEvent({ userStoryId: 10, threadId: 1 }),
+        ],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
+      await import('./flow.ts');
+
+      getCompute()?.click();
+
+      await vi.advanceTimersToNextTimerAsync();
+      expect(
+        document.querySelector('#thread-user-story-0 #user-story-1-0'),
+      ).not.toBeNull();
+      await vi.advanceTimersToNextTimerAsync();
+      expect(
+        document.querySelector('#thread-user-story-1 #user-story-10-1'),
+      ).not.toBeNull();
+
+      await vi.advanceTimersToNextTimerAsync();
+      expect(document.querySelector('#done #user-story-1')).not.toBeNull();
+      await vi.advanceTimersToNextTimerAsync();
+      expect(document.querySelector('#done #user-story-10')).not.toBeNull();
+    });
+
     test('Should keep userStories to thread when in progress', async () => {
       saveStructureEvents(
         [createThread0(), createUserStory({ id: 0 })],
