@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitest/config';
 
+// biome-ignore lint/style/noDefaultExport: Vite configuration
 export default defineConfig({
   root: './src',
   base: '/TeamSpirit/',
