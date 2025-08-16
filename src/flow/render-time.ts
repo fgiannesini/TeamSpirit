@@ -27,6 +27,62 @@ const removeCurrentTaskOfThread = (currentEvent: TimeEvent): void => {
 const sleep = (ms: number): Promise<unknown> =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
+const handleInProgress = (currentEvent: TimeEvent) => {
+  const id = `user-story-${currentEvent.userStoryId}-${currentEvent.threadId}`;
+  Array.from(getThreadUserStoryContainer(currentEvent.threadId)?.children ?? [])
+    .filter((child) => child.id !== id)
+    .forEach((child) => {
+      child.remove();
+    });
+  const userStory = getUserStory(currentEvent.userStoryId);
+  if (userStory) {
+    getThreadUserStoryContainer(currentEvent.threadId)?.appendChild(userStory);
+    userStory.id = id;
+  }
+};
+
+const handleReview = (currentEvent: TimeEvent) => {
+  const newUserStory = getUserStory(currentEvent.userStoryId)?.cloneNode(
+    true,
+  ) as HTMLElement;
+  if (newUserStory) {
+    newUserStory.id = `user-story-${currentEvent.userStoryId}-${currentEvent.threadId}`;
+    const threadUserStoryContainer = getThreadUserStoryContainer(
+      currentEvent.threadId,
+    );
+    threadUserStoryContainer?.appendChild(newUserStory);
+  }
+  document
+    .querySelector<HTMLDivElement>(
+      `#backlog #user-story-${currentEvent.userStoryId}`,
+    )
+    ?.remove();
+};
+
+const handleToReview = (currentEvent: TimeEvent) => {
+  const allUserStories = getAllUserStories(currentEvent.userStoryId);
+  const userStory = allUserStories.shift();
+  if (userStory) {
+    getBacklog()?.appendChild(userStory);
+    userStory.id = `user-story-${currentEvent.userStoryId}`;
+  }
+  allUserStories.forEach((userStoryToRemove) => {
+    userStoryToRemove.remove();
+  });
+};
+
+const handleDone = (currentEvent: TimeEvent) => {
+  const allUserStories = getAllUserStories(currentEvent.userStoryId);
+  const userStory = allUserStories.shift();
+  if (userStory) {
+    getDone()?.appendChild(userStory);
+    userStory.id = `user-story-${currentEvent.userStoryId}`;
+  }
+  allUserStories.forEach((userStoryToRemove) => {
+    userStoryToRemove.remove();
+  });
+};
+
 export const renderTimeEvents = async (
   events: TimeEvent[],
   time: number,
@@ -41,21 +97,7 @@ export const renderTimeEvents = async (
     }
     switch (currentEvent.state) {
       case 'InProgress': {
-        const id = `user-story-${currentEvent.userStoryId}-${currentEvent.threadId}`;
-        Array.from(
-          getThreadUserStoryContainer(currentEvent.threadId)?.children ?? [],
-        )
-          .filter((child) => child.id !== id)
-          .forEach((child) => {
-            child.remove();
-          });
-        const userStory = getUserStory(currentEvent.userStoryId);
-        if (userStory) {
-          getThreadUserStoryContainer(currentEvent.threadId)?.appendChild(
-            userStory,
-          );
-          userStory.id = id;
-        }
+        handleInProgress(currentEvent);
         setThreadStateTo(currentEvent.threadId, 'Develop');
         break;
       }
@@ -66,47 +108,16 @@ export const renderTimeEvents = async (
           continue;
         }
         removeCurrentTaskOfThread(currentEvent);
-        const newUserStory = getUserStory(currentEvent.userStoryId)?.cloneNode(
-          true,
-        ) as HTMLElement;
-        const newId = `user-story-${currentEvent.userStoryId}-${currentEvent.threadId}`;
-        if (newUserStory) {
-          newUserStory.id = newId;
-          const threadUserStoryContainer = getThreadUserStoryContainer(
-            currentEvent.threadId,
-          );
-          threadUserStoryContainer?.appendChild(newUserStory);
-        }
-        document
-          .querySelector<HTMLDivElement>(
-            `#backlog #user-story-${currentEvent.userStoryId}`,
-          )
-          ?.remove();
+        handleReview(currentEvent);
         setThreadStateTo(currentEvent.threadId, 'Review');
         break;
       }
       case 'ToReview': {
-        const allUserStories = getAllUserStories(currentEvent.userStoryId);
-        const userStory = allUserStories.shift();
-        if (userStory) {
-          getBacklog()?.appendChild(userStory);
-          userStory.id = `user-story-${currentEvent.userStoryId}`;
-        }
-        allUserStories.forEach((userStoryToRemove) => {
-          userStoryToRemove.remove();
-        });
+        handleToReview(currentEvent);
         break;
       }
       case 'Done': {
-        const allUserStories = getAllUserStories(currentEvent.userStoryId);
-        const userStory = allUserStories.shift();
-        if (userStory) {
-          getDone()?.appendChild(userStory);
-          userStory.id = `user-story-${currentEvent.userStoryId}`;
-        }
-        allUserStories.forEach((userStoryToRemove) => {
-          userStoryToRemove.remove();
-        });
+        handleDone(currentEvent);
         break;
       }
       default:
