@@ -61,7 +61,7 @@ describe('Backlog', () => {
     expect(userStory).toEqual(inProgress({ threadId: 1 }));
   });
 
-  test.skip('Should switch from IN_PROGRESS to TODO if priority is higher', () => {
+  test('Should switch from IN_PROGRESS to TODO if priority is higher', () => {
     const backlog = new Backlog([
       todo({ priority: 2 }),
       inProgress({ threadId: 1, priority: 1 }),

@@ -29,44 +29,38 @@ export const getNextUserStory = (
   thread: Thread,
   reviewersNeeded: number,
 ): UserStory => {
-  // const priorities = [
-  //   ...new Set(
-  //     backlog.userStoriesRemaining.map((userStory) => userStory.priority),
-  //   ),
-  // ].toSorted((a, b) => a - b);
-  //
-  // for (const priority of priorities) {
-  //   const userStories = userStories.filter(
-  //     (userStory) => userStory.priority === priority,
-  //   );
-  // }
+  const priorities = [
+    ...new Set(
+      backlog.userStoriesRemaining.map((userStory) => userStory.priority),
+    ),
+  ].toSorted((a, b) => b - a);
 
-  let nextUserStory = backlog.userStoriesRemaining.find((userStory) =>
-    isInProgressBy(userStory, thread),
-  );
-
-  if (!nextUserStory) {
-    nextUserStory = backlog.userStoriesRemaining.find((userStory) =>
-      isInReviewBy(userStory, thread),
+  let nextUserStory: UserStory | undefined;
+  for (const priority of priorities) {
+    const userStories = backlog.userStoriesRemaining.filter(
+      (userStory) => userStory.priority === priority,
     );
-  }
 
-  if (!nextUserStory) {
-    nextUserStory = backlog.userStoriesRemaining.find((userStory) =>
-      needReviewBy(userStory, thread, reviewersNeeded),
+    nextUserStory = userStories.find((userStory) =>
+      isInProgressBy(userStory, thread),
     );
-  }
 
-  if (!nextUserStory) {
-    let minDiff = Number.MAX_VALUE;
-    let maxPriority = -Number.MAX_VALUE;
-    backlog.userStoriesRemaining.forEach((userStory) => {
-      if (isToReviewBy(userStory, thread)) {
-        if (userStory.priority >= maxPriority) {
-          maxPriority = userStory.priority;
-          minDiff = Number.MAX_VALUE;
-          nextUserStory = userStory;
-        } else {
+    if (!nextUserStory) {
+      nextUserStory = userStories.find((userStory) =>
+        isInReviewBy(userStory, thread),
+      );
+    }
+
+    if (!nextUserStory) {
+      nextUserStory = userStories.find((userStory) =>
+        needReviewBy(userStory, thread, reviewersNeeded),
+      );
+    }
+
+    if (!nextUserStory) {
+      let minDiff = Number.MAX_VALUE;
+      userStories.forEach((userStory) => {
+        if (isToReviewBy(userStory, thread)) {
           const diff = Math.abs(
             userStory.review.reviewComplexity - thread.power,
           );
@@ -75,30 +69,25 @@ export const getNextUserStory = (
             nextUserStory = userStory;
           }
         }
-      }
-    });
-  }
+      });
+    }
 
-  if (!nextUserStory) {
-    let minDiff = Number.MAX_VALUE;
-    let maxPriority = -Number.MAX_VALUE;
-    backlog.userStoriesRemaining.forEach((userStory) => {
-      if (isToDo(userStory)) {
-        if (userStory.priority >= maxPriority) {
-          maxPriority = userStory.priority;
-          minDiff = Number.MAX_VALUE;
-          nextUserStory = userStory;
-        } else {
-          const diff = Math.abs(
-            userStory.review.reviewComplexity - thread.power,
-          );
+    if (!nextUserStory) {
+      let minDiff = Number.MAX_VALUE;
+      userStories.forEach((userStory) => {
+        if (isToDo(userStory)) {
+          const diff = Math.abs(userStory.complexity - thread.power);
           if (diff < minDiff) {
             minDiff = diff;
             nextUserStory = userStory;
           }
         }
-      }
-    });
+      });
+    }
+
+    if (nextUserStory) {
+      break;
+    }
   }
 
   if (nextUserStory) {
