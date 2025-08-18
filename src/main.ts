@@ -34,6 +34,7 @@ import {
   type TeamModificator,
   type TeamModificatorEvent,
 } from './simulate/team-modificator.ts';
+import type { UserStory } from './simulate/user-story.ts';
 
 const getInputValueOf = (selector: string): number => {
   const number = Number.parseInt(
@@ -238,35 +239,43 @@ export const getTeamModificator = (): TeamModificator => {
 export const buildBacklogForParallelTeam = (): Backlog => {
   const userStoryCount = getInputValueOf('#user-story-count-input');
   return new Backlog(
-    Array.from({ length: userStoryCount }, (_, i) => ({
-      id: i,
-      name: `US${i}`,
-      complexity: getInputValueOf(`#complexity-input-${i}`),
-      review: {
-        reviewers: new Map<number, number>(),
-        reviewComplexity: getInputValueOf(`#review-complexity-input-${i}`),
-      },
-      state: 'Todo',
-      threadId: undefined,
-      progression: 0,
-      timeDone: 0,
-    })),
+    Array.from(
+      { length: userStoryCount },
+      (_, i): UserStory => ({
+        id: i,
+        name: `US${i}`,
+        complexity: getInputValueOf(`#complexity-input-${i}`),
+        review: {
+          reviewers: new Map<number, number>(),
+          reviewComplexity: getInputValueOf(`#review-complexity-input-${i}`),
+        },
+        state: 'Todo',
+        threadId: undefined,
+        progression: 0,
+        timeDone: 0,
+        priority: 0,
+      }),
+    ),
   );
 };
 
 export const buildBacklogForEnsembleTeam = (): Backlog => {
   const userStoryCount = getInputValueOf('#user-story-count-input');
   return new Backlog(
-    Array.from({ length: userStoryCount }, (_, i) => ({
-      id: i,
-      name: `US${i}`,
-      complexity: getInputValueOf(`#complexity-input-${i}`),
-      review: noReview,
-      state: 'Todo',
-      threadId: undefined,
-      progression: 0,
-      timeDone: 0,
-    })),
+    Array.from(
+      { length: userStoryCount },
+      (_, i): UserStory => ({
+        id: i,
+        name: `US${i}`,
+        complexity: getInputValueOf(`#complexity-input-${i}`),
+        review: noReview,
+        state: 'Todo',
+        threadId: undefined,
+        progression: 0,
+        timeDone: 0,
+        priority: 0,
+      }),
+    ),
   );
 };
 

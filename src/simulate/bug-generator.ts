@@ -64,6 +64,7 @@ export class CustomBugGenerator implements BugGenerator {
           state: 'Todo',
           threadId: undefined,
           timeDone: 0,
+          priority: 0,
         };
         this.bugCount++;
         return userStory;
@@ -111,6 +112,7 @@ export class RandomBugGenerator implements BugGenerator {
           threadId: undefined,
           state: 'Todo',
           timeDone: 0,
+          priority: 0,
         };
       });
   }

@@ -13,6 +13,7 @@ export const todo = (options: Partial<UserStory> = {}): UserStory => {
     threadId: undefined,
     progression: 0,
     timeDone: 0,
+    priority: 0,
     ...options,
   };
 };
@@ -27,6 +28,7 @@ export const inProgress = (options: Partial<UserStory> = {}): UserStory => {
     threadId: 0,
     progression: 1,
     timeDone: 0,
+    priority: 0,
     ...options,
   };
 };
@@ -44,6 +46,7 @@ export const toReview = (options: Partial<UserStory> = {}): UserStory => {
     threadId: 0,
     progression: 1,
     timeDone: 0,
+    priority: 0,
     ...options,
   };
 };
@@ -61,6 +64,7 @@ export const inReview = (options: Partial<UserStory> = {}): UserStory => {
     threadId: 0,
     progression: 1,
     timeDone: 0,
+    priority: 0,
     ...options,
   };
 };
@@ -75,6 +79,7 @@ export const done = (options: Partial<UserStory> = {}): UserStory => {
     threadId: 0,
     progression: 1,
     timeDone: 1,
+    priority: 0,
     ...options,
   };
 };

@@ -33,6 +33,7 @@ export type UserStory = {
   threadId?: number;
   state: State;
   timeDone: number;
+  priority: number;
 };
 
 export const idle: UserStory = {
@@ -44,6 +45,7 @@ export const idle: UserStory = {
   threadId: undefined,
   state: 'Done',
   timeDone: 0,
+  priority: 0,
 };
 
 export const setInProgress = (userStory: UserStory, dev: Thread): UserStory => {
