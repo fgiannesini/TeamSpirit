@@ -1,4 +1,5 @@
-Implémenter les changements aléatoires de priorité
+Implémenter CustomPriorityModificator et RandomPriorityModificator
+Brancher les PriorityModificator à chaque tour de simulation
 Permettre la simulation sur de nombreux lancements
 
 implémenter statistiques lead time avec un graph qui se construit
