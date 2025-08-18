@@ -7,6 +7,7 @@ import {
 import {
   generateBugGeneratorEventsForm,
   generateDevForm,
+  generatePriorityModificatorEventsForm,
   generateTeamModificatorEventsForm,
   generateUserStoriesForm,
 } from './form/form.ts';
@@ -18,6 +19,13 @@ import {
   noBugGenerator,
   RandomBugGenerator,
 } from './simulate/bug-generator.ts';
+import {
+  CustomPriorityModificator,
+  noPriorityModificator,
+  type PriorityModificator,
+  type PriorityModificatorEvent,
+  RandomPriorityModificator,
+} from './simulate/priority-modificator.ts';
 import { noReview } from './simulate/review.ts';
 import { simulate } from './simulate/simulation.ts';
 import { computeStatEvents } from './simulate/stats.ts';
@@ -180,6 +188,40 @@ document.addEventListener('DOMContentLoaded', () => {
       target.parentElement?.append(form);
       bugGeneratorEventCount++;
     });
+
+  document
+    .querySelector<HTMLSelectElement>('#priority-modificator')
+    ?.addEventListener('change', (event) => {
+      const target = event.target as HTMLSelectElement;
+      if (target.value === 'custom') {
+        const eventsDiv = document.querySelector<HTMLDivElement>(
+          '#priority-modificator-events',
+        );
+        if (eventsDiv) {
+          eventsDiv.style.display = 'block';
+        }
+      } else {
+        const eventsDiv = document.querySelector<HTMLDivElement>(
+          '#priority-modificator-events',
+        );
+        if (eventsDiv) {
+          eventsDiv.style.display = 'none';
+        }
+      }
+    });
+
+  let priorityModificatorEventCount = 0;
+
+  document
+    .querySelector<HTMLSelectElement>('#priority-modificator-add-event-button')
+    ?.addEventListener('click', (event) => {
+      const form = generatePriorityModificatorEventsForm(
+        priorityModificatorEventCount,
+      );
+      const target = event.target as HTMLDivElement;
+      target.parentElement?.append(form);
+      priorityModificatorEventCount++;
+    });
 });
 
 export const getBugGenerator = (): BugGenerator => {
@@ -236,6 +278,30 @@ export const getTeamModificator = (): TeamModificator => {
     return new CustomTeamModificator(events);
   }
   return noTeamModificator;
+};
+
+export const getPriorityModificator = (): PriorityModificator => {
+  const modificator = document.querySelector<HTMLSelectElement>(
+    '#priority-modificator',
+  )?.value;
+  if (modificator === 'random') {
+    return new RandomPriorityModificator();
+  }
+  if (modificator === 'custom') {
+    const eventsDivContainer = document.querySelectorAll(
+      '#team-modificator-events div',
+    );
+    const events: PriorityModificatorEvent[] = [];
+    for (const eventDiv of eventsDivContainer) {
+      events.push({
+        time: getInputValueOf(`#${eventDiv.id}-time-input`),
+        id: getInputValueOf(`#${eventDiv.id}-id-input`),
+        priority: getInputValueOf(`#${eventDiv.id}-priority-input`),
+      });
+    }
+    return new CustomPriorityModificator(events);
+  }
+  return noPriorityModificator;
 };
 
 export const buildBacklogForParallelTeam = (): Backlog => {

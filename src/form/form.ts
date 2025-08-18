@@ -150,3 +150,39 @@ export const generateBugGeneratorEventsForm = (
   );
   return divElement;
 };
+
+export const generatePriorityModificatorEventsForm = (
+  eventCount: number,
+): HTMLDivElement => {
+  const timeInputId = `priority-modificator-event-${eventCount}-time-input`;
+  const timeLabel = generateLabel('Time', timeInputId);
+  const timeInput = generateInput(timeInputId, 2);
+
+  const idInputId = `priority-modificator-event-${eventCount}-id-input`;
+  const idLabel = generateLabel('Id', idInputId);
+  const idInput = generateInput(idInputId, 0);
+
+  const priorityInputId = `priority-modificator-event-${eventCount}-priority-input`;
+  const priorityLabel = generateLabel('Priority', priorityInputId);
+  const priorityInput = generateInput(priorityInputId, 3);
+
+  const buttonElement = document.createElement('button');
+  buttonElement.textContent = 'Remove';
+  buttonElement.id = `remove-event-button-${eventCount}`;
+  buttonElement.addEventListener('click', (event) => {
+    const target = event.target as HTMLButtonElement;
+    target.parentElement?.remove();
+  });
+  const divElement = document.createElement('div');
+  divElement.id = `team-modificator-event-${eventCount}`;
+  divElement.append(
+    idLabel,
+    idInput,
+    priorityLabel,
+    priorityInput,
+    timeLabel,
+    timeInput,
+    buttonElement,
+  );
+  return divElement;
+};

@@ -40,6 +40,17 @@
   </div>
 </div>
 <div>
+  <label for="priority-modificator">Priority Modificator</label>
+  <select id="priority-modificator">
+    <option value=""></option>
+    <option value="custom">Custom</option>
+    <option value="random">Random</option>
+  </select>
+  <div id="priority-modificator-events" style="display: none">
+    <button id="priority-modificator-add-event-button" type="button">Add</button>
+  </div>
+</div>
+<div>
     <label for="user-story-count-input">User stories count</label>
     <input id="user-story-count-input" min="1" type="number" value="5"/>
     <button id="generate-user-stories-button">Generate</button>

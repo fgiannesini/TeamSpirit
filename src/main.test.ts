@@ -7,6 +7,7 @@ import {
   buildEnsembleTeam,
   buildParallelTeam,
   getBugGenerator,
+  getPriorityModificator,
   getTeamModificator,
 } from './main.ts';
 import { Backlog } from './simulate/backlog.ts';
@@ -17,6 +18,11 @@ import {
 } from './simulate/bug-generator.ts';
 import type { TimeEvent } from './simulate/events.ts';
 import { createThread, todo } from './simulate/factory.ts';
+import {
+  CustomPriorityModificator,
+  noPriorityModificator,
+  RandomPriorityModificator,
+} from './simulate/priority-modificator.ts';
 import { noReview } from './simulate/review.ts';
 import type { StructureEvent } from './simulate/simulation-structure.ts';
 import type { StatEvent } from './simulate/stats.ts';
@@ -655,6 +661,143 @@ describe('Main', () => {
       const removeButton = getRemoveEventButton(0);
       removeButton?.click();
       expect(document.querySelector('#complexity-input-0')).toBeNull();
+    });
+  });
+
+  describe('Priority modificator', () => {
+    const getAddEventButton = (): HTMLButtonElement | null =>
+      document.querySelector<HTMLButtonElement>(
+        '#priority-modificator-add-event-button',
+      );
+
+    const getRemoveEventButton = (id: number): HTMLButtonElement | null =>
+      document.querySelector<HTMLButtonElement>(
+        `#priority-modificator-remove-event-button-${id}`,
+      );
+
+    const getPriorityModificatorDivEvents = (): HTMLDivElement | null =>
+      document.querySelector<HTMLDivElement>('#priority-modificator-events');
+
+    test('Should create a no priority modificator', () => {
+      expect(getPriorityModificator()).toEqual(noPriorityModificator);
+    });
+
+    test('Should create a random priority modificator', () => {
+      setSelectOption('priority-modificator', 'random');
+      expect(getPriorityModificator()).instanceof(RandomPriorityModificator);
+    });
+
+    test('Should not propose priority modificator events if not custom', () => {
+      expect(getPriorityModificatorDivEvents()?.style.display).toEqual('none');
+    });
+
+    test('Should create a custom priority modificator', () => {
+      setSelectOption('priority-modificator', 'custom');
+      expect(getPriorityModificatorDivEvents()?.style.display).toEqual('block');
+    });
+
+    test('Should hide priority modificator events when random is selected after custom', () => {
+      setSelectOption('priority-modificator', 'custom');
+      setSelectOption('priority-modificator', 'random');
+      expect(getPriorityModificatorDivEvents()?.style.display).toEqual('none');
+    });
+
+    test('Should propose custom priority modificator', () => {
+      setSelectOption('priority-modificator', 'custom');
+      expect(getPriorityModificator()).instanceof(CustomPriorityModificator);
+    });
+
+    test('Should bind custom priority modificator', () => {
+      setSelectOption('priority-modificator', 'custom');
+      getAddEventButton()?.click();
+      setValueTo('#priority-modificator-event-0-id-input', '6');
+      setValueTo('#priority-modificator-event-0-priority-input', '3');
+      setValueTo('#priority-modificator-event-0-time-input', '2');
+      expect(getPriorityModificator()).toMatchObject(
+        new CustomPriorityModificator([
+          {
+            time: 2,
+            id: 6,
+            priority: 3,
+          },
+        ]),
+      );
+    });
+
+    test('Should bind custom priority modificator with default values', () => {
+      setSelectOption('priority-modificator', 'custom');
+      getAddEventButton()?.click();
+      expect(getPriorityModificator()).toMatchObject(
+        new CustomPriorityModificator([
+          {
+            time: 2,
+            id: 0,
+            priority: 3,
+          },
+        ]),
+      );
+    });
+
+    test('Should display a button to add event', () => {
+      setSelectOption('priority-modificator', 'custom');
+      expect(getAddEventButton()).not.toBeNull();
+    });
+
+    test('Should add a line on click of the button to add event', () => {
+      setSelectOption('priority-modificator', 'custom');
+      getAddEventButton()?.click();
+      expect(
+        getPriorityModificatorDivEvents()?.querySelectorAll<HTMLDivElement>(
+          'div',
+        ).length,
+      ).toEqual(1);
+    });
+
+    test('Should display fields to add an event', () => {
+      setSelectOption('priority-modificator', 'custom');
+      getAddEventButton()?.click();
+      const divEvent = getPriorityModificatorDivEvents();
+      expect(
+        divEvent?.querySelector('[for=priority-modificator-event-0-id-input]'),
+      ).not.toBeNull();
+      expect(
+        divEvent?.querySelector('#priority-modificator-event-0-id-input'),
+      ).not.toBeNull();
+      expect(
+        divEvent?.querySelector(
+          '[for=priority-modificator-event-0-time-input]',
+        ),
+      ).not.toBeNull();
+      expect(
+        divEvent?.querySelector('#priority-modificator-event-0-time-input'),
+      ).not.toBeNull();
+      expect(
+        divEvent?.querySelector(
+          '[for=priority-modificator-event-0-priority-input]',
+        ),
+      ).not.toBeNull();
+      expect(
+        divEvent?.querySelector('#priority-modificator-event-0-priority-input'),
+      ).not.toBeNull();
+    });
+
+    test('Should add two lines to add an event', () => {
+      setSelectOption('priority-modificator', 'custom');
+      getAddEventButton()?.click();
+      getAddEventButton()?.click();
+      const divEvent = getPriorityModificatorDivEvents();
+      divEvent?.querySelectorAll<HTMLDivElement>('div');
+      expect(
+        divEvent?.querySelector('#priority-modificator-event-1-time-input'),
+      ).not.toBeNull();
+    });
+
+    test('Should remove an event line', () => {
+      setSelectOption('priority-modificator', 'custom');
+      getAddEventButton()?.click();
+      const removeButton = getRemoveEventButton(0);
+      removeButton?.click();
+      expect(document.querySelector('#time-input-0')).toBeNull();
     });
   });
 });
