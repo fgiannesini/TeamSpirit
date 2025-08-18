@@ -178,9 +178,11 @@ describe('Main', () => {
       clickOn('#generate-user-stories-button');
       setValueTo('#complexity-input-0', '2');
       setValueTo('#review-complexity-input-0', '1');
+      setValueTo('#priority-input-0', '0');
       setValueTo('#complexity-input-1', '4');
       setValueTo('#review-complexity-input-1', '2');
       setValueTo('#reviewers-input', '1');
+      setValueTo('#priority-input-1', '5');
       expect(buildBacklogForEnsembleTeam()).toEqual(
         new Backlog([
           todo({
@@ -188,12 +190,14 @@ describe('Main', () => {
             name: 'US0',
             complexity: 2,
             review: noReview,
+            priority: 0,
           }),
           todo({
             id: 1,
             name: 'US1',
             complexity: 4,
             review: noReview,
+            priority: 5,
           }),
         ]),
       );
