@@ -25,7 +25,10 @@ export const simulateTimeEvents = (
 ): TimeEvent[] => {
   const events: TimeEvent[] = [];
   const toAddBacklog: UserStory[] = [];
-  for (const thread of team.getEffectiveActiveThreads()) {
+  const sortedThreads = team
+    .getEffectiveActiveThreads()
+    .toSorted((a, b) => b.power - a.power);
+  for (const thread of sortedThreads) {
     const userStory: UserStory = getNextUserStory(
       backlog,
       thread,

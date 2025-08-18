@@ -17,6 +17,7 @@ import {
   toReview,
   toReviewEvent,
 } from './factory.ts';
+import { noReview } from './review.ts';
 import { simulateTimeEvents } from './simulation-time.ts';
 import { ParallelTeam } from './team.ts';
 
@@ -286,6 +287,32 @@ describe('simulation time', () => {
           reviewers: new Map([[1, 1]]),
         },
       }),
+    ]);
+  });
+
+  test('Should have the most experienced thread choose first the user stories', () => {
+    const team = parallelTeam(
+      [createThread({ id: 0, power: 1 }), createThread({ id: 1, power: 5 })],
+      0,
+    );
+    const backlog = new Backlog([
+      todo({
+        id: 0,
+        complexity: 1,
+        review: noReview,
+      }),
+      todo({
+        id: 1,
+        complexity: 1,
+        review: noReview,
+      }),
+    ]);
+    const timeEvents = simulateTimeEvents(team, backlog, 1);
+    expect(timeEvents).toEqual([
+      inProgressEvent({ threadId: 1, userStoryId: 0 }),
+      doneEvent({ threadId: 1, userStoryId: 0 }),
+      inProgressEvent({ threadId: 0, userStoryId: 1 }),
+      doneEvent({ threadId: 0, userStoryId: 1 }),
     ]);
   });
 });
