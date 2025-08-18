@@ -47,7 +47,9 @@ export type BugGeneratorEvent = {
   complexity: number;
   reviewComplexity: number;
   time: number;
+  priority: number;
 };
+
 export class CustomBugGenerator implements BugGenerator {
   private readonly bugEvents: BugGeneratorEvent[];
   private bugCount = 0;
@@ -73,7 +75,7 @@ export class CustomBugGenerator implements BugGenerator {
           state: 'Todo',
           threadId: undefined,
           timeDone: 0,
-          priority: 0,
+          priority: bugEvent.priority,
         };
         this.bugCount++;
         return userStory;

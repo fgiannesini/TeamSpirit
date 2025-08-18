@@ -282,23 +282,25 @@ describe('Bug generator', () => {
           complexity: 1,
           reviewComplexity: 1,
           time: 1,
+          priority: 1,
         },
         {
           complexity: 2,
           reviewComplexity: 2,
           time: 2,
+          priority: 2,
         },
       ]);
       expect(
         customBugGenerator.generate(
-          new Backlog([todo({ id: 0 })]),
+          new Backlog([todo({ id: 0, priority: 1 })]),
           parallelTeam(),
           1,
         ),
-      ).toStrictEqual([todo({ id: 1, name: 'bug-0' })]);
+      ).toStrictEqual([todo({ id: 1, name: 'bug-0', priority: 1 })]);
       expect(
         customBugGenerator.generate(
-          new Backlog([todo({ id: 0 })]),
+          new Backlog([todo({ id: 0, priority: 2 })]),
           parallelTeam(),
           2,
         ),
@@ -311,6 +313,7 @@ describe('Bug generator', () => {
             reviewComplexity: 2,
             reviewers: new Map(),
           },
+          priority: 2,
         }),
       ]);
     });
@@ -321,6 +324,7 @@ describe('Bug generator', () => {
           complexity: 1,
           reviewComplexity: 1,
           time: 1,
+          priority: 0,
         },
       ]);
       const userStories = customBugGenerator.generate(

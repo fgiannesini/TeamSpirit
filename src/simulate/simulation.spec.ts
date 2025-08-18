@@ -67,6 +67,7 @@ describe('Simulation', () => {
         time: 1,
         complexity: 1,
         reviewComplexity: 1,
+        priority: 1,
       },
     ]);
 
@@ -86,7 +87,7 @@ describe('Simulation', () => {
       {
         id: 2,
         time: 1,
-        value: 0,
+        value: 1,
         action: 'ChangePriority',
       },
     ]);

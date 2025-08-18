@@ -204,6 +204,7 @@ export const getBugGenerator = (): BugGenerator => {
         reviewComplexity: getInputValueOf(
           `#${eventDiv.id}-review-complexity-input`,
         ),
+        priority: getInputValueOf(`#${eventDiv.id}-priority-input`),
       });
     }
     return new CustomBugGenerator(events);

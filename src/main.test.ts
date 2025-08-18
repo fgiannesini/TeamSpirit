@@ -568,12 +568,14 @@ describe('Main', () => {
       setValueTo('#bug-generator-event-0-time-input', '2');
       setValueTo('#bug-generator-event-0-complexity-input', '6');
       setValueTo('#bug-generator-event-0-review-complexity-input', '3');
+      setValueTo('#bug-generator-event-0-priority-input', '2');
       expect(getBugGenerator()).toMatchObject(
         new CustomBugGenerator([
           {
             time: 2,
             complexity: 6,
             reviewComplexity: 3,
+            priority: 2,
           },
         ]),
       );
@@ -588,6 +590,7 @@ describe('Main', () => {
             time: 3,
             complexity: 1,
             reviewComplexity: 1,
+            priority: 0,
           },
         ]),
       );

@@ -123,6 +123,10 @@ export const generateBugGeneratorEventsForm = (
   );
   const reviewComplexityInput = generateInput(reviewComplexityInputId, 1);
 
+  const priorityInputId = `bug-generator-event-${eventCount}-priority-input`;
+  const priorityLabel = generateLabel('Priority', priorityInputId);
+  const priorityInput = generateInput(priorityInputId, 0);
+
   const buttonElement = document.createElement('button');
   buttonElement.textContent = 'Remove';
   buttonElement.id = `remove-event-button-${eventCount}`;
@@ -136,10 +140,12 @@ export const generateBugGeneratorEventsForm = (
   divElement.append(
     timeLabel,
     timeInput,
-    reviewComplexityLabel,
-    reviewComplexityInput,
     complexityLabel,
     complexityInput,
+    reviewComplexityLabel,
+    reviewComplexityInput,
+    priorityLabel,
+    priorityInput,
     buttonElement,
   );
   return divElement;
