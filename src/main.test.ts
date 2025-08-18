@@ -173,25 +173,26 @@ describe('Main', () => {
   });
 
   describe('Build backlog', () => {
-    test('Should build the backlog for ensemble team', () => {
+    test('Should build the backlog for ensemble team with 2 user stories', () => {
       setValueTo('#user-story-count-input', '2');
       clickOn('#generate-user-stories-button');
-      setValueTo('#complexity-input-0', '5');
-      setValueTo('#complexity-input-1', '5');
+      setValueTo('#complexity-input-0', '2');
+      setValueTo('#review-complexity-input-0', '1');
+      setValueTo('#complexity-input-1', '4');
+      setValueTo('#review-complexity-input-1', '2');
       setValueTo('#reviewers-input', '1');
-
       expect(buildBacklogForEnsembleTeam()).toEqual(
         new Backlog([
           todo({
             id: 0,
             name: 'US0',
-            complexity: 5,
+            complexity: 2,
             review: noReview,
           }),
           todo({
             id: 1,
             name: 'US1',
-            complexity: 5,
+            complexity: 4,
             review: noReview,
           }),
         ]),
@@ -283,31 +284,6 @@ describe('Main', () => {
           '#user-stories-container #review-complexity-input-1',
         )?.value,
       ).toEqual('9');
-    });
-
-    test('Should build the backlog for ensemble team with 2 user stories', () => {
-      setValueTo('#user-story-count-input', '2');
-      clickOn('#generate-user-stories-button');
-      setValueTo('#complexity-input-0', '2');
-      setValueTo('#review-complexity-input-0', '1');
-      setValueTo('#complexity-input-1', '4');
-      setValueTo('#review-complexity-input-1', '2');
-      expect(buildBacklogForEnsembleTeam()).toEqual(
-        new Backlog([
-          todo({
-            id: 0,
-            name: 'US0',
-            complexity: 2,
-            review: noReview,
-          }),
-          todo({
-            id: 1,
-            name: 'US1',
-            complexity: 4,
-            review: noReview,
-          }),
-        ]),
-      );
     });
   });
 
