@@ -17,6 +17,7 @@ describe('simulation-structure', () => {
       todo({
         id: 1,
         name: 'userStory1',
+        priority: 1,
       }),
     ]);
 
@@ -47,9 +48,21 @@ describe('simulation-structure', () => {
       },
       {
         time: 1,
+        id: 0,
+        value: 0,
+        action: 'ChangePriority',
+      },
+      {
+        time: 1,
         id: 1,
         name: 'userStory1',
         action: 'CreateUserStory',
+      },
+      {
+        time: 1,
+        id: 1,
+        value: 1,
+        action: 'ChangePriority',
       },
     ]);
   });

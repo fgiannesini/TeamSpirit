@@ -12,6 +12,12 @@ export type StructureEvent =
       time: number;
       id: number;
       action: 'ThreadOff' | 'ThreadIn';
+    }
+  | {
+      time: number;
+      id: number;
+      value: number;
+      action: 'ChangePriority';
     };
 
 export const structureEventsOnInitialization = (
@@ -20,13 +26,21 @@ export const structureEventsOnInitialization = (
 ): StructureEvent[] => {
   const userStoryStructureEvents: StructureEvent[] = getUserStories(
     backlog,
-  ).map((userStory) => {
-    return {
-      time: 1,
-      id: userStory.id,
-      name: userStory.name,
-      action: 'CreateUserStory',
-    };
+  ).flatMap((userStory) => {
+    return [
+      {
+        time: 1,
+        id: userStory.id,
+        name: userStory.name,
+        action: 'CreateUserStory',
+      },
+      {
+        time: 1,
+        id: userStory.id,
+        value: userStory.priority,
+        action: 'ChangePriority',
+      },
+    ];
   });
   const threadStructureEvents: StructureEvent[] = team
     .getEffectiveThreads()

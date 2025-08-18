@@ -1,5 +1,6 @@
 import type { TimeEvent } from './events.ts';
 import { noReview } from './review.ts';
+import type { StructureEvent } from './simulation-structure.ts';
 import { EnsembleTeam, ParallelTeam, type Thread } from './team.ts';
 import type { UserStory } from './user-story.ts';
 
@@ -160,3 +161,31 @@ export const parallelTeam = (
 ): ParallelTeam => {
   return new ParallelTeam(threads, reviewersNeeded);
 };
+
+export const setThreadOff = (
+  options: Partial<Pick<StructureEvent, 'id' | 'time'>>,
+): StructureEvent => ({
+  id: 0,
+  action: 'ThreadOff',
+  time: 1,
+  ...options,
+});
+
+export const setThreadIn = (
+  options: Partial<Pick<StructureEvent, 'id' | 'time'>>,
+): StructureEvent => ({
+  id: 0,
+  action: 'ThreadIn',
+  time: 1,
+  ...options,
+});
+
+export const createUserStory = (
+  options: Partial<{ time: number; id: number; name: string }>,
+): StructureEvent => ({
+  id: 0,
+  name: 'user-story-0',
+  action: 'CreateUserStory',
+  time: 1,
+  ...options,
+});

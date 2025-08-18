@@ -5,7 +5,7 @@ import {
   saveStructureEvents,
   saveTimeEvents,
 } from '../flow/storage/session-storage.ts';
-import type { StructureEvent } from '../simulate/simulation-structure.ts';
+import { createUserStory } from '../simulate/factory.ts';
 import type { State } from '../simulate/user-story.ts';
 
 describe('Time sequence', () => {
@@ -18,16 +18,6 @@ describe('Time sequence', () => {
     const htmlPath = resolve(__dirname, './time-sequence.html');
     document.body.innerHTML = readFileSync(htmlPath, 'utf-8');
     vi.useFakeTimers();
-  });
-
-  const createUserStory = (
-    options: Partial<StructureEvent>,
-  ): StructureEvent => ({
-    id: 0,
-    name: 'user-story-0',
-    action: 'CreateUserStory',
-    time: 1,
-    ...options,
   });
 
   test('Should render the page with two events on one user story in progress and done', async () => {
