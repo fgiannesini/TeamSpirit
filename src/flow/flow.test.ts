@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import {
+  createChangePriority,
   createUserStory,
   doneEvent,
   inProgressEvent,
@@ -247,7 +248,9 @@ describe('Flow', () => {
       saveStructureEvents(
         [
           createUserStory({ id: 0, name: 'US0' }),
+          createChangePriority({ id: 0, value: 1 }),
           createUserStory({ id: 1, name: 'US1' }),
+          createChangePriority({ id: 1, value: 2 }),
         ],
         'e4567-e89b-12d3-a456-426614174000',
       );
@@ -261,11 +264,11 @@ describe('Flow', () => {
       await import('./flow.ts');
       const userStory1 = getUserStory(0);
       expect(userStory1?.className).toEqual('userStory');
-      expect(userStory1?.textContent).toEqual('US0');
+      expect(userStory1?.textContent).toEqual('US0(1)');
 
       const userStory2 = getUserStory(1);
       expect(userStory2?.className).toEqual('userStory');
-      expect(userStory2?.textContent).toEqual('US1');
+      expect(userStory2?.textContent).toEqual('US1(2)');
     });
 
     test('Should add a user story on computation click', async () => {

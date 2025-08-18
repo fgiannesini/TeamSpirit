@@ -163,7 +163,9 @@ export const parallelTeam = (
 };
 
 export const setThreadOff = (
-  options: Partial<Pick<StructureEvent, 'id' | 'time'>>,
+  options: Partial<
+    Extract<StructureEvent, { action: 'ThreadOff' | 'ThreadIn' }>
+  >,
 ): StructureEvent => ({
   id: 0,
   action: 'ThreadOff',
@@ -172,7 +174,9 @@ export const setThreadOff = (
 });
 
 export const setThreadIn = (
-  options: Partial<Pick<StructureEvent, 'id' | 'time'>>,
+  options: Partial<
+    Extract<StructureEvent, { action: 'ThreadOff' | 'ThreadIn' }>
+  >,
 ): StructureEvent => ({
   id: 0,
   action: 'ThreadIn',
@@ -181,11 +185,23 @@ export const setThreadIn = (
 });
 
 export const createUserStory = (
-  options: Partial<{ time: number; id: number; name: string }>,
+  options: Partial<
+    Extract<StructureEvent, { action: 'CreateUserStory' | 'CreateThread' }>
+  >,
 ): StructureEvent => ({
   id: 0,
   name: 'user-story-0',
   action: 'CreateUserStory',
   time: 1,
+  ...options,
+});
+
+export const createChangePriority = (
+  options: Partial<Extract<StructureEvent, { action: 'ChangePriority' }>>,
+): StructureEvent => ({
+  id: 0,
+  action: 'ChangePriority',
+  time: 1,
+  value: 0,
   ...options,
 });
