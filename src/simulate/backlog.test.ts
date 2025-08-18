@@ -26,7 +26,7 @@ describe('Backlog', () => {
   test('Should get TODO with highest priority', () => {
     const backlog = new Backlog([
       inProgress({ threadId: 1 }),
-      todo({ complexity: 5, priority: 0 }),
+      todo({ complexity: 1, priority: 0 }),
       todo({ complexity: 1, priority: 1 }),
     ]);
     const userStory = getNextUserStory(
@@ -37,7 +37,7 @@ describe('Backlog', () => {
     expect(userStory).toEqual(todo({ complexity: 1, priority: 1 }));
   });
 
-  test('Should get best TODO with same priority', () => {
+  test('Should get best TODO closer to thread power', () => {
     const backlog = new Backlog([
       inProgress({ threadId: 1 }),
       todo({ complexity: 5 }),
@@ -51,7 +51,7 @@ describe('Backlog', () => {
     expect(userStory).toEqual(todo({ complexity: 1 }));
   });
 
-  test('Should get IN_PROGRESS by the corresponding createThread1', () => {
+  test('Should get IN_PROGRESS by the corresponding thread 1', () => {
     const backlog = new Backlog([
       todo(),
       inProgress({ threadId: 0 }),
@@ -61,7 +61,7 @@ describe('Backlog', () => {
     expect(userStory).toEqual(inProgress({ threadId: 1 }));
   });
 
-  test('Should get best TO_REVIEW', () => {
+  test('Should get best TO_REVIEW closer to thread power', () => {
     const backlog = new Backlog([
       todo(),
       toReview({
@@ -79,6 +79,23 @@ describe('Backlog', () => {
       2,
     );
     expect(userStory).toEqual(toReview({ threadId: 1 }));
+  });
+
+  test('Should get TO_REVIEW with higher priority', () => {
+    const backlog = new Backlog([
+      todo(),
+      toReview({
+        threadId: 1,
+        priority: 0,
+      }),
+      toReview({ threadId: 1, priority: 1 }),
+    ]);
+    const userStory = getNextUserStory(
+      backlog,
+      createThread({ id: 0, power: 2 }),
+      2,
+    );
+    expect(userStory).toEqual(toReview({ threadId: 1, priority: 1 }));
   });
 
   test('Should get first IN_REVIEW', () => {

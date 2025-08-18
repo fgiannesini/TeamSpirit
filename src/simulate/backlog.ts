@@ -47,12 +47,21 @@ export const getNextUserStory = (
 
   if (threadUserStoryIndex === -1) {
     let minDiff = Number.MAX_VALUE;
+    let maxPriority = -Number.MAX_VALUE;
     backlog.userStoriesRemaining.forEach((userStory, i) => {
       if (isToReviewBy(userStory, thread)) {
-        const diff = Math.abs(userStory.review.reviewComplexity - thread.power);
-        if (diff < minDiff) {
-          minDiff = diff;
+        if (userStory.priority >= maxPriority) {
+          maxPriority = userStory.priority;
+          minDiff = Number.MAX_VALUE;
           threadUserStoryIndex = i;
+        } else {
+          const diff = Math.abs(
+            userStory.review.reviewComplexity - thread.power,
+          );
+          if (diff < minDiff) {
+            minDiff = diff;
+            threadUserStoryIndex = i;
+          }
         }
       }
     });
@@ -62,12 +71,19 @@ export const getNextUserStory = (
     let minDiff = Number.MAX_VALUE;
     let maxPriority = -Number.MAX_VALUE;
     backlog.userStoriesRemaining.forEach((userStory, i) => {
-      if (isToDo(userStory) && userStory.priority >= maxPriority) {
-        const diff = Math.abs(userStory.complexity - thread.power);
-        if (diff < minDiff) {
+      if (isToDo(userStory)) {
+        if (userStory.priority >= maxPriority) {
           maxPriority = userStory.priority;
-          minDiff = diff;
+          minDiff = Number.MAX_VALUE;
           threadUserStoryIndex = i;
+        } else {
+          const diff = Math.abs(
+            userStory.review.reviewComplexity - thread.power,
+          );
+          if (diff < minDiff) {
+            minDiff = diff;
+            threadUserStoryIndex = i;
+          }
         }
       }
     });
