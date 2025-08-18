@@ -285,7 +285,7 @@ export const getPriorityModificator = (): PriorityModificator => {
     '#priority-modificator',
   )?.value;
   if (modificator === 'random') {
-    return new RandomPriorityModificator();
+    return new RandomPriorityModificator(Math.random);
   }
   if (modificator === 'custom') {
     const eventsDivContainer = document.querySelectorAll(
