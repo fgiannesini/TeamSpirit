@@ -3,6 +3,7 @@ import { addUserStory, Backlog } from './backlog.ts';
 import {
   CustomBugGenerator,
   computeBugProbability,
+  getBugPriority,
   RandomBugGenerator,
 } from './bug-generator.ts';
 import { done, ensembleTeam, parallelTeam, todo } from './factory.ts';
@@ -135,6 +136,7 @@ describe('Bug generator', () => {
       const bugGenerator = new RandomBugGenerator(
         () => 0,
         () => 1,
+        () => 0,
       );
       const backlog = new Backlog([]);
       addUserStory(done({ id: 0 }), backlog);
@@ -150,6 +152,7 @@ describe('Bug generator', () => {
       const bugGenerator = new RandomBugGenerator(
         () => 0,
         () => 1,
+        () => 0,
       );
       const backlog = new Backlog([]);
       addUserStory(
@@ -175,6 +178,44 @@ describe('Bug generator', () => {
       ]);
     });
 
+    test('should generate one bug with priority', () => {
+      const bugGenerator = new RandomBugGenerator(
+        () => 0,
+        () => 0,
+        () => 0.99,
+      );
+      const backlog = new Backlog([]);
+      addUserStory(
+        done({
+          id: 0,
+          priority: 3,
+        }),
+        backlog,
+      );
+      const bugs = bugGenerator.generate(backlog, parallelTeam(), 0);
+      expect(bugs).toEqual([
+        todo({
+          id: 1,
+          name: 'bug-0',
+          priority: 5,
+        }),
+      ]);
+    });
+
+    test.each([
+      [3, 1, 0],
+      [3, 3, 0.5],
+      [3, 5, 0.99],
+      [1, 0, 0],
+    ])(
+      'should generate bug priority %s when probability is %s',
+      (actualPriority, expectedPriority, priorityProbability) => {
+        expect(
+          getBugPriority(actualPriority, () => priorityProbability),
+        ).toEqual(expectedPriority);
+      },
+    );
+
     test.each([
       [1, 1, 2, 2],
       [1, 1, 1, 1],
@@ -191,6 +232,7 @@ describe('Bug generator', () => {
         const bugGenerator = new RandomBugGenerator(
           () => 0,
           () => 0.5,
+          () => 0,
         );
         const backlog = new Backlog([]);
         addUserStory(
@@ -223,6 +265,7 @@ describe('Bug generator', () => {
       const bugGenerator = new RandomBugGenerator(
         () => 1,
         () => 1,
+        () => 0,
       );
       const backlog = new Backlog([]);
       addUserStory(done({ id: 0 }), backlog);

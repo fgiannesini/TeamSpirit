@@ -189,6 +189,7 @@ export const getBugGenerator = (): BugGenerator => {
     return new RandomBugGenerator(
       () => Math.random(),
       () => Math.random(),
+      () => Math.random(),
     );
   }
   if (generator === 'custom') {
