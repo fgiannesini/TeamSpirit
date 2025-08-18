@@ -111,7 +111,6 @@ describe('Simulation', () => {
     expect(structureEvents.slice(-1)).toEqual<StructureEvent[]>([
       {
         id: 0,
-        name: 'thread',
         time: 1,
         action: 'ThreadOff',
       },
@@ -144,7 +143,6 @@ describe('Simulation', () => {
     expect(structureEvents.slice(-1)).toEqual<StructureEvent[]>([
       {
         id: 0,
-        name: 'thread',
         time: 1,
         action: 'ThreadIn',
       },

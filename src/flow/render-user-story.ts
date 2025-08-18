@@ -13,7 +13,12 @@ export const addUserStories = (
   structureEvents: StructureEvent[],
 ): void => {
   structureEvents
-    .filter(({ action }) => action === 'CreateUserStory')
+    .filter(
+      (
+        event,
+      ): event is Extract<StructureEvent, { action: 'CreateUserStory' }> =>
+        event.action === 'CreateUserStory',
+    )
     .filter(({ id }) => id !== -1)
     .map(({ id, name }) => createUserStory(id, name))
     .forEach((userStoryElement) => {

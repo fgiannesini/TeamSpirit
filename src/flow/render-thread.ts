@@ -26,9 +26,12 @@ export const addThreads = (
   structureEvents: StructureEvent[],
 ): void => {
   structureEvents
-    .filter((event) => event.action === 'CreateThread')
-    .forEach((event) => {
-      const threadHtmlElement = addThread(event.id, event.name);
+    .filter(
+      (event): event is Extract<StructureEvent, { action: 'CreateThread' }> =>
+        event.action === 'CreateThread',
+    )
+    .forEach(({ id, name }) => {
+      const threadHtmlElement = addThread(id, name);
       parent.append(threadHtmlElement);
     });
 };

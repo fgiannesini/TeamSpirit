@@ -61,20 +61,24 @@ describe('Flow', () => {
     time: 1,
   });
 
-  const setThreadOff = (options: Partial<StructureEvent>): StructureEvent => ({
+  const setThreadOff = (
+    options: Partial<Pick<StructureEvent, 'id' | 'time'>>,
+  ): StructureEvent => ({
     id: 0,
-    name: 'dev0',
     action: 'ThreadOff',
     time: 1,
     ...options,
   });
-  const setThreadIn = (options: Partial<StructureEvent>): StructureEvent => ({
+
+  const setThreadIn = (
+    options: Partial<Pick<StructureEvent, 'id' | 'time'>>,
+  ): StructureEvent => ({
     id: 0,
-    name: 'dev0',
     action: 'ThreadIn',
     time: 1,
     ...options,
   });
+
   const createUserStory = (
     options: Partial<StructureEvent>,
   ): StructureEvent => ({

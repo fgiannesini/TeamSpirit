@@ -135,7 +135,8 @@ const renderTimeSequence = (
     return;
   }
   const userStoryCreations = structureEvents.filter(
-    ({ action }) => action === 'CreateUserStory',
+    (event): event is Extract<StructureEvent, { action: 'CreateUserStory' }> =>
+      event.action === 'CreateUserStory',
   );
   userStoryCreations
     .filter(({ id }) => id !== -1)

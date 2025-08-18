@@ -11,7 +11,6 @@ export type StructureEvent =
   | {
       time: number;
       id: number;
-      name: string;
       action: 'ThreadOff' | 'ThreadIn';
     };
 

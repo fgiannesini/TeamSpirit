@@ -37,7 +37,6 @@ export const simulate = (
     teamWithThreadsOff.newThreadsOff.forEach((thread) => {
       structureEvents.push({
         time,
-        name: thread.name,
         id: thread.id,
         action: 'ThreadOff',
       });
@@ -48,7 +47,6 @@ export const simulate = (
     teamWithThreadsIn.newThreadsIn.forEach((thread) => {
       structureEvents.push({
         time,
-        name: thread.name,
         id: thread.id,
         action: 'ThreadIn',
       });
