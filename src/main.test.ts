@@ -246,6 +246,8 @@ describe('Main', () => {
       vi.spyOn(Math, 'random')
         .mockReturnValueOnce(0)
         .mockReturnValueOnce(0)
+        .mockReturnValueOnce(0)
+        .mockReturnValueOnce(0.99)
         .mockReturnValueOnce(0.99)
         .mockReturnValue(0.99);
       setValueTo('#user-story-count-input', '2');
@@ -270,6 +272,11 @@ describe('Main', () => {
         )?.value,
       ).toEqual('1');
       expect(
+        document.querySelector<HTMLInputElement>(
+          '#user-stories-container #priority-input-0',
+        )?.value,
+      ).toEqual('0');
+      expect(
         document.querySelector(
           '#user-stories-container #user-story-identifier-1',
         )?.textContent,
@@ -284,6 +291,11 @@ describe('Main', () => {
           '#user-stories-container #review-complexity-input-1',
         )?.value,
       ).toEqual('9');
+      expect(
+        document.querySelector<HTMLInputElement>(
+          '#user-stories-container #priority-input-1',
+        )?.value,
+      ).toEqual('5');
     });
   });
 

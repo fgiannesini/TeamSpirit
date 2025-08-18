@@ -39,6 +39,7 @@ export const generateUserStoriesForm = (id: number): HTMLDivElement => {
   const complexityLabel = generateLabel('Complexity', complexityInputId);
   const complexity = randomInt(10);
   const complexityInput = generateInput(complexityInputId, complexity);
+
   const reviewComplexityInputId = `review-complexity-input-${id}`;
   const reviewComplexityLabel = generateLabel(
     'Review complexity',
@@ -49,6 +50,10 @@ export const generateUserStoriesForm = (id: number): HTMLDivElement => {
     Math.max(1, randomInt(complexity - 1)),
   );
 
+  const priorityInputId = `priority-input-${id}`;
+  const priorityLabel = generateLabel('Priority', priorityInputId);
+  const priorityInput = generateInput(priorityInputId, randomInt(6) - 1);
+
   const userStory = document.createElement('div');
   userStory.append(
     identifier,
@@ -56,6 +61,8 @@ export const generateUserStoriesForm = (id: number): HTMLDivElement => {
     complexityInput,
     reviewComplexityLabel,
     reviewComplexityInput,
+    priorityLabel,
+    priorityInput,
   );
   return userStory;
 };
