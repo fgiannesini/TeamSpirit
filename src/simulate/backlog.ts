@@ -29,68 +29,81 @@ export const getNextUserStory = (
   thread: Thread,
   reviewersNeeded: number,
 ): UserStory => {
-  let threadUserStoryIndex = backlog.userStoriesRemaining.findIndex(
-    (userStory) => isInProgressBy(userStory, thread),
+  // const priorities = [
+  //   ...new Set(
+  //     backlog.userStoriesRemaining.map((userStory) => userStory.priority),
+  //   ),
+  // ].toSorted((a, b) => a - b);
+  //
+  // for (const priority of priorities) {
+  //   const userStories = userStories.filter(
+  //     (userStory) => userStory.priority === priority,
+  //   );
+  // }
+
+  let nextUserStory = backlog.userStoriesRemaining.find((userStory) =>
+    isInProgressBy(userStory, thread),
   );
 
-  if (threadUserStoryIndex === -1) {
-    threadUserStoryIndex = backlog.userStoriesRemaining.findIndex((userStory) =>
+  if (!nextUserStory) {
+    nextUserStory = backlog.userStoriesRemaining.find((userStory) =>
       isInReviewBy(userStory, thread),
     );
   }
 
-  if (threadUserStoryIndex === -1) {
-    threadUserStoryIndex = backlog.userStoriesRemaining.findIndex((userStory) =>
+  if (!nextUserStory) {
+    nextUserStory = backlog.userStoriesRemaining.find((userStory) =>
       needReviewBy(userStory, thread, reviewersNeeded),
     );
   }
 
-  if (threadUserStoryIndex === -1) {
+  if (!nextUserStory) {
     let minDiff = Number.MAX_VALUE;
     let maxPriority = -Number.MAX_VALUE;
-    backlog.userStoriesRemaining.forEach((userStory, i) => {
+    backlog.userStoriesRemaining.forEach((userStory) => {
       if (isToReviewBy(userStory, thread)) {
         if (userStory.priority >= maxPriority) {
           maxPriority = userStory.priority;
           minDiff = Number.MAX_VALUE;
-          threadUserStoryIndex = i;
+          nextUserStory = userStory;
         } else {
           const diff = Math.abs(
             userStory.review.reviewComplexity - thread.power,
           );
           if (diff < minDiff) {
             minDiff = diff;
-            threadUserStoryIndex = i;
+            nextUserStory = userStory;
           }
         }
       }
     });
   }
 
-  if (threadUserStoryIndex === -1) {
+  if (!nextUserStory) {
     let minDiff = Number.MAX_VALUE;
     let maxPriority = -Number.MAX_VALUE;
-    backlog.userStoriesRemaining.forEach((userStory, i) => {
+    backlog.userStoriesRemaining.forEach((userStory) => {
       if (isToDo(userStory)) {
         if (userStory.priority >= maxPriority) {
           maxPriority = userStory.priority;
           minDiff = Number.MAX_VALUE;
-          threadUserStoryIndex = i;
+          nextUserStory = userStory;
         } else {
           const diff = Math.abs(
             userStory.review.reviewComplexity - thread.power,
           );
           if (diff < minDiff) {
             minDiff = diff;
-            threadUserStoryIndex = i;
+            nextUserStory = userStory;
           }
         }
       }
     });
   }
 
-  if (threadUserStoryIndex !== -1) {
-    return backlog.userStoriesRemaining.splice(threadUserStoryIndex, 1)[0];
+  if (nextUserStory) {
+    const index = backlog.userStoriesRemaining.indexOf(nextUserStory);
+    return backlog.userStoriesRemaining.splice(index, 1)[0];
   }
   return idle;
 };

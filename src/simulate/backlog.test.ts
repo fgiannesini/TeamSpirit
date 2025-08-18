@@ -61,6 +61,15 @@ describe('Backlog', () => {
     expect(userStory).toEqual(inProgress({ threadId: 1 }));
   });
 
+  test.skip('Should switch from IN_PROGRESS to TODO if priority is higher', () => {
+    const backlog = new Backlog([
+      todo({ priority: 2 }),
+      inProgress({ threadId: 1, priority: 1 }),
+    ]);
+    const userStory = getNextUserStory(backlog, createThread({ id: 1 }), 2);
+    expect(userStory).toEqual(todo({ priority: 2 }));
+  });
+
   test('Should get best TO_REVIEW closer to thread power', () => {
     const backlog = new Backlog([
       todo(),
