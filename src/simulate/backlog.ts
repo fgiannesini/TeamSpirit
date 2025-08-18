@@ -59,8 +59,9 @@ export const getNextUserStory = (
 
     if (!nextUserStory) {
       let minDiff = Number.MAX_VALUE;
-      userStories.forEach((userStory) => {
-        if (isToReviewBy(userStory, thread)) {
+      userStories
+        .filter((userStory) => isToReviewBy(userStory, thread))
+        .forEach((userStory) => {
           const diff = Math.abs(
             userStory.review.reviewComplexity - thread.power,
           );
@@ -68,19 +69,16 @@ export const getNextUserStory = (
             minDiff = diff;
             nextUserStory = userStory;
           }
-        }
-      });
+        });
     }
 
     if (!nextUserStory) {
       let minDiff = Number.MAX_VALUE;
-      userStories.forEach((userStory) => {
-        if (isToDo(userStory)) {
-          const diff = Math.abs(userStory.complexity - thread.power);
-          if (diff < minDiff) {
-            minDiff = diff;
-            nextUserStory = userStory;
-          }
+      userStories.filter(isToDo).forEach((userStory) => {
+        const diff = Math.abs(userStory.complexity - thread.power);
+        if (diff < minDiff) {
+          minDiff = diff;
+          nextUserStory = userStory;
         }
       });
     }
