@@ -208,6 +208,7 @@ describe('Main', () => {
       clickOn('#generate-user-stories-button');
       setValueTo('#complexity-input-0', '5');
       setValueTo('#review-complexity-input-0', '2');
+      setValueTo('#priority-input-0', '3');
       setValueTo('#reviewers-input', '1');
 
       expect(buildBacklogForParallelTeam()).toEqual(
@@ -220,6 +221,7 @@ describe('Main', () => {
               reviewComplexity: 2,
               reviewers: new Map<number, number>(),
             },
+            priority: 3,
           }),
         ]),
       );
@@ -230,6 +232,7 @@ describe('Main', () => {
       clickOn('#generate-user-stories-button');
       setValueTo('#complexity-input-0', '5');
       setValueTo('#review-complexity-input-0', '2');
+      setValueTo('#priority-input-0', '1');
 
       expect(buildBacklogForParallelTeam()).toEqual(
         new Backlog([
@@ -241,6 +244,7 @@ describe('Main', () => {
               reviewComplexity: 2,
               reviewers: new Map<number, number>(),
             },
+            priority: 1,
           }),
         ]),
       );

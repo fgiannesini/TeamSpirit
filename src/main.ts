@@ -253,7 +253,7 @@ export const buildBacklogForParallelTeam = (): Backlog => {
         threadId: undefined,
         progression: 0,
         timeDone: 0,
-        priority: 0,
+        priority: getInputValueOf(`#priority-input-${i}`),
       }),
     ),
   );
