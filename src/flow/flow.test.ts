@@ -264,11 +264,17 @@ describe('Flow', () => {
       await import('./flow.ts');
       const userStory1 = getUserStory(0);
       expect(userStory1?.className).toEqual('userStory');
-      expect(userStory1?.textContent).toEqual('US0(1)');
+      expect(userStory1?.querySelector('.name')?.textContent).toEqual('US0');
+      expect(userStory1?.querySelector('.priority')?.textContent).toEqual(
+        '(1)',
+      );
 
       const userStory2 = getUserStory(1);
       expect(userStory2?.className).toEqual('userStory');
-      expect(userStory2?.textContent).toEqual('US1(2)');
+      expect(userStory2?.querySelector('.name')?.textContent).toEqual('US1');
+      expect(userStory2?.querySelector('.priority')?.textContent).toEqual(
+        '(2)',
+      );
     });
 
     test('Should add a user story on computation click', async () => {

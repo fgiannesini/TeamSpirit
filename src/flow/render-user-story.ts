@@ -2,12 +2,13 @@ import type { StructureEvent } from '../simulate/simulation-structure.ts';
 import { getUserStory } from './selector.ts';
 
 export const createUserStory = (id: number, name: string): HTMLDivElement => {
-  const prioritySpan = document.createElement('span');
-  prioritySpan.textContent = name;
+  const nameSpan = document.createElement('span');
+  nameSpan.textContent = name;
+  nameSpan.className = 'name';
   const userStoryHtmlElement = document.createElement('div');
   userStoryHtmlElement.id = `user-story-${id}`;
   userStoryHtmlElement.className = 'userStory';
-  userStoryHtmlElement.appendChild(prioritySpan);
+  userStoryHtmlElement.appendChild(nameSpan);
   return userStoryHtmlElement;
 };
 
@@ -38,6 +39,7 @@ export const addUserStories = (
       if (userStory) {
         const prioritySpan = document.createElement('span');
         prioritySpan.textContent = `(${value})`;
+        prioritySpan.className = 'priority';
         userStory.appendChild(prioritySpan);
       }
     });
