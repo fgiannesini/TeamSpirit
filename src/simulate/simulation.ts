@@ -24,12 +24,21 @@ export const simulate = (
   const structureEvents = structureEventsOnInitialization(backlog, team);
   while (hasMoreUserStories(backlog)) {
     bugGenerator.generate(backlog, team, time).forEach((bug) => {
-      structureEvents.push({
-        time,
-        name: bug.name,
-        id: bug.id,
-        action: 'CreateUserStory',
-      });
+      structureEvents.push(
+        {
+          time,
+          name: bug.name,
+          id: bug.id,
+          action: 'CreateUserStory',
+        },
+        {
+          time,
+          value: bug.priority,
+          id: bug.id,
+          action: 'ChangePriority',
+        },
+      );
+
       addUserStory(bug, backlog);
     });
     const teamWithThreadsOff = teamModificator.setThreadsOff(team, time);

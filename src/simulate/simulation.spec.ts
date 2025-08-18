@@ -5,13 +5,16 @@ import {
   getUserStoriesDone,
   getUserStoriesRemainings,
 } from './backlog.ts';
-import { type BugGenerator, noBugGenerator } from './bug-generator.ts';
+import {
+  type BugGenerator,
+  CustomBugGenerator,
+  noBugGenerator,
+} from './bug-generator.ts';
 import { createThread, done, ensembleTeam, todo } from './factory.ts';
 import { simulate } from './simulation.ts';
 import type { StructureEvent } from './simulation-structure.ts';
 import type { Team, Thread } from './team.ts';
 import { noTeamModificator, type TeamModificator } from './team-modificator.ts';
-import type { UserStory } from './user-story.ts';
 
 describe('Simulation', () => {
   test('Should have one thread developing a user story', () => {
@@ -59,14 +62,13 @@ describe('Simulation', () => {
       }),
     ]);
     addUserStory(done({ id: 0, name: 'US0' }), backlog);
-    const bugGenerator: BugGenerator = {
-      generate(_: Backlog, _2: Team, time: number): UserStory[] {
-        if (time === 1) {
-          return [todo({ id: 1, name: 'bug-0' })];
-        }
-        return [];
+    const bugGenerator: BugGenerator = new CustomBugGenerator([
+      {
+        time: 1,
+        complexity: 1,
+        reviewComplexity: 1,
       },
-    };
+    ]);
 
     const { structureEvents } = simulate(
       backlog,
@@ -74,12 +76,18 @@ describe('Simulation', () => {
       bugGenerator,
       noTeamModificator,
     );
-    expect(structureEvents.slice(-1)).toEqual([
+    expect(structureEvents.slice(-2)).toEqual([
       {
-        id: 1,
+        id: 2,
         name: 'bug-0',
         time: 1,
         action: 'CreateUserStory',
+      },
+      {
+        id: 2,
+        time: 1,
+        value: 0,
+        action: 'ChangePriority',
       },
     ]);
     expect(backlog.userStoriesDone.length).toEqual(3);
