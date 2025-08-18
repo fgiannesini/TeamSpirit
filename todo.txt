@@ -1,23 +1,14 @@
-Retirer les bugs du calcul lead time
-Bug d'affichage à partir de 20 tâches
+Implémenter les changements aléatoires de priorité
+Permettre la simulation sur de nombreux lancements
 
-Voir d'autres métriques à ajouter
-Permettre simulation sur de nombreux lancements
-
-Afficher l'avancement de la tâche lors du rendu
-Afficher la montée compétence du développeur (échelle logarithmique)
 implémenter statistiques lead time avec un graph qui se construit
 
 Feedback:
 Mode produit => Besoin de lead time court
 Mode projet => Besoin d'une date de livraison courte
-
-métrique: complexité accidentelle ajoutée
-la complexité accidentelle ajoute du temps sur les tâches qui suivent
+=> loi de Little
 
 Mesurer le temps total passé en dev, en review, en attente
 
-Elizabeth Hendrikson, vidéo youtube de simulation
+Elizabeth Hendrikson, vidéo youtube de simulation https://www.youtube.com/watch?v=Zi3wkVAH-hE
 autres approches : récupérer des statistiques sur des projets existants
-vidéo youtube : mesures de performances
-loi de Little
