@@ -1,17 +1,19 @@
 import { type Backlog, getUserStories } from './backlog.ts';
 import type { Team } from './team.ts';
 
-export type Action =
-  | 'CreateThread'
-  | 'CreateUserStory'
-  | 'ThreadOff'
-  | 'ThreadIn';
-export type StructureEvent = {
-  time: number;
-  id: number;
-  name: string;
-  action: Action;
-};
+export type StructureEvent =
+  | {
+      time: number;
+      id: number;
+      name: string;
+      action: 'CreateThread' | 'CreateUserStory';
+    }
+  | {
+      time: number;
+      id: number;
+      name: string;
+      action: 'ThreadOff' | 'ThreadIn';
+    };
 
 export const structureEventsOnInitialization = (
   backlog: Backlog,
