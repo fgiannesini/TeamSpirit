@@ -60,10 +60,12 @@ export const getNextUserStory = (
 
   if (threadUserStoryIndex === -1) {
     let minDiff = Number.MAX_VALUE;
+    let maxPriority = -Number.MAX_VALUE;
     backlog.userStoriesRemaining.forEach((userStory, i) => {
-      if (isToDo(userStory)) {
+      if (isToDo(userStory) && userStory.priority >= maxPriority) {
         const diff = Math.abs(userStory.complexity - thread.power);
         if (diff < minDiff) {
+          maxPriority = userStory.priority;
           minDiff = diff;
           threadUserStoryIndex = i;
         }

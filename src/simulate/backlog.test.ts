@@ -23,7 +23,21 @@ describe('Backlog', () => {
     expect(userStory).toEqual(idle);
   });
 
-  test('Should get best TODO', () => {
+  test('Should get TODO with highest priority', () => {
+    const backlog = new Backlog([
+      inProgress({ threadId: 1 }),
+      todo({ complexity: 5, priority: 0 }),
+      todo({ complexity: 1, priority: 1 }),
+    ]);
+    const userStory = getNextUserStory(
+      backlog,
+      createThread({ id: 0, power: 2 }),
+      2,
+    );
+    expect(userStory).toEqual(todo({ complexity: 1, priority: 1 }));
+  });
+
+  test('Should get best TODO with same priority', () => {
     const backlog = new Backlog([
       inProgress({ threadId: 1 }),
       todo({ complexity: 5 }),
