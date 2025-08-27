@@ -11,6 +11,11 @@ import {
   noBugGenerator,
 } from './bug-generator.ts';
 import { createThread, done, ensembleTeam, todo } from './factory.ts';
+import {
+  CustomPriorityModificator,
+  noPriorityModificator,
+  type PriorityModificator,
+} from './priority-modificator.ts';
 import { simulate } from './simulation.ts';
 import type { StructureEvent } from './simulation-structure.ts';
 import type { Team, Thread } from './team.ts';
@@ -29,6 +34,7 @@ describe('Simulation', () => {
       team,
       noBugGenerator,
       noTeamModificator,
+      noPriorityModificator,
     );
     expect(timeEvents.pop()?.time).toEqual(2);
     expect(getUserStoriesDone(backlog)).toHaveLength(1);
@@ -48,6 +54,7 @@ describe('Simulation', () => {
       team,
       noBugGenerator,
       noTeamModificator,
+      noPriorityModificator,
     );
     expect(structureEvents.length).toBeGreaterThan(0);
   });
@@ -76,6 +83,7 @@ describe('Simulation', () => {
       team,
       bugGenerator,
       noTeamModificator,
+      noPriorityModificator,
     );
     expect(structureEvents.slice(-2)).toEqual([
       {
@@ -115,6 +123,7 @@ describe('Simulation', () => {
       teamToModify,
       noBugGenerator,
       teamModificator,
+      noPriorityModificator,
     );
 
     expect(structureEvents.slice(-1)).toEqual<StructureEvent[]>([
@@ -147,6 +156,7 @@ describe('Simulation', () => {
       teamToModify,
       noBugGenerator,
       teamModificator,
+      noPriorityModificator,
     );
 
     expect(structureEvents.slice(-1)).toEqual<StructureEvent[]>([
@@ -166,8 +176,37 @@ describe('Simulation', () => {
       teamToUpdate,
       noBugGenerator,
       noTeamModificator,
+      noPriorityModificator,
     );
 
     expect(updateTimesMock).toHaveBeenCalled();
+  });
+
+  test('Should modify priority', () => {
+    const priorityModificator: PriorityModificator =
+      new CustomPriorityModificator([
+        {
+          time: 1,
+          id: 0,
+          priority: 3,
+        },
+      ]);
+    const team = ensembleTeam();
+    const { structureEvents } = simulate(
+      new Backlog([todo()]),
+      team,
+      noBugGenerator,
+      noTeamModificator,
+      priorityModificator,
+    );
+
+    expect(structureEvents.slice(-1)).toEqual<StructureEvent[]>([
+      {
+        time: 1,
+        id: 0,
+        value: 3,
+        action: 'ChangePriority',
+      },
+    ]);
   });
 });

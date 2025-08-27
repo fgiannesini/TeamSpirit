@@ -1,6 +1,13 @@
-import { addUserStory, type Backlog, hasMoreUserStories } from './backlog.ts';
+import {
+  addUserStory,
+  type Backlog,
+  getUserStoriesRemainings,
+  hasMoreUserStories,
+  resetUserStoriesRemainings,
+} from './backlog.ts';
 import type { BugGenerator } from './bug-generator.ts';
 import type { TimeEvent } from './events.ts';
+import type { PriorityModificator } from './priority-modificator.ts';
 import {
   type StructureEvent,
   structureEventsOnInitialization,
@@ -10,10 +17,11 @@ import type { Team } from './team.ts';
 import type { TeamModificator } from './team-modificator.ts';
 
 export const simulate = (
-  backlog: Backlog,
+  originalBacklog: Backlog,
   originalTeam: Team,
   bugGenerator: BugGenerator,
   teamModificator: TeamModificator,
+  priorityModificator: PriorityModificator,
 ): {
   timeEvents: TimeEvent[];
   structureEvents: StructureEvent[];
@@ -21,6 +29,7 @@ export const simulate = (
   const timeEvents: TimeEvent[] = [];
   let time = 1;
   let team = originalTeam;
+  let backlog = originalBacklog;
   const structureEvents = structureEventsOnInitialization(backlog, team);
   while (hasMoreUserStories(backlog)) {
     bugGenerator.generate(backlog, team, time).forEach((bug) => {
@@ -58,6 +67,23 @@ export const simulate = (
         time,
         id: thread.id,
         action: 'ThreadIn',
+      });
+    });
+
+    const userStoriesWithModifications = priorityModificator.generate(
+      getUserStoriesRemainings(backlog),
+      time,
+    );
+    backlog = resetUserStoriesRemainings(
+      backlog,
+      userStoriesWithModifications.userStories,
+    );
+    userStoriesWithModifications.modifications.forEach((modification) => {
+      structureEvents.push({
+        time,
+        id: modification.id,
+        value: modification.priority,
+        action: 'ChangePriority',
       });
     });
 

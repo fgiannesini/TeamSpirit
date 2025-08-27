@@ -41,14 +41,14 @@ export type PriorityModificator = {
 
 export const noPriorityModificator: PriorityModificator = {
   generate(
-    _userStories: UserStory[],
+    userStories: UserStory[],
     _time: number,
   ): {
     userStories: UserStory[];
     modifications: Pick<UserStory, 'id' | 'priority'>[];
   } {
     return {
-      userStories: [],
+      userStories,
       modifications: [],
     };
   },

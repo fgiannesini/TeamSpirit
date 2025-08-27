@@ -57,12 +57,14 @@ const runSimulation = (
   team: Team,
   bugGenerator: BugGenerator,
   teamModificator: TeamModificator,
+  priorityModificator: PriorityModificator,
 ): string => {
   const { timeEvents, structureEvents } = simulate(
     backlog,
     team,
     bugGenerator,
     teamModificator,
+    priorityModificator,
   );
   const randomKey = crypto.randomUUID();
   saveTimeEvents(timeEvents, randomKey);
@@ -83,6 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
         buildEnsembleTeam(),
         getBugGenerator(),
         getTeamModificator(),
+        getPriorityModificator(),
       );
       window.open(`/TeamSpirit/flow/flow.html?id=${ensembleRandomKey}`);
       window.open(
@@ -94,6 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
         buildParallelTeam(),
         getBugGenerator(),
         getTeamModificator(),
+        getPriorityModificator(),
       );
       window.open(`/TeamSpirit/flow/flow.html?id=${parallelRandomKey}`);
       window.open(

@@ -2,6 +2,7 @@ import { describe, expect, test, vitest } from 'vitest';
 import { todo } from './factory.ts';
 import {
   CustomPriorityModificator,
+  noPriorityModificator,
   RandomPriorityModificator,
   tickJump,
 } from './priority-modificator.ts';
@@ -98,6 +99,16 @@ describe('Priority Modificator', () => {
       expect(actual).toEqual({
         userStories: [todo({ priority: 5 })],
         modifications: [{ id: 0, priority: 5 }],
+      });
+    });
+  });
+
+  describe('No', () => {
+    test('should not modify a priority', () => {
+      const actual = noPriorityModificator.generate([todo()], 1);
+      expect(actual).toEqual({
+        userStories: [todo()],
+        modifications: [],
       });
     });
   });
