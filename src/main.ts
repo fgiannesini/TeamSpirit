@@ -289,7 +289,7 @@ export const getPriorityModificator = (): PriorityModificator => {
   }
   if (modificator === 'custom') {
     const eventsDivContainer = document.querySelectorAll(
-      '#team-modificator-events div',
+      '#priority-modificator-events div',
     );
     const events: PriorityModificatorEvent[] = [];
     for (const eventDiv of eventsDivContainer) {

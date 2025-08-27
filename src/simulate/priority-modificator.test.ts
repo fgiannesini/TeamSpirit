@@ -1,6 +1,10 @@
 import { describe, expect, test, vitest } from 'vitest';
 import { todo } from './factory.ts';
-import { RandomPriorityModificator, tickJump } from './priority-modificator.ts';
+import {
+  CustomPriorityModificator,
+  RandomPriorityModificator,
+  tickJump,
+} from './priority-modificator.ts';
 
 describe('Priority Modificator', () => {
   describe('Random', () => {
@@ -55,5 +59,46 @@ describe('Priority Modificator', () => {
         expect(newPriority).toEqual(expectedPriority);
       },
     );
+  });
+
+  describe('Custom', () => {
+    test('should not modify a priority if not on right time', () => {
+      const customPriorityModificator = new CustomPriorityModificator([
+        {
+          time: 1,
+          id: 0,
+          priority: 5,
+        },
+      ]);
+      const actual = customPriorityModificator.generate([todo()], 2);
+      expect(actual).toEqual({ userStories: [todo()], modifications: [] });
+    });
+
+    test('should not modify a priority if equal to the previous one', () => {
+      const customPriorityModificator = new CustomPriorityModificator([
+        {
+          time: 1,
+          id: 0,
+          priority: 0,
+        },
+      ]);
+      const actual = customPriorityModificator.generate([todo()], 1);
+      expect(actual).toEqual({ userStories: [todo()], modifications: [] });
+    });
+
+    test('should modify a priority if on right time', () => {
+      const customPriorityModificator = new CustomPriorityModificator([
+        {
+          time: 1,
+          id: 0,
+          priority: 5,
+        },
+      ]);
+      const actual = customPriorityModificator.generate([todo()], 1);
+      expect(actual).toEqual({
+        userStories: [todo({ priority: 5 })],
+        modifications: [{ id: 0, priority: 5 }],
+      });
+    });
   });
 });

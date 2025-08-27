@@ -174,7 +174,7 @@ export const generatePriorityModificatorEventsForm = (
     target.parentElement?.remove();
   });
   const divElement = document.createElement('div');
-  divElement.id = `team-modificator-event-${eventCount}`;
+  divElement.id = `priority-modificator-event-${eventCount}`;
   divElement.append(
     idLabel,
     idInput,

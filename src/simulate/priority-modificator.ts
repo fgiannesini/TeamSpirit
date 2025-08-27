@@ -91,17 +91,33 @@ export type PriorityModificatorEvent = {
   priority: number;
 };
 export class CustomPriorityModificator implements PriorityModificator {
-  constructor(_events: PriorityModificatorEvent[]) {}
+  readonly events: PriorityModificatorEvent[] = [];
+  constructor(events: PriorityModificatorEvent[]) {
+    this.events = events;
+  }
   generate(
-    _userStories: UserStory[],
-    _time: number,
+    userStories: UserStory[],
+    time: number,
   ): {
     userStories: UserStory[];
     modifications: Pick<UserStory, 'id' | 'priority'>[];
   } {
+    const eventsOnTime = this.events.filter((event) => event.time === time);
+    const modifications: Pick<UserStory, 'id' | 'priority'>[] = [];
+    const newUserStories = userStories.map((userStory) => {
+      const event = eventsOnTime.find((e) => e.id === userStory.id);
+      if (event && event.priority !== userStory.priority) {
+        modifications.push({
+          id: userStory.id,
+          priority: event.priority,
+        });
+        return { ...userStory, priority: event.priority };
+      }
+      return userStory;
+    });
     return {
-      userStories: [],
-      modifications: [],
+      userStories: newUserStories,
+      modifications,
     };
   }
 }
