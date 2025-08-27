@@ -32,7 +32,7 @@ const handleInProgress = (currentEvent: TimeEvent): void => {
   Array.from(getThreadUserStoryContainer(currentEvent.threadId)?.children ?? [])
     .filter((child) => child.id !== id)
     .forEach((child) => {
-      child.remove();
+      getBacklog()?.append(child);
     });
   const userStory = getUserStory(currentEvent.userStoryId);
   if (userStory) {

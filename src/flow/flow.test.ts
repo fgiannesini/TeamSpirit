@@ -332,6 +332,37 @@ describe('Flow', () => {
       expect(document.querySelector('#done #user-story-0')).not.toBeNull();
     });
 
+    test('Should move userStory to thread when in progress and replace the existing one', async () => {
+      saveStructureEvents(
+        [
+          createThread0(),
+          createUserStory({ id: 0 }),
+          createUserStory({ id: 1 }),
+        ],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
+      saveTimeEvents(
+        [
+          inProgressEvent({ userStoryId: 0 }),
+          inProgressEvent({ userStoryId: 1, time: 1 }),
+        ],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
+      await import('./flow.ts');
+
+      getCompute()?.click();
+      await vi.advanceTimersToNextTimerAsync();
+      expect(
+        document.querySelector('#thread-user-story-0 #user-story-0-0'),
+      ).not.toBeNull();
+
+      await vi.advanceTimersToNextTimerAsync();
+      expect(
+        document.querySelector('#thread-user-story-0 #user-story-1-0'),
+      ).not.toBeNull();
+      expect(document.querySelector('#backlog #user-story-0-0')).not.toBeNull();
+    });
+
     test('Should move userStories with id >10 to thread when in progress, then done', async () => {
       saveStructureEvents(
         [
