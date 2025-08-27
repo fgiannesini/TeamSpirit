@@ -1,10 +1,5 @@
 import type { UserStory } from './user-story.ts';
 
-type JumpParams = {
-  pChange: number;
-  sigma: number;
-};
-
 const sampleTruncatedNormalInt = (
   mean: number,
   sigma: number,
@@ -25,27 +20,37 @@ const sampleTruncatedNormalInt = (
 };
 
 export const tickJump = (
-  stories: UserStory[],
-  params: JumpParams,
+  priority: number,
   randomProvider: () => number,
-): UserStory[] => {
-  const { pChange, sigma } = params;
-  return stories.map((s) => {
-    if (randomProvider() >= pChange) {
-      return s;
-    }
-    const next = sampleTruncatedNormalInt(s.priority, sigma, randomProvider);
-    return { ...s, priority: next };
-  });
+): number => {
+  if (randomProvider() >= 0.08) {
+    return priority;
+  }
+  return sampleTruncatedNormalInt(priority, 1, randomProvider);
 };
 
 export type PriorityModificator = {
-  generate(userStories: UserStory[], time: number): UserStory[];
+  generate(
+    userStories: UserStory[],
+    time: number,
+  ): {
+    userStories: UserStory[];
+    modifications: Pick<UserStory, 'id' | 'priority'>[];
+  };
 };
 
 export const noPriorityModificator: PriorityModificator = {
-  generate(_userStories: UserStory[], _time: number): UserStory[] {
-    return [];
+  generate(
+    _userStories: UserStory[],
+    _time: number,
+  ): {
+    userStories: UserStory[];
+    modifications: Pick<UserStory, 'id' | 'priority'>[];
+  } {
+    return {
+      userStories: [],
+      modifications: [],
+    };
   },
 };
 
@@ -54,9 +59,29 @@ export class RandomPriorityModificator implements PriorityModificator {
   constructor(randomGenerator: () => number) {
     this.randomGenerator = randomGenerator;
   }
-  generate(_userStories: UserStory[], _time: number): UserStory[] {
-    this.randomGenerator();
-    return [];
+  generate(
+    userStories: UserStory[],
+    _time: number,
+  ): {
+    userStories: UserStory[];
+    modifications: Pick<UserStory, 'id' | 'priority'>[];
+  } {
+    const modifications: Pick<UserStory, 'id' | 'priority'>[] = [];
+    const newUserStories = userStories.map((userStory) => {
+      const newPriority = tickJump(userStory.priority, this.randomGenerator);
+      if (newPriority !== userStory.priority) {
+        modifications.push({
+          id: userStory.id,
+          priority: newPriority,
+        });
+        return { ...userStory, priority: newPriority };
+      }
+      return userStory;
+    });
+    return {
+      userStories: newUserStories,
+      modifications,
+    };
   }
 }
 
@@ -67,7 +92,16 @@ export type PriorityModificatorEvent = {
 };
 export class CustomPriorityModificator implements PriorityModificator {
   constructor(_events: PriorityModificatorEvent[]) {}
-  generate(_userStories: UserStory[], _time: number): UserStory[] {
-    return [];
+  generate(
+    _userStories: UserStory[],
+    _time: number,
+  ): {
+    userStories: UserStory[];
+    modifications: Pick<UserStory, 'id' | 'priority'>[];
+  } {
+    return {
+      userStories: [],
+      modifications: [],
+    };
   }
 }
