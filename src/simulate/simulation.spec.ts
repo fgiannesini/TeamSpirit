@@ -1,34 +1,21 @@
-import { describe, expect, test, vi } from 'vitest';
-import {
-  addUserStory,
-  Backlog,
-  getUserStoriesDone,
-  getUserStoriesRemainings,
-} from './backlog.ts';
-import {
-  type BugGenerator,
-  CustomBugGenerator,
-  noBugGenerator,
-} from './bug-generator.ts';
-import { createThread, done, ensembleTeam, todo } from './factory.ts';
-import {
-  CustomPriorityModificator,
-  noPriorityModificator,
-  type PriorityModificator,
-} from './priority-modificator.ts';
-import { simulate } from './simulation.ts';
-import type { StructureEvent } from './simulation-structure.ts';
-import type { Team, Thread } from './team.ts';
-import { noTeamModificator, type TeamModificator } from './team-modificator.ts';
+import {describe, expect, test, vi} from 'vitest';
+import {addUserStory, getUserStoriesDone, getUserStoriesRemainings,} from './backlog.ts';
+import {type BugGenerator, CustomBugGenerator, noBugGenerator,} from './bug-generator.ts';
+import {createBacklog, createThread, done, ensembleTeam, todo} from './factory.ts';
+import {CustomPriorityModificator, noPriorityModificator, type PriorityModificator,} from './priority-modificator.ts';
+import {simulate} from './simulation.ts';
+import type {StructureEvent} from './simulation-structure.ts';
+import type {Team, Thread} from './team.ts';
+import {noTeamModificator, type TeamModificator} from './team-modificator.ts';
 
 describe('Simulation', () => {
   test('Should have one thread developing a user story', () => {
     const team = ensembleTeam([createThread({ power: 1 })]);
-    const backlog = new Backlog([
+    const backlog = createBacklog({userStoriesRemaining:[
       todo({
         complexity: 2,
       }),
-    ]);
+    ]});
     const { timeEvents } = simulate(
       backlog,
       team,
@@ -43,11 +30,11 @@ describe('Simulation', () => {
 
   test('Should build structure events on initialization', () => {
     const team = ensembleTeam([createThread()]);
-    const backlog = new Backlog([
+    const backlog = createBacklog({userStoriesRemaining:[
       todo({
         complexity: 2,
       }),
-    ]);
+    ]});
 
     const { structureEvents } = simulate(
       backlog,
@@ -61,13 +48,13 @@ describe('Simulation', () => {
 
   test('Should generate a bug during the first and second turn', () => {
     const team = ensembleTeam([createThread()]);
-    const backlog = new Backlog([
+    const backlog = createBacklog({userStoriesRemaining:[
       todo({
         id: 1,
         name: 'US1',
         complexity: 1,
       }),
-    ]);
+    ]});
     addUserStory(done({ id: 0, name: 'US0' }), backlog);
     const bugGenerator: BugGenerator = new CustomBugGenerator([
       {
@@ -119,7 +106,7 @@ describe('Simulation', () => {
     };
     const teamToModify = ensembleTeam([createThread()]);
     const { structureEvents } = simulate(
-      new Backlog([todo()]),
+      createBacklog({userStoriesRemaining:[todo()]}),
       teamToModify,
       noBugGenerator,
       teamModificator,
@@ -152,7 +139,7 @@ describe('Simulation', () => {
     };
     const teamToModify = ensembleTeam([createThread()]);
     const { structureEvents } = simulate(
-      new Backlog([todo()]),
+      createBacklog({userStoriesRemaining:[todo()]}),
       teamToModify,
       noBugGenerator,
       teamModificator,
@@ -172,7 +159,7 @@ describe('Simulation', () => {
     const teamToUpdate = ensembleTeam([createThread()]);
     const updateTimesMock = vi.spyOn(teamToUpdate, 'updateTimes');
     simulate(
-      new Backlog([todo()]),
+      createBacklog({userStoriesRemaining:[todo()]}),
       teamToUpdate,
       noBugGenerator,
       noTeamModificator,
@@ -193,7 +180,7 @@ describe('Simulation', () => {
       ]);
     const team = ensembleTeam();
     const { structureEvents } = simulate(
-      new Backlog([todo()]),
+      createBacklog({userStoriesRemaining:[todo()]}),
       team,
       noBugGenerator,
       noTeamModificator,

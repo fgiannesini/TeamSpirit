@@ -1,37 +1,28 @@
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
-import { beforeEach, describe, expect, test, vi } from 'vitest';
+import {readFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {beforeEach, describe, expect, test, vi} from 'vitest';
 import {
-  buildBacklogForEnsembleTeam,
-  buildBacklogForParallelTeam,
-  buildEnsembleTeam,
-  buildParallelTeam,
-  getBugGenerator,
-  getPriorityModificator,
-  getTeamModificator,
+    buildBacklogForEnsembleTeam,
+    buildBacklogForParallelTeam,
+    buildEnsembleTeam,
+    buildParallelTeam,
+    getBugGenerator,
+    getPriorityModificator,
+    getTeamModificator,
 } from './main.ts';
-import { Backlog } from './simulate/backlog.ts';
+import {CustomBugGenerator, noBugGenerator, RandomBugGenerator,} from './simulate/bug-generator.ts';
+import type {TimeEvent} from './simulate/events.ts';
+import {createBacklog, createThread, todo} from './simulate/factory.ts';
 import {
-  CustomBugGenerator,
-  noBugGenerator,
-  RandomBugGenerator,
-} from './simulate/bug-generator.ts';
-import type { TimeEvent } from './simulate/events.ts';
-import { createThread, todo } from './simulate/factory.ts';
-import {
-  CustomPriorityModificator,
-  noPriorityModificator,
-  RandomPriorityModificator,
+    CustomPriorityModificator,
+    noPriorityModificator,
+    RandomPriorityModificator,
 } from './simulate/priority-modificator.ts';
-import { noReview } from './simulate/review.ts';
-import type { StructureEvent } from './simulate/simulation-structure.ts';
-import type { StatEvent } from './simulate/stats.ts';
-import { EnsembleTeam, ParallelTeam } from './simulate/team.ts';
-import {
-  CustomTeamModificator,
-  noTeamModificator,
-  RandomTeamModificator,
-} from './simulate/team-modificator.ts';
+import {noReview} from './simulate/review.ts';
+import type {StructureEvent} from './simulate/simulation-structure.ts';
+import type {StatEvent} from './simulate/stats.ts';
+import {EnsembleTeam, ParallelTeam} from './simulate/team.ts';
+import {CustomTeamModificator, noTeamModificator, RandomTeamModificator,} from './simulate/team-modificator.ts';
 
 const setSelectOption = (selectId: string, optionValue: string): void => {
   const select = document.querySelector<HTMLSelectElement>(`#${selectId}`);
@@ -190,22 +181,24 @@ describe('Main', () => {
       setValueTo('#reviewers-input', '1');
       setValueTo('#priority-input-1', '5');
       expect(buildBacklogForEnsembleTeam()).toEqual(
-        new Backlog([
-          todo({
-            id: 0,
-            name: 'US0',
-            complexity: 2,
-            review: noReview,
-            priority: 0,
-          }),
-          todo({
-            id: 1,
-            name: 'US1',
-            complexity: 4,
-            review: noReview,
-            priority: 5,
-          }),
-        ]),
+        createBacklog({
+          userStoriesRemaining: [
+            todo({
+              id: 0,
+              name: 'US0',
+              complexity: 2,
+              review: noReview,
+              priority: 0,
+            }),
+            todo({
+              id: 1,
+              name: 'US1',
+              complexity: 4,
+              review: noReview,
+              priority: 5,
+            }),
+          ],
+        }),
       );
     });
 
@@ -218,18 +211,20 @@ describe('Main', () => {
       setValueTo('#reviewers-input', '1');
 
       expect(buildBacklogForParallelTeam()).toEqual(
-        new Backlog([
-          todo({
-            id: 0,
-            name: 'US0',
-            complexity: 5,
-            review: {
-              reviewComplexity: 2,
-              reviewers: new Map<number, number>(),
-            },
-            priority: 3,
-          }),
-        ]),
+        createBacklog({
+          userStoriesRemaining: [
+            todo({
+              id: 0,
+              name: 'US0',
+              complexity: 5,
+              review: {
+                reviewComplexity: 2,
+                reviewers: new Map<number, number>(),
+              },
+              priority: 3,
+            }),
+          ],
+        }),
       );
     });
 
@@ -241,18 +236,20 @@ describe('Main', () => {
       setValueTo('#priority-input-0', '1');
 
       expect(buildBacklogForParallelTeam()).toEqual(
-        new Backlog([
-          todo({
-            id: 0,
-            name: 'US0',
-            complexity: 5,
-            review: {
-              reviewComplexity: 2,
-              reviewers: new Map<number, number>(),
-            },
-            priority: 1,
-          }),
-        ]),
+        createBacklog({
+          userStoriesRemaining: [
+            todo({
+              id: 0,
+              name: 'US0',
+              complexity: 5,
+              review: {
+                reviewComplexity: 2,
+                reviewers: new Map<number, number>(),
+              },
+              priority: 1,
+            }),
+          ],
+        }),
       );
     });
 

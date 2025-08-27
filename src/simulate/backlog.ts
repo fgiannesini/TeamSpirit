@@ -1,23 +1,12 @@
-import { computeBugProbability } from './bug-generator.ts';
-import { hasSomeReviews } from './review.ts';
-import type { Team, Thread } from './team.ts';
-import {
-  idle,
-  isInProgressBy,
-  isInReviewBy,
-  isToDo,
-  isToReviewBy,
-  needReviewBy,
-  type UserStory,
-} from './user-story.ts';
+import {computeBugProbability} from './bug-generator.ts';
+import {hasSomeReviews} from './review.ts';
+import type {Team, Thread} from './team.ts';
+import {idle, isInProgressBy, isInReviewBy, isToDo, isToReviewBy, needReviewBy, type UserStory,} from './user-story.ts';
 
-export class Backlog {
-  readonly userStoriesRemaining: UserStory[];
-  readonly userStoriesDone: UserStory[] = [];
-  constructor(userStories: UserStory[]) {
-    this.userStoriesRemaining = userStories;
-  }
-}
+export type Backlog = {
+  userStoriesRemaining: UserStory[];
+  userStoriesDone: UserStory[];
+};
 
 export const getUserStories = (backlog: Backlog): UserStory[] => [
   ...backlog.userStoriesRemaining,

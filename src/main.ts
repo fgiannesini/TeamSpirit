@@ -1,48 +1,39 @@
 import './style.scss';
+import {saveStatEvents, saveStructureEvents, saveTimeEvents,} from './flow/storage/session-storage.ts';
 import {
-  saveStatEvents,
-  saveStructureEvents,
-  saveTimeEvents,
-} from './flow/storage/session-storage.ts';
-import {
-  generateBugGeneratorEventsForm,
-  generateDevForm,
-  generatePriorityModificatorEventsForm,
-  generateTeamModificatorEventsForm,
-  generateUserStoriesForm,
+    generateBugGeneratorEventsForm,
+    generateDevForm,
+    generatePriorityModificatorEventsForm,
+    generateTeamModificatorEventsForm,
+    generateUserStoriesForm,
 } from './form/form.ts';
-import { Backlog } from './simulate/backlog.ts';
+import type {Backlog} from './simulate/backlog.ts';
 import {
-  type BugGenerator,
-  type BugGeneratorEvent,
-  CustomBugGenerator,
-  noBugGenerator,
-  RandomBugGenerator,
+    type BugGenerator,
+    type BugGeneratorEvent,
+    CustomBugGenerator,
+    noBugGenerator,
+    RandomBugGenerator,
 } from './simulate/bug-generator.ts';
 import {
-  CustomPriorityModificator,
-  noPriorityModificator,
-  type PriorityModificator,
-  type PriorityModificatorEvent,
-  RandomPriorityModificator,
+    CustomPriorityModificator,
+    noPriorityModificator,
+    type PriorityModificator,
+    type PriorityModificatorEvent,
+    RandomPriorityModificator,
 } from './simulate/priority-modificator.ts';
-import { noReview } from './simulate/review.ts';
-import { simulate } from './simulate/simulation.ts';
-import { computeStatEvents } from './simulate/stats.ts';
+import {noReview} from './simulate/review.ts';
+import {simulate} from './simulate/simulation.ts';
+import {computeStatEvents} from './simulate/stats.ts';
+import {EnsembleTeam, ParallelTeam, type Team, type Thread,} from './simulate/team.ts';
 import {
-  EnsembleTeam,
-  ParallelTeam,
-  type Team,
-  type Thread,
-} from './simulate/team.ts';
-import {
-  CustomTeamModificator,
-  noTeamModificator,
-  RandomTeamModificator,
-  type TeamModificator,
-  type TeamModificatorEvent,
+    CustomTeamModificator,
+    noTeamModificator,
+    RandomTeamModificator,
+    type TeamModificator,
+    type TeamModificatorEvent,
 } from './simulate/team-modificator.ts';
-import type { UserStory } from './simulate/user-story.ts';
+import type {UserStory} from './simulate/user-story.ts';
 
 const getInputValueOf = (selector: string): number => {
   const number = Number.parseInt(
@@ -310,8 +301,8 @@ export const getPriorityModificator = (): PriorityModificator => {
 
 export const buildBacklogForParallelTeam = (): Backlog => {
   const userStoryCount = getInputValueOf('#user-story-count-input');
-  return new Backlog(
-    Array.from(
+  return {
+    userStoriesRemaining: Array.from(
       { length: userStoryCount },
       (_, i): UserStory => ({
         id: i,
@@ -328,13 +319,14 @@ export const buildBacklogForParallelTeam = (): Backlog => {
         priority: getInputValueOf(`#priority-input-${i}`),
       }),
     ),
-  );
+    userStoriesDone: [],
+  };
 };
 
 export const buildBacklogForEnsembleTeam = (): Backlog => {
   const userStoryCount = getInputValueOf('#user-story-count-input');
-  return new Backlog(
-    Array.from(
+  return {
+    userStoriesRemaining: Array.from(
       { length: userStoryCount },
       (_, i): UserStory => ({
         id: i,
@@ -348,7 +340,8 @@ export const buildBacklogForEnsembleTeam = (): Backlog => {
         priority: getInputValueOf(`#priority-input-${i}`),
       }),
     ),
-  );
+    userStoriesDone: [],
+  };
 };
 
 export const buildParallelTeam = (): Team => {

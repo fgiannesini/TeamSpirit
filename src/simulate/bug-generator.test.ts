@@ -1,12 +1,7 @@
-import { describe, expect, test } from 'vitest';
-import { addUserStory, Backlog } from './backlog.ts';
-import {
-  CustomBugGenerator,
-  computeBugProbability,
-  getBugPriority,
-  RandomBugGenerator,
-} from './bug-generator.ts';
-import { done, ensembleTeam, parallelTeam, todo } from './factory.ts';
+import {describe, expect, test} from 'vitest';
+import {addUserStory} from './backlog.ts';
+import {computeBugProbability, CustomBugGenerator, getBugPriority, RandomBugGenerator,} from './bug-generator.ts';
+import {createBacklog, done, ensembleTeam, parallelTeam, todo} from './factory.ts';
 
 describe('Bug generator', () => {
   describe('Random Bug generator', () => {
@@ -138,7 +133,7 @@ describe('Bug generator', () => {
         () => 1,
         () => 0,
       );
-      const backlog = new Backlog([]);
+      const backlog = createBacklog({userStoriesRemaining:[]});
       addUserStory(done({ id: 0 }), backlog);
       addUserStory(done({ id: 1 }), backlog);
       const bugs = bugGenerator.generate(backlog, ensembleTeam(), 0);
@@ -154,7 +149,7 @@ describe('Bug generator', () => {
         () => 1,
         () => 0,
       );
-      const backlog = new Backlog([]);
+      const backlog = createBacklog({userStoriesRemaining:[]});
       addUserStory(
         done({
           id: 0,
@@ -184,7 +179,7 @@ describe('Bug generator', () => {
         () => 0,
         () => 0.99,
       );
-      const backlog = new Backlog([]);
+      const backlog = createBacklog({userStoriesRemaining:[]});
       addUserStory(
         done({
           id: 0,
@@ -234,7 +229,7 @@ describe('Bug generator', () => {
           () => 0.5,
           () => 0,
         );
-        const backlog = new Backlog([]);
+        const backlog = createBacklog({userStoriesRemaining:[]});
         addUserStory(
           done({
             id: 0,
@@ -267,7 +262,7 @@ describe('Bug generator', () => {
         () => 1,
         () => 0,
       );
-      const backlog = new Backlog([]);
+      const backlog = createBacklog({userStoriesRemaining:[]});
       addUserStory(done({ id: 0 }), backlog);
       addUserStory(done({ id: 1 }), backlog);
       const bugs = bugGenerator.generate(backlog, ensembleTeam(), 0);
@@ -293,14 +288,14 @@ describe('Bug generator', () => {
       ]);
       expect(
         customBugGenerator.generate(
-          new Backlog([todo({ id: 0, priority: 1 })]),
+          createBacklog({userStoriesRemaining:[todo({ id: 0, priority: 1 })]}),
           parallelTeam(),
           1,
         ),
       ).toStrictEqual([todo({ id: 1, name: 'bug-0', priority: 1 })]);
       expect(
         customBugGenerator.generate(
-          new Backlog([todo({ id: 0, priority: 2 })]),
+          createBacklog({userStoriesRemaining:[todo({ id: 0, priority: 2 })]}),
           parallelTeam(),
           2,
         ),
@@ -328,7 +323,7 @@ describe('Bug generator', () => {
         },
       ]);
       const userStories = customBugGenerator.generate(
-        new Backlog([]),
+        createBacklog({userStoriesRemaining:[]}),
         parallelTeam(),
         3,
       );

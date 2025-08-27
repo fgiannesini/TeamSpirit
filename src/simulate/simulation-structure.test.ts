@@ -1,15 +1,11 @@
-import { describe, expect, test } from 'vitest';
-import { Backlog } from './backlog.ts';
-import { createThread, todo } from './factory.ts';
-import {
-  type StructureEvent,
-  structureEventsOnInitialization,
-} from './simulation-structure.ts';
-import { ParallelTeam } from './team.ts';
+import {describe, expect, test} from 'vitest';
+import {createBacklog, createThread, todo} from './factory.ts';
+import {type StructureEvent, structureEventsOnInitialization,} from './simulation-structure.ts';
+import {ParallelTeam} from './team.ts';
 
 describe('simulation-structure', () => {
   test('should create 2 user stories and 2 threads', () => {
-    const backlog = new Backlog([
+    const backlog = createBacklog({userStoriesRemaining: [
       todo({
         id: 0,
         name: 'userStory0',
@@ -19,7 +15,7 @@ describe('simulation-structure', () => {
         name: 'userStory1',
         priority: 1,
       }),
-    ]);
+    ]});
 
     const team = new ParallelTeam([
       createThread({ id: 0, name: 'thread0', power: 1 }),

@@ -1,8 +1,9 @@
-import type { TimeEvent } from './events.ts';
-import { noReview } from './review.ts';
-import type { StructureEvent } from './simulation-structure.ts';
-import { EnsembleTeam, ParallelTeam, type Thread } from './team.ts';
-import type { UserStory } from './user-story.ts';
+import type {Backlog} from './backlog.ts';
+import type {TimeEvent} from './events.ts';
+import {noReview} from './review.ts';
+import type {StructureEvent} from './simulation-structure.ts';
+import {EnsembleTeam, ParallelTeam, type Thread} from './team.ts';
+import type {UserStory} from './user-story.ts';
 
 export const todo = (options: Partial<UserStory> = {}): UserStory => {
   return {
@@ -205,3 +206,11 @@ export const createChangePriority = (
   value: 0,
   ...options,
 });
+
+export const createBacklog = (options: Partial<Backlog>): Backlog => {
+  return {
+    userStoriesRemaining: [todo()],
+    userStoriesDone: [],
+    ...options,
+  };
+};
