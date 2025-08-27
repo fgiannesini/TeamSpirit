@@ -2,6 +2,7 @@ import { describe, expect, test, vitest } from 'vitest';
 import {
   Backlog,
   getNextUserStory,
+  resetUserStoriesRemainings,
   shouldGenerateBug,
   userStoriesWithSomeReviews,
 } from './backlog.ts';
@@ -233,5 +234,16 @@ describe('Backlog', () => {
     expect(
       shouldGenerateBug(randomProvider, done(), ensembleTeam(), 0),
     ).toEqual(false);
+  });
+
+  test('should reset remaining user stories', () => {
+    const initialBacklog = new Backlog([todo()]);
+    initialBacklog.userStoriesDone.push(done());
+    const backlog = resetUserStoriesRemainings(initialBacklog, [inProgress()]);
+    const expected: Backlog = {
+      userStoriesRemaining: [inProgress()],
+      userStoriesDone: [done()],
+    };
+    expect(backlog).toEqual(expected);
   });
 });

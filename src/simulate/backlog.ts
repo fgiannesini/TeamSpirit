@@ -126,6 +126,13 @@ export const getUserStoriesRemainings = (backlog: Backlog): UserStory[] => {
   return backlog.userStoriesRemaining;
 };
 
+export const resetUserStoriesRemainings = (
+  backlog: Backlog,
+  userStories: UserStory[],
+): Backlog => {
+  return { ...backlog, userStoriesRemaining: userStories };
+};
+
 export const hasMoreUserStories = (backlog: Backlog): boolean => {
   return backlog.userStoriesRemaining.length > 0;
 };
