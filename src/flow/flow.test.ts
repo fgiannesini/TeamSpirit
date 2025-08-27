@@ -629,6 +629,23 @@ describe('Flow', () => {
 
       expect(document.querySelector('#idle')).toBeNull();
     });
+
+    test('Should change priority on computation click', async () => {
+      saveStructureEvents(
+        [
+          createUserStory({ id: 0, name: 'US0' }),
+          createChangePriority({ id: 0, value: 1 }),
+          createChangePriority({ id: 0, value: 2, time: 2 }),
+        ],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
+      await import('./flow.ts');
+
+      getCompute()?.click();
+      await vi.advanceTimersToNextTimerAsync();
+
+      expect(getUserStory(0)?.textContent).toEqual('US0(2)');
+    });
   });
 
   describe('Compute', () => {

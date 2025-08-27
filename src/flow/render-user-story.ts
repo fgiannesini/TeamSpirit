@@ -37,6 +37,7 @@ export const addUserStories = (
     .forEach(({ id, value }) => {
       const userStory = getUserStory(id);
       if (userStory) {
+        userStory.querySelector('.priority')?.remove();
         const prioritySpan = document.createElement('span');
         prioritySpan.textContent = `(${value})`;
         prioritySpan.className = 'priority';
