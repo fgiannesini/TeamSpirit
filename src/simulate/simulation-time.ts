@@ -2,7 +2,7 @@ import {
   addUserStory,
   type Backlog,
   getNextUserStory,
-  retrieveInProgressUserStories,
+  retrieveUserStories,
   userStoriesWithSomeReviews,
 } from './backlog.ts';
 import { createTimeEvent, type TimeEvent } from './events.ts';
@@ -42,13 +42,29 @@ export const simulateTimeEvents = (
       continue;
     }
     if (['Todo'].includes(userStory.state)) {
-      const userStories = retrieveInProgressUserStories(backlog, thread.id);
-      userStories.forEach((inProgress) => {
+      const inProgressUserStories = retrieveUserStories(
+        backlog,
+        thread.id,
+        'InProgress',
+      );
+      inProgressUserStories.forEach((inProgress) => {
         const todo = setTodo(inProgress);
         events.push(createTimeEvent(time, todo, thread.id));
         addUserStory(todo, backlog);
       });
+
+      const reviewUserStories = retrieveUserStories(
+        backlog,
+        thread.id,
+        'Review',
+      );
+      reviewUserStories.forEach((review) => {
+        const toReview = setToReview(review, review.threadId as number);
+        events.push(createTimeEvent(time, toReview, thread.id));
+        addUserStory(toReview, backlog);
+      });
     }
+
     if (['ToReview', 'Review'].includes(userStory.state)) {
       const review = setReview(userStory, thread);
       events.push(createTimeEvent(time, review, thread.id));

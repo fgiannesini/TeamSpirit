@@ -8,6 +8,7 @@ import {
   isToDo,
   isToReviewBy,
   needReviewBy,
+  type State,
   type UserStory,
 } from './user-story.ts';
 
@@ -123,13 +124,14 @@ export const getUserStoriesRemainings = (backlog: Backlog): UserStory[] => {
   return backlog.userStoriesRemaining;
 };
 
-export const retrieveInProgressUserStories = (
+export const retrieveUserStories = (
   backlog: Backlog,
   threadId: number,
+  state: State,
 ): UserStory[] => {
   const inProgressUserStories: UserStory[] = [];
   [...backlog.userStoriesRemaining].forEach((userStory, index) => {
-    if (userStory.threadId === threadId && userStory.state === 'InProgress') {
+    if (userStory.threadId === threadId && userStory.state === state) {
       inProgressUserStories.push(userStory);
       backlog.userStoriesRemaining.splice(index, 1);
     }

@@ -3,7 +3,7 @@ import {
   type Backlog,
   getNextUserStory,
   resetUserStoriesRemainings,
-  retrieveInProgressUserStories,
+  retrieveUserStories,
   shouldGenerateBug,
   userStoriesWithSomeReviews,
 } from './backlog.ts';
@@ -288,7 +288,7 @@ describe('Backlog', () => {
         inReview({ threadId: 0 }),
       ],
     });
-    const userStories = retrieveInProgressUserStories(backlog, 0);
+    const userStories = retrieveUserStories(backlog, 0, 'InProgress');
     expect(userStories).toEqual([inProgress({ threadId: 0 })]);
     expect(backlog.userStoriesRemaining).toEqual([
       todo(),
