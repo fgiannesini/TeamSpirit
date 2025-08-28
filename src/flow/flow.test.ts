@@ -9,6 +9,7 @@ import {
   reviewEvent,
   setThreadIn,
   setThreadOff,
+  todoEvent,
   toReviewEvent,
 } from '../simulate/factory.ts';
 import type { StructureEvent } from '../simulate/simulation-structure.ts';
@@ -332,34 +333,23 @@ describe('Flow', () => {
       expect(document.querySelector('#done #user-story-0')).not.toBeNull();
     });
 
-    test('Should move userStory to thread when in progress and replace the existing one', async () => {
+    test('Should move userStory to backlog when todo', async () => {
       saveStructureEvents(
-        [
-          createThread0(),
-          createUserStory({ id: 0 }),
-          createUserStory({ id: 1 }),
-        ],
+        [createThread0(), createUserStory({ id: 0 })],
         'e4567-e89b-12d3-a456-426614174000',
       );
       saveTimeEvents(
         [
           inProgressEvent({ userStoryId: 0 }),
-          inProgressEvent({ userStoryId: 1, time: 1 }),
+          todoEvent({ userStoryId: 0, time: 2 }),
         ],
         'e4567-e89b-12d3-a456-426614174000',
       );
       await import('./flow.ts');
 
-      getCompute()?.click();
-      await vi.advanceTimersToNextTimerAsync();
-      expect(
-        document.querySelector('#thread-user-story-0 #user-story-0-0'),
-      ).not.toBeNull();
+      getComputeAll()?.click();
+      await vi.runAllTimersAsync();
 
-      await vi.advanceTimersToNextTimerAsync();
-      expect(
-        document.querySelector('#thread-user-story-0 #user-story-1-0'),
-      ).not.toBeNull();
       expect(document.querySelector('#backlog #user-story-0-0')).not.toBeNull();
     });
 

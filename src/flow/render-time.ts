@@ -96,6 +96,13 @@ export const renderTimeEvents = async (
       continue;
     }
     switch (currentEvent.state) {
+      case 'Todo': {
+        const userStory = getUserStory(currentEvent.userStoryId);
+        if (userStory) {
+          getBacklog()?.appendChild(userStory);
+        }
+        break;
+      }
       case 'InProgress': {
         handleInProgress(currentEvent);
         setThreadStateTo(currentEvent.threadId, 'Develop');
