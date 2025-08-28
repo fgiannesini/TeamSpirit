@@ -48,6 +48,10 @@ export const idle: UserStory = {
   priority: 0,
 };
 
+export const setTodo = (userStory: UserStory): UserStory => {
+  return { ...userStory, state: 'Todo' };
+};
+
 export const setInProgress = (userStory: UserStory, dev: Thread): UserStory => {
   return {
     ...userStory,

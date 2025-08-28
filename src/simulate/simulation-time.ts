@@ -2,6 +2,7 @@ import {
   addUserStory,
   type Backlog,
   getNextUserStory,
+  retrieveInProgressUserStories,
   userStoriesWithSomeReviews,
 } from './backlog.ts';
 import { createTimeEvent, type TimeEvent } from './events.ts';
@@ -14,6 +15,7 @@ import {
   setDoneBy,
   setInProgress,
   setReview,
+  setTodo,
   setToReview,
   type UserStory,
 } from './user-story.ts';
@@ -38,6 +40,14 @@ export const simulateTimeEvents = (
       idle.threadId = thread.id;
       events.push(createTimeEvent(time, idle, thread.id));
       continue;
+    }
+    if (['Todo'].includes(userStory.state)) {
+      const userStories = retrieveInProgressUserStories(backlog, thread.id);
+      userStories.forEach((inProgress) => {
+        const todo = setTodo(inProgress);
+        events.push(createTimeEvent(time, todo, thread.id));
+        addUserStory(todo, backlog);
+      });
     }
     if (['ToReview', 'Review'].includes(userStory.state)) {
       const review = setReview(userStory, thread);

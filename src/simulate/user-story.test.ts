@@ -19,6 +19,7 @@ import {
   setDoneBy,
   setInProgress,
   setReview,
+  setTodo,
   setToReview,
 } from './user-story.ts';
 
@@ -364,5 +365,10 @@ describe('user-story', () => {
       createThread({ id: 2 }),
     );
     expect(result).toEqual(true);
+  });
+
+  test('Should set todo', () => {
+    const result = setTodo(inProgress());
+    expect(result).toEqual(todo({ progression: 1, threadId: 0 }));
   });
 });

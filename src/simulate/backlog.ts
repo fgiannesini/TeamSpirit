@@ -1,7 +1,15 @@
-import {computeBugProbability} from './bug-generator.ts';
-import {hasSomeReviews} from './review.ts';
-import type {Team, Thread} from './team.ts';
-import {idle, isInProgressBy, isInReviewBy, isToDo, isToReviewBy, needReviewBy, type UserStory,} from './user-story.ts';
+import { computeBugProbability } from './bug-generator.ts';
+import { hasSomeReviews } from './review.ts';
+import type { Team, Thread } from './team.ts';
+import {
+  idle,
+  isInProgressBy,
+  isInReviewBy,
+  isToDo,
+  isToReviewBy,
+  needReviewBy,
+  type UserStory,
+} from './user-story.ts';
 
 export type Backlog = {
   userStoriesRemaining: UserStory[];
@@ -113,6 +121,20 @@ export const getUserStoriesDone = (backlog: Backlog): UserStory[] => {
 
 export const getUserStoriesRemainings = (backlog: Backlog): UserStory[] => {
   return backlog.userStoriesRemaining;
+};
+
+export const retrieveInProgressUserStories = (
+  backlog: Backlog,
+  threadId: number,
+): UserStory[] => {
+  const inProgressUserStories: UserStory[] = [];
+  [...backlog.userStoriesRemaining].forEach((userStory, index) => {
+    if (userStory.threadId === threadId && userStory.state === 'InProgress') {
+      inProgressUserStories.push(userStory);
+      backlog.userStoriesRemaining.splice(index, 1);
+    }
+  });
+  return inProgressUserStories;
 };
 
 export const resetUserStoriesRemainings = (

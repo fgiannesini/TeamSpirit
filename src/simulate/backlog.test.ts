@@ -1,13 +1,23 @@
-import {describe, expect, test, vitest} from 'vitest';
+import { describe, expect, test, vitest } from 'vitest';
 import {
-    type Backlog,
-    getNextUserStory,
-    resetUserStoriesRemainings,
-    shouldGenerateBug,
-    userStoriesWithSomeReviews,
+  type Backlog,
+  getNextUserStory,
+  resetUserStoriesRemainings,
+  retrieveInProgressUserStories,
+  shouldGenerateBug,
+  userStoriesWithSomeReviews,
 } from './backlog.ts';
-import {createBacklog, createThread, done, ensembleTeam, inProgress, inReview, todo, toReview,} from './factory.ts';
-import {idle, type UserStory} from './user-story.ts';
+import {
+  createBacklog,
+  createThread,
+  done,
+  ensembleTeam,
+  inProgress,
+  inReview,
+  todo,
+  toReview,
+} from './factory.ts';
+import { idle, type UserStory } from './user-story.ts';
 
 describe('Backlog', () => {
   test('Should get idle by default', () => {
@@ -267,5 +277,23 @@ describe('Backlog', () => {
       userStoriesDone: [done()],
     };
     expect(backlog).toEqual(expected);
+  });
+
+  test('should retrieve user stories already in progress by a thread', () => {
+    const backlog = createBacklog({
+      userStoriesRemaining: [
+        todo(),
+        inProgress({ threadId: 0 }),
+        toReview({ threadId: 0 }),
+        inReview({ threadId: 0 }),
+      ],
+    });
+    const userStories = retrieveInProgressUserStories(backlog, 0);
+    expect(userStories).toEqual([inProgress({ threadId: 0 })]);
+    expect(backlog.userStoriesRemaining).toEqual([
+      todo(),
+      toReview({ threadId: 0 }),
+      inReview({ threadId: 0 }),
+    ]);
   });
 });
