@@ -3,7 +3,8 @@ import {
   type Backlog,
   getNextUserStory,
   resetUserStoriesRemainings,
-  retrieveUserStories,
+  retrieveInProgressUserStories,
+  retrieveInReviewUserStories,
   shouldGenerateBug,
   userStoriesWithSomeReviews,
 } from './backlog.ts';
@@ -288,12 +289,54 @@ describe('Backlog', () => {
         inReview({ threadId: 0 }),
       ],
     });
-    const userStories = retrieveUserStories(backlog, 0, 'InProgress');
+    const userStories = retrieveInProgressUserStories(backlog, createThread());
     expect(userStories).toEqual([inProgress({ threadId: 0 })]);
     expect(backlog.userStoriesRemaining).toEqual([
       todo(),
       toReview({ threadId: 0 }),
       inReview({ threadId: 0 }),
+    ]);
+  });
+
+  test('should retrieve user stories already in review by a thread', () => {
+    const backlog = createBacklog({
+      userStoriesRemaining: [
+        toReview({ threadId: 0 }),
+        inReview({
+          threadId: 1,
+          review: {
+            reviewComplexity: 2,
+            reviewers: new Map([[2, 1]]),
+          },
+        }),
+        inReview({
+          threadId: 1,
+          review: {
+            reviewComplexity: 2,
+            reviewers: new Map([[0, 1]]),
+          },
+        }),
+      ],
+    });
+    const userStories = retrieveInReviewUserStories(backlog, createThread());
+    expect(userStories).toEqual([
+      inReview({
+        threadId: 1,
+        review: {
+          reviewComplexity: 2,
+          reviewers: new Map([[0, 1]]),
+        },
+      }),
+    ]);
+    expect(backlog.userStoriesRemaining).toEqual([
+      toReview({ threadId: 0 }),
+      inReview({
+        threadId: 1,
+        review: {
+          reviewComplexity: 2,
+          reviewers: new Map([[2, 1]]),
+        },
+      }),
     ]);
   });
 });

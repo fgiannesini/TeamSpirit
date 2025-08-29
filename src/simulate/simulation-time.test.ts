@@ -340,7 +340,7 @@ describe('simulation time', () => {
     ]);
   });
 
-  test('Should set previous in progress user story to todo when a thread chose an other user story', () => {
+  test('Should set previous in progress user story to todo when a thread chose another user story', () => {
     const team = parallelTeam([createThread({ id: 0, power: 1 })], 0);
     const backlog = createBacklog({
       userStoriesRemaining: [
@@ -367,15 +367,19 @@ describe('simulation time', () => {
     ]);
   });
 
-  test('Should set previous review user story to toReview when a thread chose an other user story', () => {
+  test('Should set previous review user story to toReview when a thread chose another user story', () => {
     const team = parallelTeam([createThread({ id: 0, power: 1 })], 0);
     const backlog = createBacklog({
       userStoriesRemaining: [
         inReview({
           id: 0,
-          threadId: 0,
+          threadId: 1,
           priority: 1,
           progression: 1,
+          review: {
+            reviewComplexity: 2,
+            reviewers: new Map([[0, 1]]),
+          },
         }),
         todo({
           id: 1,
@@ -390,7 +394,16 @@ describe('simulation time', () => {
       doneEvent({ threadId: 0, userStoryId: 1 }),
     ]);
     expect(backlog.userStoriesRemaining).toEqual([
-      toReview({ id: 0, threadId: 0, priority: 1 }),
+      toReview({
+        id: 0,
+        threadId: 1,
+        priority: 1,
+        progression: 1,
+        review: {
+          reviewComplexity: 2,
+          reviewers: new Map([[0, 1]]),
+        },
+      }),
     ]);
   });
 });
