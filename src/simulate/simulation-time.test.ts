@@ -367,7 +367,7 @@ describe('simulation time', () => {
     ]);
   });
 
-  test('Should set previous review user story to toReview when a thread chose another user story', () => {
+  test('Should set previous review user story to toReview when a thread chose another user story todo', () => {
     const team = parallelTeam([createThread({ id: 0, power: 1 })], 0);
     const backlog = createBacklog({
       userStoriesRemaining: [
@@ -402,6 +402,64 @@ describe('simulation time', () => {
         review: {
           reviewComplexity: 2,
           reviewers: new Map([[0, 1]]),
+        },
+      }),
+    ]);
+  });
+
+  test('Should set previous review user story to toReview when a thread chose another user story to review', () => {
+    const team = parallelTeam(
+      [createThread({ id: 0 }), createThread({ id: 1 })],
+      1,
+    );
+    const backlog = createBacklog({
+      userStoriesRemaining: [
+        inReview({
+          id: 0,
+          threadId: 0,
+          priority: 1,
+          progression: 1,
+          review: {
+            reviewComplexity: 2,
+            reviewers: new Map([[1, 1]]),
+          },
+        }),
+        toReview({
+          id: 1,
+          threadId: 0,
+          priority: 2,
+          review: {
+            reviewComplexity: 2,
+            reviewers: new Map(),
+          },
+        }),
+      ],
+    });
+    const timeEvents = simulateTimeEvents(team, backlog, 1);
+    expect(timeEvents).toEqual([
+      idleEvent({ threadId: 0 }),
+      toReviewEvent({ threadId: 1, userStoryId: 0 }),
+      reviewEvent({ threadId: 1, userStoryId: 1 }),
+    ]);
+    expect(backlog.userStoriesRemaining).toEqual([
+      toReview({
+        id: 0,
+        threadId: 0,
+        priority: 1,
+        progression: 1,
+        review: {
+          reviewComplexity: 2,
+          reviewers: new Map([[1, 1]]),
+        },
+      }),
+      inReview({
+        id: 1,
+        threadId: 0,
+        priority: 2,
+        progression: 1,
+        review: {
+          reviewComplexity: 2,
+          reviewers: new Map([[1, 1]]),
         },
       }),
     ]);

@@ -61,6 +61,15 @@ export const simulateTimeEvents = (
       });
     }
 
+    if (['ToReview'].includes(userStory.state)) {
+      const reviewUserStories = retrieveInReviewUserStories(backlog, thread);
+      reviewUserStories.forEach((review) => {
+        const toReview = setToReview(review, review.threadId as number);
+        events.push(createTimeEvent(time, toReview, thread.id));
+        addUserStory(toReview, backlog);
+      });
+    }
+
     if (['ToReview', 'Review'].includes(userStory.state)) {
       const review = setReview(userStory, thread);
       events.push(createTimeEvent(time, review, thread.id));
