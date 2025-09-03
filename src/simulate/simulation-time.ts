@@ -42,7 +42,7 @@ export const simulateTimeEvents = (
       events.push(createTimeEvent(time, idle, thread.id));
       continue;
     }
-    if (['Todo'].includes(userStory.state)) {
+    if (['Todo', 'ToReview'].includes(userStory.state)) {
       const inProgressUserStories = retrieveInProgressUserStories(
         backlog,
         thread,
@@ -53,15 +53,6 @@ export const simulateTimeEvents = (
         addUserStory(todo, backlog);
       });
 
-      const reviewUserStories = retrieveInReviewUserStories(backlog, thread);
-      reviewUserStories.forEach((review) => {
-        const toReview = setToReview(review, review.threadId as number);
-        events.push(createTimeEvent(time, toReview, thread.id));
-        addUserStory(toReview, backlog);
-      });
-    }
-
-    if (['ToReview'].includes(userStory.state)) {
       const reviewUserStories = retrieveInReviewUserStories(backlog, thread);
       reviewUserStories.forEach((review) => {
         const toReview = setToReview(review, review.threadId as number);
