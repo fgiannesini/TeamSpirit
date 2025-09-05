@@ -1,4 +1,4 @@
-Transformer le backlog en type et non plus classe
+Ajouter une pénalité quand le ticket change de dev suite à un changement de priorité
 Permettre la simulation sur de nombreux lancements
 
 implémenter statistiques lead time avec un graph qui se construit
