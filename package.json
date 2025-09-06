@@ -5,19 +5,25 @@
   "type": "module",
   "scripts": {
     "start": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "deploy": "gh-pages -d dist",
-    "preview": "vite preview",
     "lint": "npx @biomejs/biome check src",
     "lint:fix": "npx @biomejs/biome check --write src",
     "lint:fix-unsafe": "npx @biomejs/biome check --write --unsafe src",
     "test": "vitest run",
-    "type-check": "tsc -p tsconfig.json --noEmit",
+    "type-check": "vue-tsc --build",
     "prepare": "husky"
+  },
+  "dependencies": {
+    "vue": "^3.5.21"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.0.0",
-    "@types/node": "^24.0.3",
+    "@tsconfig/node24": "^24.0.1",
+    "@types/node": "^24.3.1",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/test-utils": "^2.4.6",
+    "@vue/tsconfig": "^0.8.1",
     "beercss": "^3.11.33",
     "gh-pages": "^6.2.0",
     "husky": "^9.1.7",
@@ -26,6 +32,7 @@
     "sass": "^1.81.0",
     "typescript": "^5.8.3",
     "vite": "^7.0.0",
-    "vitest": "^3.0.4"
+    "vitest": "^3.0.4",
+    "vue-tsc": "^3.0.6"
   }
 }

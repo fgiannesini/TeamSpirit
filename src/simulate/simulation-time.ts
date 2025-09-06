@@ -7,7 +7,7 @@ import {
   userStoriesWithSomeReviews,
 } from './backlog.ts';
 import { createTimeEvent, type TimeEvent } from './events.ts';
-import type { Team } from './team.ts';
+import type { Team, Thread } from './team.ts';
 import {
   idle,
   isDeveloped,
@@ -30,7 +30,7 @@ export const simulateTimeEvents = (
   const toAddBacklog: UserStory[] = [];
   const sortedThreads = team
     .getEffectiveActiveThreads()
-    .toSorted((a, b) => b.power - a.power);
+    .toSorted((a: Thread, b: Thread) => b.power - a.power);
   for (const thread of sortedThreads) {
     const userStory: UserStory = getNextUserStory(
       backlog,
