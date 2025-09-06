@@ -1,28 +1,36 @@
-import {readFileSync} from 'node:fs';
-import {resolve} from 'node:path';
-import {beforeEach, describe, expect, test, vi} from 'vitest';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 import {
-    buildBacklogForEnsembleTeam,
-    buildBacklogForParallelTeam,
-    buildEnsembleTeam,
-    buildParallelTeam,
-    getBugGenerator,
-    getPriorityModificator,
-    getTeamModificator,
+  buildBacklogForEnsembleTeam,
+  buildBacklogForParallelTeam,
+  buildEnsembleTeam,
+  buildParallelTeam,
+  getBugGenerator,
+  getPriorityModificator,
+  getTeamModificator,
 } from './main.ts';
-import {CustomBugGenerator, noBugGenerator, RandomBugGenerator,} from './simulate/bug-generator.ts';
-import type {TimeEvent} from './simulate/events.ts';
-import {createBacklog, createThread, todo} from './simulate/factory.ts';
 import {
-    CustomPriorityModificator,
-    noPriorityModificator,
-    RandomPriorityModificator,
+  CustomBugGenerator,
+  noBugGenerator,
+  RandomBugGenerator,
+} from './simulate/bug-generator.ts';
+import type { TimeEvent } from './simulate/events.ts';
+import { createBacklog, createThread, todo } from './simulate/factory.ts';
+import {
+  CustomPriorityModificator,
+  noPriorityModificator,
+  RandomPriorityModificator,
 } from './simulate/priority-modificator.ts';
-import {noReview} from './simulate/review.ts';
-import type {StructureEvent} from './simulate/simulation-structure.ts';
-import type {StatEvent} from './simulate/stats.ts';
-import {EnsembleTeam, ParallelTeam} from './simulate/team.ts';
-import {CustomTeamModificator, noTeamModificator, RandomTeamModificator,} from './simulate/team-modificator.ts';
+import { noReview } from './simulate/review.ts';
+import type { StructureEvent } from './simulate/simulation-structure.ts';
+import type { StatEvent } from './simulate/stats.ts';
+import { EnsembleTeam, ParallelTeam } from './simulate/team.ts';
+import {
+  CustomTeamModificator,
+  noTeamModificator,
+  RandomTeamModificator,
+} from './simulate/team-modificator.ts';
 
 const setSelectOption = (selectId: string, optionValue: string): void => {
   const select = document.querySelector<HTMLSelectElement>(`#${selectId}`);
@@ -31,12 +39,12 @@ const setSelectOption = (selectId: string, optionValue: string): void => {
     select.dispatchEvent(new Event('change'));
   }
 };
-
 describe('Main', () => {
   beforeEach(async () => {
     vi.spyOn(window, 'open').mockImplementation(vi.fn());
     const htmlPath = resolve(__dirname, './index.html');
     document.body.innerHTML = readFileSync(htmlPath, 'utf-8');
+    vi.mock('beercss', () => ({}));
     await import('./main.ts');
     const event = new Event('DOMContentLoaded');
     document.dispatchEvent(event);

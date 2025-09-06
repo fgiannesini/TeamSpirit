@@ -1,39 +1,50 @@
-import './style.scss';
-import {saveStatEvents, saveStructureEvents, saveTimeEvents,} from './flow/storage/session-storage.ts';
+import 'beercss';
+import 'material-dynamic-colors';
+
 import {
-    generateBugGeneratorEventsForm,
-    generateDevForm,
-    generatePriorityModificatorEventsForm,
-    generateTeamModificatorEventsForm,
-    generateUserStoriesForm,
+  saveStatEvents,
+  saveStructureEvents,
+  saveTimeEvents,
+} from './flow/storage/session-storage.ts';
+import {
+  generateBugGeneratorEventsForm,
+  generateDevForm,
+  generatePriorityModificatorEventsForm,
+  generateTeamModificatorEventsForm,
+  generateUserStoriesForm,
 } from './form/form.ts';
-import type {Backlog} from './simulate/backlog.ts';
+import type { Backlog } from './simulate/backlog.ts';
 import {
-    type BugGenerator,
-    type BugGeneratorEvent,
-    CustomBugGenerator,
-    noBugGenerator,
-    RandomBugGenerator,
+  type BugGenerator,
+  type BugGeneratorEvent,
+  CustomBugGenerator,
+  noBugGenerator,
+  RandomBugGenerator,
 } from './simulate/bug-generator.ts';
 import {
-    CustomPriorityModificator,
-    noPriorityModificator,
-    type PriorityModificator,
-    type PriorityModificatorEvent,
-    RandomPriorityModificator,
+  CustomPriorityModificator,
+  noPriorityModificator,
+  type PriorityModificator,
+  type PriorityModificatorEvent,
+  RandomPriorityModificator,
 } from './simulate/priority-modificator.ts';
-import {noReview} from './simulate/review.ts';
-import {simulate} from './simulate/simulation.ts';
-import {computeStatEvents} from './simulate/stats.ts';
-import {EnsembleTeam, ParallelTeam, type Team, type Thread,} from './simulate/team.ts';
+import { noReview } from './simulate/review.ts';
+import { simulate } from './simulate/simulation.ts';
+import { computeStatEvents } from './simulate/stats.ts';
 import {
-    CustomTeamModificator,
-    noTeamModificator,
-    RandomTeamModificator,
-    type TeamModificator,
-    type TeamModificatorEvent,
+  EnsembleTeam,
+  ParallelTeam,
+  type Team,
+  type Thread,
+} from './simulate/team.ts';
+import {
+  CustomTeamModificator,
+  noTeamModificator,
+  RandomTeamModificator,
+  type TeamModificator,
+  type TeamModificatorEvent,
 } from './simulate/team-modificator.ts';
-import type {UserStory} from './simulate/user-story.ts';
+import type { UserStory } from './simulate/user-story.ts';
 
 const getInputValueOf = (selector: string): number => {
   const number = Number.parseInt(
