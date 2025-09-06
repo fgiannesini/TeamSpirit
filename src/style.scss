@@ -1,4 +1,1 @@
-@use "@picocss/pico/scss" with (
-  $enable-semantic-container: true,
-  $enable-viewport: false,
-);
+@import "beercss/dist/cdn/beer.css";

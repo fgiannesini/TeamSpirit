@@ -17,8 +17,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.0.0",
-    "@picocss/pico": "^2.1.1",
     "@types/node": "^24.0.3",
+    "beercss": "^3.11.33",
     "gh-pages": "^6.2.0",
     "husky": "^9.1.7",
     "jsdom": "^26.0.0",
