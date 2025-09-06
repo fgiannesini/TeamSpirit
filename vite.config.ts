@@ -1,7 +1,9 @@
+import vue from '@vitejs/plugin-vue';
 import { defineConfig } from 'vitest/config';
 
 // biome-ignore lint/style/noDefaultExport: Vite configuration
 export default defineConfig({
+  plugins: [vue()],
   root: './src',
   base: '/TeamSpirit/',
   build: {
