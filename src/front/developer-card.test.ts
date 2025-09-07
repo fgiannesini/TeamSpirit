@@ -42,5 +42,17 @@ describe('DeveloperCard', () => {
       const tooltip = wrapper.get('[data-testid=experience-label]');
       expect(tooltip.isVisible()).toBe(true);
     });
+
+    test('Should show minimum of the range', () => {
+      const wrapper = createWrapper();
+      const minimum = wrapper.get('[data-testid=experience-minimum]');
+      expect(minimum.text()).toBe('1');
+    });
+
+    test('Should show maximum of the range', () => {
+      const wrapper = createWrapper();
+      const minimum = wrapper.get('[data-testid=experience-maximum]');
+      expect(minimum.text()).toBe('7');
+    });
   });
 });
