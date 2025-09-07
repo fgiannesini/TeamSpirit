@@ -24,15 +24,23 @@ describe('DeveloperCard', () => {
     expect(wrapper.emitted()).toHaveProperty('remove');
   });
 
-  test('Should render a range to select experience', () => {
-    const wrapper = createWrapper();
-    const range = wrapper.get('[data-testid=experience-range]');
-    expect(range.isVisible()).toBe(true);
-  });
+  describe('Experience', () => {
+    test('Should render a range to select experience', () => {
+      const wrapper = createWrapper();
+      const range = wrapper.get('[data-testid=experience-range]');
+      expect(range.isVisible()).toBe(true);
+    });
 
-  test('Should have the tooltip rendered', () => {
-    const wrapper = createWrapper();
-    const tooltip = wrapper.get('[data-testid=experience-range-tooltip]');
-    expect(tooltip.isVisible()).toBe(true);
+    test('Should have the tooltip rendered', () => {
+      const wrapper = createWrapper();
+      const tooltip = wrapper.get('[data-testid=experience-range-tooltip]');
+      expect(tooltip.isVisible()).toBe(true);
+    });
+
+    test('Should have a label', () => {
+      const wrapper = createWrapper();
+      const tooltip = wrapper.get('[data-testid=experience-label]');
+      expect(tooltip.isVisible()).toBe(true);
+    });
   });
 });

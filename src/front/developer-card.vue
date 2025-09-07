@@ -4,12 +4,14 @@
       <i>remove</i>
       <span>Remove</span>
     </button>
-    <label class="slider" data-testid="experience-range">
-      <input type="range" value="3" min="1" max="7">
-      <span></span>
-      <div class="tooltip" data-testid=experience-range-tooltip></div>
-    </label>
-
+    <fieldset>
+      <legend data-testid="experience-label">Experience</legend>
+      <label class="slider" data-testid="experience-range">
+        <input type="range" value="3" min="1" max="7">
+        <span></span>
+        <div class="tooltip" data-testid=experience-range-tooltip></div>
+      </label>
+    </fieldset>
   </article>
 </template>
 <script setup lang="ts">
