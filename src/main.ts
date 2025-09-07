@@ -14,7 +14,7 @@ import {
   generateTeamModificatorEventsForm,
   generateUserStoriesForm,
 } from './form/form.ts';
-import form from './front/form.vue';
+import formComponent from './front/form.vue';
 import type { Backlog } from './simulate/backlog.ts';
 import {
   type BugGenerator,
@@ -48,7 +48,7 @@ import {
 } from './simulate/team-modificator.ts';
 import type { UserStory } from './simulate/user-story.ts';
 
-const app: App<Element> = createApp(form);
+const app: App<Element> = createApp(formComponent);
 app.mount('#form');
 
 const getInputValueOf = (selector: string): number => {
