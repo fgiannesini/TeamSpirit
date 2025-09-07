@@ -7,18 +7,20 @@
     <fieldset>
       <legend data-testid="experience-label">Experience</legend>
       <nav>
-      <span data-testid="experience-minimum">1</span>
+      <span data-testid="experience-minimum">{{min}}</span>
       <label class="slider" data-testid="experience-range">
-        <input type="range" value="3" min="1" max="7">
+        <input type="range" value="3" :min="min" :max="max">
         <span></span>
         <div class="tooltip" data-testid=experience-range-tooltip></div>
       </label>
-      <span data-testid="experience-maximum">7</span>
+      <span data-testid="experience-maximum">{{max}}</span>
       </nav>
     </fieldset>
   </article>
 </template>
 <script setup lang="ts">
+const min =1;
+const max = 7;
 </script>
 <style lang="scss" scoped>
 .slider > .tooltip {
