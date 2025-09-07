@@ -1,6 +1,6 @@
 <template>
   <article>
-<button class="small-round extra" data-testid="remove-developer-button">
+<button class="small-round extra" data-testid="remove-button" @click="$emit('remove')">
   <i>remove</i>
   <span>Remove</span>
 </button>
