@@ -4,7 +4,10 @@
       <i>add</i>
       <span>Add a developer</span>
     </button>
-    <article data-testid="developer-card">
-    </article>
+    <developer-card data-testid="developer-card">
+    </developer-card>
   </main>
 </template>
+<script setup lang="ts">
+import DeveloperCard from './developer-card.vue';
+</script>
