@@ -6,6 +6,5 @@
     </button>
     <article data-testid="developer-card">
     </article>
-
   </main>
 </template>
