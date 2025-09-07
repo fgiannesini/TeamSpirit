@@ -19,4 +19,10 @@ describe('DeveloperCard', () => {
     button.trigger('click');
     expect(wrapper.emitted()).toHaveProperty('remove');
   });
+
+  test('Should render a range to select experience', () => {
+    const wrapper = mount(DeveloperCard);
+    const range = wrapper.get('[data-testid=experience-range]');
+    expect(range.isVisible()).toBe(true);
+  });
 });
