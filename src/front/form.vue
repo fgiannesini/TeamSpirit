@@ -4,7 +4,7 @@
       <i>add</i>
       <span>Add a developer</span>
     </button>
-    <developer-card data-testid="developer-card">
+    <developer-card :id="1" data-testid="developer-card">
     </developer-card>
   </main>
 </template>

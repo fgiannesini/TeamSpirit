@@ -3,14 +3,23 @@ import { describe, expect, test } from 'vitest';
 import DeveloperCard from './developer-card.vue';
 
 describe('DeveloperCard', () => {
+  const createWrapper = (): VueWrapper => {
+    return mount(DeveloperCard, {
+      props: {
+        id: 1,
+      },
+    });
+  };
+
   test('Should render', () => {
-    const wrapper = mount(DeveloperCard);
+    const wrapper = createWrapper();
     expect(wrapper.exists()).toBe(true);
   });
 
-  const createWrapper = (): VueWrapper => {
-    return mount(DeveloperCard);
-  };
+  test('Should have a title', () => {
+    const wrapper = createWrapper();
+    expect(wrapper.get('[data-testid=title]').text()).toBe('Developer 1');
+  });
 
   test('Should have a button to remove the developer', () => {
     const wrapper = createWrapper();

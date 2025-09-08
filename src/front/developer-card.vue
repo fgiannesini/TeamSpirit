@@ -1,5 +1,6 @@
 <template>
   <article class ="medium-width">
+    <h3 data-testid="title">Developer {{id}}</h3>
     <button class="small-round small secondary" data-testid="remove-button" @click="$emit('remove')">
       <i>remove</i>
       <span>Remove</span>
@@ -19,7 +20,8 @@
   </article>
 </template>
 <script setup lang="ts">
-const min =1;
+defineProps<{ id: number }>();
+const min = 1;
 const max = 7;
 </script>
 <style lang="scss" scoped>
