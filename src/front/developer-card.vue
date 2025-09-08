@@ -1,10 +1,13 @@
 <template>
   <article class ="medium-width">
-    <h3 data-testid="title">Developer {{id}}</h3>
-    <button class="small-round small secondary" data-testid="remove-button" @click="$emit('remove')">
-      <i>remove</i>
-      <span>Remove</span>
-    </button>
+    <nav>
+      <h4 data-testid="title" class="max">Developer {{id}}</h4>
+      <button class="small-round small secondary" data-testid="remove-button" @click="$emit('remove')">
+        <i>remove</i>
+        <span>Remove</span>
+      </button>
+    </nav>
+    <div class="space"></div>
     <fieldset>
       <legend data-testid="experience-label">Experience</legend>
       <nav>
