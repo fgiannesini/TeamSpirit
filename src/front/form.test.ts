@@ -1,5 +1,6 @@
 import { mount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
+import type DeveloperCard from './developer-card.vue';
 import Form from './form.vue';
 
 describe('Form', () => {
@@ -23,9 +24,24 @@ describe('Form', () => {
     );
   });
 
-  test('Should generate a card to add a developer', () => {
+  test('Should generate a developper card', () => {
     const wrapper = createWrapper();
-    wrapper.get('[data-testid=add-developer-button]').trigger('click');
-    expect(wrapper.get('[data-testid=developer-card]').isVisible()).toBe(true);
+    const addButton = wrapper.get('[data-testid=add-developer-button]');
+    addButton.trigger('click');
+    const developerCard1 = wrapper.findComponent<typeof DeveloperCard>(
+      '[data-testid=developer-card-1]',
+    );
+    expect(developerCard1.props('id')).toEqual(1);
+  });
+
+  test('Should generate two developer cards', () => {
+    const wrapper = createWrapper();
+    const addButton = wrapper.get('[data-testid=add-developer-button]');
+    addButton.trigger('click');
+    addButton.trigger('click');
+    const developerCard1 = wrapper.findComponent<typeof DeveloperCard>(
+      '[data-testid=developer-card-2]',
+    );
+    expect(developerCard1.props('id')).toEqual(2);
   });
 });
