@@ -13,8 +13,10 @@ const addDeveloper = () => {
       <i>add</i>
       <span>Add a developer</span>
     </button>
-    <div v-for="id in ids">
-      <developer-card :id="id" :data-testid="'developer-card-' + id"></developer-card>
+    <div class="grid">
+      <div class="s12 m6 l4" v-for="id in ids">
+        <developer-card :id="id" :data-testid="'developer-card-' + id"></developer-card>
+      </div>
     </div>
   </main>
 </template>
