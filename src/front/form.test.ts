@@ -71,4 +71,17 @@ describe('Form', () => {
     await getDeveloperCard(wrapper, 'developer-card-1').trigger('remove');
     expect(getDeveloperCard(wrapper, 'developer-card-1').exists()).toBe(false);
   });
+
+  test('Should add a developer after a remove', async () => {
+    const wrapper = createWrapper();
+    const addButton = wrapper.get('[data-testid=add-developer-button]');
+
+    await addButton.trigger('click');
+    await addButton.trigger('click');
+    await getDeveloperCard(wrapper, 'developer-card-0').trigger('remove');
+
+    await addButton.trigger('click');
+
+    expect(getDeveloperCard(wrapper, 'developer-card-2').exists()).toBe(true);
+  });
 });

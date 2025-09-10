@@ -4,9 +4,10 @@ import {ref} from "vue";
 
 const ids = ref<number[]>([]);
 const addDeveloper = () => {
-  ids.value = [...ids.value, ids.value.length];
+  const max = ids.value.length ? Math.max(...ids.value) + 1 : 0
+  ids.value = [...ids.value, max];
 }
-const removeDeveloper= (targetId: number) => {
+const removeDeveloper = (targetId: number) => {
   ids.value = ids.value.filter(id => id !== targetId);
 }
 </script>
