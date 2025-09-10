@@ -24,14 +24,21 @@ describe('Form', () => {
     );
   });
 
+  const getDeveloperCard = (
+    wrapper: VueWrapper,
+    selector: string,
+  ): VueWrapper<InstanceType<typeof DeveloperCard>> => {
+    return wrapper.findComponent<typeof DeveloperCard>(
+      `[data-testid=${selector}]`,
+    );
+  };
+
   test('Should generate a developper card', async () => {
     const wrapper = createWrapper();
     const addButton = wrapper.get('[data-testid=add-developer-button]');
     await addButton.trigger('click');
 
-    const developerCard = wrapper.findComponent<typeof DeveloperCard>(
-      '[data-testid=developer-card-0]',
-    );
+    const developerCard = getDeveloperCard(wrapper, 'developer-card-0');
     expect(developerCard.props('id')).toEqual(0);
   });
 
@@ -41,10 +48,8 @@ describe('Form', () => {
     await addButton.trigger('click');
     await addButton.trigger('click');
 
-    const developerCard1 = wrapper.findComponent<typeof DeveloperCard>(
-      '[data-testid=developer-card-1]',
-    );
-    expect(developerCard1.props('id')).toEqual(1);
+    const developerCard = getDeveloperCard(wrapper, 'developer-card-1');
+    expect(developerCard.props('id')).toEqual(1);
   });
 
   test('Should remove a developer card', async () => {
@@ -52,10 +57,18 @@ describe('Form', () => {
     const addButton = wrapper.get('[data-testid=add-developer-button]');
     await addButton.trigger('click');
 
-    const developerCard0 = wrapper.findComponent<typeof DeveloperCard>(
-      '[data-testid=developer-card-0]',
-    );
-    await developerCard0.trigger('remove');
-    expect(developerCard0.exists()).toBe(false);
+    await getDeveloperCard(wrapper, 'developer-card-0').trigger('remove');
+    expect(getDeveloperCard(wrapper, 'developer-card-0').exists()).toBe(false);
+  });
+
+  test('Should remove a dedicated developer card', async () => {
+    const wrapper = createWrapper();
+    const addButton = wrapper.get('[data-testid=add-developer-button]');
+    await addButton.trigger('click');
+    await addButton.trigger('click');
+    await addButton.trigger('click');
+
+    await getDeveloperCard(wrapper, 'developer-card-1').trigger('remove');
+    expect(getDeveloperCard(wrapper, 'developer-card-1').exists()).toBe(false);
   });
 });
