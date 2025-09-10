@@ -1,5 +1,5 @@
-import {shallowMount, type VueWrapper} from '@vue/test-utils';
-import {describe, expect, test} from 'vitest';
+import { shallowMount, type VueWrapper } from '@vue/test-utils';
+import { describe, expect, test } from 'vitest';
 import type DeveloperCard from './developer-card.vue';
 import Form from './form.vue';
 
@@ -25,25 +25,37 @@ describe('Form', () => {
   });
 
   test('Should generate a developper card', async () => {
-      const wrapper = createWrapper();
-      const addButton = wrapper.get('[data-testid=add-developer-button]');
-      await addButton.trigger('click');
+    const wrapper = createWrapper();
+    const addButton = wrapper.get('[data-testid=add-developer-button]');
+    await addButton.trigger('click');
 
-      const developerCard = wrapper.findComponent<typeof DeveloperCard>(
-          '[data-testid=developer-card-0]',
-      );
-      expect(developerCard.props('id')).toEqual(0);
+    const developerCard = wrapper.findComponent<typeof DeveloperCard>(
+      '[data-testid=developer-card-0]',
+    );
+    expect(developerCard.props('id')).toEqual(0);
   });
 
   test('Should generate two developer cards', async () => {
-      const wrapper = createWrapper();
-      const addButton = wrapper.get('[data-testid=add-developer-button]');
-      await addButton.trigger('click');
-      await addButton.trigger('click');
+    const wrapper = createWrapper();
+    const addButton = wrapper.get('[data-testid=add-developer-button]');
+    await addButton.trigger('click');
+    await addButton.trigger('click');
 
-      const developerCard1 = wrapper.findComponent<typeof DeveloperCard>(
-          '[data-testid=developer-card-1]',
-      );
-      expect(developerCard1.props('id')).toEqual(1);
+    const developerCard1 = wrapper.findComponent<typeof DeveloperCard>(
+      '[data-testid=developer-card-1]',
+    );
+    expect(developerCard1.props('id')).toEqual(1);
+  });
+
+  test('Should remove a developer card', async () => {
+    const wrapper = createWrapper();
+    const addButton = wrapper.get('[data-testid=add-developer-button]');
+    await addButton.trigger('click');
+
+    const developerCard0 = wrapper.findComponent<typeof DeveloperCard>(
+      '[data-testid=developer-card-0]',
+    );
+    await developerCard0.trigger('remove');
+    expect(developerCard0.exists()).toBe(false);
   });
 });

@@ -6,6 +6,9 @@ const ids = ref<number[]>([]);
 const addDeveloper = () => {
   ids.value = [...ids.value, ids.value.length];
 }
+const removeDeveloper= () => {
+  ids.value = ids.value.slice(0,ids.value.length-1);
+}
 </script>
 <template>
   <main class="responsive">
@@ -15,7 +18,7 @@ const addDeveloper = () => {
     </button>
     <div class="grid">
       <div class="s12 m6 l4" v-for="id in ids">
-        <developer-card :id="id" :data-testid="'developer-card-' + id"></developer-card>
+        <developer-card :id="id" :data-testid="'developer-card-' + id" @remove="removeDeveloper"></developer-card>
       </div>
     </div>
   </main>
