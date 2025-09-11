@@ -39,4 +39,17 @@ describe('Form', () => {
     const classes = wrapper.get('[data-testid=team-tab]').classes();
     expect(classes).toContain('active');
   });
+
+  test('Should set the navigation tab reviewers active onclick', async () => {
+    const wrapper = createWrapper();
+
+    const reviewers = wrapper.get('[data-testid=reviewers-tab]');
+    await reviewers.trigger('click');
+    expect(wrapper.get('[data-testid=reviewers-tab]').classes()).toContain(
+      'active',
+    );
+
+    const teamClasses = wrapper.get('[data-testid=team-tab]').classes();
+    expect(teamClasses).not.toContain('active');
+  });
 });
