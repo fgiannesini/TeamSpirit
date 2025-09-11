@@ -18,9 +18,19 @@ describe('Form', () => {
     expect(wrapper.exists()).toBe(true);
   });
 
-  test('Should have a Team', () => {
+  test('Should render a Team', () => {
     const wrapper = createWrapper();
     const team = wrapper.getComponent<typeof Team>(Team);
     expect(team.isVisible()).toBe(true);
   });
+
+  test("Should render a navigation tab teams", () => {
+      const wrapper = createWrapper();
+      expect(wrapper.get("[data-testid=team-tab]").isVisible()).toBe(true);
+  });
+
+    test("Should render a navigation tab reviewers", () => {
+        const wrapper = createWrapper();
+        expect(wrapper.get("[data-testid=reviewers-tab]").isVisible()).toBe(true);
+    });
 });
