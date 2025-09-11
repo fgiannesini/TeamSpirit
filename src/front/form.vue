@@ -1,8 +1,8 @@
 <script setup lang="ts">
 
 import {type Ref, ref} from "vue";
-import Reviewers from "./reviewers.vue";
-import Team from "./team.vue";
+import Reviewers from "./reviewers/reviewers.vue";
+import Team from "./team/team.vue";
 
 type TabName = 'team' | 'reviewers'
 const active: Ref<TabName> = ref("team");

@@ -1,7 +1,7 @@
 import { shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
 import Form from './form.vue';
-import Team from './team.vue';
+import Team from './team/team.vue';
 
 describe('Form', () => {
   const createWrapper = (): VueWrapper => {
