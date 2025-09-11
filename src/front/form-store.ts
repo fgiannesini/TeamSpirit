@@ -1,7 +1,17 @@
 import { defineStore, type StoreDefinition } from 'pinia';
 
+type State = {
+  teamMode: TeamMode;
+};
+
+export type TeamMode = 'random' | 'custom' | 'notSet';
+
 export const useFormStore: StoreDefinition = defineStore('form', {
-  state: () => ({}),
+  state: (): State => ({ teamMode: 'notSet' }),
   getters: {},
-  actions: {},
+  actions: {
+    setTeamMode(teamMode: TeamMode): void {
+      this.teamMode = teamMode;
+    },
+  },
 });
