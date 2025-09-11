@@ -17,4 +17,10 @@ describe('Team', () => {
     const randomRadio = wrapper.get('[data-testid=random-radio]');
     expect(randomRadio.isVisible()).toBe(true);
   });
+
+  test('Should have a radio button for custom mode', () => {
+    const wrapper = createWrapper();
+    const customRadio = wrapper.get('[data-testid=custom-radio]');
+    expect(customRadio.isVisible()).toBe(true);
+  });
 });
