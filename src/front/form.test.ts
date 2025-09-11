@@ -1,7 +1,7 @@
 import { shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
+import CustomTeam from './custom-team.vue';
 import Form from './form.vue';
-import Team from './team.vue';
 
 describe('Form', () => {
   const createWrapper = (): VueWrapper => {
@@ -20,7 +20,7 @@ describe('Form', () => {
 
   test('Should render a Team', () => {
     const wrapper = createWrapper();
-    const team = wrapper.getComponent<typeof Team>(Team);
+    const team = wrapper.getComponent<typeof CustomTeam>(CustomTeam);
     expect(team.isVisible()).toBe(true);
   });
 

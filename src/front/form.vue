@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import Team from './team.vue';
+import CustomTeam from './custom-team.vue';
 import {type Ref, ref} from "vue";
 import Reviewers from "./reviewers.vue";
 
@@ -23,7 +23,7 @@ const activate = (tabName: TabName): void => {
       </a>
     </nav>
     <div data-testid="team-container" :class="[active === 'team' ? 'active' : '','page', 'padding']">
-      <Team></Team>
+      <CustomTeam></CustomTeam>
     </div>
     <div data-testid="reviewers-container" :class="[active === 'reviewers' ? 'active' : '','page', 'padding']">
       <Reviewers></Reviewers>
