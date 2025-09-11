@@ -24,6 +24,11 @@ describe('Form', () => {
     );
   });
 
+  test('Should not display setting state when no developer is added', () => {
+    const wrapper = createWrapper();
+    expect(wrapper.find('[data-testid=setting-state]').exists()).toBe(false);
+  });
+
   const getDeveloperCard = (
     wrapper: VueWrapper,
     selector: string,
@@ -75,7 +80,6 @@ describe('Form', () => {
   test('Should add a developer after a remove', async () => {
     const wrapper = createWrapper();
     const addButton = wrapper.get('[data-testid=add-developer-button]');
-
     await addButton.trigger('click');
     await addButton.trigger('click');
     await getDeveloperCard(wrapper, 'developer-card-0').trigger('remove');
@@ -83,5 +87,22 @@ describe('Form', () => {
     await addButton.trigger('click');
 
     expect(getDeveloperCard(wrapper, 'developer-card-2').exists()).toBe(true);
+  });
+
+  test('Should display empty state', () => {
+    const wrapper = createWrapper();
+    expect(wrapper.get('[data-testid=empty-state]').isVisible()).toBe(true);
+  });
+
+  test('Should display empty state when no developers are configured', () => {
+    const wrapper = createWrapper();
+    expect(wrapper.get('[data-testid=empty-state]').isVisible()).toBe(true);
+  });
+
+  test('Should not display empty state when developers are configured', async () => {
+    const wrapper = createWrapper();
+    const addButton = wrapper.get('[data-testid=add-developer-button]');
+    await addButton.trigger('click');
+    expect(wrapper.find('[data-testid=empty-state]').exists()).toBe(false);
   });
 });
