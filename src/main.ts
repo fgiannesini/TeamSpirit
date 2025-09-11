@@ -1,6 +1,7 @@
 import 'beercss';
 import 'material-dynamic-colors';
 
+import { createPinia } from 'pinia';
 import { type App, createApp } from 'vue';
 import {
   saveStatEvents,
@@ -49,6 +50,7 @@ import {
 import type { UserStory } from './simulate/user-story.ts';
 
 const app: App<Element> = createApp(formComponent);
+app.use(createPinia());
 app.mount('#form');
 
 const getInputValueOf = (selector: string): number => {
