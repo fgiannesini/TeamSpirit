@@ -11,4 +11,10 @@ describe('Team', () => {
     const wrapper = createWrapper();
     expect(wrapper.exists()).toBe(true);
   });
+
+  test('Should have a radio button for random mode', () => {
+    const wrapper = createWrapper();
+    const randomRadio = wrapper.get('[data-testid=random-radio]');
+    expect(randomRadio.isVisible()).toBe(true);
+  });
 });
