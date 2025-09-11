@@ -1,11 +1,11 @@
 import { shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
+import CustomTeam from './custom-team.vue';
 import type DeveloperCard from './developer-card.vue';
-import Team from './team.vue';
 
 describe('Team', () => {
   const createWrapper = (): VueWrapper => {
-    return shallowMount(Team);
+    return shallowMount(CustomTeam);
   };
   test('Should render the component', () => {
     const wrapper = createWrapper();
