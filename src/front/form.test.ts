@@ -62,4 +62,29 @@ describe('Form', () => {
     const teamClasses = wrapper.get('[data-testid=team-tab]').classes();
     expect(teamClasses).toContain('active');
   });
+
+  test('Should set the reviewers page active on reviewers tab click', async () => {
+    const wrapper = createWrapper();
+    expect(
+      wrapper.get('[data-testid=reviewers-container]').classes(),
+    ).not.toContain('active');
+
+    await wrapper.get('[data-testid=reviewers-tab]').trigger('click');
+    expect(
+      wrapper.get('[data-testid=reviewers-container]').classes(),
+    ).toContain('active');
+  });
+
+  test('Should set the team page active on team tab click', async () => {
+    const wrapper = createWrapper();
+    await wrapper.get('[data-testid=reviewers-tab]').trigger('click');
+    expect(wrapper.get('[data-testid=team-container]').classes()).not.toContain(
+      'active',
+    );
+
+    await wrapper.get('[data-testid=team-tab]').trigger('click');
+    expect(wrapper.get('[data-testid=team-container]').classes()).toContain(
+      'active',
+    );
+  });
 });

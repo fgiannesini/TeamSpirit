@@ -2,10 +2,11 @@
 
 import Team from './team.vue';
 import {type Ref, ref} from "vue";
+import Reviewers from "./reviewers.vue";
 
 type TabName = 'team' | 'reviewers'
 const active: Ref<TabName> = ref("team");
-const activate = (tabName : TabName): void => {
+const activate = (tabName: TabName): void => {
   active.value = tabName;
 }
 </script>
@@ -21,6 +22,11 @@ const activate = (tabName : TabName): void => {
         <span>Reviewers</span>
       </a>
     </nav>
-    <Team></Team>
+    <div data-testid="team-container" :class="[active === 'team' ? 'active' : '','page', 'padding']">
+      <Team></Team>
+    </div>
+    <div data-testid="reviewers-container" :class="[active === 'reviewers' ? 'active' : '','page', 'padding']">
+      <Reviewers></Reviewers>
+    </div>
   </main>
 </template>
