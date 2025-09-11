@@ -1,10 +1,10 @@
 <script setup lang="ts">
 
 import Team from './team.vue';
-import {ref} from "vue";
+import {type Ref, ref} from "vue";
 
-type TabName = 'teams' | 'reviewers'
-const active = ref("teams");
+type TabName = 'team' | 'reviewers'
+const active: Ref<TabName> = ref("team");
 const activate = (tabName : TabName): void => {
   active.value = tabName;
 }
@@ -12,7 +12,7 @@ const activate = (tabName : TabName): void => {
 <template>
   <main class="responsive">
     <nav class="tabbed">
-      <a data-testid="team-tab" :class="[active !== 'reviewers' ? 'active' : '']">
+      <a data-testid="team-tab" @click="activate('team')" :class="[active === 'team' ? 'active' : '']">
         <i>groups</i>
         <span>Teams</span>
       </a>

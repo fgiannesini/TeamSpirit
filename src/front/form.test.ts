@@ -52,4 +52,14 @@ describe('Form', () => {
     const teamClasses = wrapper.get('[data-testid=team-tab]').classes();
     expect(teamClasses).not.toContain('active');
   });
+
+  test('Should set the navigation tab teams active onclick', async () => {
+    const wrapper = createWrapper();
+
+    await wrapper.get('[data-testid=reviewers-tab]').trigger('click');
+    await wrapper.get('[data-testid=team-tab]').trigger('click');
+
+    const teamClasses = wrapper.get('[data-testid=team-tab]').classes();
+    expect(teamClasses).toContain('active');
+  });
 });
