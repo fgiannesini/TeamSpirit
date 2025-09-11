@@ -11,7 +11,7 @@ const activate = (teamMode: TeamMode) => {
 <template>
   <nav>
     <label class="radio">
-      <input data-testid="random-radio" type="radio" name="team" >
+      <input data-testid="random-radio" type="radio" name="team" @click="activate('random')">
       <span>Random</span>
     </label>
     <label class="radio">

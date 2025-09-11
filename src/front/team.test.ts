@@ -57,15 +57,13 @@ describe('Team', () => {
     const randomRadio = radio(wrapper, 'random');
     await randomRadio.trigger('click');
 
-    const customRadio = radio(wrapper, 'custom');
-    await customRadio.trigger('click');
+    await radio(wrapper, 'custom').trigger('click');
     expect(randomRadio.element.checked).toBe(false);
   });
 
   test('Should render custom team component when custom mode is selected', async () => {
     const wrapper = createWrapper();
-    const customRadio = radio(wrapper, 'custom');
-    await customRadio.trigger('click');
+    await radio(wrapper, 'custom').trigger('click');
     expect(wrapper.get('[data-testid=custom-container]').classes()).toContain(
       'active',
     );
@@ -73,10 +71,21 @@ describe('Team', () => {
 
   test('Should not render custom team component when random mode is selected', async () => {
     const wrapper = createWrapper();
-    const randomRadio = radio(wrapper, 'random');
-    await randomRadio.trigger('click');
-    expect(wrapper.get('[data-testid=custom-container]').classes()).not.toBe(
+    await radio(wrapper, 'random').trigger('click');
+    expect(
+      wrapper.get('[data-testid=custom-container]').classes(),
+    ).not.toContain('active');
+  });
+
+  test('Should not render custom team component when random mode is selected after custom mode', async () => {
+    const wrapper = createWrapper();
+    await radio(wrapper, 'custom').trigger('click');
+    expect(wrapper.get('[data-testid=custom-container]').classes()).toContain(
       'active',
     );
+    await radio(wrapper, 'random').trigger('click');
+    expect(
+      wrapper.get('[data-testid=custom-container]').classes(),
+    ).not.toContain('active');
   });
 });
