@@ -17,7 +17,7 @@ const activate = (tabName: TabName): void => {
         <button data-testid="team-tab" @click="activate('team')" :class="[active === 'team' ? 'active' : '']">
           <i>groups</i>
         </button>
-        <div class="small-margin">Teams</div>
+        <div class="small-margin">Team</div>
       </div>
       <hr class="medium-width">
       <div class="center-align">

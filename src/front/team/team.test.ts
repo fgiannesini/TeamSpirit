@@ -1,14 +1,20 @@
+import { createTestingPinia } from '@pinia/testing';
 import {
   type DOMWrapper,
   shallowMount,
   type VueWrapper,
 } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
+import { useFormStore } from '../form-store.ts';
 import Team from './team.vue';
 
 describe('Team', () => {
   const createWrapper = (): VueWrapper => {
-    return shallowMount(Team);
+    return shallowMount(Team, {
+      global: {
+        plugins: [createTestingPinia()],
+      },
+    });
   };
 
   test('Should render the component', () => {
@@ -39,10 +45,16 @@ describe('Team', () => {
 
   test('Should select random mode', async () => {
     const wrapper = createWrapper();
-    const radioName = 'random';
-    const randomRadio = radio(wrapper, radioName);
+    const randomRadio = radio(wrapper, 'random');
     await randomRadio.trigger('click');
     expect(randomRadio.element.checked).toBe(true);
+  });
+
+  test('Should update random mode in store', async () => {
+    const wrapper = createWrapper();
+    await radio(wrapper, 'random').trigger('click');
+    const formStore = useFormStore();
+    expect(formStore.setTeamMode).toHaveBeenCalledWith('random');
   });
 
   test('Should select custom mode', async () => {
