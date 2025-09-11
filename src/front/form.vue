@@ -5,7 +5,7 @@ import Team from './team.vue';
 <template>
   <main class="responsive">
     <nav class="tabbed">
-      <a data-testid="team-tab">
+      <a data-testid="team-tab" class="active">
         <i>groups</i>
         <span>Teams</span>
       </a>

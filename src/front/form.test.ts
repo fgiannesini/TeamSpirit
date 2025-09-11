@@ -24,13 +24,19 @@ describe('Form', () => {
     expect(team.isVisible()).toBe(true);
   });
 
-  test("Should render a navigation tab teams", () => {
-      const wrapper = createWrapper();
-      expect(wrapper.get("[data-testid=team-tab]").isVisible()).toBe(true);
+  test('Should render a navigation tab teams', () => {
+    const wrapper = createWrapper();
+    expect(wrapper.get('[data-testid=team-tab]').isVisible()).toBe(true);
   });
 
-    test("Should render a navigation tab reviewers", () => {
-        const wrapper = createWrapper();
-        expect(wrapper.get("[data-testid=reviewers-tab]").isVisible()).toBe(true);
-    });
+  test('Should render a navigation tab reviewers', () => {
+    const wrapper = createWrapper();
+    expect(wrapper.get('[data-testid=reviewers-tab]').isVisible()).toBe(true);
+  });
+
+  test('Should have the navigation tab teams active by default', () => {
+    const wrapper = createWrapper();
+    const classes = wrapper.get('[data-testid=team-tab]').classes();
+    expect(classes).toContain('active');
+  });
 });
