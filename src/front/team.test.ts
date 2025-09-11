@@ -61,4 +61,22 @@ describe('Team', () => {
     await customRadio.trigger('click');
     expect(randomRadio.element.checked).toBe(false);
   });
+
+  test('Should render custom team component when custom mode is selected', async () => {
+    const wrapper = createWrapper();
+    const customRadio = radio(wrapper, 'custom');
+    await customRadio.trigger('click');
+    expect(wrapper.get('[data-testid=custom-container]').classes()).toContain(
+      'active',
+    );
+  });
+
+  test('Should not render custom team component when random mode is selected', async () => {
+    const wrapper = createWrapper();
+    const randomRadio = radio(wrapper, 'random');
+    await randomRadio.trigger('click');
+    expect(wrapper.get('[data-testid=custom-container]').classes()).not.toBe(
+      'active',
+    );
+  });
 });
