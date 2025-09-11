@@ -1,15 +1,14 @@
+<script setup lang="ts">
+</script>
 <template>
-
   <nav>
-    <label data-testid = "random-radio" class="radio">
-      <input type="radio" name="Random">
+    <label class="radio">
+      <input data-testid="random-radio" type="radio" name="team">
       <span>Random</span>
     </label>
-    <label data-testid = "custom-radio" class="radio">
-      <input type="radio" name="Custom">
+    <label class="radio">
+      <input data-testid="custom-radio" type="radio" name="team">
       <span>Custom</span>
     </label>
   </nav>
 </template>
-<script setup lang="ts">
-</script>
