@@ -11,6 +11,7 @@ const activate = (tabName: TabName): void => {
 }
 </script>
 <template>
+
   <main class="responsive">
     <nav class="tabbed">
       <a data-testid="team-tab" @click="activate('team')" :class="[active === 'team' ? 'active' : '']">
@@ -29,4 +30,5 @@ const activate = (tabName: TabName): void => {
       <Reviewers></Reviewers>
     </div>
   </main>
+  <nav class="right medium-width" data-testid="resume-panel">Resume</nav>
 </template>

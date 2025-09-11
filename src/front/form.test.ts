@@ -87,4 +87,9 @@ describe('Form', () => {
       'active',
     );
   });
+
+  test('Should render a resume panel', () => {
+    const wrapper = createWrapper();
+    expect(wrapper.get('[data-testid=resume-panel]').isVisible()).toBe(true);
+  });
 });
