@@ -17,7 +17,7 @@ const activate = (tabName : TabName): void => {
         <span>Teams</span>
       </a>
       <a data-testid="reviewers-tab" @click="activate('reviewers')" :class="[active === 'reviewers' ? 'active' : '']">
-        <i>groups</i>
+        <i>share_reviews</i>
         <span>Reviewers</span>
       </a>
     </nav>
