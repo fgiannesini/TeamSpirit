@@ -11,17 +11,22 @@ const activate = (tabName: TabName): void => {
 }
 </script>
 <template>
-
   <main class="responsive">
-    <nav class="tabbed">
-      <a data-testid="team-tab" @click="activate('team')" :class="[active === 'team' ? 'active' : '']">
-        <i>groups</i>
-        <span>Teams</span>
-      </a>
-      <a data-testid="reviewers-tab" @click="activate('reviewers')" :class="[active === 'reviewers' ? 'active' : '']">
-        <i>share_reviews</i>
-        <span>Reviewers</span>
-      </a>
+    <nav>
+      <div class="center-align">
+        <button data-testid="team-tab" @click="activate('team')" :class="[active === 'team' ? 'active' : '']">
+          <i>groups</i>
+        </button>
+        <div class="small-margin">Teams</div>
+      </div>
+      <hr class="medium-width">
+      <div class="center-align">
+        <button data-testid="reviewers-tab" @click="activate('reviewers')"
+                :class="[active === 'reviewers' ? 'active' : '']">
+          <i>share_reviews</i>
+        </button>
+        <div class="small-margin">Reviewers</div>
+      </div>
     </nav>
     <div data-testid="team-container" :class="[active === 'team' ? 'active' : '','page', 'padding']">
       <Team></Team>
