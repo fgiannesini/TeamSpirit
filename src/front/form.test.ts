@@ -1,6 +1,7 @@
 import { shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
 import Form from './form.vue';
+import Resume from './resume/resume.vue';
 import Team from './team/team.vue';
 
 describe('Form', () => {
@@ -91,5 +92,10 @@ describe('Form', () => {
   test('Should render a resume panel', () => {
     const wrapper = createWrapper();
     expect(wrapper.get('[data-testid=resume-panel]').isVisible()).toBe(true);
+  });
+
+  test('Should render a resume component', () => {
+    const wrapper = createWrapper();
+    expect(wrapper.getComponent(Resume).isVisible()).toBe(true);
   });
 });

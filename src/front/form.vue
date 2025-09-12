@@ -3,6 +3,7 @@
 import {type Ref, ref} from "vue";
 import Reviewers from "./reviewers/reviewers.vue";
 import Team from "./team/team.vue";
+import Resume from "./resume/resume.vue";
 
 type TabName = 'team' | 'reviewers'
 const active: Ref<TabName> = ref("team");
@@ -35,5 +36,5 @@ const activate = (tabName: TabName): void => {
       <Reviewers></Reviewers>
     </div>
   </main>
-  <nav class="right medium-width" data-testid="resume-panel">Resume</nav>
+  <nav class="right medium-width" data-testid="resume-panel">Resume <Resume></Resume></nav>
 </template>
