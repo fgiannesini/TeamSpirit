@@ -14,11 +14,11 @@ const activate = (teamMode: TeamMode) => {
 <template>
   <nav>
     <label class="radio">
-      <input data-testid="random-radio" type="radio" name="team" @click="activate('random')">
+      <input data-testid="random-radio" type="radio" name="team" @click="activate('random')" :checked="formStore.$state.teamMode === 'random'">
       <span>Random</span>
     </label>
     <label class="radio">
-      <input data-testid="custom-radio" type="radio" name="team" @click="activate('custom')">
+      <input data-testid="custom-radio" type="radio" name="team" @click="activate('custom')" :checked="formStore.$state.teamMode === 'custom'">
       <span>Custom</span>
     </label>
   </nav>

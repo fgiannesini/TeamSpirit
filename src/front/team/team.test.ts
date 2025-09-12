@@ -5,14 +5,20 @@ import {
   type VueWrapper,
 } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
-import { useFormStore } from '../form-store.ts';
+import { type State, useFormStore } from '../form-store.ts';
 import Team from './team.vue';
 
 describe('Team', () => {
-  const createWrapper = (): VueWrapper => {
+  const createWrapper = (state: Partial<State> = {}): VueWrapper => {
     return shallowMount(Team, {
       global: {
-        plugins: [createTestingPinia()],
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              form: { ...state },
+            },
+          }),
+        ],
       },
     });
   };
@@ -99,5 +105,17 @@ describe('Team', () => {
     expect(
       wrapper.get('[data-testid=custom-container]').classes(),
     ).not.toContain('active');
+  });
+
+  test('Should select custom mode on loading', () => {
+    const wrapper = createWrapper({ teamMode: 'custom' });
+    const customRadio = radio(wrapper, 'custom');
+    expect(customRadio.element.checked).toBe(true);
+  });
+
+  test('Should select random mode on loading', () => {
+    const wrapper = createWrapper({ teamMode: 'random' });
+    const randomRadio = radio(wrapper, 'random');
+    expect(randomRadio.element.checked).toBe(true);
   });
 });

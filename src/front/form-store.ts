@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 
-type State = {
+export type State = {
   teamMode: TeamMode;
 };
 
