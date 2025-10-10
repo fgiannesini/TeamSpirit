@@ -19,7 +19,11 @@ export const useFormStore = defineStore('form', {
       this.teamMode = teamMode;
     },
     generateDeveloper(): void {
-      this.developers.push({ id: 0 });
+      const max =
+        this.developers.length > 0
+          ? Math.max(...this.developers.map(({ id }) => id)) + 1
+          : 0;
+      this.developers = [...this.developers, { id: max }];
     },
   },
 });

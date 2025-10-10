@@ -33,4 +33,20 @@ describe('Form store', () => {
       ],
     });
   });
+
+  test('Should generate two developers', () => {
+    const store = useFormStore();
+    store.generateDeveloper();
+    store.generateDeveloper();
+    expect(store.$state).toMatchObject({
+      developers: [
+        {
+          id: 0,
+        },
+        {
+          id: 1,
+        },
+      ],
+    });
+  });
 });
