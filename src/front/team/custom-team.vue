@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import DeveloperCard from './developer-card.vue';
 import { ref } from 'vue';
+import DeveloperCard from './developer-card.vue';
 
 const ids = ref<number[]>([]);
-const addDeveloper = () => {
+const addDeveloper = (): void => {
   const max = ids.value.length ? Math.max(...ids.value) + 1 : 0;
   ids.value = [...ids.value, max];
 };
-const removeDeveloper = (targetId: number) => {
-  ids.value = ids.value.filter(id => id !== targetId);
+const removeDeveloper = (targetId: number): void => {
+  ids.value = ids.value.filter((id) => id !== targetId);
 };
 
-const hasDevelopers = () => ids.value.length > 0
+const hasDevelopers = () => ids.value.length > 0;
 </script>
 <template>
   <div v-if="hasDevelopers()" data-testid="setting-state">

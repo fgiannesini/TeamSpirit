@@ -25,5 +25,8 @@ export const useFormStore = defineStore('form', {
           : 0;
       this.developers = [...this.developers, { id: max }];
     },
+    removeDeveloper(targetId: number): void {
+      this.developers = this.developers.filter(({ id }) => id !== targetId);
+    },
   },
 });

@@ -49,4 +49,32 @@ describe('Form store', () => {
       ],
     });
   });
+
+  test('Should remove a developer card', () => {
+    const store = useFormStore();
+    store.$patch({
+      developers: [
+        {
+          id: 0,
+        },
+        {
+          id: 1,
+        },
+        {
+          id: 2,
+        },
+      ],
+    });
+    store.removeDeveloper(1);
+    expect(store.$state).toMatchObject({
+      developers: [
+        {
+          id: 0,
+        },
+        {
+          id: 2,
+        },
+      ],
+    });
+  });
 });
