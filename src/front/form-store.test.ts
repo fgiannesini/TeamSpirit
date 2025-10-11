@@ -77,4 +77,27 @@ describe('Form store', () => {
       ],
     });
   });
+
+  test('Should add a developer after the last one', () => {
+    const store = useFormStore();
+    store.$patch({
+      developers: [
+        {
+          id: 1,
+        },
+      ],
+    });
+    store.generateDeveloper();
+
+    expect(store.$state).toMatchObject({
+      developers: [
+        {
+          id: 1,
+        },
+        {
+          id: 2,
+        },
+      ],
+    });
+  });
 });
