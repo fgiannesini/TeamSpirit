@@ -1,11 +1,23 @@
+import { createTestingPinia } from '@pinia/testing';
 import { shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
+import { type State, useFormStore } from '../form-store.ts';
 import CustomTeam from './custom-team.vue';
 import type DeveloperCard from './developer-card.vue';
 
 describe('Team', () => {
-  const createWrapper = (): VueWrapper => {
-    return shallowMount(CustomTeam);
+  const createWrapper = (state: Partial<State> = {}): VueWrapper => {
+    return shallowMount(CustomTeam, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              form: { ...state },
+            },
+          }),
+        ],
+      },
+    });
   };
   test('Should render the component', () => {
     const wrapper = createWrapper();
@@ -38,55 +50,28 @@ describe('Team', () => {
     const addButton = wrapper.get('[data-testid=add-developer-button]');
     await addButton.trigger('click');
 
-    const developerCard = getDeveloperCard(wrapper, 'developer-card-0');
-    expect(developerCard.props('id')).toEqual(0);
+    expect(useFormStore().generateDeveloper).toHaveBeenCalled();
   });
 
-  test('Should generate two developer cards', async () => {
-    const wrapper = createWrapper();
-    const addButton = wrapper.get('[data-testid=add-developer-button]');
-    await addButton.trigger('click');
-    await addButton.trigger('click');
+  test('Should display developer cards', () => {
+    const wrapper = createWrapper({
+      developers: [{ id: 0 }, { id: 1 }],
+    });
 
-    const developerCard = getDeveloperCard(wrapper, 'developer-card-1');
-    expect(developerCard.props('id')).toEqual(1);
+    expect(getDeveloperCard(wrapper, 'developer-card-0').props('id')).toEqual(
+      0,
+    );
+    expect(getDeveloperCard(wrapper, 'developer-card-1').props('id')).toEqual(
+      1,
+    );
   });
 
   test('Should remove a developer card', async () => {
-    const wrapper = createWrapper();
-    const addButton = wrapper.get('[data-testid=add-developer-button]');
-    await addButton.trigger('click');
-
+    const wrapper = createWrapper({
+      developers: [{ id: 0 }],
+    });
     await getDeveloperCard(wrapper, 'developer-card-0').trigger('remove');
-    expect(getDeveloperCard(wrapper, 'developer-card-0').exists()).toBe(false);
-  });
-
-  test('Should remove a dedicated developer card', async () => {
-    const wrapper = createWrapper();
-    const addButton = wrapper.get('[data-testid=add-developer-button]');
-    await addButton.trigger('click');
-    await addButton.trigger('click');
-    await addButton.trigger('click');
-
-    await getDeveloperCard(wrapper, 'developer-card-1').trigger('remove');
-    expect(getDeveloperCard(wrapper, 'developer-card-1').exists()).toBe(false);
-  });
-
-  test('Should add a developer after a remove', async () => {
-    const wrapper = createWrapper();
-    const addButton = wrapper.get('[data-testid=add-developer-button]');
-    await addButton.trigger('click');
-    await addButton.trigger('click');
-    await getDeveloperCard(wrapper, 'developer-card-0').trigger('remove');
-
-    await addButton.trigger('click');
-
-    expect(getDeveloperCard(wrapper, 'developer-card-2').exists()).toBe(true);
-  });
-
-  test('Should display empty state', () => {
-    const wrapper = createWrapper();
-    expect(wrapper.get('[data-testid=empty-state]').isVisible()).toBe(true);
+    expect(useFormStore().removeDeveloper).toHaveBeenCalledWith(0);
   });
 
   test('Should display empty state when no developers are configured', () => {
@@ -94,10 +79,10 @@ describe('Team', () => {
     expect(wrapper.get('[data-testid=empty-state]').isVisible()).toBe(true);
   });
 
-  test('Should not display empty state when developers are configured', async () => {
-    const wrapper = createWrapper();
-    const addButton = wrapper.get('[data-testid=add-developer-button]');
-    await addButton.trigger('click');
+  test('Should not display empty state when developers are configured', () => {
+    const wrapper = createWrapper({
+      developers: [{ id: 0 }],
+    });
     expect(wrapper.find('[data-testid=empty-state]').exists()).toBe(false);
   });
 });

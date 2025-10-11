@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { useFormStore } from '../form-store.ts';
 import DeveloperCard from './developer-card.vue';
 
-const ids = ref<number[]>([]);
+const store = useFormStore();
 const addDeveloper = (): void => {
-  const max = ids.value.length ? Math.max(...ids.value) + 1 : 0;
-  ids.value = [...ids.value, max];
+  store.generateDeveloper();
 };
 const removeDeveloper = (targetId: number): void => {
-  ids.value = ids.value.filter((id) => id !== targetId);
+  store.removeDeveloper(targetId);
 };
 
-const hasDevelopers = () => ids.value.length > 0;
+const hasDevelopers = () => store.developers.length > 0;
 </script>
 <template>
   <div v-if="hasDevelopers()" data-testid="setting-state">
@@ -20,8 +19,9 @@ const hasDevelopers = () => ids.value.length > 0;
       <span>Add a developer</span>
     </button>
     <div class="grid">
-      <div class="s12 m6 l4" v-for="id in ids">
-        <developer-card :id="id" :data-testid="'developer-card-' + id" @remove="removeDeveloper(id)"></developer-card>
+      <div class="s12 m6 l4" v-for="developer in store.developers">
+        <developer-card :id="developer.id" :data-testid="'developer-card-' + developer.id"
+                        @remove="removeDeveloper(developer.id)"></developer-card>
       </div>
     </div>
   </div>
