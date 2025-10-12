@@ -9,6 +9,7 @@ export type TeamMode = 'random' | 'custom' | 'notSet';
 
 export type Developer = {
   id: number;
+  experience: number;
 };
 
 // biome-ignore lint/nursery/useExplicitType: type is dynamic
@@ -23,7 +24,7 @@ export const useFormStore = defineStore('form', {
         this.developers.length > 0
           ? Math.max(...this.developers.map(({ id }) => id)) + 1
           : 0;
-      this.developers = [...this.developers, { id: max }];
+      this.developers = [...this.developers, { id: max, experience: 3 }];
     },
     removeDeveloper(targetId: number): void {
       this.developers = this.developers.filter(({ id }) => id !== targetId);

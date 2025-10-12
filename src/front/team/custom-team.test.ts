@@ -5,7 +5,7 @@ import { type State, useFormStore } from '../form-store.ts';
 import CustomTeam from './custom-team.vue';
 import type DeveloperCard from './developer-card.vue';
 
-describe('Team', () => {
+describe('Custom Team', () => {
   const createWrapper = (state: Partial<State> = {}): VueWrapper => {
     return shallowMount(CustomTeam, {
       global: {
@@ -55,7 +55,10 @@ describe('Team', () => {
 
   test('Should display developer cards', () => {
     const wrapper = createWrapper({
-      developers: [{ id: 0 }, { id: 1 }],
+      developers: [
+        { id: 0, experience: 3 },
+        { id: 1, experience: 3 },
+      ],
     });
 
     expect(getDeveloperCard(wrapper, 'developer-card-0').props('id')).toEqual(
@@ -66,9 +69,19 @@ describe('Team', () => {
     );
   });
 
+  test('Should bind developer experience', () => {
+    const wrapper = createWrapper({
+      developers: [{ id: 0, experience: 4 }],
+    });
+
+    expect(
+      getDeveloperCard(wrapper, 'developer-card-0').props('experience'),
+    ).toEqual(4);
+  });
+
   test('Should remove a developer card', async () => {
     const wrapper = createWrapper({
-      developers: [{ id: 0 }],
+      developers: [{ id: 0, experience: 3 }],
     });
     await getDeveloperCard(wrapper, 'developer-card-0').trigger('remove');
     expect(useFormStore().removeDeveloper).toHaveBeenCalledWith(0);
@@ -81,7 +94,7 @@ describe('Team', () => {
 
   test('Should not display empty state when developers are configured', () => {
     const wrapper = createWrapper({
-      developers: [{ id: 0 }],
+      developers: [{ id: 0, experience: 3 }],
     });
     expect(wrapper.find('[data-testid=empty-state]').exists()).toBe(false);
   });
