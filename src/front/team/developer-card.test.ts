@@ -72,5 +72,15 @@ describe('DeveloperCard', () => {
       );
       expect(input.element.value).toBe('4');
     });
+
+    test('Should send an update event on experience change', () => {
+      const wrapper = createWrapper();
+      const input = wrapper.get<HTMLInputElement>(
+        '[data-testid=experience-input]',
+      );
+      input.setValue(2);
+      const emitted = wrapper.emitted('update:experience');
+      expect(emitted?.[0]).toStrictEqual([2]);
+    });
   });
 });

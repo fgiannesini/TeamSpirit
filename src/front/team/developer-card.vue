@@ -13,7 +13,8 @@
       <nav>
         <span data-testid="experience-minimum">{{ min }}</span>
         <label class="slider" data-testid="experience-range">
-          <input data-testid="experience-input" type="range" :value="experience" :min="min" :max="max">
+          <input data-testid="experience-input" type="range" :value="experience"
+                 @input="$emit('update:experience', Number(($event.target as InputHTMLAttributes).value))" :min="min" :max="max">
           <span></span>
           <div class="tooltip" data-testid=experience-range-tooltip></div>
         </label>
@@ -23,7 +24,10 @@
   </article>
 </template>
 <script setup lang="ts">
+import type { InputHTMLAttributes } from 'vue';
+
 defineProps<{ id: number, experience: number }>();
+defineEmits(['update:experience', 'remove']);
 const min = 1;
 const max = 7;
 </script>
