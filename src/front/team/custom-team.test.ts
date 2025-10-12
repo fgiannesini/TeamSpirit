@@ -1,5 +1,5 @@
 import { createTestingPinia } from '@pinia/testing';
-import { shallowMount, type VueWrapper } from '@vue/test-utils';
+import { flushPromises, shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
 import { type State, useFormStore } from '../form-store.ts';
 import CustomTeam from './custom-team.vue';
@@ -77,6 +77,17 @@ describe('Custom Team', () => {
     expect(
       getDeveloperCard(wrapper, 'developer-card-0').props('experience'),
     ).toEqual(4);
+  });
+
+  test('Should update developer experience', async () => {
+    const wrapper = createWrapper({
+      developers: [{ id: 0, experience: 3 }],
+    });
+    const developerCard = getDeveloperCard(wrapper, 'developer-card-0');
+    developerCard.vm.$emit('update:experience', 2);
+    await flushPromises();
+
+    expect(useFormStore().developers[0].experience).toEqual(2);
   });
 
   test('Should remove a developer card', async () => {
