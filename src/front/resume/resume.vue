@@ -5,5 +5,5 @@ const formStore = useFormStore();
 </script>
 <template>
   <span data-testid="team-mode">{{formStore.$state.teamMode}}</span>
-  <span v-for="developer in formStore.developers" :data-testid="'developer-' + developer.id">3</span>
+  <span v-for="developer in formStore.developers" :data-testid="'developer-' + developer.id">{{developer.experience}}</span>
 </template>

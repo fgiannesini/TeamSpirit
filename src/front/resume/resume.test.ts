@@ -34,10 +34,10 @@ describe('Resume', () => {
     const wrapper = createWrapper({
       developers: [
         { id: 0, experience: 3 },
-        { id: 1, experience: 3 },
+        { id: 1, experience: 2 },
       ],
     });
     expect(wrapper.get('[data-testid=developer-0]').text()).toBe('3');
-    expect(wrapper.get('[data-testid=developer-1]').text()).toBe('3');
+    expect(wrapper.get('[data-testid=developer-1]').text()).toBe('2');
   });
 });
