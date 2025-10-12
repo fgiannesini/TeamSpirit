@@ -20,7 +20,7 @@ const hasDevelopers = () => store.developers.length > 0;
     </button>
     <div class="grid">
       <div class="s12 m6 l4" v-for="developer in store.developers">
-        <developer-card :id="developer.id" :data-testid="'developer-card-' + developer.id"
+        <developer-card :id="developer.id" :experience="3" :data-testid="'developer-card-' + developer.id"
                         @remove="removeDeveloper(developer.id)"></developer-card>
       </div>
     </div>

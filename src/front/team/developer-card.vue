@@ -13,7 +13,7 @@
       <nav>
         <span data-testid="experience-minimum">{{ min }}</span>
         <label class="slider" data-testid="experience-range">
-          <input type="range" value="3" :min="min" :max="max">
+          <input data-testid="experience-input" type="range" :value="experience" :min="min" :max="max">
           <span></span>
           <div class="tooltip" data-testid=experience-range-tooltip></div>
         </label>
@@ -23,7 +23,7 @@
   </article>
 </template>
 <script setup lang="ts">
-defineProps<{ id: number }>();
+defineProps<{ id: number, experience: number }>();
 const min = 1;
 const max = 7;
 </script>

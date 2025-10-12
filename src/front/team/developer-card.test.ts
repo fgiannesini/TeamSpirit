@@ -7,6 +7,7 @@ describe('DeveloperCard', () => {
     return mount(DeveloperCard, {
       props: {
         id: 1,
+        experience: 4,
       },
     });
   };
@@ -62,6 +63,14 @@ describe('DeveloperCard', () => {
       const wrapper = createWrapper();
       const minimum = wrapper.get('[data-testid=experience-maximum]');
       expect(minimum.text()).toBe('7');
+    });
+
+    test('Should bind experience', () => {
+      const wrapper = createWrapper();
+      const input = wrapper.get<HTMLInputElement>(
+        '[data-testid=experience-input]',
+      );
+      expect(input.element.value).toBe('4');
     });
   });
 });
