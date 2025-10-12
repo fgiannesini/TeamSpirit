@@ -29,4 +29,10 @@ describe('Resume', () => {
     const teamMode = wrapper.get('[data-testid=team-mode]');
     expect(teamMode.text()).toBe('random');
   });
+
+  test('Should display the developers', () => {
+    const wrapper = createWrapper({ developers: [{ id: 0 }, { id: 1 }] });
+    expect(wrapper.get('[data-testid=developer-0]').text()).toBe('3');
+    expect(wrapper.get('[data-testid=developer-1]').text()).toBe('3');
+  });
 });
