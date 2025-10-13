@@ -23,5 +23,9 @@ defineEmits(['update:value']);
 </template>
 
 <style scoped lang="scss">
-
+.slider > .tooltip {
+  visibility: visible !important;
+  inset-block-start: -1rem !important;
+  opacity: 1 !important;
+}
 </style>

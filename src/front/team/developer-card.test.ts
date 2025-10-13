@@ -1,5 +1,6 @@
-import { mount, type VueWrapper } from '@vue/test-utils';
+import { flushPromises, mount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
+import Slider from '../slider.vue';
 import DeveloperCard from './developer-card.vue';
 
 describe('DeveloperCard', () => {
@@ -35,50 +36,28 @@ describe('DeveloperCard', () => {
   });
 
   describe('Experience', () => {
-    test('Should render a range to select experience', () => {
-      const wrapper = createWrapper();
-      const range = wrapper.get('[data-testid=experience-range]');
-      expect(range.isVisible()).toBe(true);
-    });
-
-    test('Should have the tooltip rendered', () => {
-      const wrapper = createWrapper();
-      const tooltip = wrapper.get('[data-testid=experience-range-tooltip]');
-      expect(tooltip.isVisible()).toBe(true);
-    });
-
     test('Should have a label', () => {
       const wrapper = createWrapper();
-      const tooltip = wrapper.get('[data-testid=experience-label]');
-      expect(tooltip.isVisible()).toBe(true);
+      const label = wrapper.get('[data-testid=experience-label]');
+      expect(label.text()).toBe('Experience');
     });
 
-    test('Should show minimum of the range', () => {
+    test('Should bind slider properties', () => {
       const wrapper = createWrapper();
-      const minimum = wrapper.get('[data-testid=experience-minimum]');
-      expect(minimum.text()).toBe('1');
+      const slider = wrapper.getComponent(Slider);
+      expect(slider.props()).toStrictEqual({
+        min: 1,
+        max: 7,
+        value: 4,
+      });
     });
 
-    test('Should show maximum of the range', () => {
+    test('Should send an update event on experience change', async () => {
       const wrapper = createWrapper();
-      const minimum = wrapper.get('[data-testid=experience-maximum]');
-      expect(minimum.text()).toBe('7');
-    });
+      const slider = wrapper.getComponent(Slider);
+      slider.vm.$emit('update:value', 2);
+      await flushPromises();
 
-    test('Should bind experience', () => {
-      const wrapper = createWrapper();
-      const input = wrapper.get<HTMLInputElement>(
-        '[data-testid=experience-input]',
-      );
-      expect(input.element.value).toBe('4');
-    });
-
-    test('Should send an update event on experience change', () => {
-      const wrapper = createWrapper();
-      const input = wrapper.get<HTMLInputElement>(
-        '[data-testid=experience-input]',
-      );
-      input.setValue(2);
       const emitted = wrapper.emitted('update:experience');
       expect(emitted?.[0]).toStrictEqual([2]);
     });
