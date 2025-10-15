@@ -7,9 +7,10 @@
         <span>Remove</span>
       </button>
     </nav>
-    <div class="space"></div>
+    <div class="space"/>
     <fieldset>
       <legend data-testid="experience-label">Experience</legend>
+      <div class="space"/>
       <slider :min="1" :max="7" :value="experience"
               @update:value="$emit('update:experience', $event)"/>
     </fieldset>
