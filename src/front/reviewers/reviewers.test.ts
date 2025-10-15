@@ -38,4 +38,9 @@ describe('Reviewers', () => {
       value: 0,
     });
   });
+
+  test('Should render a title', () => {
+    const wrapper = createWrapper();
+    expect(wrapper.get('[data-testid="title"]').text()).toBe('Reviewers');
+  });
 });
