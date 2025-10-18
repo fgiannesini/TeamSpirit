@@ -40,4 +40,11 @@ describe('Resume', () => {
     expect(wrapper.get('[data-testid=developer-0]').text()).toBe('3');
     expect(wrapper.get('[data-testid=developer-1]').text()).toBe('2');
   });
+
+  test('Should display the reviewers count', () => {
+    const wrapper = createWrapper({
+      reviewers: 1,
+    });
+    expect(wrapper.get('[data-testid=reviewers]').text()).toBe('1');
+  });
 });
