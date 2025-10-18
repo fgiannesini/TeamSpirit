@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 export type State = {
   teamMode: TeamMode;
   developers: Developer[];
+  reviewers: number;
 };
 
 export type TeamMode = 'random' | 'custom' | 'notSet';
@@ -14,7 +15,7 @@ export type Developer = {
 
 // biome-ignore lint/nursery/useExplicitType: type is dynamic
 export const useFormStore = defineStore('form', {
-  state: (): State => ({ teamMode: 'notSet', developers: [] }),
+  state: (): State => ({ teamMode: 'notSet', developers: [], reviewers: 0 }),
   actions: {
     setTeamMode(teamMode: TeamMode): void {
       this.teamMode = teamMode;

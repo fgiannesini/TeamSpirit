@@ -24,7 +24,7 @@ describe('Reviewers', () => {
     expect(wrapper.exists()).toBe(true);
   });
 
-  test('Should render a slider', () => {
+  test('Should render a slider with default value', () => {
     const wrapper = createWrapper({
       developers: [
         { id: 0, experience: 2 },
@@ -36,6 +36,22 @@ describe('Reviewers', () => {
       min: 0,
       max: 1,
       value: 0,
+    });
+  });
+
+  test('Should bind reviewers value', () => {
+    const wrapper = createWrapper({
+      developers: [
+        { id: 0, experience: 2 },
+        { id: 1, experience: 3 },
+      ],
+      reviewers:1,
+    });
+    const slider = wrapper.getComponent(Slider);
+    expect(slider.props()).toStrictEqual({
+      min: 0,
+      max: 1,
+      value: 1,
     });
   });
 
