@@ -1,7 +1,7 @@
 import { createTestingPinia } from '@pinia/testing';
-import { shallowMount, type VueWrapper } from '@vue/test-utils';
+import { flushPromises, shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
-import type { State } from '../form-store.ts';
+import { type State, useFormStore } from '../form-store.ts';
 import Slider from '../slider.vue';
 import Reviewers from './reviewers.vue';
 
@@ -45,7 +45,7 @@ describe('Reviewers', () => {
         { id: 0, experience: 2 },
         { id: 1, experience: 3 },
       ],
-      reviewers:1,
+      reviewers: 1,
     });
     const slider = wrapper.getComponent(Slider);
     expect(slider.props()).toStrictEqual({
@@ -53,6 +53,20 @@ describe('Reviewers', () => {
       max: 1,
       value: 1,
     });
+  });
+
+  test('Should update reviewers value', async () => {
+    const wrapper = createWrapper({
+      developers: [
+        { id: 0, experience: 2 },
+        { id: 1, experience: 3 },
+      ],
+    });
+    const slider = wrapper.getComponent(Slider);
+    slider.vm.$emit('update:value', 1);
+    await flushPromises();
+
+    expect(useFormStore().reviewers).toEqual(1);
   });
 
   test('Should render a title', () => {
