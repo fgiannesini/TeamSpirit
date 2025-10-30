@@ -1,11 +1,11 @@
-import { flushPromises, mount, type VueWrapper } from '@vue/test-utils';
+import { flushPromises, shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
 import Slider from '../slider.vue';
 import DeveloperCard from './developer-card.vue';
 
 describe('DeveloperCard', () => {
   const createWrapper = (): VueWrapper => {
-    return mount(DeveloperCard, {
+    return shallowMount(DeveloperCard, {
       props: {
         id: 1,
         experience: 4,

@@ -41,6 +41,7 @@ const setSelectOption = (selectId: string, optionValue: string): void => {
 };
 describe('Main', () => {
   beforeEach(async () => {
+    vi.resetAllMocks();
     vi.spyOn(window, 'open').mockImplementation(vi.fn());
     const htmlPath = resolve(__dirname, './index.html');
     document.body.innerHTML = readFileSync(htmlPath, 'utf-8');
