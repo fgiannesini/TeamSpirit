@@ -10,7 +10,8 @@
   "linter": {
     "domains": {
       "project": "all",
-      "test": "all"
+      "test": "all",
+      "vue": "all"
     },
     "rules": {
       "complexity": {
@@ -36,8 +37,6 @@
         "noNoninteractiveElementInteractions": "error"
       },
       "nursery": {
-        "noNonNullAssertedOptionalChain": "error",
-        "noSecrets": "off",
         "noShadow": "error",
         "noUselessUndefined": "error",
         "useExplicitType": "error",
@@ -82,6 +81,7 @@
         "useCollapsedIf": "error",
         "useConsistentArrayType": "error",
         "useConsistentBuiltinInstantiation": "error",
+        "useConsistentTypeDefinitions": "off",
         "useConsistentCurlyBraces": "error",
         "useConsistentMemberAccessibility": "error",
         "useConsistentObjectDefinitions": "error",
@@ -125,6 +125,9 @@
         "useNumberToFixedDigitsArgument": "error",
         "useStaticResponseMethods": "error",
         "useStrictMode": "error"
+      },
+      "security": {
+        "noSecrets": "off"
       }
     }
   },

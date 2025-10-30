@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import CustomTeam from "./custom-team.vue";
-import {ref} from "vue";
-import {useFormStore} from "../form-store.ts";
+import { ref } from 'vue';
+import { useFormStore } from '../form-store.ts';
+import CustomTeam from './custom-team.vue';
 
-type TeamMode = 'random' | 'custom'
-let active = ref('')
+type TeamMode = 'random' | 'custom';
+const active = ref('');
 const formStore = useFormStore();
 const activate = (teamMode: TeamMode) => {
-  active.value = teamMode
-  formStore.setTeamMode(teamMode)
-}
+  active.value = teamMode;
+  formStore.setTeamMode(teamMode);
+};
 </script>
 <template>
   <nav>

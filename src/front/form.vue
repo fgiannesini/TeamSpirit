@@ -1,15 +1,14 @@
 <script setup lang="ts">
+import { type Ref, ref } from 'vue';
+import Resume from './resume/resume.vue';
+import Reviewers from './reviewers/reviewers.vue';
+import Team from './team/team.vue';
 
-import {type Ref, ref} from "vue";
-import Reviewers from "./reviewers/reviewers.vue";
-import Team from "./team/team.vue";
-import Resume from "./resume/resume.vue";
-
-type TabName = 'team' | 'reviewers'
-const active: Ref<TabName> = ref("team");
+type TabName = 'team' | 'reviewers';
+const active: Ref<TabName> = ref('team');
 const activate = (tabName: TabName): void => {
   active.value = tabName;
-}
+};
 </script>
 <template>
   <main class="responsive">

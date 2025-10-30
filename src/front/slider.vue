@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import type { InputHTMLAttributes } from 'vue';
 
-import type {InputHTMLAttributes} from "vue";
 defineProps<{
-  min:number;
-  max:number;
-  value:number;
-}>()
+  min: number;
+  max: number;
+  value: number;
+}>();
 defineEmits(['update:value']);
 </script>
 

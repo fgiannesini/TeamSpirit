@@ -17,9 +17,8 @@
   </article>
 </template>
 <script setup lang="ts">
-import Slider from "../slider.vue";
+import Slider from '../slider.vue';
 
-defineProps<{ id: number, experience: number }>();
+defineProps<{ id: number; experience: number }>();
 defineEmits(['update:experience', 'remove']);
-
 </script>
