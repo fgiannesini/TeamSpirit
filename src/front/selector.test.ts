@@ -10,7 +10,7 @@ describe('Selector', () => {
   const createWrapper = (): VueWrapper => {
     return shallowMount(Selector, {
       props: {
-        selectorMode: undefined,
+        selectedMode: 'notSet',
       },
     });
   };
@@ -51,13 +51,13 @@ describe('Selector', () => {
   test('Should emit en event on random mode selection', async () => {
     const wrapper = createWrapper();
     await radio(wrapper, 'random').trigger('click');
-    expect(wrapper.emitted('select')).toStrictEqual([['random']]);
+    expect(wrapper.emitted('update:selectedMode')).toStrictEqual([['random']]);
   });
 
   test('Should emit en event on random mode selection', async () => {
     const wrapper = createWrapper();
     await radio(wrapper, 'custom').trigger('click');
-    expect(wrapper.emitted('select')).toStrictEqual([['custom']]);
+    expect(wrapper.emitted('update:selectedMode')).toStrictEqual([['custom']]);
   });
 
   test('Should select random mode, then custom mode', async () => {
@@ -71,14 +71,14 @@ describe('Selector', () => {
 
   test('Should select custom mode on initialisation', async () => {
     const wrapper = createWrapper();
-    await wrapper.setProps({ selectorMode: 'custom' });
+    await wrapper.setProps({ selectedMode: 'custom' });
     const customRadio = radio(wrapper, 'custom');
     expect(customRadio.element.checked).toBe(true);
   });
 
   test('Should select random mode on initialisation', async () => {
     const wrapper = createWrapper();
-    await wrapper.setProps({ selectorMode: 'random' });
+    await wrapper.setProps({ selectedMode: 'random' });
     const randomRadio = radio(wrapper, 'random');
     expect(randomRadio.element.checked).toBe(true);
   });

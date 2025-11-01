@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia';
 
 export type State = {
-  teamMode: TeamMode;
+  teamMode: SelectorMode;
   developers: Developer[];
   reviewers: number;
 };
 
-export type TeamMode = 'random' | 'custom' | 'notSet';
+export type SelectorMode = 'random' | 'custom' | 'notSet';
 
 export type Developer = {
   id: number;
@@ -17,7 +17,7 @@ export type Developer = {
 export const useFormStore = defineStore('form', {
   state: (): State => ({ teamMode: 'notSet', developers: [], reviewers: 0 }),
   actions: {
-    setTeamMode(teamMode: TeamMode): void {
+    setTeamMode(teamMode: SelectorMode): void {
       this.teamMode = teamMode;
     },
     generateDeveloper(): void {
