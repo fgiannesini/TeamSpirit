@@ -3,6 +3,7 @@ import { flushPromises, shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
 import { type State, useFormStore } from '../form-store.ts';
 import Selector from '../selector.vue';
+import CustomTeam from './custom-team.vue';
 import Team from './team.vue';
 
 describe('Team', () => {
@@ -67,5 +68,10 @@ describe('Team', () => {
     expect(selector.props()).toStrictEqual({
       selectedMode: 'random',
     });
+  });
+
+  test('Should render Custom team', () => {
+    const wrapper = createWrapper();
+    expect(wrapper.findComponent(CustomTeam)).toBeDefined();
   });
 });
