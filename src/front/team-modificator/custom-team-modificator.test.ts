@@ -1,10 +1,10 @@
 import { shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
-import TeamModificator from './team-modificator.vue';
+import CustomTeamModificator from './custom-team-modificator.vue';
 
-describe('Team Modificator', () => {
+describe('Custom Team Modificator', () => {
   const createWrapper = (): VueWrapper => {
-    return shallowMount(TeamModificator);
+    return shallowMount(CustomTeamModificator);
   };
 
   test('Should render', () => {
