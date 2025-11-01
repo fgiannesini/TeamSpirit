@@ -52,7 +52,6 @@ describe('Team', () => {
   });
 
   test('Should select custom mode on loading', () => {
-    useFormStore().setTeamMode('custom');
     const wrapper = createWrapper({ teamMode: 'custom' });
 
     const selector = wrapper.findComponent(Selector);
@@ -62,7 +61,6 @@ describe('Team', () => {
   });
 
   test('Should select random mode on loading', () => {
-    useFormStore().setTeamMode('random');
     const wrapper = createWrapper({ teamMode: 'random' });
 
     const selector = wrapper.findComponent(Selector);
