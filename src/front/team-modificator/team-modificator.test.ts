@@ -3,12 +3,12 @@ import { flushPromises, shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
 import { type State, useFormStore } from '../form-store.ts';
 import Selector from '../selector.vue';
-import CustomTeam from './custom-team.vue';
-import Team from './team.vue';
+import CustomTeamModificator from './custom-team-modificator.vue';
+import TeamModificator from './team-modificator.vue';
 
-describe('Team', () => {
+describe('Team Modificator', () => {
   const createWrapper = (state: Partial<State> = {}): VueWrapper => {
-    return shallowMount(Team, {
+    return shallowMount(TeamModificator, {
       global: {
         plugins: [
           createTestingPinia({
@@ -21,7 +21,7 @@ describe('Team', () => {
     });
   };
 
-  test('Should render the component', () => {
+  test('Should render', () => {
     const wrapper = createWrapper();
     expect(wrapper.exists()).toBe(true);
   });
@@ -40,7 +40,7 @@ describe('Team', () => {
     await flushPromises();
 
     const formStore = useFormStore();
-    expect(formStore.teamMode).toStrictEqual('random');
+    expect(formStore.teamModificatorMode).toStrictEqual('random');
   });
 
   test('Should select custom mode', async () => {
@@ -49,11 +49,11 @@ describe('Team', () => {
     await flushPromises();
 
     const formStore = useFormStore();
-    expect(formStore.teamMode).toStrictEqual('custom');
+    expect(formStore.teamModificatorMode).toStrictEqual('custom');
   });
 
   test('Should select custom mode on loading', () => {
-    const wrapper = createWrapper({ teamMode: 'custom' });
+    const wrapper = createWrapper({ teamModificatorMode: 'custom' });
 
     const selector = wrapper.findComponent(Selector);
     expect(selector.props()).toStrictEqual({
@@ -62,7 +62,7 @@ describe('Team', () => {
   });
 
   test('Should select random mode on loading', () => {
-    const wrapper = createWrapper({ teamMode: 'random' });
+    const wrapper = createWrapper({ teamModificatorMode: 'random' });
 
     const selector = wrapper.findComponent(Selector);
     expect(selector.props()).toStrictEqual({
@@ -70,8 +70,8 @@ describe('Team', () => {
     });
   });
 
-  test.skip('Should render Custom team', () => {
-    const wrapper = createWrapper();
-    expect(wrapper.findComponent(CustomTeam).exists()).toBe(true);
+  test.skip('Should render Custom Team Modificator', () => {
+    const wrapper = createWrapper({ teamModificatorMode: 'custom' });
+    expect(wrapper.findComponent(CustomTeamModificator).exists()).toBe(true);
   });
 });

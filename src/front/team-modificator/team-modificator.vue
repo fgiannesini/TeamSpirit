@@ -1,1 +1,12 @@
-<template></template>
+<template>
+  <Selector v-model:selectedMode="store.teamModificatorMode">
+    <CustomTeamModificator></CustomTeamModificator>
+  </Selector>
+</template>
+<script setup lang="ts">
+import Selector from '../selector.vue';
+import { useFormStore } from '../form-store.ts';
+import CustomTeamModificator from './custom-team-modificator.vue';
+
+const store = useFormStore();
+</script>
