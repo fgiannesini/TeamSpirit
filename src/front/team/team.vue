@@ -6,8 +6,7 @@ import Selector from '../selector.vue';
 const formStore = useFormStore();
 </script>
 <template>
-  <Selector v-model:selectedMode="formStore.teamMode"/>
-  <div data-testid="custom-container" :class="[formStore.teamMode === 'custom'?'active' : '', 'page', 'padding']">
+  <Selector v-model:selectedMode="formStore.teamMode">
     <CustomTeam></CustomTeam>
-  </div>
+  </Selector>
 </template>

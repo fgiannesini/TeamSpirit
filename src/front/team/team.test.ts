@@ -51,40 +51,6 @@ describe('Team', () => {
     expect(formStore.teamMode).toStrictEqual('custom');
   });
 
-  test('Should render custom team component when custom mode is selected', async () => {
-    const wrapper = createWrapper();
-    wrapper.findComponent(Selector).vm.$emit('update:selectedMode', 'custom');
-    await flushPromises();
-
-    expect(wrapper.get('[data-testid=custom-container]').classes()).toContain(
-      'active',
-    );
-  });
-
-  test('Should not render custom team component when random mode is selected', async () => {
-    const wrapper = createWrapper();
-    wrapper.findComponent(Selector).vm.$emit('update:selectedMode', 'random');
-    await flushPromises();
-    expect(
-      wrapper.get('[data-testid=custom-container]').classes(),
-    ).not.toContain('active');
-  });
-
-  test('Should not render custom team component when random mode is selected after custom mode', async () => {
-    const wrapper = createWrapper();
-    wrapper.findComponent(Selector).vm.$emit('update:selectedMode', 'custom');
-    await flushPromises();
-
-    expect(wrapper.get('[data-testid=custom-container]').classes()).toContain(
-      'active',
-    );
-    wrapper.findComponent(Selector).vm.$emit('update:selectedMode', 'random');
-    await flushPromises();
-    expect(
-      wrapper.get('[data-testid=custom-container]').classes(),
-    ).not.toContain('active');
-  });
-
   test('Should select custom mode on loading', () => {
     useFormStore().setTeamMode('custom');
     const wrapper = createWrapper({ teamMode: 'custom' });
