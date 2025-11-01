@@ -12,6 +12,7 @@ describe('Selector', () => {
       props: {
         selectedMode: 'notSet',
       },
+      slots: { default: '<div data-testid="slot"/>' },
     });
   };
 
@@ -81,5 +82,29 @@ describe('Selector', () => {
     await wrapper.setProps({ selectedMode: 'random' });
     const randomRadio = radio(wrapper, 'random');
     expect(randomRadio.element.checked).toBe(true);
+  });
+
+  test('Should render custom container and slot when custom mode is selected', async () => {
+    const wrapper = createWrapper();
+    await wrapper.setProps({
+      selectedMode: 'custom',
+    });
+
+    expect(wrapper.get('[data-testid=custom-container]').classes()).toContain(
+      'active',
+    );
+
+    expect(wrapper.get('[data-testid=slot]')).toBeDefined();
+  });
+
+  test('Should not render custom team component when random mode is selected', async () => {
+    const wrapper = createWrapper();
+    await wrapper.setProps({
+      selectedMode: 'random',
+    });
+
+    expect(
+      wrapper.get('[data-testid=custom-container]').classes(),
+    ).not.toContain('active');
   });
 });
