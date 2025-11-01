@@ -14,14 +14,6 @@ describe('Form store', () => {
     });
   });
 
-  test('should store the team mode', () => {
-    const store = useFormStore();
-    store.setTeamMode('random');
-    expect(store.$state).toMatchObject({
-      teamMode: 'random',
-    });
-  });
-
   test('should generate a developper', () => {
     const store = useFormStore();
     store.generateDeveloper();
