@@ -1,69 +1,73 @@
 <!doctype html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <link rel="icon" href="assets/favicon.ico" />
-  <title>Team Spirit</title>
-</head>
-<body>
-<header>
-  <h3 class="center-align">Team Spirit</h3>
-</header>
-<div id="form"></div>
-<div class="responsive">
-  <div>
-    <label for="dev-count-input" class="slider">Developers count</label>
-    <input id="dev-count-input" min="1" max="10" type="range" value="3" />
-    <span></span>
-    <button id="generate-devs-button" class="secondary">Add</button>
-    <div id="devs-container"></div>
-  </div>
-  <div>
-    <label for="reviewers-input">Reviewers</label>
-    <input id="reviewers-input" min="0" type="number" value="0" />
-  </div>
-  <div>
-    <label for="team-modificator">Team modificator</label>
-    <select id="team-modificator">
-      <option value=""></option>
-      <option value="custom">Custom</option>
-      <option value="random">Random</option>
-    </select>
-    <div id="team-modificator-events" style="display: none">
-      <button id="team-modificator-add-event-button" type="button">Add</button>
+  <head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link rel="icon" href="assets/favicon.ico">
+    <title>Team Spirit</title>
+  </head>
+  <body>
+    <header>
+      <h3 class="center-align">Team Spirit</h3>
+    </header>
+    <div id="form"></div>
+    <div class="responsive">
+      <div>
+        <label for="dev-count-input" class="slider">Developers count</label>
+        <input id="dev-count-input" min="1" max="10" type="range" value="3">
+        <span></span>
+        <button id="generate-devs-button" class="secondary">Add</button>
+        <div id="devs-container"></div>
+      </div>
+      <div>
+        <label for="reviewers-input">Reviewers</label>
+        <input id="reviewers-input" min="0" type="number" value="0">
+      </div>
+      <div>
+        <label for="team-modificator">Team modificator</label>
+        <select id="team-modificator">
+          <option value=""></option>
+          <option value="custom">Custom</option>
+          <option value="random">Random</option>
+        </select>
+        <div id="team-modificator-events" style="display: none">
+          <button id="team-modificator-add-event-button" type="button">
+            Add
+          </button>
+        </div>
+      </div>
+      <div>
+        <label for="bug-generator">Bug Generator</label>
+        <select id="bug-generator">
+          <option value=""></option>
+          <option value="custom">Custom</option>
+          <option value="random">Random</option>
+        </select>
+        <div id="bug-generator-events" style="display: none">
+          <button id="bug-generator-add-event-button" type="button">Add</button>
+        </div>
+      </div>
+      <div>
+        <label for="priority-modificator">Priority Modificator</label>
+        <select id="priority-modificator">
+          <option value=""></option>
+          <option value="custom">Custom</option>
+          <option value="random">Random</option>
+        </select>
+        <div id="priority-modificator-events" style="display: none">
+          <button id="priority-modificator-add-event-button" type="button">
+            Add
+          </button>
+        </div>
+      </div>
+      <div>
+        <label for="user-story-count-input">User stories count</label>
+        <input id="user-story-count-input" min="1" type="number" value="5">
+        <button id="generate-user-stories-button">Generate</button>
+        <div id="user-stories-container"></div>
+      </div>
+      <button id="calculate-button">Calculate</button>
     </div>
-  </div>
-  <div>
-    <label for="bug-generator">Bug Generator</label>
-    <select id="bug-generator">
-      <option value=""></option>
-      <option value="custom">Custom</option>
-      <option value="random">Random</option>
-    </select>
-    <div id="bug-generator-events" style="display: none">
-      <button id="bug-generator-add-event-button" type="button">Add</button>
-    </div>
-  </div>
-  <div>
-    <label for="priority-modificator">Priority Modificator</label>
-    <select id="priority-modificator">
-      <option value=""></option>
-      <option value="custom">Custom</option>
-      <option value="random">Random</option>
-    </select>
-    <div id="priority-modificator-events" style="display: none">
-      <button id="priority-modificator-add-event-button" type="button">Add</button>
-    </div>
-  </div>
-  <div>
-    <label for="user-story-count-input">User stories count</label>
-    <input id="user-story-count-input" min="1" type="number" value="5" />
-    <button id="generate-user-stories-button">Generate</button>
-    <div id="user-stories-container"></div>
-  </div>
-  <button id="calculate-button">Calculate</button>
-</div>
-</body>
-<script src="main.ts" type="module"></script>
+  </body>
+  <script src="main.ts" type="module"></script>
 </html>

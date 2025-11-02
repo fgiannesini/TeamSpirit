@@ -1,25 +1,35 @@
 <!doctype html>
 <html lang="fr">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team Spirit</title>
   </head>
   <body>
     <h3>Team Spirit</h3>
     <div class="meta">
       <div id="stats" class="stats">
-        <div>Time: <span id="time"></span></div>
-        <div>Lead Time: <span id="lead-time"></span></div>
+        <div>
+          Time: <span id="time"></span>
+        </div>
+        <div>
+          Lead Time: <span id="lead-time"></span>
+        </div>
       </div>
       <button id="compute">Play next</button>
       <button id="compute-all">Play All</button>
     </div>
 
-    <div id="backlog" class="backlog"><span class="title">Backlog</span></div>
+    <div id="backlog" class="backlog">
+      <span class="title">Backlog</span>
+    </div>
 
-    <div id="threads" class="threads"><span class="title">Threads</span></div>
-    <div id="done" class="done"><span class="title">Done</span></div>
+    <div id="threads" class="threads">
+      <span class="title">Threads</span>
+    </div>
+    <div id="done" class="done">
+      <span class="title">Done</span>
+    </div>
   </body>
   <script type="module" src="flow.ts"></script>
 </html>

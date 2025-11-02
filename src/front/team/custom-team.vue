@@ -14,23 +14,39 @@ const hasDevelopers = () => store.developers.length > 0;
 </script>
 <template>
   <div v-if="hasDevelopers()" data-testid="setting-state">
-    <button class="small-round extra" data-testid="add-developer-button" @click="addDeveloper">
+    <button
+      class="small-round extra"
+      data-testid="add-developer-button"
+      @click="addDeveloper"
+    >
       <i>add</i>
       <span>Add a developer</span>
     </button>
     <div class="grid">
       <div class="s12 m6 l4" v-for="developer in store.developers">
-        <developer-card :id="developer.id" v-model:experience="developer.experience" :data-testid="'developer-card-' + developer.id"
-                        @remove="removeDeveloper(developer.id)"></developer-card>
+        <developer-card
+          :id="developer.id"
+          v-model:experience="developer.experience"
+          :data-testid="'developer-card-' + developer.id"
+          @remove="removeDeveloper(developer.id)"
+        ></developer-card>
       </div>
     </div>
   </div>
-  <article v-if="!hasDevelopers()" class="medium middle-align center-align" data-testid="empty-state">
+  <article
+    v-if="!hasDevelopers()"
+    class="medium middle-align center-align"
+    data-testid="empty-state"
+  >
     <div>
       <i class="extra">groups</i>
       <h5>Your team is empty</h5>
       <div class="medium-space"></div>
-      <button class="small-round extra" data-testid="add-developer-button" @click="addDeveloper">
+      <button
+        class="small-round extra"
+        data-testid="add-developer-button"
+        @click="addDeveloper"
+      >
         <i>add</i>
         <span>Add a developer</span>
       </button>

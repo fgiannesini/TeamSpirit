@@ -2,7 +2,11 @@
   <article class="medium-width">
     <nav>
       <h4 data-testid="title" class="max">Developer {{ id }}</h4>
-      <button class="small-round small secondary" data-testid="remove-button" @click="$emit('remove')">
+      <button
+        class="small-round small secondary"
+        data-testid="remove-button"
+        @click="$emit('remove')"
+      >
         <i>remove</i>
         <span>Remove</span>
       </button>
@@ -11,8 +15,12 @@
     <fieldset>
       <legend data-testid="experience-label">Experience</legend>
       <div class="space"/>
-      <slider :min="1" :max="7" :value="experience"
-              @update:value="$emit('update:experience', $event)"/>
+      <slider
+        :min="1"
+        :max="7"
+        :value="experience"
+        @update:value="$emit('update:experience', $event)"
+      />
     </fieldset>
   </article>
 </template>
