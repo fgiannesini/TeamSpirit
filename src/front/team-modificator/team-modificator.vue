@@ -1,6 +1,6 @@
 <template>
-  <Selector v-model:selectedMode="store.teamModificatorMode">
-    <CustomTeamModificator></CustomTeamModificator>
+  <Selector v-model:selectedMode="store.teamModificatorMode" :mandatory="false">
+    <CustomTeamModificator/>
   </Selector>
 </template>
 <script setup lang="ts">

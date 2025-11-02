@@ -11,6 +11,7 @@ describe('Selector', () => {
     return shallowMount(Selector, {
       props: {
         selectedMode: 'notSet',
+        mandatory: false,
       },
       slots: { default: '<div data-testid="slot"/>' },
     });
@@ -27,6 +28,14 @@ describe('Selector', () => {
   ): DOMWrapper<HTMLInputElement> => {
     return wrapper.find<HTMLInputElement>(`[data-testid=${radioName}-radio]`);
   };
+
+  describe('Mandatory', () => {
+    test('Should have a radio not available by default button for notSet mode if not mandatory', () => {
+      const wrapper = createWrapper();
+      const customRadio = radio(wrapper, 'notSet');
+      expect(customRadio.exists()).toBe(false);
+    });
+  });
 
   test('Should have a radio not checked by default button for custom mode', () => {
     const wrapper = createWrapper();

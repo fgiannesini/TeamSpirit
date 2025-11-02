@@ -11,5 +11,5 @@ const createSelectorStub = (): ReturnType<typeof defineComponent> => {
 };
 
 config.global.stubs = {
-  Selector: createSelectorStub(),
+  selector: createSelectorStub(),
 };

@@ -29,7 +29,7 @@ describe('Team', () => {
   test('Should have a selector not selected by default', () => {
     const wrapper = createWrapper();
     const selector = wrapper.findComponent(Selector);
-    expect(selector.props()).toStrictEqual({
+    expect(selector.props()).toMatchObject({
       selectedMode: 'notSet',
     });
   });
@@ -56,7 +56,7 @@ describe('Team', () => {
     const wrapper = createWrapper({ teamMode: 'custom' });
 
     const selector = wrapper.findComponent(Selector);
-    expect(selector.props()).toStrictEqual({
+    expect(selector.props()).toMatchObject({
       selectedMode: 'custom',
     });
   });
@@ -65,7 +65,7 @@ describe('Team', () => {
     const wrapper = createWrapper({ teamMode: 'random' });
 
     const selector = wrapper.findComponent(Selector);
-    expect(selector.props()).toStrictEqual({
+    expect(selector.props()).toMatchObject({
       selectedMode: 'random',
     });
   });
@@ -73,5 +73,13 @@ describe('Team', () => {
   test('Should render Custom team', () => {
     const wrapper = createWrapper();
     expect(wrapper.findComponent(CustomTeam).exists()).toBe(true);
+  });
+
+  test('Should set mode selection mandatory', () => {
+    const wrapper = createWrapper();
+    const selector = wrapper.findComponent(Selector);
+    expect(selector.props()).toMatchObject({
+      mandatory: true,
+    });
   });
 });

@@ -3,7 +3,8 @@ import type { SelectorMode } from './form-store.ts';
 
 defineProps<{
   selectedMode: SelectorMode;
-}>();
+  mandatory: boolean;
+}>()
 
 defineEmits(['update:selectedMode']);
 </script>

@@ -6,7 +6,7 @@ import CustomTeam from './custom-team.vue';
 const formStore = useFormStore();
 </script>
 <template>
-  <Selector v-model:selectedMode="formStore.teamMode">
-    <CustomTeam></CustomTeam>
+  <Selector v-model:selectedMode="formStore.teamMode" :mandatory="true">
+    <CustomTeam/>
   </Selector>
 </template>
