@@ -70,7 +70,7 @@ describe('Team Modificator', () => {
     });
   });
 
-  test.skip('Should render Custom Team Modificator', () => {
+  test('Should render Custom Team Modificator', () => {
     const wrapper = createWrapper({ teamModificatorMode: 'custom' });
     expect(wrapper.findComponent(CustomTeamModificator).exists()).toBe(true);
   });

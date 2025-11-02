@@ -70,7 +70,7 @@ describe('Team', () => {
     });
   });
 
-  test.skip('Should render Custom team', () => {
+  test('Should render Custom team', () => {
     const wrapper = createWrapper();
     expect(wrapper.findComponent(CustomTeam).exists()).toBe(true);
   });
