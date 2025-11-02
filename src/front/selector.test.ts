@@ -30,10 +30,29 @@ describe('Selector', () => {
   };
 
   describe('Mandatory', () => {
-    test('Should have a radio not available by default button for notSet mode if not mandatory', () => {
+    test('Should have a radio available by default button for notSet mode if not mandatory', async () => {
       const wrapper = createWrapper();
-      const customRadio = radio(wrapper, 'notSet');
-      expect(customRadio.exists()).toBe(false);
+      await wrapper.setProps({ selectedMode: 'notSet', mandatory: false });
+      const notSetRadio = radio(wrapper, 'notSet');
+      expect(notSetRadio.exists()).toBe(true);
+    });
+
+    test('Should have a radio not available by default button for notSet mode if mandatory', async () => {
+      const wrapper = createWrapper();
+      await wrapper.setProps({ selectedMode: 'notSet', mandatory: true });
+      const notSetRadio = radio(wrapper, 'notSet');
+      expect(notSetRadio.exists()).toBe(false);
+    });
+
+    test('Should emit an event on notSet mode selection', async () => {
+      const wrapper = createWrapper();
+      await wrapper.setProps({ mandatory: false });
+      await radio(wrapper, 'random').trigger('click');
+      await radio(wrapper, 'notSet').trigger('click');
+      expect(wrapper.emitted('update:selectedMode')).toStrictEqual([
+        ['random'],
+        ['notSet'],
+      ]);
     });
   });
 

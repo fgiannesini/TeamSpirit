@@ -10,6 +10,16 @@ defineEmits(['update:selectedMode']);
 </script>
 <template>
   <nav>
+    <label class="radio" v-if="!mandatory">
+      <input
+        data-testid="notSet-radio"
+        type="radio"
+        name="team"
+        @click="$emit('update:selectedMode', 'notSet')"
+        :checked="selectedMode === 'notSet'"
+      />
+      <span>Not set</span>
+    </label>
     <label class="radio">
       <input
         data-testid="random-radio"
@@ -17,7 +27,7 @@ defineEmits(['update:selectedMode']);
         name="team"
         @click="$emit('update:selectedMode', 'random')"
         :checked="selectedMode === 'random'"
-      >
+      />
       <span>Random</span>
     </label>
     <label class="radio">
@@ -27,7 +37,7 @@ defineEmits(['update:selectedMode']);
         name="team"
         @click="$emit('update:selectedMode', 'custom')"
         :checked="selectedMode === 'custom'"
-      >
+      />
       <span>Custom</span>
     </label>
   </nav>
