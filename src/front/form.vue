@@ -35,7 +35,7 @@ const activate = (tabName: TabName): void => {
         </button>
         <div class="small-margin">Reviewers</div>
       </div>
-
+      <hr class="medium-width">
       <div class="center-align">
         <button
             data-testid="team-modificator-tab"
