@@ -2,7 +2,9 @@ import { shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
 import Form from './form.vue';
 import Resume from './resume/resume.vue';
+import Reviewers from './reviewers/reviewers.vue';
 import Team from './team/team.vue';
+import TeamModificator from './team-modificator/team-modificator.vue';
 
 describe('Form', () => {
   const createWrapper = (): VueWrapper => {
@@ -91,6 +93,12 @@ describe('Form', () => {
         wrapper.get('[data-testid=reviewers-container]').classes(),
       ).toContain('active');
     });
+
+    test('Should render a reviewers component', async () => {
+      const wrapper = createWrapper();
+      await wrapper.get('[data-testid=reviewers-tab]').trigger('click');
+      expect(wrapper.getComponent(Reviewers).isVisible()).toBe(true);
+    });
   });
 
   describe('Resume', () => {
@@ -136,6 +144,12 @@ describe('Form', () => {
       expect(
         wrapper.get('[data-testid=team-modificator-container]').classes(),
       ).toContain('active');
+    });
+
+    test('Should render a team modificator component', async () => {
+      const wrapper = createWrapper();
+      await wrapper.get('[data-testid=team-modificator-tab]').trigger('click');
+      expect(wrapper.getComponent(TeamModificator).isVisible()).toBe(true);
     });
   });
 });

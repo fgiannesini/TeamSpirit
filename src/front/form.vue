@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { type Ref, ref } from 'vue';
+import {type Ref, ref} from 'vue';
 import Resume from './resume/resume.vue';
 import Reviewers from './reviewers/reviewers.vue';
 import Team from './team/team.vue';
+import TeamModificator from "./team-modificator/team-modificator.vue";
 
 type TabName = 'team' | 'reviewers' | 'team-modificator';
 const active: Ref<TabName> = ref('team');
@@ -15,9 +16,9 @@ const activate = (tabName: TabName): void => {
     <nav>
       <div class="center-align">
         <button
-          data-testid="team-tab"
-          @click="activate('team')"
-          :class="[active === 'team' ? 'active' : '']"
+            data-testid="team-tab"
+            @click="activate('team')"
+            :class="[active === 'team' ? 'active' : '']"
         >
           <i>groups</i>
         </button>
@@ -26,9 +27,9 @@ const activate = (tabName: TabName): void => {
       <hr class="medium-width">
       <div class="center-align">
         <button
-          data-testid="reviewers-tab"
-          @click="activate('reviewers')"
-          :class="[active === 'reviewers' ? 'active' : '']"
+            data-testid="reviewers-tab"
+            @click="activate('reviewers')"
+            :class="[active === 'reviewers' ? 'active' : '']"
         >
           <i>share_reviews</i>
         </button>
@@ -46,25 +47,26 @@ const activate = (tabName: TabName): void => {
       </div>
     </nav>
     <div
-      data-testid="team-container"
-      :class="[active === 'team' ? 'active' : '','page', 'padding']"
+        data-testid="team-container"
+        :class="[active === 'team' ? 'active' : '','page', 'padding']"
     >
       <Team></Team>
     </div>
     <div
-      data-testid="reviewers-container"
-      :class="[active === 'reviewers' ? 'active' : '','page', 'padding']"
+        data-testid="reviewers-container"
+        :class="[active === 'reviewers' ? 'active' : '','page', 'padding']"
     >
-      <Reviewers></Reviewers>
+      <Reviewers/>
     </div>
     <div
         data-testid="team-modificator-container"
         :class="[active === 'team-modificator' ? 'active' : '','page', 'padding']"
     >
-
+      <TeamModificator/>
     </div>
   </main>
   <nav class="right medium-width" data-testid="resume-panel">
-    Resume <Resume></Resume>
+    Resume
+    <Resume/>
   </nav>
 </template>
