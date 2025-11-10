@@ -1,5 +1,6 @@
 import { shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
+import PeriodCard from '../period-card.vue';
 import CustomTeamModificator from './custom-team-modificator.vue';
 
 describe('Custom Team Modificator', () => {
@@ -10,5 +11,10 @@ describe('Custom Team Modificator', () => {
   test('Should render', () => {
     const wrapper = createWrapper();
     expect(wrapper.exists()).toBe(true);
+  });
+
+  test('Should render a period card', () => {
+    const wrapper = createWrapper();
+    expect(wrapper.findComponent(PeriodCard).exists()).toBe(true);
   });
 });
