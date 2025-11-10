@@ -19,84 +19,90 @@ describe('Form', () => {
     expect(wrapper.exists()).toBe(true);
   });
 
-  test('Should render a Team', () => {
-    const wrapper = createWrapper();
-    const team = wrapper.getComponent(Team);
-    expect(team.isVisible()).toBe(true);
+  describe('Team', () => {
+    test('Should render a Team', () => {
+      const wrapper = createWrapper();
+      const team = wrapper.getComponent(Team);
+      expect(team.isVisible()).toBe(true);
+    });
+
+    test('Should render a navigation tab teams', () => {
+      const wrapper = createWrapper();
+      expect(wrapper.get('[data-testid=team-tab]').isVisible()).toBe(true);
+    });
+
+    test('Should have the navigation tab teams active by default', () => {
+      const wrapper = createWrapper();
+      const classes = wrapper.get('[data-testid=team-tab]').classes();
+      expect(classes).toContain('active');
+    });
+
+    test('Should set the navigation tab teams active onclick', async () => {
+      const wrapper = createWrapper();
+
+      await wrapper.get('[data-testid=reviewers-tab]').trigger('click');
+      await wrapper.get('[data-testid=team-tab]').trigger('click');
+
+      const teamClasses = wrapper.get('[data-testid=team-tab]').classes();
+      expect(teamClasses).toContain('active');
+    });
+
+    test('Should set the team page active on team tab click', async () => {
+      const wrapper = createWrapper();
+      await wrapper.get('[data-testid=reviewers-tab]').trigger('click');
+      expect(
+        wrapper.get('[data-testid=team-container]').classes(),
+      ).not.toContain('active');
+
+      await wrapper.get('[data-testid=team-tab]').trigger('click');
+      expect(wrapper.get('[data-testid=team-container]').classes()).toContain(
+        'active',
+      );
+    });
   });
 
-  test('Should render a navigation tab teams', () => {
-    const wrapper = createWrapper();
-    expect(wrapper.get('[data-testid=team-tab]').isVisible()).toBe(true);
+  describe('Reviewers', () => {
+    test('Should render a navigation tab reviewers', () => {
+      const wrapper = createWrapper();
+      expect(wrapper.get('[data-testid=reviewers-tab]').isVisible()).toBe(true);
+    });
+
+    test('Should set the navigation tab reviewers active onclick', async () => {
+      const wrapper = createWrapper();
+
+      const reviewers = wrapper.get('[data-testid=reviewers-tab]');
+      await reviewers.trigger('click');
+      expect(wrapper.get('[data-testid=reviewers-tab]').classes()).toContain(
+        'active',
+      );
+
+      const teamClasses = wrapper.get('[data-testid=team-tab]').classes();
+      expect(teamClasses).not.toContain('active');
+    });
+
+    test('Should set the reviewers page active on reviewers tab click', async () => {
+      const wrapper = createWrapper();
+      expect(
+        wrapper.get('[data-testid=reviewers-container]').classes(),
+      ).not.toContain('active');
+
+      await wrapper.get('[data-testid=reviewers-tab]').trigger('click');
+      expect(
+        wrapper.get('[data-testid=reviewers-container]').classes(),
+      ).toContain('active');
+    });
   });
 
-  test('Should render a navigation tab reviewers', () => {
-    const wrapper = createWrapper();
-    expect(wrapper.get('[data-testid=reviewers-tab]').isVisible()).toBe(true);
-  });
+  describe('Resume', () => {
+    test('Should render a resume panel', () => {
+      const wrapper = createWrapper();
+      expect(wrapper.get('[data-testid=resume-panel]').isVisible()).toBe(true);
+    });
 
-  test('Should have the navigation tab teams active by default', () => {
-    const wrapper = createWrapper();
-    const classes = wrapper.get('[data-testid=team-tab]').classes();
-    expect(classes).toContain('active');
-  });
-
-  test('Should set the navigation tab reviewers active onclick', async () => {
-    const wrapper = createWrapper();
-
-    const reviewers = wrapper.get('[data-testid=reviewers-tab]');
-    await reviewers.trigger('click');
-    expect(wrapper.get('[data-testid=reviewers-tab]').classes()).toContain(
-      'active',
-    );
-
-    const teamClasses = wrapper.get('[data-testid=team-tab]').classes();
-    expect(teamClasses).not.toContain('active');
-  });
-
-  test('Should set the navigation tab teams active onclick', async () => {
-    const wrapper = createWrapper();
-
-    await wrapper.get('[data-testid=reviewers-tab]').trigger('click');
-    await wrapper.get('[data-testid=team-tab]').trigger('click');
-
-    const teamClasses = wrapper.get('[data-testid=team-tab]').classes();
-    expect(teamClasses).toContain('active');
-  });
-
-  test('Should set the reviewers page active on reviewers tab click', async () => {
-    const wrapper = createWrapper();
-    expect(
-      wrapper.get('[data-testid=reviewers-container]').classes(),
-    ).not.toContain('active');
-
-    await wrapper.get('[data-testid=reviewers-tab]').trigger('click');
-    expect(
-      wrapper.get('[data-testid=reviewers-container]').classes(),
-    ).toContain('active');
-  });
-
-  test('Should set the team page active on team tab click', async () => {
-    const wrapper = createWrapper();
-    await wrapper.get('[data-testid=reviewers-tab]').trigger('click');
-    expect(wrapper.get('[data-testid=team-container]').classes()).not.toContain(
-      'active',
-    );
-
-    await wrapper.get('[data-testid=team-tab]').trigger('click');
-    expect(wrapper.get('[data-testid=team-container]').classes()).toContain(
-      'active',
-    );
-  });
-
-  test('Should render a resume panel', () => {
-    const wrapper = createWrapper();
-    expect(wrapper.get('[data-testid=resume-panel]').isVisible()).toBe(true);
-  });
-
-  test('Should render a resume component', () => {
-    const wrapper = createWrapper();
-    expect(wrapper.getComponent(Resume).isVisible()).toBe(true);
+    test('Should render a resume component', () => {
+      const wrapper = createWrapper();
+      expect(wrapper.getComponent(Resume).isVisible()).toBe(true);
+    });
   });
 
   test('Should render a navigation team modificator tab', () => {
