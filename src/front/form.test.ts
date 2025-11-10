@@ -98,4 +98,11 @@ describe('Form', () => {
     const wrapper = createWrapper();
     expect(wrapper.getComponent(Resume).isVisible()).toBe(true);
   });
+
+  test('Should render a navigation team modificator tab', () => {
+    const wrapper = createWrapper();
+    expect(wrapper.get('[data-testid=team-modificator-tab]').isVisible()).toBe(
+      true,
+    );
+  });
 });

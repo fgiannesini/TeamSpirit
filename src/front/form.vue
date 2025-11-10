@@ -34,6 +34,13 @@ const activate = (tabName: TabName): void => {
         </button>
         <div class="small-margin">Reviewers</div>
       </div>
+
+      <div class="center-align">
+        <button
+            data-testid="team-modificator-tab"
+        >
+        </button>
+      </div>
     </nav>
     <div
       data-testid="team-container"
