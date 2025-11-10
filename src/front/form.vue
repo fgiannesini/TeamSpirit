@@ -4,7 +4,7 @@ import Resume from './resume/resume.vue';
 import Reviewers from './reviewers/reviewers.vue';
 import Team from './team/team.vue';
 
-type TabName = 'team' | 'reviewers';
+type TabName = 'team' | 'reviewers' | 'team-modificator';
 const active: Ref<TabName> = ref('team');
 const activate = (tabName: TabName): void => {
   active.value = tabName;
@@ -38,8 +38,11 @@ const activate = (tabName: TabName): void => {
       <div class="center-align">
         <button
             data-testid="team-modificator-tab"
+            @click="activate('team-modificator')"
+            :class="[active === 'team-modificator' ? 'active' : '']"
         >
         </button>
+        <div class="small-margin">Team Modificator</div>
       </div>
     </nav>
     <div
@@ -53,6 +56,12 @@ const activate = (tabName: TabName): void => {
       :class="[active === 'reviewers' ? 'active' : '','page', 'padding']"
     >
       <Reviewers></Reviewers>
+    </div>
+    <div
+        data-testid="team-modificator-container"
+        :class="[active === 'team-modificator' ? 'active' : '','page', 'padding']"
+    >
+
     </div>
   </main>
   <nav class="right medium-width" data-testid="resume-panel">

@@ -105,10 +105,37 @@ describe('Form', () => {
     });
   });
 
-  test('Should render a navigation team modificator tab', () => {
-    const wrapper = createWrapper();
-    expect(wrapper.get('[data-testid=team-modificator-tab]').isVisible()).toBe(
-      true,
-    );
+  describe('Team modificator', () => {
+    test('Should render a navigation team modificator tab', () => {
+      const wrapper = createWrapper();
+      expect(
+        wrapper.get('[data-testid=team-modificator-tab]').isVisible(),
+      ).toBe(true);
+    });
+
+    test('Should set the navigation tab team modificator active onclick', async () => {
+      const wrapper = createWrapper();
+
+      const teamModificator = wrapper.get('[data-testid=team-modificator-tab]');
+      await teamModificator.trigger('click');
+      expect(
+        wrapper.get('[data-testid=team-modificator-tab]').classes(),
+      ).toContain('active');
+
+      const teamClasses = wrapper.get('[data-testid=team-tab]').classes();
+      expect(teamClasses).not.toContain('active');
+    });
+
+    test('Should set the modificator team page active on modificator tab click', async () => {
+      const wrapper = createWrapper();
+      expect(
+        wrapper.get('[data-testid=team-modificator-container]').classes(),
+      ).not.toContain('active');
+
+      await wrapper.get('[data-testid=team-modificator-tab]').trigger('click');
+      expect(
+        wrapper.get('[data-testid=team-modificator-container]').classes(),
+      ).toContain('active');
+    });
   });
 });
