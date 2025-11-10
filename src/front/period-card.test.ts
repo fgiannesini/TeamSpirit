@@ -33,4 +33,16 @@ describe('Period Card', () => {
     const startDateLabel = wrapper.find('[data-testid=start-date-label]');
     expect(startDateLabel.text()).toBe('Start');
   });
+
+  test('Should render a date field for period end', () => {
+    const wrapper = createWrapper();
+    const endDate = wrapper.find('[data-testid=end-date-input]');
+    expect(endDate.exists()).toBe(true);
+  });
+
+  test('Should render a date label for period end', () => {
+    const wrapper = createWrapper();
+    const startDateLabel = wrapper.find('[data-testid=end-date-label]');
+    expect(startDateLabel.text()).toBe('End');
+  });
 });
