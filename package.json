@@ -19,7 +19,7 @@
     "vue": "^3.5.24"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.3.4",
+    "@biomejs/biome": "^2.3.6",
     "@pinia/testing": "^1.0.3",
     "@tsconfig/node24": "^24.0.1",
     "@types/node": "^24.10.0",
