@@ -14,82 +14,165 @@ describe('Form store', () => {
     });
   });
 
-  test('should generate a developper', () => {
-    const store = useFormStore();
-    store.generateDeveloper();
-    expect(store.$state).toMatchObject({
-      developers: [
-        {
-          id: 0,
-        },
-      ],
+  describe('Developers', () => {
+    test('should generate a developper', () => {
+      const store = useFormStore();
+      store.generateDeveloper();
+      expect(store.$state).toMatchObject({
+        developers: [
+          {
+            id: 0,
+          },
+        ],
+      });
+    });
+
+    test('Should generate two developers', () => {
+      const store = useFormStore();
+      store.generateDeveloper();
+      store.generateDeveloper();
+      expect(store.$state).toMatchObject({
+        developers: [
+          {
+            id: 0,
+          },
+          {
+            id: 1,
+          },
+        ],
+      });
+    });
+
+    test('Should remove a developer card', () => {
+      const store = useFormStore();
+      store.$patch({
+        developers: [
+          {
+            id: 0,
+          },
+          {
+            id: 1,
+          },
+          {
+            id: 2,
+          },
+        ],
+      });
+      store.removeDeveloper(1);
+      expect(store.$state).toMatchObject({
+        developers: [
+          {
+            id: 0,
+          },
+          {
+            id: 2,
+          },
+        ],
+      });
+    });
+
+    test('Should add a developer after the last one', () => {
+      const store = useFormStore();
+      store.$patch({
+        developers: [
+          {
+            id: 1,
+          },
+        ],
+      });
+      store.generateDeveloper();
+
+      expect(store.$state).toMatchObject({
+        developers: [
+          {
+            id: 1,
+          },
+          {
+            id: 2,
+          },
+        ],
+      });
     });
   });
 
-  test('Should generate two developers', () => {
-    const store = useFormStore();
-    store.generateDeveloper();
-    store.generateDeveloper();
-    expect(store.$state).toMatchObject({
-      developers: [
-        {
-          id: 0,
-        },
-        {
-          id: 1,
-        },
-      ],
+  describe('Team Modifications', () => {
+    test('should generate a team modification', () => {
+      const store = useFormStore();
+      store.generateTeamModification();
+      expect(store.$state).toMatchObject({
+        teamModifications: [
+          {
+            id: 0,
+          },
+        ],
+      });
     });
-  });
 
-  test('Should remove a developer card', () => {
-    const store = useFormStore();
-    store.$patch({
-      developers: [
-        {
-          id: 0,
-        },
-        {
-          id: 1,
-        },
-        {
-          id: 2,
-        },
-      ],
+    test('Should generate two team modifications', () => {
+      const store = useFormStore();
+      store.generateTeamModification();
+      store.generateTeamModification();
+      expect(store.$state).toMatchObject({
+        teamModifications: [
+          {
+            id: 0,
+          },
+          {
+            id: 1,
+          },
+        ],
+      });
     });
-    store.removeDeveloper(1);
-    expect(store.$state).toMatchObject({
-      developers: [
-        {
-          id: 0,
-        },
-        {
-          id: 2,
-        },
-      ],
-    });
-  });
 
-  test('Should add a developer after the last one', () => {
-    const store = useFormStore();
-    store.$patch({
-      developers: [
-        {
-          id: 1,
-        },
-      ],
+    test('Should remove a team modification', () => {
+      const store = useFormStore();
+      store.$patch({
+        teamModifications: [
+          {
+            id: 0,
+          },
+          {
+            id: 1,
+          },
+          {
+            id: 2,
+          },
+        ],
+      });
+      store.removeTeamModification(1);
+      expect(store.$state).toMatchObject({
+        teamModifications: [
+          {
+            id: 0,
+          },
+          {
+            id: 2,
+          },
+        ],
+      });
     });
-    store.generateDeveloper();
 
-    expect(store.$state).toMatchObject({
-      developers: [
-        {
-          id: 1,
-        },
-        {
-          id: 2,
-        },
-      ],
+    test('Should add a team modification after the last one', () => {
+      const store = useFormStore();
+      store.$patch({
+        teamModifications: [
+          {
+            id: 1,
+          },
+        ],
+      });
+      store.generateTeamModification();
+
+      expect(store.$state).toMatchObject({
+        teamModifications: [
+          {
+            id: 1,
+          },
+          {
+            id: 2,
+          },
+        ],
+      });
     });
   });
 });
