@@ -1,6 +1,7 @@
 import { shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
 import PeriodCard from './period-card.vue';
+import RemoveButton from './remove-button.vue';
 
 describe('Period Card', () => {
   const createWrapper = (): VueWrapper => {
@@ -44,5 +45,10 @@ describe('Period Card', () => {
     const wrapper = createWrapper();
     const startDateLabel = wrapper.find('[data-testid=end-date-label]');
     expect(startDateLabel.text()).toBe('End');
+  });
+
+  test('Should have a button to remove the card', () => {
+    const wrapper = createWrapper();
+    expect(wrapper.findComponent(RemoveButton).exists()).toBe(true);
   });
 });

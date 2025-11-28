@@ -2,6 +2,7 @@
   <article class="medium-width">
     <nav>
       <h4 data-testid="title" class="max">Period {{ id }}</h4>
+      <remove-button/>
     </nav>
     <div class="space"/>
     <div class="field label border fill">
@@ -15,5 +16,7 @@
   </article>
 </template>
 <script setup lang="ts">
+import RemoveButton from "./remove-button.vue";
+
 defineProps<{ id: number }>()
 </script>
