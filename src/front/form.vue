@@ -42,6 +42,7 @@ const activate = (tabName: TabName): void => {
             @click="activate('team-modificator')"
             :class="[active === 'team-modificator' ? 'active' : '']"
         >
+          <i>group_remove</i>
         </button>
         <div class="small-margin">Team Modificator</div>
       </div>
