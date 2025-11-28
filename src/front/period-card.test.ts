@@ -51,4 +51,11 @@ describe('Period Card', () => {
     const wrapper = createWrapper();
     expect(wrapper.findComponent(RemoveButton).exists()).toBe(true);
   });
+
+  test('Should send a remove event on click on remove button', () => {
+    const wrapper = createWrapper();
+    const button = wrapper.getComponent(RemoveButton);
+    button.trigger('click');
+    expect(wrapper.emitted()).toHaveProperty('remove');
+  });
 });

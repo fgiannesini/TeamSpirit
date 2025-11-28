@@ -11,11 +11,4 @@ describe('Remove button', () => {
     const wrapper = createWrapper();
     expect(wrapper.get('[data-testid=remove-button]').isVisible()).toBe(true);
   });
-
-  test('Should send a remove event on click on button', () => {
-    const wrapper = createWrapper();
-    const button = wrapper.get('[data-testid=remove-button]');
-    button.trigger('click');
-    expect(wrapper.emitted()).toHaveProperty('remove');
-  });
 });

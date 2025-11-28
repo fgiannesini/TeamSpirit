@@ -2,7 +2,7 @@
   <article class="medium-width">
     <nav>
       <h4 data-testid="title" class="max">Period {{ id }}</h4>
-      <remove-button/>
+      <remove-button @click="$emit('remove')"/>
     </nav>
     <div class="space"/>
     <div class="field label border fill">

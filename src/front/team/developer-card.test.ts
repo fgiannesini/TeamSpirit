@@ -1,5 +1,6 @@
 import { flushPromises, shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
+import RemoveButton from '../remove-button.vue';
 import Slider from '../slider.vue';
 import DeveloperCard from './developer-card.vue';
 
@@ -25,12 +26,12 @@ describe('DeveloperCard', () => {
 
   test('Should have a button to remove the developer', () => {
     const wrapper = createWrapper();
-    expect(wrapper.get('[data-testid=remove-button]').isVisible()).toBe(true);
+    expect(wrapper.findComponent(RemoveButton).exists()).toBe(true);
   });
 
   test('Should send a remove event on click on remove button', () => {
     const wrapper = createWrapper();
-    const button = wrapper.get('[data-testid=remove-button]');
+    const button = wrapper.getComponent(RemoveButton);
     button.trigger('click');
     expect(wrapper.emitted()).toHaveProperty('remove');
   });

@@ -6,7 +6,6 @@
   <button
       class="small-round small secondary"
       data-testid="remove-button"
-      @click="$emit('remove')"
   >
     <i>remove</i>
     <span>Remove</span>
