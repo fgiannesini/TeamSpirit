@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useFormStore } from '../form-store.ts';
 import DeveloperCard from './developer-card.vue';
+import AddButton from "../add-button.vue";
 
 const store = useFormStore();
 const addDeveloper = (): void => {
@@ -14,14 +15,7 @@ const hasDevelopers = () => store.developers.length > 0;
 </script>
 <template>
   <div v-if="hasDevelopers()" data-testid="setting-state">
-    <button
-      class="small-round extra"
-      data-testid="add-developer-button"
-      @click="addDeveloper"
-    >
-      <i>add</i>
-      <span>Add a developer</span>
-    </button>
+    <add-button text="Add a developer" @click="addDeveloper"/>
     <div class="grid">
       <div class="s12 m6 l4" v-for="developer in store.developers">
         <developer-card
@@ -42,14 +36,7 @@ const hasDevelopers = () => store.developers.length > 0;
       <i class="extra">groups</i>
       <h5>Your team is empty</h5>
       <div class="medium-space"></div>
-      <button
-        class="small-round extra"
-        data-testid="add-developer-button"
-        @click="addDeveloper"
-      >
-        <i>add</i>
-        <span>Add a developer</span>
-      </button>
+      <add-button text="Add a developer" @click="addDeveloper"/>
     </div>
   </article>
 </template>

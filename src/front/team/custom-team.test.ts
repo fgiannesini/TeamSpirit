@@ -1,6 +1,7 @@
 import { createTestingPinia } from '@pinia/testing';
 import { flushPromises, shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
+import AddButton from '../add-button.vue';
 import { type State, useFormStore } from '../form-store.ts';
 import CustomTeam from './custom-team.vue';
 import type DeveloperCard from './developer-card.vue';
@@ -24,18 +25,6 @@ describe('Custom Team', () => {
     expect(wrapper.exists()).toBe(true);
   });
 
-  test('Should have a button to add a developer', () => {
-    const wrapper = createWrapper();
-    expect(wrapper.get('[data-testid=add-developer-button]').isVisible()).toBe(
-      true,
-    );
-  });
-
-  test('Should not display setting state when no developer is added', () => {
-    const wrapper = createWrapper();
-    expect(wrapper.find('[data-testid=setting-state]').exists()).toBe(false);
-  });
-
   const getDeveloperCard = (
     wrapper: VueWrapper,
     selector: string,
@@ -45,9 +34,11 @@ describe('Custom Team', () => {
     );
   };
 
-  test('Should generate a developper card', async () => {
-    const wrapper = createWrapper();
-    const addButton = wrapper.get('[data-testid=add-developer-button]');
+  test('Should generate a developper card in settings state', async () => {
+    const wrapper = createWrapper({
+      developers: [{ id: 0, experience: 3 }],
+    });
+    const addButton = wrapper.getComponent(AddButton);
     await addButton.trigger('click');
 
     expect(useFormStore().generateDeveloper).toHaveBeenCalled();
@@ -98,15 +89,35 @@ describe('Custom Team', () => {
     expect(useFormStore().removeDeveloper).toHaveBeenCalledWith(0);
   });
 
-  test('Should display empty state when no developers are configured', () => {
-    const wrapper = createWrapper();
-    expect(wrapper.get('[data-testid=empty-state]').isVisible()).toBe(true);
-  });
-
-  test('Should not display empty state when developers are configured', () => {
-    const wrapper = createWrapper({
-      developers: [{ id: 0, experience: 3 }],
+  describe('Empty state', () => {
+    test('Should display empty state when no developers are configured', () => {
+      const wrapper = createWrapper();
+      expect(wrapper.get('[data-testid=empty-state]').isVisible()).toBe(true);
     });
-    expect(wrapper.find('[data-testid=empty-state]').exists()).toBe(false);
+
+    test('Should not display empty state when developers are configured', () => {
+      const wrapper = createWrapper({
+        developers: [{ id: 0, experience: 3 }],
+      });
+      expect(wrapper.find('[data-testid=empty-state]').exists()).toBe(false);
+    });
+
+    test('Should have a button to add a developer when no developper is added', () => {
+      const wrapper = createWrapper();
+      expect(wrapper.findComponent(AddButton).isVisible()).toBe(true);
+    });
+
+    test('Should not display setting state when no developer is added', () => {
+      const wrapper = createWrapper();
+      expect(wrapper.find('[data-testid=setting-state]').exists()).toBe(false);
+    });
+
+    test('Should generate a developper card in empty state', async () => {
+      const wrapper = createWrapper();
+      const addButton = wrapper.getComponent(AddButton);
+      await addButton.trigger('click');
+
+      expect(useFormStore().generateDeveloper).toHaveBeenCalled();
+    });
   });
 });
