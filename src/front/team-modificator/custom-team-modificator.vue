@@ -6,6 +6,7 @@
         <PeriodCard
           :id="teamModificator.id"
           :data-testid="'team-modificator-' + teamModificator.id"
+          @remove="removeTeamModificator(teamModificator.id)"
         ></PeriodCard>
       </div>
     </div>
@@ -31,6 +32,9 @@ import PeriodCard from '../period-card.vue';
 const store = useFormStore();
 const addTeamModificator = (): void => {
   store.generateTeamModification();
+};
+const removeTeamModificator = (targetId: number): void => {
+  store.removeTeamModification(targetId);
 };
 const hasTeamModificators = () => store.teamModificators.length > 0;
 </script>

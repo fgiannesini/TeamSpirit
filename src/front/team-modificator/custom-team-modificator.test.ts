@@ -58,6 +58,14 @@ describe('Custom Team Modificator', () => {
     ).toEqual(1);
   });
 
+  test('Should remove a team modificator', async () => {
+    const wrapper = createWrapper({
+      teamModificators: [{ id: 0 }],
+    });
+    await getTeamModificator(wrapper, 'team-modificator-0').trigger('remove');
+    expect(useFormStore().removeTeamModification).toHaveBeenCalledWith(0);
+  });
+
   describe('Empty state', () => {
     test('Should render empty state when no developers are configured', () => {
       const wrapper = createWrapper();
