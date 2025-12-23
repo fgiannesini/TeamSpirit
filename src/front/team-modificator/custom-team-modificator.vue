@@ -1,10 +1,12 @@
 <template>
-  <div class="grid">
-    <div class="s12 m6 l4" v-for="teamModificator in store.teamModificators">
-      <PeriodCard
-        :id="teamModificator.id"
-        :data-testid="'team-modificator-' + teamModificator.id"
-      ></PeriodCard>
+  <div v-if="hasTeamModificators()" data-testid="setting-state">
+    <div class="grid">
+      <div class="s12 m6 l4" v-for="teamModificator in store.teamModificators">
+        <PeriodCard
+          :id="teamModificator.id"
+          :data-testid="'team-modificator-' + teamModificator.id"
+        ></PeriodCard>
+      </div>
     </div>
   </div>
   <article

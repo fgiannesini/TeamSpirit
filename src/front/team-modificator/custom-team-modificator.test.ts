@@ -65,6 +65,11 @@ describe('Custom Team Modificator', () => {
       const wrapper = createWrapper();
       expect(wrapper.findComponent(AddButton).isVisible()).toBe(true);
     });
+
+    test('Should not display setting state when no team modificator is added', () => {
+      const wrapper = createWrapper();
+      expect(wrapper.find('[data-testid=setting-state]').exists()).toBe(false);
+    });
   });
 
   test('Should generate a team modificator card in empty state', async () => {
