@@ -1,6 +1,6 @@
 import { createPinia, setActivePinia } from 'pinia';
 import { beforeEach, describe, expect, test } from 'vitest';
-import { useFormStore } from './form-store.ts';
+import { type State, useFormStore } from './form-store.ts';
 
 describe('Form store', () => {
   beforeEach(() => {
@@ -9,7 +9,7 @@ describe('Form store', () => {
 
   test('should initialise the store', () => {
     const store = useFormStore();
-    expect(store.$state).toMatchObject({
+    expect(store.$state).toMatchObject<Partial<State>>({
       teamMode: 'notSet',
     });
   });
@@ -18,10 +18,11 @@ describe('Form store', () => {
     test('should generate a developper', () => {
       const store = useFormStore();
       store.generateDeveloper();
-      expect(store.$state).toMatchObject({
+      expect(store.$state).toMatchObject<Partial<State>>({
         developers: [
           {
             id: 0,
+            experience: 3,
           },
         ],
       });
@@ -31,13 +32,15 @@ describe('Form store', () => {
       const store = useFormStore();
       store.generateDeveloper();
       store.generateDeveloper();
-      expect(store.$state).toMatchObject({
+      expect(store.$state).toMatchObject<Partial<State>>({
         developers: [
           {
             id: 0,
+            experience: 3,
           },
           {
             id: 1,
+            experience: 3,
           },
         ],
       });
@@ -49,23 +52,28 @@ describe('Form store', () => {
         developers: [
           {
             id: 0,
+            experience: 3,
           },
           {
             id: 1,
+            experience: 3,
           },
           {
             id: 2,
+            experience: 3,
           },
         ],
       });
       store.removeDeveloper(1);
-      expect(store.$state).toMatchObject({
+      expect(store.$state).toMatchObject<Partial<State>>({
         developers: [
           {
             id: 0,
+            experience: 3,
           },
           {
             id: 2,
+            experience: 3,
           },
         ],
       });
@@ -77,18 +85,21 @@ describe('Form store', () => {
         developers: [
           {
             id: 1,
+            experience: 3,
           },
         ],
       });
       store.generateDeveloper();
 
-      expect(store.$state).toMatchObject({
+      expect(store.$state).toMatchObject<Partial<State>>({
         developers: [
           {
             id: 1,
+            experience: 3,
           },
           {
             id: 2,
+            experience: 3,
           },
         ],
       });
@@ -99,7 +110,7 @@ describe('Form store', () => {
     test('should generate a team modification', () => {
       const store = useFormStore();
       store.generateTeamModification();
-      expect(store.$state).toMatchObject({
+      expect(store.$state).toMatchObject<Partial<State>>({
         teamModificators: [
           {
             id: 0,
@@ -112,7 +123,7 @@ describe('Form store', () => {
       const store = useFormStore();
       store.generateTeamModification();
       store.generateTeamModification();
-      expect(store.$state).toMatchObject({
+      expect(store.$state).toMatchObject<Partial<State>>({
         teamModificators: [
           {
             id: 0,
@@ -140,7 +151,7 @@ describe('Form store', () => {
         ],
       });
       store.removeTeamModification(1);
-      expect(store.$state).toMatchObject({
+      expect(store.$state).toMatchObject<Partial<State>>({
         teamModificators: [
           {
             id: 0,
@@ -163,7 +174,7 @@ describe('Form store', () => {
       });
       store.generateTeamModification();
 
-      expect(store.$state).toMatchObject({
+      expect(store.$state).toMatchObject<Partial<State>>({
         teamModificators: [
           {
             id: 1,
