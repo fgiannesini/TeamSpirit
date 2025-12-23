@@ -11,7 +11,7 @@
     "domains": {
       "project": "all",
       "test": "all",
-      "vue": "all"
+      "vue": "recommended"
     },
     "rules": {
       "complexity": {

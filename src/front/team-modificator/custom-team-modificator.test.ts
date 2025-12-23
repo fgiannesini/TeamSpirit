@@ -1,12 +1,23 @@
+import { createTestingPinia } from '@pinia/testing';
 import { shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
 import AddButton from '../add-button.vue';
-import PeriodCard from '../period-card.vue';
+import { type State, useFormStore } from '../form-store.ts';
 import CustomTeamModificator from './custom-team-modificator.vue';
 
 describe('Custom Team Modificator', () => {
-  const createWrapper = (): VueWrapper => {
-    return shallowMount(CustomTeamModificator);
+  const createWrapper = (state: Partial<State> = {}): VueWrapper => {
+    return shallowMount(CustomTeamModificator, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              form: { ...state },
+            },
+          }),
+        ],
+      },
+    });
   };
 
   test('Should render', () => {
@@ -25,8 +36,11 @@ describe('Custom Team Modificator', () => {
     });
   });
 
-  test('Should render a period card', () => {
+  test('Should generate a team modificator card in empty state', async () => {
     const wrapper = createWrapper();
-    expect(wrapper.findComponent(PeriodCard).exists()).toBe(true);
+    const addButton = wrapper.getComponent(AddButton);
+    await addButton.trigger('click');
+
+    expect(useFormStore().generateTeamModification).toHaveBeenCalled();
   });
 });
