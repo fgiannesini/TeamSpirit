@@ -35,6 +35,16 @@ describe('Custom Team Modificator', () => {
     );
   };
 
+  test('Should generate a team modificator in settings state', async () => {
+    const wrapper = createWrapper({
+      teamModificators: [{ id: 0 }],
+    });
+    const addButton = wrapper.getComponent(AddButton);
+    await addButton.trigger('click');
+
+    expect(useFormStore().generateTeamModification).toHaveBeenCalled();
+  });
+
   test('Should display team modificators', () => {
     const wrapper = createWrapper({
       teamModificators: [{ id: 0 }, { id: 1 }],
@@ -70,13 +80,13 @@ describe('Custom Team Modificator', () => {
       const wrapper = createWrapper();
       expect(wrapper.find('[data-testid=setting-state]').exists()).toBe(false);
     });
-  });
 
-  test('Should generate a team modificator card in empty state', async () => {
-    const wrapper = createWrapper();
-    const addButton = wrapper.getComponent(AddButton);
-    await addButton.trigger('click');
+    test('Should generate a team modificator in empty state', async () => {
+      const wrapper = createWrapper();
+      const addButton = wrapper.getComponent(AddButton);
+      await addButton.trigger('click');
 
-    expect(useFormStore().generateTeamModification).toHaveBeenCalled();
+      expect(useFormStore().generateTeamModification).toHaveBeenCalled();
+    });
   });
 });
