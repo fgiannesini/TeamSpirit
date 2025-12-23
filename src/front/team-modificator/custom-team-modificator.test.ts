@@ -49,10 +49,18 @@ describe('Custom Team Modificator', () => {
   });
 
   describe('Empty state', () => {
-    test('Should render empty state', () => {
+    test('Should render empty state when no developers are configured', () => {
       const wrapper = createWrapper();
       expect(wrapper.find('[data-testid=empty-state]').exists()).toBe(true);
     });
+
+    test('Should not display empty state when team modificators are configured', () => {
+      const wrapper = createWrapper({
+        teamModificators: [{ id: 0 }],
+      });
+      expect(wrapper.find('[data-testid=empty-state]').exists()).toBe(false);
+    });
+
     test('Should have a button to add a team modification when no team modification is added', () => {
       const wrapper = createWrapper();
       expect(wrapper.findComponent(AddButton).isVisible()).toBe(true);

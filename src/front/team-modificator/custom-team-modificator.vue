@@ -7,7 +7,11 @@
       ></PeriodCard>
     </div>
   </div>
-  <article class="medium middle-align center-align" data-testid="empty-state">
+  <article
+    v-if="!hasTeamModificators()"
+    class="medium middle-align center-align"
+    data-testid="empty-state"
+  >
     <div>
       <i class="extra">group_remove</i>
       <h5>No team modification exists</h5>
@@ -25,4 +29,5 @@ const store = useFormStore();
 const addTeamModification = (): void => {
   store.generateTeamModification();
 };
+const hasTeamModificators = () => store.teamModificators.length > 0;
 </script>
