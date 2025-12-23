@@ -100,7 +100,7 @@ describe('Form store', () => {
       const store = useFormStore();
       store.generateTeamModification();
       expect(store.$state).toMatchObject({
-        teamModifications: [
+        teamModificators: [
           {
             id: 0,
           },
@@ -113,7 +113,7 @@ describe('Form store', () => {
       store.generateTeamModification();
       store.generateTeamModification();
       expect(store.$state).toMatchObject({
-        teamModifications: [
+        teamModificators: [
           {
             id: 0,
           },
@@ -127,7 +127,7 @@ describe('Form store', () => {
     test('Should remove a team modification', () => {
       const store = useFormStore();
       store.$patch({
-        teamModifications: [
+        teamModificators: [
           {
             id: 0,
           },
@@ -141,7 +141,7 @@ describe('Form store', () => {
       });
       store.removeTeamModification(1);
       expect(store.$state).toMatchObject({
-        teamModifications: [
+        teamModificators: [
           {
             id: 0,
           },
@@ -155,7 +155,7 @@ describe('Form store', () => {
     test('Should add a team modification after the last one', () => {
       const store = useFormStore();
       store.$patch({
-        teamModifications: [
+        teamModificators: [
           {
             id: 1,
           },
@@ -164,7 +164,7 @@ describe('Form store', () => {
       store.generateTeamModification();
 
       expect(store.$state).toMatchObject({
-        teamModifications: [
+        teamModificators: [
           {
             id: 1,
           },

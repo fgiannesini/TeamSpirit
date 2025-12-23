@@ -4,7 +4,7 @@ export type State = {
   teamMode: SelectorMode;
   teamModificatorMode: SelectorMode;
   developers: Developer[];
-  teamModifications: TeamModification[];
+  teamModificators: TeamModification[];
   reviewers: number;
 };
 
@@ -25,7 +25,7 @@ export const useFormStore = defineStore('form', {
     teamMode: 'notSet',
     teamModificatorMode: 'notSet',
     developers: [],
-    teamModifications: [],
+    teamModificators: [],
     reviewers: 0,
   }),
   actions: {
@@ -41,13 +41,13 @@ export const useFormStore = defineStore('form', {
     },
     generateTeamModification(): void {
       const max =
-        this.teamModifications.length > 0
-          ? Math.max(...this.teamModifications.map(({ id }) => id)) + 1
+        this.teamModificators.length > 0
+          ? Math.max(...this.teamModificators.map(({ id }) => id)) + 1
           : 0;
-      this.teamModifications = [...this.teamModifications, { id: max }];
+      this.teamModificators = [...this.teamModificators, { id: max }];
     },
     removeTeamModification(targetId: number): void {
-      this.teamModifications = this.teamModifications.filter(
+      this.teamModificators = this.teamModificators.filter(
         ({ id }) => id !== targetId,
       );
     },

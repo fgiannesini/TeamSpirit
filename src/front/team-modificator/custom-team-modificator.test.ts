@@ -3,6 +3,7 @@ import { shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
 import AddButton from '../add-button.vue';
 import { type State, useFormStore } from '../form-store.ts';
+import type PeriodCard from '../period-card.vue';
 import CustomTeamModificator from './custom-team-modificator.vue';
 
 describe('Custom Team Modificator', () => {
@@ -23,6 +24,28 @@ describe('Custom Team Modificator', () => {
   test('Should render', () => {
     const wrapper = createWrapper();
     expect(wrapper.exists()).toBe(true);
+  });
+
+  const getTeamModificator = (
+    wrapper: VueWrapper,
+    selector: string,
+  ): VueWrapper<InstanceType<typeof PeriodCard>> => {
+    return wrapper.findComponent<typeof PeriodCard>(
+      `[data-testid=${selector}]`,
+    );
+  };
+
+  test('Should display team modificators', () => {
+    const wrapper = createWrapper({
+      teamModificators: [{ id: 0 }, { id: 1 }],
+    });
+
+    expect(
+      getTeamModificator(wrapper, 'team-modificator-0').props('id'),
+    ).toEqual(0);
+    expect(
+      getTeamModificator(wrapper, 'team-modificator-1').props('id'),
+    ).toEqual(1);
   });
 
   describe('Empty state', () => {

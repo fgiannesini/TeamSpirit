@@ -1,4 +1,12 @@
 <template>
+  <div class="grid">
+    <div class="s12 m6 l4" v-for="teamModificator in store.teamModificators">
+      <PeriodCard
+        :id="teamModificator.id"
+        :data-testid="'team-modificator-' + teamModificator.id"
+      ></PeriodCard>
+    </div>
+  </div>
   <article class="medium middle-align center-align" data-testid="empty-state">
     <div>
       <i class="extra">group_remove</i>
@@ -11,6 +19,7 @@
 <script setup lang="ts">
 import AddButton from '../add-button.vue';
 import { useFormStore } from '../form-store.ts';
+import PeriodCard from '../period-card.vue';
 
 const store = useFormStore();
 const addTeamModification = (): void => {
