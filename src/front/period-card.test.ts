@@ -10,6 +10,10 @@ describe('Period Card', () => {
         id: 1,
         periodStart: new Date('2023-01-01'),
         periodEnd: new Date('2024-01-01'),
+        developers: [
+          { id: 0, experience: 3 },
+          { id: 1, experience: 3 },
+        ],
       },
     });
   };
@@ -116,6 +120,16 @@ describe('Period Card', () => {
       const wrapper = createWrapper();
       const devLabel = wrapper.get('[data-testid=dev-select-label]');
       expect(devLabel.text()).toBe('Select a developer');
+    });
+
+    test('should render select items', () => {
+      const wrapper = createWrapper();
+
+      const item0 = wrapper.find('[data-testid=dev-select-item-0]');
+      expect(item0.text()).toBe('Developer 0 - XP 3');
+
+      const item1 = wrapper.find('[data-testid=dev-select-item-1]');
+      expect(item1.text()).toBe('Developer 1 - XP 3');
     });
   });
 });

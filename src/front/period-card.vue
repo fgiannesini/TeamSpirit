@@ -10,6 +10,15 @@
       <button>
         <span data-testid="dev-select-label">Select a developer</span>
         <i>arrow_drop_down</i>
+        <menu>
+          <li
+            v-for="developer in developers"
+            :key="developer.id"
+            :data-testid="`dev-select-item-${developer.id}`"
+          >
+            {{ `Developer ${developer.id} - XP ${developer.experience}` }}
+          </li>
+        </menu>
       </button>
     </div>
     <div class="field label border fill">
@@ -34,8 +43,14 @@
 </template>
 <script setup lang="ts">
 import type { InputHTMLAttributes } from 'vue';
+import type { Developer } from './form-store.ts';
 import RemoveButton from './remove-button.vue';
 
-defineProps<{ id: number; periodStart: Date; periodEnd: Date }>();
+defineProps<{
+  id: number;
+  periodStart: Date;
+  periodEnd: Date;
+  developers: Developer[];
+}>();
 defineEmits(['update:period-start', 'update:period-end', 'remove']);
 </script>
