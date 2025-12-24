@@ -30,4 +30,5 @@ import type { InputHTMLAttributes } from 'vue';
 import RemoveButton from './remove-button.vue';
 
 defineProps<{ id: number; periodStart: Date; periodEnd: Date }>();
+defineEmits(['update:period-start', 'update:period-end', 'remove']);
 </script>
