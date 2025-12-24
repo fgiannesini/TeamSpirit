@@ -104,4 +104,18 @@ describe('Period Card', () => {
       expect(emitted?.[0]).toStrictEqual([new Date('2024-01-02')]);
     });
   });
+
+  describe('Developers', () => {
+    test('should render a field label', () => {
+      const wrapper = createWrapper();
+      const devLabel = wrapper.get('[data-testid=dev-label]');
+      expect(devLabel.text()).toBe('Developers');
+    });
+
+    test('should render a select label', () => {
+      const wrapper = createWrapper();
+      const devLabel = wrapper.get('[data-testid=dev-select-label]');
+      expect(devLabel.text()).toBe('Select a developer');
+    });
+  });
 });

@@ -5,6 +5,13 @@
       <remove-button @click="$emit('remove')"/>
     </nav>
     <div class="space"/>
+    <div class="field">
+      <label data-testid="dev-label">Developers</label>
+      <button>
+        <span data-testid="dev-select-label">Select a developer</span>
+        <i>arrow_drop_down</i>
+      </button>
+    </div>
     <div class="field label border fill">
       <input
         data-testid="start-date-input"
