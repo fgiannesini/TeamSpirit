@@ -15,7 +15,12 @@
       <label data-testid="start-date-label">Start</label>
     </div>
     <div class="field label border fill">
-      <input data-testid="end-date-input" type="date">
+      <input
+        data-testid="end-date-input"
+        type="date"
+        :value="periodEnd.toISOString().split('T')[0]"
+        @input="$emit('update:period-end', new Date(($event.target as InputHTMLAttributes).value))"
+      >
       <label data-testid="end-date-label">End</label>
     </div>
   </article>
@@ -24,5 +29,5 @@
 import type { InputHTMLAttributes } from 'vue';
 import RemoveButton from './remove-button.vue';
 
-defineProps<{ id: number; periodStart: Date }>();
+defineProps<{ id: number; periodStart: Date; periodEnd: Date }>();
 </script>

@@ -9,6 +9,7 @@ describe('Period Card', () => {
       props: {
         id: 1,
         periodStart: new Date('2023-01-01'),
+        periodEnd: new Date('2024-01-01'),
       },
     });
   };
@@ -22,18 +23,6 @@ describe('Period Card', () => {
     const wrapper = createWrapper();
     const title = wrapper.find('[data-testid=title]');
     expect(title.text()).toBe('Period 1');
-  });
-
-  test('Should render a date field for period end', () => {
-    const wrapper = createWrapper();
-    const endDate = wrapper.find('[data-testid=end-date-input]');
-    expect(endDate.exists()).toBe(true);
-  });
-
-  test('Should render a date label for period end', () => {
-    const wrapper = createWrapper();
-    const startDateLabel = wrapper.find('[data-testid=end-date-label]');
-    expect(startDateLabel.text()).toBe('End');
   });
 
   test('Should have a button to remove the card', () => {
@@ -79,6 +68,40 @@ describe('Period Card', () => {
 
       const emitted = wrapper.emitted('update:period-start');
       expect(emitted?.[0]).toStrictEqual([new Date('2023-01-02')]);
+    });
+  });
+
+  describe('Period End', () => {
+    test('Should render a date field for period end', () => {
+      const wrapper = createWrapper();
+      const endDate = wrapper.find('[data-testid=end-date-input]');
+      expect(endDate.exists()).toBe(true);
+    });
+
+    test('Should render a date label for period end', () => {
+      const wrapper = createWrapper();
+      const endDateLabel = wrapper.find('[data-testid=end-date-label]');
+      expect(endDateLabel.text()).toBe('End');
+    });
+
+    test('Should bind date value', () => {
+      const wrapper = createWrapper();
+      const input = wrapper.get<HTMLInputElement>(
+        '[data-testid=end-date-input]',
+      );
+      expect(input.element.value).toStrictEqual('2024-01-01');
+    });
+
+    test('Should send an update event on date change', async () => {
+      const wrapper = createWrapper();
+      const input = wrapper.get<HTMLInputElement>(
+        '[data-testid=end-date-input]',
+      );
+      await input.setValue('2024-01-02');
+      await flushPromises();
+
+      const emitted = wrapper.emitted('update:period-end');
+      expect(emitted?.[0]).toStrictEqual([new Date('2024-01-02')]);
     });
   });
 });
