@@ -7,6 +7,7 @@
           :id="teamModificator.id"
           :data-testid="'team-modificator-' + teamModificator.id"
           @remove="removeTeamModificator(teamModificator.id)"
+          :period-start="new Date()"
         ></PeriodCard>
       </div>
     </div>

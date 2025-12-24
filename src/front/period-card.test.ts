@@ -1,4 +1,4 @@
-import { shallowMount, type VueWrapper } from '@vue/test-utils';
+import { flushPromises, shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
 import PeriodCard from './period-card.vue';
 import RemoveButton from './remove-button.vue';
@@ -8,6 +8,7 @@ describe('Period Card', () => {
     return shallowMount(PeriodCard, {
       props: {
         id: 1,
+        periodStart: new Date('2023-01-01'),
       },
     });
   };
@@ -21,18 +22,6 @@ describe('Period Card', () => {
     const wrapper = createWrapper();
     const title = wrapper.find('[data-testid=title]');
     expect(title.text()).toBe('Period 1');
-  });
-
-  test('Should render a date field for period start', () => {
-    const wrapper = createWrapper();
-    const startDate = wrapper.find('[data-testid=start-date-input]');
-    expect(startDate.exists()).toBe(true);
-  });
-
-  test('Should render a date label for period start', () => {
-    const wrapper = createWrapper();
-    const startDateLabel = wrapper.find('[data-testid=start-date-label]');
-    expect(startDateLabel.text()).toBe('Start');
   });
 
   test('Should render a date field for period end', () => {
@@ -57,5 +46,39 @@ describe('Period Card', () => {
     const button = wrapper.getComponent(RemoveButton);
     button.trigger('click');
     expect(wrapper.emitted()).toHaveProperty('remove');
+  });
+
+  describe('Period Start', () => {
+    test('Should render a date field for period start', () => {
+      const wrapper = createWrapper();
+      const startDate = wrapper.find('[data-testid=start-date-input]');
+      expect(startDate.exists()).toBe(true);
+    });
+
+    test('Should render a date label for period start', () => {
+      const wrapper = createWrapper();
+      const startDateLabel = wrapper.find('[data-testid=start-date-label]');
+      expect(startDateLabel.text()).toBe('Start');
+    });
+
+    test('Should bind date value', () => {
+      const wrapper = createWrapper();
+      const input = wrapper.get<HTMLInputElement>(
+        '[data-testid=start-date-input]',
+      );
+      expect(input.element.value).toStrictEqual('2023-01-01');
+    });
+
+    test('Should send an update event on date change', async () => {
+      const wrapper = createWrapper();
+      const input = wrapper.get<HTMLInputElement>(
+        '[data-testid=start-date-input]',
+      );
+      await input.setValue('2023-01-02');
+      await flushPromises();
+
+      const emitted = wrapper.emitted('update:period-start');
+      expect(emitted?.[0]).toStrictEqual([new Date('2023-01-02')]);
+    });
   });
 });
