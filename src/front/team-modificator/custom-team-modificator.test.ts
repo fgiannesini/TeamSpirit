@@ -45,7 +45,7 @@ describe('Custom Team Modificator', () => {
 
   test('Should display team modificators', () => {
     const wrapper = createWrapper({
-      teamModificators: [teamModification(), { id: 1 }],
+      teamModificators: [teamModification(), teamModification({ id: 1 })],
     });
 
     expect(

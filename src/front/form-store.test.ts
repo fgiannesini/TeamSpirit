@@ -1,6 +1,7 @@
 import { createPinia, setActivePinia } from 'pinia';
 import { beforeEach, describe, expect, test } from 'vitest';
 import { type State, useFormStore } from './form-store.ts';
+import { teamModification } from './front-factory-for-test.ts';
 
 describe('Form store', () => {
   beforeEach(() => {
@@ -112,9 +113,9 @@ describe('Form store', () => {
       store.generateTeamModification();
       expect(store.$state).toMatchObject<Partial<State>>({
         teamModificators: [
-          {
+          teamModification({
             id: 0,
-          },
+          }),
         ],
       });
     });
@@ -125,12 +126,12 @@ describe('Form store', () => {
       store.generateTeamModification();
       expect(store.$state).toMatchObject<Partial<State>>({
         teamModificators: [
-          {
+          teamModification({
             id: 0,
-          },
-          {
+          }),
+          teamModification({
             id: 1,
-          },
+          }),
         ],
       });
     });
@@ -139,26 +140,26 @@ describe('Form store', () => {
       const store = useFormStore();
       store.$patch({
         teamModificators: [
-          {
+          teamModification({
             id: 0,
-          },
-          {
+          }),
+          teamModification({
             id: 1,
-          },
-          {
+          }),
+          teamModification({
             id: 2,
-          },
+          }),
         ],
       });
       store.removeTeamModification(1);
       expect(store.$state).toMatchObject<Partial<State>>({
         teamModificators: [
-          {
+          teamModification({
             id: 0,
-          },
-          {
+          }),
+          teamModification({
             id: 2,
-          },
+          }),
         ],
       });
     });
@@ -167,21 +168,21 @@ describe('Form store', () => {
       const store = useFormStore();
       store.$patch({
         teamModificators: [
-          {
+          teamModification({
             id: 1,
-          },
+          }),
         ],
       });
       store.generateTeamModification();
 
       expect(store.$state).toMatchObject<Partial<State>>({
         teamModificators: [
-          {
+          teamModification({
             id: 1,
-          },
-          {
+          }),
+          teamModification({
             id: 2,
-          },
+          }),
         ],
       });
     });

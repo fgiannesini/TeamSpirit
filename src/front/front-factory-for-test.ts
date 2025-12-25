@@ -10,5 +10,6 @@ export const teamModification = (
   option: Partial<TeamModification> = {},
 ): TeamModification => ({
   id: 0,
+  selectedDevelopers: [],
   ...option,
 });

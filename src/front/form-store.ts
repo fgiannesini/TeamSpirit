@@ -17,6 +17,7 @@ export type Developer = {
 
 export type TeamModification = {
   id: number;
+  selectedDevelopers: Developer[];
 };
 
 // biome-ignore lint/nursery/useExplicitType: type is dynamic
@@ -44,7 +45,10 @@ export const useFormStore = defineStore('form', {
         this.teamModificators.length > 0
           ? Math.max(...this.teamModificators.map(({ id }) => id)) + 1
           : 0;
-      this.teamModificators = [...this.teamModificators, { id: max }];
+      this.teamModificators = [
+        ...this.teamModificators,
+        { id: max, selectedDevelopers: [] },
+      ];
     },
     removeTeamModification(targetId: number): void {
       this.teamModificators = this.teamModificators.filter(
