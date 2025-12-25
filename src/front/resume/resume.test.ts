@@ -2,6 +2,7 @@ import { createTestingPinia } from '@pinia/testing';
 import { shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
 import type { State } from '../form-store.ts';
+import { developer } from '../front-factory-for-test.ts';
 import Resume from './resume.vue';
 
 describe('Resume', () => {
@@ -32,10 +33,7 @@ describe('Resume', () => {
 
   test('Should display the developers', () => {
     const wrapper = createWrapper({
-      developers: [
-        { id: 0, experience: 3 },
-        { id: 1, experience: 2 },
-      ],
+      developers: [developer(), developer({ id: 1, experience: 2 })],
     });
     expect(wrapper.get('[data-testid=developer-0]').text()).toBe('3');
     expect(wrapper.get('[data-testid=developer-1]').text()).toBe('2');

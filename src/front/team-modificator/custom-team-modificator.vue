@@ -5,7 +5,7 @@
       <div class="s12 m6 l4" v-for="teamModificator in store.teamModificators">
         <PeriodCard
           :id="teamModificator.id"
-          :data-testid="'team-modificator-' + teamModificator.id"
+          :data-testid="`team-modificator-${teamModificator.id}`"
           @remove="removeTeamModificator(teamModificator.id)"
           :period-start="new Date()"
           :period-end="new Date()"

@@ -1,5 +1,6 @@
 import { flushPromises, shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
+import { developer } from './front-factory-for-test.ts';
 import PeriodCard from './period-card.vue';
 import RemoveButton from './remove-button.vue';
 
@@ -10,11 +11,8 @@ describe('Period Card', () => {
         id: 1,
         periodStart: new Date('2023-01-01'),
         periodEnd: new Date('2024-01-01'),
-        developers: [
-          { id: 0, experience: 3 },
-          { id: 1, experience: 3 },
-        ],
-        selectedDevelopers: [{ id: 2, experience: 3 }],
+        developers: [developer(), developer({ id: 1 })],
+        selectedDevelopers: [developer({ id: 2 })],
       },
     });
   };
@@ -140,7 +138,7 @@ describe('Period Card', () => {
       item0.trigger('click');
 
       const emitted = wrapper.emitted('update:select-developer');
-      expect(emitted?.[0]).toStrictEqual([{ id: 0, experience: 3 }]);
+      expect(emitted?.[0]).toStrictEqual([developer()]);
     });
 
     test('should display selected items as chips', () => {
@@ -153,7 +151,7 @@ describe('Period Card', () => {
     test('should not display selected items in items to select', async () => {
       const wrapper = createWrapper();
       await wrapper.setProps({
-        selectedDevelopers: [{ id: 0, experience: 3 }],
+        selectedDevelopers: [developer()],
       });
 
       const item0 = wrapper.find('[data-testid=dev-select-item-0]');

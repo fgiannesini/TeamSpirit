@@ -3,6 +3,7 @@ import { shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
 import AddButton from '../add-button.vue';
 import { type State, useFormStore } from '../form-store.ts';
+import { developer, teamModification } from '../front-factory-for-test.ts';
 import PeriodCard from '../period-card.vue';
 import CustomTeamModificator from './custom-team-modificator.vue';
 
@@ -29,15 +30,12 @@ describe('Custom Team Modificator', () => {
   const getTeamModificator = (
     wrapper: VueWrapper,
     selector: string,
-  ): VueWrapper<InstanceType<typeof PeriodCard>> => {
-    return wrapper.findComponent<typeof PeriodCard>(
-      `[data-testid=${selector}]`,
-    );
-  };
+  ): VueWrapper<InstanceType<typeof PeriodCard>> =>
+    wrapper.findComponent<typeof PeriodCard>(`[data-testid=${selector}]`);
 
   test('Should generate a team modificator in settings state', async () => {
     const wrapper = createWrapper({
-      teamModificators: [{ id: 0 }],
+      teamModificators: [teamModification()],
     });
     const addButton = wrapper.getComponent(AddButton);
     await addButton.trigger('click');
@@ -47,7 +45,7 @@ describe('Custom Team Modificator', () => {
 
   test('Should display team modificators', () => {
     const wrapper = createWrapper({
-      teamModificators: [{ id: 0 }, { id: 1 }],
+      teamModificators: [teamModification(), { id: 1 }],
     });
 
     expect(
@@ -60,7 +58,7 @@ describe('Custom Team Modificator', () => {
 
   test('Should remove a team modificator', async () => {
     const wrapper = createWrapper({
-      teamModificators: [{ id: 0 }],
+      teamModificators: [teamModification()],
     });
     await getTeamModificator(wrapper, 'team-modificator-0').trigger('remove');
     expect(useFormStore().removeTeamModification).toHaveBeenCalledWith(0);
@@ -69,13 +67,11 @@ describe('Custom Team Modificator', () => {
   describe('Events', () => {
     test('should bind developers for period card', () => {
       const wrapper = createWrapper({
-        developers: [{ id: 0, experience: 3 }],
-        teamModificators: [{ id: 0 }],
+        developers: [developer()],
+        teamModificators: [teamModification()],
       });
       const periodCard = wrapper.getComponent(PeriodCard);
-      expect(periodCard.props('developers')).toStrictEqual([
-        { id: 0, experience: 3 },
-      ]);
+      expect(periodCard.props('developers')).toStrictEqual([developer()]);
     });
   });
   describe('Empty state', () => {
@@ -86,7 +82,7 @@ describe('Custom Team Modificator', () => {
 
     test('Should not display empty state when team modificators are configured', () => {
       const wrapper = createWrapper({
-        teamModificators: [{ id: 0 }],
+        teamModificators: [teamModification()],
       });
       expect(wrapper.find('[data-testid=empty-state]').exists()).toBe(false);
     });

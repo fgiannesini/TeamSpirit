@@ -3,6 +3,7 @@ import { flushPromises, shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
 import AddButton from '../add-button.vue';
 import { type State, useFormStore } from '../form-store.ts';
+import { developer } from '../front-factory-for-test.ts';
 import CustomTeam from './custom-team.vue';
 import type DeveloperCard from './developer-card.vue';
 
@@ -36,7 +37,7 @@ describe('Custom Team', () => {
 
   test('Should generate a developper card in settings state', async () => {
     const wrapper = createWrapper({
-      developers: [{ id: 0, experience: 3 }],
+      developers: [developer()],
     });
     const addButton = wrapper.getComponent(AddButton);
     await addButton.trigger('click');
@@ -46,10 +47,7 @@ describe('Custom Team', () => {
 
   test('Should display developer cards', () => {
     const wrapper = createWrapper({
-      developers: [
-        { id: 0, experience: 3 },
-        { id: 1, experience: 3 },
-      ],
+      developers: [developer(), { id: 1, experience: 3 }],
     });
 
     expect(getDeveloperCard(wrapper, 'developer-card-0').props('id')).toEqual(
@@ -62,7 +60,7 @@ describe('Custom Team', () => {
 
   test('Should bind developer experience', () => {
     const wrapper = createWrapper({
-      developers: [{ id: 0, experience: 4 }],
+      developers: [developer({ id: 0, experience: 4 })],
     });
 
     expect(
@@ -72,7 +70,7 @@ describe('Custom Team', () => {
 
   test('Should update developer experience', async () => {
     const wrapper = createWrapper({
-      developers: [{ id: 0, experience: 3 }],
+      developers: [developer()],
     });
     const developerCard = getDeveloperCard(wrapper, 'developer-card-0');
     developerCard.vm.$emit('update:experience', 2);
@@ -83,7 +81,7 @@ describe('Custom Team', () => {
 
   test('Should remove a developer card', async () => {
     const wrapper = createWrapper({
-      developers: [{ id: 0, experience: 3 }],
+      developers: [developer()],
     });
     await getDeveloperCard(wrapper, 'developer-card-0').trigger('remove');
     expect(useFormStore().removeDeveloper).toHaveBeenCalledWith(0);
@@ -97,7 +95,7 @@ describe('Custom Team', () => {
 
     test('Should not display empty state when developers are configured', () => {
       const wrapper = createWrapper({
-        developers: [{ id: 0, experience: 3 }],
+        developers: [developer()],
       });
       expect(wrapper.find('[data-testid=empty-state]').exists()).toBe(false);
     });
