@@ -10,7 +10,7 @@
           :period-start="new Date()"
           :period-end="new Date()"
           :developers="store.developers"
-          :selected-developers="[{ id: 0, experience: 3}]"
+          :selected-developers="teamModificator.selectedDevelopers"
         ></PeriodCard>
       </div>
     </div>

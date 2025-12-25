@@ -73,6 +73,19 @@ describe('Custom Team Modificator', () => {
       const periodCard = wrapper.getComponent(PeriodCard);
       expect(periodCard.props('developers')).toStrictEqual([developer()]);
     });
+
+    test('should bind selected developers for period card', () => {
+      const wrapper = createWrapper({
+        developers: [developer({ id: 0 })],
+        teamModificators: [
+          teamModification({ selectedDevelopers: [developer({ id: 1 })] }),
+        ],
+      });
+      const periodCard = wrapper.getComponent(PeriodCard);
+      expect(periodCard.props('selectedDevelopers')).toStrictEqual([
+        developer({ id: 1 }),
+      ]);
+    });
   });
   describe('Empty state', () => {
     test('Should render empty state when no developers are configured', () => {
