@@ -137,8 +137,8 @@ describe('Period Card', () => {
       const item0 = wrapper.find('[data-testid=dev-select-item-0]');
       item0.trigger('click');
 
-      const emitted = wrapper.emitted('update:select-developer');
-      expect(emitted?.[0]).toStrictEqual([developer()]);
+      const emitted = wrapper.emitted('update:selected-developers');
+      expect(emitted?.[0]).toStrictEqual([developer({ id: 2 }), developer()]);
     });
 
     test('should display selected items as chips', () => {

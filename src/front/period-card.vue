@@ -1,3 +1,35 @@
+<script setup lang="ts">
+import { computed, type InputHTMLAttributes } from 'vue';
+import type { Developer } from './form-store.ts';
+import RemoveButton from './remove-button.vue';
+
+const props = defineProps<{
+  id: number;
+  periodStart: Date;
+  periodEnd: Date;
+  developers: Developer[];
+  selectedDevelopers: Developer[];
+}>();
+const emit = defineEmits([
+  'update:period-start',
+  'update:period-end',
+  'remove',
+  'remove:selected-developer',
+  'update:selected-developers',
+]);
+
+const developersToDisplay = computed(() => {
+  const selectedIds = props.selectedDevelopers.map((d) => d.id);
+  return props.developers.filter(
+    (developer) => !selectedIds.includes(developer.id),
+  );
+});
+
+const addDeveloper = (developer: Developer): void => {
+  const selectedDevelopers = [...props.selectedDevelopers, developer];
+  emit('update:selected-developers', ...selectedDevelopers);
+};
+</script>
 <template>
   <article class="medium-width">
     <nav>
@@ -15,7 +47,7 @@
             v-for="developer in developersToDisplay"
             :key="developer.id"
             :data-testid="`dev-select-item-${developer.id}`"
-            @click="$emit('update:select-developer', developer)"
+            @click="addDeveloper(developer)"
           >
             {{ `Developer ${developer.id} - XP ${developer.experience}` }}
           </li>
@@ -54,30 +86,3 @@
     </div>
   </article>
 </template>
-<script setup lang="ts">
-import { computed, type InputHTMLAttributes } from 'vue';
-import type { Developer } from './form-store.ts';
-import RemoveButton from './remove-button.vue';
-
-const props = defineProps<{
-  id: number;
-  periodStart: Date;
-  periodEnd: Date;
-  developers: Developer[];
-  selectedDevelopers: Developer[];
-}>();
-defineEmits([
-  'update:period-start',
-  'update:period-end',
-  'remove',
-  'remove:selected-developer',
-  'update:select-developer',
-]);
-
-const developersToDisplay = computed(() => {
-  const selectedIds = props.selectedDevelopers.map((d) => d.id);
-  return props.developers.filter(
-    (developer) => !selectedIds.includes(developer.id),
-  );
-});
-</script>
