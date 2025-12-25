@@ -26,8 +26,10 @@
       class="chip"
       v-for="developer in selectedDevelopers"
       :key="developer.id"
+      :data-testid="`dev-selected-button-${developer.id}`"
+      @click="$emit('remove:selected-developer', developer)"
     >
-      <span data-testid="dev-selected-chip-0"
+      <span :data-testid="`dev-selected-label-${developer.id}`"
         >{{ `Developer ${developer.id} - XP ${developer.experience}` }}</span
       >
       <i>close</i>
@@ -68,6 +70,7 @@ defineEmits([
   'update:period-start',
   'update:period-end',
   'remove',
+  'remove:selected-developer',
   'update:select-developer',
 ]);
 

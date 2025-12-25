@@ -1,5 +1,5 @@
-import {flushPromises, shallowMount, type VueWrapper} from '@vue/test-utils';
-import {describe, expect, test} from 'vitest';
+import { flushPromises, shallowMount, type VueWrapper } from '@vue/test-utils';
+import { describe, expect, test } from 'vitest';
 import PeriodCard from './period-card.vue';
 import RemoveButton from './remove-button.vue';
 
@@ -146,7 +146,7 @@ describe('Period Card', () => {
     test('should display selected items as chips', () => {
       const wrapper = createWrapper();
 
-      const chip = wrapper.find('[data-testid=dev-selected-chip-0]');
+      const chip = wrapper.find('[data-testid=dev-selected-label-2]');
       expect(chip.text()).toBe('Developer 2 - XP 3');
     });
 
@@ -161,6 +161,16 @@ describe('Period Card', () => {
 
       const item1 = wrapper.find('[data-testid=dev-select-item-1]');
       expect(item1.exists()).toBe(true);
+    });
+
+    test('should send an event on item deselection', () => {
+      const wrapper = createWrapper();
+
+      const item = wrapper.find('[data-testid=dev-selected-button-2]');
+      item.trigger('click');
+
+      const emitted = wrapper.emitted('remove:selected-developer');
+      expect(emitted?.[0]).toStrictEqual([{ id: 2, experience: 3 }]);
     });
   });
 });
