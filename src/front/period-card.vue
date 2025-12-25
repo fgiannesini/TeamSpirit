@@ -42,35 +42,35 @@ const removeDeveloper = (developerToRemove: Developer): void => {
       <remove-button @click="$emit('remove')"/>
     </nav>
     <div class="space"/>
-    <div class="field">
+    <div class="field label suffix border round small">
+      <select>
+        <option data-testid="dev-default-option">Select a developer</option>
+        <option
+          v-for="developer in developersToDisplay"
+          :key="developer.id"
+          :data-testid="`dev-select-item-${developer.id}`"
+          @click="addDeveloper(developer)"
+        >
+          {{ `Developer ${developer.id} - XP ${developer.experience}` }}
+        </option>
+      </select>
       <label data-testid="dev-label">Developers</label>
-      <button>
-        <span data-testid="dev-select-label">Select a developer</span>
-        <i>arrow_drop_down</i>
-        <menu>
-          <li
-            v-for="developer in developersToDisplay"
-            :key="developer.id"
-            :data-testid="`dev-select-item-${developer.id}`"
-            @click="addDeveloper(developer)"
+      <i>arrow_drop_down</i>
+      <output>
+        <button
+          class="chip"
+          v-for="developer in selectedDevelopers"
+          :key="developer.id"
+          :data-testid="`dev-selected-button-${developer.id}`"
+          @click="removeDeveloper(developer);"
+        >
+          <span :data-testid="`dev-selected-label-${developer.id}`"
+            >{{ `Developer ${developer.id} - XP ${developer.experience}` }}</span
           >
-            {{ `Developer ${developer.id} - XP ${developer.experience}` }}
-          </li>
-        </menu>
-      </button>
+          <i>close</i>
+        </button>
+      </output>
     </div>
-    <button
-      class="chip"
-      v-for="developer in selectedDevelopers"
-      :key="developer.id"
-      :data-testid="`dev-selected-button-${developer.id}`"
-      @click="removeDeveloper(developer);"
-    >
-      <span :data-testid="`dev-selected-label-${developer.id}`"
-        >{{ `Developer ${developer.id} - XP ${developer.experience}` }}</span
-      >
-      <i>close</i>
-    </button>
     <div class="field label border fill">
       <input
         data-testid="start-date-input"

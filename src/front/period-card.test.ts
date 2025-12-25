@@ -115,9 +115,9 @@ describe('Period Card', () => {
       expect(devLabel.text()).toBe('Developers');
     });
 
-    test('should render a select label', () => {
+    test('should render a default select option', () => {
       const wrapper = createWrapper();
-      const devLabel = wrapper.get('[data-testid=dev-select-label]');
+      const devLabel = wrapper.get('[data-testid=dev-default-option]');
       expect(devLabel.text()).toBe('Select a developer');
     });
 
