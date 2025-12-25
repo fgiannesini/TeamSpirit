@@ -9,7 +9,7 @@
           @remove="removeTeamModificator(teamModificator.id)"
           :period-start="new Date()"
           :period-end="new Date()"
-          :developers="[{ id: 0, experience: 3}, { id: 1, experience: 2}]"
+          :developers="store.developers"
           :selected-developers="[{ id: 0, experience: 3}]"
         ></PeriodCard>
       </div>

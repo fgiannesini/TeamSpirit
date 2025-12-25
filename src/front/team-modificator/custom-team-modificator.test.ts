@@ -3,7 +3,7 @@ import { shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
 import AddButton from '../add-button.vue';
 import { type State, useFormStore } from '../form-store.ts';
-import type PeriodCard from '../period-card.vue';
+import PeriodCard from '../period-card.vue';
 import CustomTeamModificator from './custom-team-modificator.vue';
 
 describe('Custom Team Modificator', () => {
@@ -66,6 +66,18 @@ describe('Custom Team Modificator', () => {
     expect(useFormStore().removeTeamModification).toHaveBeenCalledWith(0);
   });
 
+  describe('Events', () => {
+    test('should bind developers for period card', () => {
+      const wrapper = createWrapper({
+        developers: [{ id: 0, experience: 3 }],
+        teamModificators: [{ id: 0 }],
+      });
+      const periodCard = wrapper.getComponent(PeriodCard);
+      expect(periodCard.props('developers')).toStrictEqual([
+        { id: 0, experience: 3 },
+      ]);
+    });
+  });
   describe('Empty state', () => {
     test('Should render empty state when no developers are configured', () => {
       const wrapper = createWrapper();
