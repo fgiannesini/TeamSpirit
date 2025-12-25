@@ -10,7 +10,7 @@
           :period-start="new Date()"
           :period-end="new Date()"
           :developers="store.developers"
-          :selected-developers="teamModificator.selectedDevelopers"
+          v-model:selected-developers="teamModificator.selectedDevelopers"
         ></PeriodCard>
       </div>
     </div>

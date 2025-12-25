@@ -86,6 +86,22 @@ describe('Custom Team Modificator', () => {
         developer({ id: 1 }),
       ]);
     });
+
+    test('should update selected developers on update', () => {
+      const wrapper = createWrapper({
+        teamModificators: [
+          teamModification({ selectedDevelopers: [developer({ id: 1 })] }),
+        ],
+      });
+      const periodCard = wrapper.getComponent(PeriodCard);
+      periodCard.vm.$emit('update:selectedDevelopers', [
+        developer({ id: 1 }),
+        developer(),
+      ]);
+      expect(
+        useFormStore().teamModificators[0].selectedDevelopers,
+      ).toStrictEqual([developer({ id: 1 }), developer()]);
+    });
   });
   describe('Empty state', () => {
     test('Should render empty state when no developers are configured', () => {
