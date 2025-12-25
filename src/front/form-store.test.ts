@@ -1,11 +1,14 @@
 import { createPinia, setActivePinia } from 'pinia';
-import { beforeEach, describe, expect, test } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { type State, useFormStore } from './form-store.ts';
 import { teamModification } from './front-factory-for-test.ts';
 
 describe('Form store', () => {
   beforeEach(() => {
     setActivePinia(createPinia());
+    vi.useFakeTimers({
+      now: new Date('2025-12-25'),
+    });
   });
 
   test('should initialise the store', () => {

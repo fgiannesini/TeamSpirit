@@ -1,5 +1,11 @@
 import { defineStore } from 'pinia';
 
+const tomorrow = (): Date => {
+  const date = new Date();
+  date.setDate(date.getDate() + 1);
+  return date;
+};
+
 export type State = {
   teamMode: SelectorMode;
   teamModificatorMode: SelectorMode;
@@ -18,6 +24,8 @@ export type Developer = {
 export type TeamModification = {
   id: number;
   selectedDevelopers: Developer[];
+  periodStart: Date;
+  periodEnd: Date;
 };
 
 // biome-ignore lint/nursery/useExplicitType: type is dynamic
@@ -47,7 +55,12 @@ export const useFormStore = defineStore('form', {
           : 0;
       this.teamModificators = [
         ...this.teamModificators,
-        { id: max, selectedDevelopers: [] },
+        {
+          id: max,
+          selectedDevelopers: [],
+          periodStart: new Date(),
+          periodEnd: tomorrow(),
+        },
       ];
     },
     removeTeamModification(targetId: number): void {
