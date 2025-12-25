@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, type InputHTMLAttributes } from 'vue';
+import { computed, type InputHTMLAttributes, type Ref } from 'vue';
 import type { Developer } from './form-store.ts';
 import RemoveButton from './remove-button.vue';
 
@@ -10,15 +10,13 @@ const props = defineProps<{
   developers: Developer[];
   selectedDevelopers: Developer[];
 }>();
-const emit = defineEmits([
-  'update:period-start',
-  'update:period-end',
-  'remove',
-  'remove:selected-developer',
-  'update:selected-developers',
-]);
+const emit = defineEmits<{
+  (e: 'update:period-end' | 'update:period-start', value: Date): void;
+  (e: 'update:selected-developers', value: Developer[]): void;
+  (e: 'remove'): void;
+}>();
 
-const developersToDisplay = computed(() => {
+const developersToDisplay: Ref<Developer[]> = computed(() => {
   const selectedIds = props.selectedDevelopers.map((d) => d.id);
   return props.developers.filter(
     (developer) => !selectedIds.includes(developer.id),
@@ -27,7 +25,14 @@ const developersToDisplay = computed(() => {
 
 const addDeveloper = (developer: Developer): void => {
   const selectedDevelopers = [...props.selectedDevelopers, developer];
-  emit('update:selected-developers', ...selectedDevelopers);
+  emit('update:selected-developers', selectedDevelopers);
+};
+
+const removeDeveloper = (developerToRemove: Developer): void => {
+  const selectedDevelopers = props.selectedDevelopers.filter(
+    (developer) => developerToRemove.id !== developer.id,
+  );
+  emit('update:selected-developers', selectedDevelopers);
 };
 </script>
 <template>
@@ -59,7 +64,7 @@ const addDeveloper = (developer: Developer): void => {
       v-for="developer in selectedDevelopers"
       :key="developer.id"
       :data-testid="`dev-selected-button-${developer.id}`"
-      @click="$emit('remove:selected-developer', developer)"
+      @click="removeDeveloper(developer);"
     >
       <span :data-testid="`dev-selected-label-${developer.id}`"
         >{{ `Developer ${developer.id} - XP ${developer.experience}` }}</span

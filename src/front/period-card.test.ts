@@ -138,7 +138,7 @@ describe('Period Card', () => {
       item0.trigger('click');
 
       const emitted = wrapper.emitted('update:selected-developers');
-      expect(emitted?.[0]).toStrictEqual([developer({ id: 2 }), developer()]);
+      expect(emitted?.[0]).toStrictEqual([[developer({ id: 2 }), developer()]]);
     });
 
     test('should display selected items as chips', () => {
@@ -167,8 +167,8 @@ describe('Period Card', () => {
       const item = wrapper.find('[data-testid=dev-selected-button-2]');
       item.trigger('click');
 
-      const emitted = wrapper.emitted('remove:selected-developer');
-      expect(emitted?.[0]).toStrictEqual([{ id: 2, experience: 3 }]);
+      const emitted = wrapper.emitted('update:selected-developers');
+      expect(emitted?.[0]).toStrictEqual([[]]);
     });
   });
 });
