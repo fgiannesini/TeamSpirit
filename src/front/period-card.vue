@@ -12,7 +12,7 @@
         <i>arrow_drop_down</i>
         <menu>
           <li
-            v-for="developer in developers"
+            v-for="developer in developersToDisplay"
             :key="developer.id"
             :data-testid="`dev-select-item-${developer.id}`"
             @click="$emit('update:select-developer', developer)"
@@ -22,6 +22,16 @@
         </menu>
       </button>
     </div>
+    <button
+      class="chip"
+      v-for="developer in selectedDevelopers"
+      :key="developer.id"
+    >
+      <span data-testid="dev-selected-chip-0"
+        >{{ `Developer ${developer.id} - XP ${developer.experience}` }}</span
+      >
+      <i>close</i>
+    </button>
     <div class="field label border fill">
       <input
         data-testid="start-date-input"
@@ -43,15 +53,16 @@
   </article>
 </template>
 <script setup lang="ts">
-import type { InputHTMLAttributes } from 'vue';
+import { computed, type InputHTMLAttributes } from 'vue';
 import type { Developer } from './form-store.ts';
 import RemoveButton from './remove-button.vue';
 
-defineProps<{
+const props = defineProps<{
   id: number;
   periodStart: Date;
   periodEnd: Date;
   developers: Developer[];
+  selectedDevelopers: Developer[];
 }>();
 defineEmits([
   'update:period-start',
@@ -59,4 +70,11 @@ defineEmits([
   'remove',
   'update:select-developer',
 ]);
+
+const developersToDisplay = computed(() => {
+  const selectedIds = props.selectedDevelopers.map((d) => d.id);
+  return props.developers.filter(
+    (developer) => !selectedIds.includes(developer.id),
+  );
+});
 </script>

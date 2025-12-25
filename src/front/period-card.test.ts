@@ -1,5 +1,5 @@
-import { flushPromises, shallowMount, type VueWrapper } from '@vue/test-utils';
-import { describe, expect, test } from 'vitest';
+import {flushPromises, shallowMount, type VueWrapper} from '@vue/test-utils';
+import {describe, expect, test} from 'vitest';
 import PeriodCard from './period-card.vue';
 import RemoveButton from './remove-button.vue';
 
@@ -14,6 +14,7 @@ describe('Period Card', () => {
           { id: 0, experience: 3 },
           { id: 1, experience: 3 },
         ],
+        selectedDevelopers: [{ id: 2, experience: 3 }],
       },
     });
   };
@@ -140,6 +141,26 @@ describe('Period Card', () => {
 
       const emitted = wrapper.emitted('update:select-developer');
       expect(emitted?.[0]).toStrictEqual([{ id: 0, experience: 3 }]);
+    });
+
+    test('should display selected items as chips', () => {
+      const wrapper = createWrapper();
+
+      const chip = wrapper.find('[data-testid=dev-selected-chip-0]');
+      expect(chip.text()).toBe('Developer 2 - XP 3');
+    });
+
+    test('should not display selected items in items to select', async () => {
+      const wrapper = createWrapper();
+      await wrapper.setProps({
+        selectedDevelopers: [{ id: 0, experience: 3 }],
+      });
+
+      const item0 = wrapper.find('[data-testid=dev-select-item-0]');
+      expect(item0.exists()).toBe(false);
+
+      const item1 = wrapper.find('[data-testid=dev-select-item-1]');
+      expect(item1.exists()).toBe(true);
     });
   });
 });
