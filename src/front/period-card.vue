@@ -15,6 +15,7 @@
             v-for="developer in developers"
             :key="developer.id"
             :data-testid="`dev-select-item-${developer.id}`"
+            @click="$emit('update:select-developer', developer)"
           >
             {{ `Developer ${developer.id} - XP ${developer.experience}` }}
           </li>
@@ -52,5 +53,10 @@ defineProps<{
   periodEnd: Date;
   developers: Developer[];
 }>();
-defineEmits(['update:period-start', 'update:period-end', 'remove']);
+defineEmits([
+  'update:period-start',
+  'update:period-end',
+  'remove',
+  'update:select-developer',
+]);
 </script>

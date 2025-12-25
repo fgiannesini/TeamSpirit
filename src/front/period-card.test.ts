@@ -122,7 +122,7 @@ describe('Period Card', () => {
       expect(devLabel.text()).toBe('Select a developer');
     });
 
-    test('should render select items', () => {
+    test('should render items to select', () => {
       const wrapper = createWrapper();
 
       const item0 = wrapper.find('[data-testid=dev-select-item-0]');
@@ -130,6 +130,16 @@ describe('Period Card', () => {
 
       const item1 = wrapper.find('[data-testid=dev-select-item-1]');
       expect(item1.text()).toBe('Developer 1 - XP 3');
+    });
+
+    test('should send an event on item selection', () => {
+      const wrapper = createWrapper();
+
+      const item0 = wrapper.find('[data-testid=dev-select-item-0]');
+      item0.trigger('click');
+
+      const emitted = wrapper.emitted('update:select-developer');
+      expect(emitted?.[0]).toStrictEqual([{ id: 0, experience: 3 }]);
     });
   });
 });
