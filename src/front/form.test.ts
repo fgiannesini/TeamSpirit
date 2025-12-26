@@ -5,6 +5,7 @@ import Resume from './resume/resume.vue';
 import Reviewers from './reviewers/reviewers.vue';
 import Team from './team/team.vue';
 import TeamModificator from './team-modificator/team-modificator.vue';
+import UserStories from './user-stories.vue';
 
 describe('Form', () => {
   const createWrapper = (): VueWrapper => {
@@ -150,6 +151,46 @@ describe('Form', () => {
       const wrapper = createWrapper();
       await wrapper.get('[data-testid=team-modificator-tab]').trigger('click');
       expect(wrapper.getComponent(TeamModificator).isVisible()).toBe(true);
+    });
+  });
+
+  describe('User Stories', () => {
+    test('Should render a navigation user stories tab', () => {
+      const wrapper = createWrapper();
+      expect(wrapper.get('[data-testid=user-stories-tab]').isVisible()).toBe(
+        true,
+      );
+    });
+
+    test('Should set the navigation tab user stories active onclick', async () => {
+      const wrapper = createWrapper();
+
+      const userStories = wrapper.get('[data-testid=user-stories-tab]');
+      await userStories.trigger('click');
+      expect(wrapper.get('[data-testid=user-stories-tab]').classes()).toContain(
+        'active',
+      );
+
+      const teamClasses = wrapper.get('[data-testid=team-tab]').classes();
+      expect(teamClasses).not.toContain('active');
+    });
+
+    test('Should set the user stories page active on user stories tab click', async () => {
+      const wrapper = createWrapper();
+      expect(
+        wrapper.get('[data-testid=user-stories-container]').classes(),
+      ).not.toContain('active');
+
+      await wrapper.get('[data-testid=user-stories-tab]').trigger('click');
+      expect(
+        wrapper.get('[data-testid=user-stories-container]').classes(),
+      ).toContain('active');
+    });
+
+    test('Should render a user stories component', async () => {
+      const wrapper = createWrapper();
+      await wrapper.get('[data-testid=user-stories-tab]').trigger('click');
+      expect(wrapper.getComponent(UserStories).isVisible()).toBe(true);
     });
   });
 });

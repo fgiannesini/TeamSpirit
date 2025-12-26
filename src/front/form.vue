@@ -4,8 +4,9 @@ import Resume from './resume/resume.vue';
 import Reviewers from './reviewers/reviewers.vue';
 import Team from './team/team.vue';
 import TeamModificator from './team-modificator/team-modificator.vue';
+import UserStories from './user-stories.vue';
 
-type TabName = 'team' | 'reviewers' | 'team-modificator';
+type TabName = 'team' | 'reviewers' | 'team-modificator' | 'user-stories';
 const active: Ref<TabName> = ref('team');
 const activate = (tabName: TabName): void => {
   active.value = tabName;
@@ -24,7 +25,7 @@ const activate = (tabName: TabName): void => {
         </button>
         <div class="small-margin">Team</div>
       </div>
-      <hr class="medium-width">
+      <hr class="small-width">
       <div class="center-align">
         <button
           data-testid="reviewers-tab"
@@ -35,7 +36,7 @@ const activate = (tabName: TabName): void => {
         </button>
         <div class="small-margin">Reviewers</div>
       </div>
-      <hr class="medium-width">
+      <hr class="small-width">
       <div class="center-align">
         <button
           data-testid="team-modificator-tab"
@@ -45,6 +46,17 @@ const activate = (tabName: TabName): void => {
           <i>group_remove</i>
         </button>
         <div class="small-margin">Team Modificator</div>
+      </div>
+      <hr class="small-width">
+      <div class="center-align">
+        <button
+          data-testid="user-stories-tab"
+          @click="activate('user-stories')"
+          :class="[active === 'user-stories' ? 'active' : '']"
+        >
+          <i>group_remove</i>
+        </button>
+        <div class="small-margin">User stories</div>
       </div>
     </nav>
     <div
@@ -64,6 +76,12 @@ const activate = (tabName: TabName): void => {
       :class="[active === 'team-modificator' ? 'active' : '','page', 'padding']"
     >
       <TeamModificator/>
+    </div>
+    <div
+      data-testid="user-stories-container"
+      :class="[active === 'user-stories' ? 'active' : '','page', 'padding']"
+    >
+      <UserStories></UserStories>
     </div>
   </main>
   <nav class="right" data-testid="resume-panel">
