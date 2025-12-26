@@ -120,6 +120,21 @@ describe('Custom Team Modificator', () => {
         end: new Date('2024-01-01'),
       });
     });
+
+    test('should update period for period card', () => {
+      const wrapper = createWrapper({
+        teamModificators: [teamModification()],
+      });
+      const periodCard = wrapper.getComponent(PeriodCard);
+      periodCard.vm.$emit('update:period', {
+        start: new Date('2023-01-01'),
+        end: new Date('2024-01-01'),
+      });
+      expect(useFormStore().teamModificators[0].period).toStrictEqual<Period>({
+        start: new Date('2023-01-01'),
+        end: new Date('2024-01-01'),
+      });
+    });
   });
   describe('Empty state', () => {
     test('Should render empty state when no developers are configured', () => {

@@ -6,10 +6,10 @@
         <PeriodCard
           :id="teamModificator.id"
           :data-testid="`team-modificator-${teamModificator.id}`"
-          @remove="removeTeamModificator(teamModificator.id)"
-          :period="teamModificator.period"
           :developers="store.developers"
+          v-model:period="teamModificator.period"
           v-model:selected-developers="teamModificator.selectedDevelopers"
+          @remove="removeTeamModificator(teamModificator.id)"
         ></PeriodCard>
       </div>
     </div>
