@@ -11,7 +11,9 @@ export const teamModification = (
 ): TeamModification => ({
   id: 0,
   selectedDevelopers: [],
-  periodStart: new Date('2025-12-25'),
-  periodEnd: new Date('2025-12-26'),
+  period: {
+    start: new Date('2025-12-25'),
+    end: new Date('2025-12-26'),
+  },
   ...option,
 });

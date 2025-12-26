@@ -21,11 +21,14 @@ export type Developer = {
   experience: number;
 };
 
+export type Period = {
+  start: Date;
+  end: Date;
+};
 export type TeamModification = {
   id: number;
   selectedDevelopers: Developer[];
-  periodStart: Date;
-  periodEnd: Date;
+  period: Period;
 };
 
 // biome-ignore lint/nursery/useExplicitType: type is dynamic
@@ -58,8 +61,10 @@ export const useFormStore = defineStore('form', {
         {
           id: max,
           selectedDevelopers: [],
-          periodStart: new Date(),
-          periodEnd: tomorrow(),
+          period: {
+            start: new Date(),
+            end: tomorrow(),
+          },
         },
       ];
     },
