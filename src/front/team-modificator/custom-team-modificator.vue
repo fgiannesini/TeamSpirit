@@ -7,7 +7,7 @@
           :id="teamModificator.id"
           :data-testid="`team-modificator-${teamModificator.id}`"
           @remove="removeTeamModificator(teamModificator.id)"
-          :period="{start: new Date(), end: new Date()}"
+          :period="teamModificator.period"
           :developers="store.developers"
           v-model:selected-developers="teamModificator.selectedDevelopers"
         ></PeriodCard>

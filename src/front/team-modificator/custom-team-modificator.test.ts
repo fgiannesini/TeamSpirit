@@ -2,7 +2,7 @@ import { createTestingPinia } from '@pinia/testing';
 import { shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
 import AddButton from '../add-button.vue';
-import { type State, useFormStore } from '../form-store.ts';
+import { type Period, type State, useFormStore } from '../form-store.ts';
 import { developer, teamModification } from '../front-factory-for-test.ts';
 import PeriodCard from '../period-card.vue';
 import CustomTeamModificator from './custom-team-modificator.vue';
@@ -101,6 +101,24 @@ describe('Custom Team Modificator', () => {
       expect(
         useFormStore().teamModificators[0].selectedDevelopers,
       ).toStrictEqual([developer({ id: 1 }), developer()]);
+    });
+
+    test('should bind period for period card', () => {
+      const wrapper = createWrapper({
+        teamModificators: [
+          teamModification({
+            period: {
+              start: new Date('2023-01-01'),
+              end: new Date('2024-01-01'),
+            },
+          }),
+        ],
+      });
+      const periodCard = wrapper.getComponent(PeriodCard);
+      expect(periodCard.props('period')).toStrictEqual<Period>({
+        start: new Date('2023-01-01'),
+        end: new Date('2024-01-01'),
+      });
     });
   });
   describe('Empty state', () => {
