@@ -1,17 +1,16 @@
 <script setup lang="ts">
 import { computed, type InputHTMLAttributes, type Ref } from 'vue';
-import type { Developer } from './form-store.ts';
+import type { Developer, Period } from './form-store.ts';
 import RemoveButton from './remove-button.vue';
 
 const props = defineProps<{
   id: number;
-  periodStart: Date;
-  periodEnd: Date;
+  period: Period;
   developers: Developer[];
   selectedDevelopers: Developer[];
 }>();
 const emit = defineEmits<{
-  (e: 'update:period-end' | 'update:period-start', value: Date): void;
+  (e: 'update:period', value: Period): void;
   (e: 'update:selected-developers', value: Developer[]): void;
   (e: 'remove'): void;
 }>();
@@ -75,8 +74,8 @@ const removeDeveloper = (developerToRemove: Developer): void => {
       <input
         data-testid="start-date-input"
         type="date"
-        :value="periodStart.toISOString().split('T')[0]"
-        @input="$emit('update:period-start', new Date(($event.target as InputHTMLAttributes).value))"
+        :value="period.start.toISOString().split('T')[0]"
+        @input="$emit('update:period', { ...period, start: new Date(($event.target as InputHTMLAttributes).value)})"
       >
       <label data-testid="start-date-label">Start</label>
     </div>
@@ -84,8 +83,8 @@ const removeDeveloper = (developerToRemove: Developer): void => {
       <input
         data-testid="end-date-input"
         type="date"
-        :value="periodEnd.toISOString().split('T')[0]"
-        @input="$emit('update:period-end', new Date(($event.target as InputHTMLAttributes).value))"
+        :value="period.end.toISOString().split('T')[0]"
+        @input="$emit('update:period', {...period,end:new Date(($event.target as InputHTMLAttributes).value)})"
       >
       <label data-testid="end-date-label">End</label>
     </div>

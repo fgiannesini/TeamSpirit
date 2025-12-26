@@ -11,6 +11,7 @@ describe('Period Card', () => {
         id: 1,
         periodStart: new Date('2023-01-01'),
         periodEnd: new Date('2024-01-01'),
+        period: { start: new Date('2023-01-01'), end: new Date('2024-01-01') },
         developers: [developer(), developer({ id: 1 })],
         selectedDevelopers: [developer({ id: 2 })],
       },
@@ -69,8 +70,13 @@ describe('Period Card', () => {
       await input.setValue('2023-01-02');
       await flushPromises();
 
-      const emitted = wrapper.emitted('update:period-start');
-      expect(emitted?.[0]).toStrictEqual([new Date('2023-01-02')]);
+      const emitted = wrapper.emitted('update:period');
+      expect(emitted?.[0]).toStrictEqual([
+        {
+          start: new Date('2023-01-02'),
+          end: new Date('2024-01-01'),
+        },
+      ]);
     });
   });
 
@@ -103,8 +109,10 @@ describe('Period Card', () => {
       await input.setValue('2024-01-02');
       await flushPromises();
 
-      const emitted = wrapper.emitted('update:period-end');
-      expect(emitted?.[0]).toStrictEqual([new Date('2024-01-02')]);
+      const emitted = wrapper.emitted('update:period');
+      expect(emitted?.[0]).toStrictEqual([
+        { start: new Date('2023-01-01'), end: new Date('2024-01-02') },
+      ]);
     });
   });
 
