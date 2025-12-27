@@ -18,8 +18,8 @@
   </article>
 </template>
 <script setup lang="ts">
+import RemoveButton from '../remove-button.vue';
 import Slider from '../slider.vue';
-import RemoveButton from "../remove-button.vue";
 
 defineProps<{ id: number; experience: number }>();
 defineEmits(['update:experience', 'remove']);

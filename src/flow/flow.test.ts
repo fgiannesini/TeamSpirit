@@ -770,40 +770,37 @@ describe('Flow', () => {
     test.each([
       [1 / 3, '0.33'],
       [Number.NaN, 'NaN'],
-    ])(
-      'Should render the page with a stat event',
-      async (leadTimeProvided, leadTimeDisplayed) => {
-        saveTimeEvents(
-          [
-            {
-              time: 1,
-              userStoryId: 1,
-              threadId: 1,
-              state: 'InProgress',
-            },
-          ],
-          'e4567-e89b-12d3-a456-426614174000',
-        );
-        saveStatEvents(
-          [
-            {
-              time: 1,
-              leadTime: leadTimeProvided,
-            },
-          ],
-          'e4567-e89b-12d3-a456-426614174000',
-        );
-        await import('./flow.ts');
+    ])('Should render the page with a stat event', async (leadTimeProvided, leadTimeDisplayed) => {
+      saveTimeEvents(
+        [
+          {
+            time: 1,
+            userStoryId: 1,
+            threadId: 1,
+            state: 'InProgress',
+          },
+        ],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
+      saveStatEvents(
+        [
+          {
+            time: 1,
+            leadTime: leadTimeProvided,
+          },
+        ],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
+      await import('./flow.ts');
 
-        getCompute()?.click();
-        await vi.runAllTimersAsync();
+      getCompute()?.click();
+      await vi.runAllTimersAsync();
 
-        const leadTime = document.querySelector('#lead-time');
-        expect(leadTime?.textContent).toEqual(leadTimeDisplayed);
+      const leadTime = document.querySelector('#lead-time');
+      expect(leadTime?.textContent).toEqual(leadTimeDisplayed);
 
-        const time = document.querySelector('#time');
-        expect(time?.textContent).toEqual('1/1');
-      },
-    );
+      const time = document.querySelector('#time');
+      expect(time?.textContent).toEqual('1/1');
+    });
   });
 });
