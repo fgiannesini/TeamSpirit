@@ -10,6 +10,7 @@ describe('User Story Card', () => {
       props: {
         id: 1,
         complexity: 3,
+        reviewComplexity: 2,
       },
     });
   };
@@ -45,7 +46,9 @@ describe('User Story Card', () => {
 
     test('Should bind slider properties', () => {
       const wrapper = createWrapper();
-      const slider = wrapper.getComponent(Slider);
+      const slider = wrapper.getComponent<typeof Slider>(
+        '[data-testid=complexity-slider]',
+      );
       expect(slider.props()).toStrictEqual({
         min: 1,
         max: 10,
@@ -55,12 +58,46 @@ describe('User Story Card', () => {
 
     test('Should send an update event on complexity change', async () => {
       const wrapper = createWrapper();
-      const slider = wrapper.getComponent(Slider);
+      const slider = wrapper.getComponent<typeof Slider>(
+        '[data-testid=complexity-slider]',
+      );
       slider.vm.$emit('update:value', 2);
       await flushPromises();
 
       const emitted = wrapper.emitted('update:complexity');
       expect(emitted?.[0]).toStrictEqual([2]);
+    });
+  });
+
+  describe('Review complexity', () => {
+    test('Should have a label', () => {
+      const wrapper = createWrapper();
+      const label = wrapper.get('[data-testid=review-complexity-label]');
+      expect(label.text()).toBe('Review complexity');
+    });
+
+    test('Should bind slider properties', () => {
+      const wrapper = createWrapper();
+      const slider = wrapper.getComponent<typeof Slider>(
+        '[data-testid=review-complexity-slider]',
+      );
+      expect(slider.props()).toStrictEqual({
+        min: 1,
+        max: 9,
+        value: 2,
+      });
+    });
+
+    test('Should send an update event on review complexity change', async () => {
+      const wrapper = createWrapper();
+      const slider = wrapper.getComponent<typeof Slider>(
+        '[data-testid=review-complexity-slider]',
+      );
+      slider.vm.$emit('update:value', 1);
+      await flushPromises();
+
+      const emitted = wrapper.emitted('update:review-complexity');
+      expect(emitted?.[0]).toStrictEqual([1]);
     });
   });
 });
