@@ -4,7 +4,7 @@ import Resume from './resume/resume.vue';
 import Reviewers from './reviewers/reviewers.vue';
 import Team from './team/team.vue';
 import TeamModificator from './team-modificator/team-modificator.vue';
-import UserStories from './user-stories.vue';
+import UserStories from './user-stories/user-stories.vue';
 
 type TabName = 'team' | 'reviewers' | 'team-modificator' | 'user-stories';
 const active: Ref<TabName> = ref('team');
