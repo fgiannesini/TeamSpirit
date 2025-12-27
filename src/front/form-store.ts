@@ -9,6 +9,7 @@ const tomorrow = (): Date => {
 export type State = {
   teamMode: SelectorMode;
   teamModificatorMode: SelectorMode;
+  userStoriesMode: SelectorMode;
   developers: Developer[];
   teamModificators: TeamModification[];
   reviewers: number;
@@ -31,11 +32,11 @@ export type TeamModification = {
   period: Period;
 };
 
-// biome-ignore lint/nursery/useExplicitType: type is dynamic
 export const useFormStore = defineStore('form', {
   state: (): State => ({
     teamMode: 'notSet',
     teamModificatorMode: 'notSet',
+    userStoriesMode: 'notSet',
     developers: [],
     teamModificators: [],
     reviewers: 0,
