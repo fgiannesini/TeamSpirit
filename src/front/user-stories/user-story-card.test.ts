@@ -1,7 +1,7 @@
 import { flushPromises, shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
 import RemoveButton from '../remove-button.vue';
-import Slider from '../slider.vue';
+import type Slider from '../slider.vue';
 import UserStoryCard from './user-story-card.vue';
 
 describe('User Story Card', () => {
@@ -11,6 +11,7 @@ describe('User Story Card', () => {
         id: 1,
         complexity: 3,
         reviewComplexity: 2,
+        priority: 5,
       },
     });
   };
@@ -97,6 +98,38 @@ describe('User Story Card', () => {
       await flushPromises();
 
       const emitted = wrapper.emitted('update:review-complexity');
+      expect(emitted?.[0]).toStrictEqual([1]);
+    });
+  });
+
+  describe('Priority', () => {
+    test('Should have a label', () => {
+      const wrapper = createWrapper();
+      const label = wrapper.get('[data-testid=priority-label]');
+      expect(label.text()).toBe('Priority');
+    });
+
+    test('Should bind slider properties', () => {
+      const wrapper = createWrapper();
+      const slider = wrapper.getComponent<typeof Slider>(
+        '[data-testid=priority-slider]',
+      );
+      expect(slider.props()).toStrictEqual({
+        min: 1,
+        max: 10,
+        value: 5,
+      });
+    });
+
+    test('Should send an update event on priority change', async () => {
+      const wrapper = createWrapper();
+      const slider = wrapper.getComponent<typeof Slider>(
+        '[data-testid=priority-slider]',
+      );
+      slider.vm.$emit('update:value', 1);
+      await flushPromises();
+
+      const emitted = wrapper.emitted('update:priority');
       expect(emitted?.[0]).toStrictEqual([1]);
     });
   });
