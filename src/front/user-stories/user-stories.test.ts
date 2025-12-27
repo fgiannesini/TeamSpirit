@@ -41,4 +41,22 @@ describe('User stories', () => {
     const formStore = useFormStore();
     expect(formStore.userStoriesMode).toStrictEqual('random');
   });
+
+  test('Should select custom mode', async () => {
+    const wrapper = createWrapper();
+    wrapper.findComponent(Selector).vm.$emit('update:selectedMode', 'custom');
+    await flushPromises();
+
+    const formStore = useFormStore();
+    expect(formStore.userStoriesMode).toStrictEqual('custom');
+  });
+
+  test('Should select custom mode on loading', () => {
+    const wrapper = createWrapper({ userStoriesMode: 'custom' });
+
+    const selector = wrapper.findComponent(Selector);
+    expect(selector.props()).toMatchObject({
+      selectedMode: 'custom',
+    });
+  });
 });
