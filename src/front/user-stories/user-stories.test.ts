@@ -59,4 +59,13 @@ describe('User stories', () => {
       selectedMode: 'custom',
     });
   });
+
+  test('Should set selector as mandatory', () => {
+    const wrapper = createWrapper();
+
+    const selector = wrapper.findComponent(Selector);
+    expect(selector.props()).toMatchObject({
+      mandatory: true,
+    });
+  });
 });

@@ -6,5 +6,5 @@ const store = useFormStore();
 </script>
 
 <template>
-  <Selector v-model:selectedMode="store.userStoriesMode" :mandatory="false"></Selector>
+  <Selector v-model:selectedMode="store.userStoriesMode" :mandatory="true"></Selector>
 </template>
