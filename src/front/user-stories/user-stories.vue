@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import Selector from '../selector.vue';
 </script>
 
-<template></template>
+<template>
+  <Selector :selectedMode="'notSet'" :mandatory="false"></Selector>
+</template>
