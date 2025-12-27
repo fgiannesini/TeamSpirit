@@ -3,6 +3,7 @@ import { flushPromises, shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
 import { type State, useFormStore } from '../form-store.ts';
 import Selector from '../selector.vue';
+import CustomUserStories from './custom-user-stories.vue';
 import UserStories from './user-stories.vue';
 
 describe('User stories', () => {
@@ -67,5 +68,10 @@ describe('User stories', () => {
     expect(selector.props()).toMatchObject({
       mandatory: true,
     });
+  });
+
+  test('Should render Custom User Stories', () => {
+    const wrapper = createWrapper({ userStoriesMode: 'custom' });
+    expect(wrapper.findComponent(CustomUserStories).exists()).toBe(true);
   });
 });
