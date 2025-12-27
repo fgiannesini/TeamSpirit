@@ -1,10 +1,24 @@
-import { shallowMount, type VueWrapper } from '@vue/test-utils';
+import { createTestingPinia } from '@pinia/testing';
+import { flushPromises, shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
+import { type State, useFormStore } from '../form-store.ts';
 import Selector from '../selector.vue';
 import UserStories from './user-stories.vue';
 
 describe('User stories', () => {
-  const createWrapper = (): VueWrapper => shallowMount(UserStories);
+  const createWrapper = (state: Partial<State> = {}): VueWrapper => {
+    return shallowMount(UserStories, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              form: { ...state },
+            },
+          }),
+        ],
+      },
+    });
+  };
 
   test('Should render', () => {
     const wrapper = createWrapper();
@@ -17,5 +31,14 @@ describe('User stories', () => {
     expect(selector.props()).toMatchObject({
       selectedMode: 'notSet',
     });
+  });
+
+  test('Should update random mode in store', async () => {
+    const wrapper = createWrapper();
+    wrapper.findComponent(Selector).vm.$emit('update:selectedMode', 'random');
+    await flushPromises();
+
+    const formStore = useFormStore();
+    expect(formStore.userStoriesMode).toStrictEqual('random');
   });
 });
