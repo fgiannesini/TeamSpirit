@@ -13,6 +13,7 @@ export type State = {
   developers: Developer[];
   teamModificators: TeamModification[];
   reviewers: number;
+  userStories: UserStory[];
 };
 
 export type SelectorMode = 'random' | 'custom' | 'notSet';
@@ -32,6 +33,10 @@ export type TeamModification = {
   period: Period;
 };
 
+export type UserStory = {
+  id: number;
+};
+
 export const useFormStore = defineStore('form', {
   state: (): State => ({
     teamMode: 'notSet',
@@ -40,6 +45,7 @@ export const useFormStore = defineStore('form', {
     developers: [],
     teamModificators: [],
     reviewers: 0,
+    userStories: [],
   }),
   actions: {
     generateDeveloper(): void {
@@ -74,5 +80,6 @@ export const useFormStore = defineStore('form', {
         ({ id }) => id !== targetId,
       );
     },
+    generateUserStory(): void {},
   },
 });
