@@ -5,6 +5,7 @@ import AddButton from '../add-button.vue';
 import { type State, useFormStore } from '../form-store.ts';
 import { userStory } from '../front-factory-for-test.ts';
 import CustomUserStories from './custom-user-stories.vue';
+import type UserStoryCard from './user-story-card.vue';
 
 describe('Custom User Stories', () => {
   const createWrapper = (state: Partial<State> = {}): VueWrapper => {
@@ -24,6 +25,43 @@ describe('Custom User Stories', () => {
   test('Should render', () => {
     const wrapper = createWrapper();
     expect(wrapper.exists()).toBe(true);
+  });
+
+  test('Should generate a user story card in settings state', async () => {
+    const wrapper = createWrapper({
+      userStories: [userStory()],
+    });
+    const addButton = wrapper.getComponent(AddButton);
+    await addButton.trigger('click');
+
+    expect(useFormStore().generateUserStory).toHaveBeenCalled();
+  });
+
+  const getUserStoryCard = (
+    wrapper: VueWrapper,
+    selector: string,
+  ): VueWrapper<InstanceType<typeof UserStoryCard>> =>
+    wrapper.findComponent<typeof UserStoryCard>(`[data-testid=${selector}]`);
+
+  test('Should display userStory cards', () => {
+    const wrapper = createWrapper({
+      userStories: [userStory(), userStory({ id: 1 })],
+    });
+
+    expect(getUserStoryCard(wrapper, 'user-story-card-0').props('id')).toEqual(
+      0,
+    );
+    expect(getUserStoryCard(wrapper, 'user-story-card-1').props('id')).toEqual(
+      1,
+    );
+  });
+
+  test('Should remove a user story card', async () => {
+    const wrapper = createWrapper({
+      userStories: [userStory()],
+    });
+    await getUserStoryCard(wrapper, 'user-story-card-0').trigger('remove');
+    expect(useFormStore().removeUserStory).toHaveBeenCalledWith(0);
   });
 
   describe('Empty state', () => {

@@ -81,5 +81,6 @@ export const useFormStore = defineStore('form', {
       );
     },
     generateUserStory(): void {},
+    removeUserStory(_id: number): void {},
   },
 });
