@@ -20,7 +20,7 @@ const hasUserStories = () => store.userStories.length > 0;
       <div class="s12 m6 l4" v-for="userStory in store.userStories">
         <user-story-card
             :id="userStory.id"
-            :complexity="1"
+            :complexity="userStory.complexity"
             :review-complexity="1"
             :priority="1"
             :data-testid="'user-story-card-' + userStory.id"

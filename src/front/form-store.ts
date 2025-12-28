@@ -35,6 +35,7 @@ export type TeamModification = {
 
 export type UserStory = {
   id: number;
+  complexity: number;
 };
 
 export const useFormStore = defineStore('form', {
@@ -89,6 +90,7 @@ export const useFormStore = defineStore('form', {
         ...this.userStories,
         {
           id: max,
+          complexity: 3,
         },
       ];
     },

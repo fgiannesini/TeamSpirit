@@ -64,6 +64,16 @@ describe('Custom User Stories', () => {
     expect(useFormStore().removeUserStory).toHaveBeenCalledWith(0);
   });
 
+  describe('Complexity', () => {
+    test('Should bind complexity', async () => {
+      const wrapper = createWrapper({
+        userStories: [userStory({ complexity: 2 })],
+      });
+      const userStory0 = getUserStoryCard(wrapper, 'user-story-card-0');
+      expect(userStory0.props('complexity')).toStrictEqual(2);
+    });
+  });
+
   describe('Empty state', () => {
     test('Should display empty state when no user stories are configured', () => {
       const wrapper = createWrapper();
