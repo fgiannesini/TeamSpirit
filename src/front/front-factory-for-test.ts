@@ -21,5 +21,6 @@ export const teamModification = (
 export const userStory = (option: Partial<UserStory> = {}): UserStory => ({
   id: 0,
   complexity: 3,
+  reviewComplexity: 2,
   ...option,
 });

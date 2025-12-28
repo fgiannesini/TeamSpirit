@@ -21,7 +21,7 @@ const hasUserStories = () => store.userStories.length > 0;
         <user-story-card
             :id="userStory.id"
             v-model:complexity="userStory.complexity"
-            :review-complexity="1"
+            v-model:review-complexity="userStory.reviewComplexity"
             :priority="1"
             :data-testid="'user-story-card-' + userStory.id"
             @remove="removeUserStory(userStory.id)"

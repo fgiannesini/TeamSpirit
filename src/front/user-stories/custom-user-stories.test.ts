@@ -83,6 +83,25 @@ describe('Custom User Stories', () => {
     });
   });
 
+  describe('Review complexity', () => {
+    test('Should bind review-complexity', async () => {
+      const wrapper = createWrapper({
+        userStories: [userStory({ reviewComplexity: 2 })],
+      });
+      const userStory0 = getUserStoryCard(wrapper, 'user-story-card-0');
+      expect(userStory0.props('reviewComplexity')).toStrictEqual(2);
+    });
+
+    test('Should update review-complexity', async () => {
+      const wrapper = createWrapper({
+        userStories: [userStory({ reviewComplexity: 2 })],
+      });
+      const userStory0 = getUserStoryCard(wrapper, 'user-story-card-0');
+      userStory0.vm.$emit('update:review-complexity', 3);
+      expect(useFormStore().userStories[0].reviewComplexity).toStrictEqual(3);
+    });
+  });
+
   describe('Empty state', () => {
     test('Should display empty state when no user stories are configured', () => {
       const wrapper = createWrapper();
