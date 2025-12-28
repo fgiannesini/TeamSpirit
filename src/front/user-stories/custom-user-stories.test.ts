@@ -102,6 +102,25 @@ describe('Custom User Stories', () => {
     });
   });
 
+  describe('Priority', () => {
+    test('Should bind priority', async () => {
+      const wrapper = createWrapper({
+        userStories: [userStory({ priority: 2 })],
+      });
+      const userStory0 = getUserStoryCard(wrapper, 'user-story-card-0');
+      expect(userStory0.props('priority')).toStrictEqual(2);
+    });
+
+    test('Should update priority', async () => {
+      const wrapper = createWrapper({
+        userStories: [userStory({ priority: 2 })],
+      });
+      const userStory0 = getUserStoryCard(wrapper, 'user-story-card-0');
+      userStory0.vm.$emit('update:priority', 3);
+      expect(useFormStore().userStories[0].priority).toStrictEqual(3);
+    });
+  });
+
   describe('Empty state', () => {
     test('Should display empty state when no user stories are configured', () => {
       const wrapper = createWrapper();

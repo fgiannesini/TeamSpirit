@@ -37,6 +37,7 @@ export type UserStory = {
   id: number;
   complexity: number;
   reviewComplexity: number;
+  priority: number;
 };
 
 export const useFormStore = defineStore('form', {
@@ -93,6 +94,7 @@ export const useFormStore = defineStore('form', {
           id: max,
           complexity: 3,
           reviewComplexity: 2,
+          priority: 1,
         },
       ];
     },
