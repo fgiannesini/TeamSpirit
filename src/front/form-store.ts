@@ -80,7 +80,20 @@ export const useFormStore = defineStore('form', {
         ({ id }) => id !== targetId,
       );
     },
-    generateUserStory(): void {},
-    removeUserStory(_id: number): void {},
+    generateUserStory(): void {
+      const max =
+        this.userStories.length > 0
+          ? Math.max(...this.userStories.map(({ id }) => id)) + 1
+          : 0;
+      this.userStories = [
+        ...this.userStories,
+        {
+          id: max,
+        },
+      ];
+    },
+    removeUserStory(targetId: number): void {
+      this.userStories = this.userStories.filter(({ id }) => id !== targetId);
+    },
   },
 });
