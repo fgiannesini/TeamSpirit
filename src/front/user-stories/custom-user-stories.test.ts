@@ -72,6 +72,15 @@ describe('Custom User Stories', () => {
       const userStory0 = getUserStoryCard(wrapper, 'user-story-card-0');
       expect(userStory0.props('complexity')).toStrictEqual(2);
     });
+
+    test('Should update complexity', async () => {
+      const wrapper = createWrapper({
+        userStories: [userStory({ complexity: 2 })],
+      });
+      const userStory0 = getUserStoryCard(wrapper, 'user-story-card-0');
+      userStory0.vm.$emit('update:complexity', 3);
+      expect(useFormStore().userStories[0].complexity).toStrictEqual(3);
+    });
   });
 
   describe('Empty state', () => {
