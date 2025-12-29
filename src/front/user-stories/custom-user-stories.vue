@@ -17,7 +17,7 @@ const hasUserStories = () => store.userStories.length > 0;
   <div v-if="hasUserStories()" data-testid="setting-state">
     <add-button text="Add a user story" @click="addUserStory"/>
     <div class="grid">
-      <div class="s12 m6 l4" v-for="userStory in store.userStories">
+      <div class="m6 l3" v-for="userStory in store.userStories">
         <user-story-card
             :id="userStory.id"
             v-model:complexity="userStory.complexity"

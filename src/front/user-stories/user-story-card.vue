@@ -19,13 +19,11 @@ defineProps<{
 <template>
   <article class="medium-width">
     <nav>
-      <h4 data-testid="title" class="max">User story {{ id }}</h4>
+      <h4 data-testid="title" class="small max">User story {{ id }}</h4>
       <remove-button @click="$emit('remove')"/>
     </nav>
-    <div class="space"/>
     <fieldset>
       <legend data-testid="complexity-label">Complexity</legend>
-      <div class="space"/>
       <slider
           data-testid="complexity-slider"
           :min="1"
@@ -34,22 +32,18 @@ defineProps<{
           @update:value="$emit('update:complexity', $event)"
       />
     </fieldset>
-    <div class="space"/>
     <fieldset>
       <legend data-testid="review-complexity-label">Review complexity</legend>
-      <div class="space"/>
       <slider
           data-testid="review-complexity-slider"
           :min="1"
-          :max="9"
+          :max="10"
           :value="reviewComplexity"
           @update:value="$emit('update:review-complexity', $event)"
       />
     </fieldset>
-    <div class="space"/>
     <fieldset>
       <legend data-testid="priority-label">Priority</legend>
-      <div class="space"/>
       <slider
           data-testid="priority-slider"
           :min="1"

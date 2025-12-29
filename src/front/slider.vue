@@ -16,16 +16,8 @@ defineEmits(['update:value']);
       <input data-testid="input" type="range" :value="value"
              @input="$emit('update:value', Number(($event.target as InputHTMLAttributes).value))" :min="min" :max="max">
       <span></span>
-      <div class="tooltip" data-testid=range-tooltip></div>
+      <div class="tooltip bottom" data-testid=range-tooltip></div>
     </label>
     <span data-testid="maximum">{{ max }}</span>
   </nav>
 </template>
-
-<style scoped lang="scss">
-.slider > .tooltip {
-  visibility: visible !important;
-  inset-block-start: -1rem !important;
-  opacity: 1 !important;
-}
-</style>

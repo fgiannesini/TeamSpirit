@@ -84,7 +84,7 @@ describe('User Story Card', () => {
       );
       expect(slider.props()).toStrictEqual({
         min: 1,
-        max: 9,
+        max: 10,
         value: 2,
       });
     });
