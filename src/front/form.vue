@@ -54,7 +54,7 @@ const activate = (tabName: TabName): void => {
           @click="activate('user-stories')"
           :class="[active === 'user-stories' ? 'active' : '']"
         >
-          <i>group_remove</i>
+          <i>book_4</i>
         </button>
         <div class="small-margin">User stories</div>
       </div>
