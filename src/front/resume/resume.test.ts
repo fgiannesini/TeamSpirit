@@ -45,4 +45,9 @@ describe('Resume', () => {
     });
     expect(wrapper.get('[data-testid=reviewers]').text()).toBe('1');
   });
+
+  test('Should display a launch button', () => {
+    const wrapper = createWrapper();
+    expect(wrapper.get('[data-testid=launch-button]').text()).toBe('Launch');
+  });
 });
