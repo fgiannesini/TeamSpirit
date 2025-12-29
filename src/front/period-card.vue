@@ -37,10 +37,9 @@ const removeDeveloper = (developerToRemove: Developer): void => {
 <template>
   <article class="medium-width">
     <nav>
-      <h4 data-testid="title" class="max">Period {{ id }}</h4>
+      <h4 data-testid="title" class="max small">Period {{ id }}</h4>
       <remove-button @click="$emit('remove')"/>
     </nav>
-    <div class="space"/>
     <div class="field label suffix border round small">
       <select>
         <option data-testid="dev-default-option">Select a developer</option>

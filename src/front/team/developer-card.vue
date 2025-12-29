@@ -1,13 +1,11 @@
 <template>
   <article class="medium-width">
     <nav>
-      <h4 data-testid="title" class="max">Developer {{ id }}</h4>
+      <h4 data-testid="title" class="max small">Developer {{ id }}</h4>
       <remove-button @click="$emit('remove')"/>
     </nav>
-    <div class="space"/>
     <fieldset>
       <legend data-testid="experience-label">Experience</legend>
-      <div class="space"/>
       <slider
           :min="1"
           :max="7"
