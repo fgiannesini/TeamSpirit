@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useFormStore } from '../form-store.ts';
-import Selector from '../selector.vue';
+import {useFormStore} from '../form-store.ts';
+import Selector from '../shared/selector.vue';
 import CustomTeamModificator from './custom-team-modificator.vue';
 
 const store = useFormStore();

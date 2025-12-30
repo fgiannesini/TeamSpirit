@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import AddButton from '../add-button.vue';
-import { useFormStore } from '../form-store.ts';
+import AddButton from '../shared/add-button.vue';
+import {useFormStore} from '../form-store.ts';
 import DeveloperCard from './developer-card.vue';
 
 const store = useFormStore();

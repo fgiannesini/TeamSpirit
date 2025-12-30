@@ -1,5 +1,5 @@
-import { shallowMount, type VueWrapper } from '@vue/test-utils';
-import { describe, expect, it, test } from 'vitest';
+import {shallowMount, type VueWrapper} from '@vue/test-utils';
+import {describe, expect, it, test} from 'vitest';
 import Slider from './slider.vue';
 
 describe('Slider', () => {

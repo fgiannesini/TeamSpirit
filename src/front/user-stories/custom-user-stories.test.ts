@@ -1,9 +1,9 @@
-import { createTestingPinia } from '@pinia/testing';
-import { shallowMount, type VueWrapper } from '@vue/test-utils';
-import { describe, expect, test } from 'vitest';
-import AddButton from '../add-button.vue';
-import { type State, useFormStore } from '../form-store.ts';
-import { userStory } from '../front-factory-for-test.ts';
+import {createTestingPinia} from '@pinia/testing';
+import {shallowMount, type VueWrapper} from '@vue/test-utils';
+import {describe, expect, test} from 'vitest';
+import {type State, useFormStore} from '../form-store.ts';
+import {userStory} from '../front-factory-for-test.ts';
+import AddButton from '../shared/add-button.vue';
 import CustomUserStories from './custom-user-stories.vue';
 import type UserStoryCard from './user-story-card.vue';
 

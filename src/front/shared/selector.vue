@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { SelectorMode } from './form-store.ts';
+import type {SelectorMode} from '../form-store.ts';
 
 defineProps<{
   selectedMode: SelectorMode;

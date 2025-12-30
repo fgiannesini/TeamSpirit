@@ -1,8 +1,8 @@
-import { createTestingPinia } from '@pinia/testing';
-import { flushPromises, shallowMount, type VueWrapper } from '@vue/test-utils';
-import { describe, expect, test } from 'vitest';
-import { type State, useFormStore } from '../form-store.ts';
-import Selector from '../selector.vue';
+import {createTestingPinia} from '@pinia/testing';
+import {flushPromises, shallowMount, type VueWrapper} from '@vue/test-utils';
+import {describe, expect, test} from 'vitest';
+import {type State, useFormStore} from '../form-store.ts';
+import Selector from '../shared/selector.vue';
 import CustomTeam from './custom-team.vue';
 import Team from './team.vue';
 

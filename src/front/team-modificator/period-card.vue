@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, type InputHTMLAttributes, type Ref } from 'vue';
-import type { Developer, Period } from './form-store.ts';
-import RemoveButton from './remove-button.vue';
+import {computed, type InputHTMLAttributes, type Ref} from 'vue';
+import type {Developer, Period} from '../form-store.ts';
+import RemoveButton from '../shared/remove-button.vue';
 
 const props = defineProps<{
   id: number;

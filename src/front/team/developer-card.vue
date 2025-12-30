@@ -16,8 +16,8 @@
   </article>
 </template>
 <script setup lang="ts">
-import RemoveButton from '../remove-button.vue';
-import Slider from '../slider.vue';
+import RemoveButton from '../shared/remove-button.vue';
+import Slider from '../shared/slider.vue';
 
 defineProps<{ id: number; experience: number }>();
 defineEmits(['update:experience', 'remove']);

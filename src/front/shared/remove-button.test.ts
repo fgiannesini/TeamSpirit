@@ -1,5 +1,5 @@
-import { shallowMount, type VueWrapper } from '@vue/test-utils';
-import { describe, expect, test } from 'vitest';
+import {shallowMount, type VueWrapper} from '@vue/test-utils';
+import {describe, expect, test} from 'vitest';
 import RemoveButton from './remove-button.vue';
 
 describe('Remove button', () => {

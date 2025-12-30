@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useFormStore } from '../form-store.ts';
-import Selector from '../selector.vue';
+import {useFormStore} from '../form-store.ts';
+import Selector from '../shared/selector.vue';
 import CustomUserStories from './custom-user-stories.vue';
 
 const store = useFormStore();

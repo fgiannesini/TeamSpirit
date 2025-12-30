@@ -1,11 +1,11 @@
-import { createTestingPinia } from '@pinia/testing';
-import { shallowMount, type VueWrapper } from '@vue/test-utils';
-import { describe, expect, test } from 'vitest';
-import AddButton from '../add-button.vue';
-import { type Period, type State, useFormStore } from '../form-store.ts';
-import { developer, teamModification } from '../front-factory-for-test.ts';
-import PeriodCard from '../period-card.vue';
+import {createTestingPinia} from '@pinia/testing';
+import {shallowMount, type VueWrapper} from '@vue/test-utils';
+import {describe, expect, test} from 'vitest';
+import AddButton from '../shared/add-button.vue';
+import {type Period, type State, useFormStore} from '../form-store.ts';
+import {developer, teamModification} from '../front-factory-for-test.ts';
 import CustomTeamModificator from './custom-team-modificator.vue';
+import PeriodCard from './period-card.vue';
 
 describe('Custom Team Modificator', () => {
   const createWrapper = (state: Partial<State> = {}): VueWrapper => {
