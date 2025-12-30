@@ -1,5 +1,5 @@
 import { shallowMount, type VueWrapper } from '@vue/test-utils';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import Form from './form.vue';
 import Resume from './resume/resume.vue';
 import Reviewers from './reviewers/reviewers.vue';
@@ -8,8 +8,17 @@ import TeamModificator from './team-modificator/team-modificator.vue';
 import UserStories from './user-stories/user-stories.vue';
 
 describe('Form', () => {
+  const mockRouter = {
+    push: vi.fn(),
+  };
   const createWrapper = (): VueWrapper => {
-    return shallowMount(Form);
+    return shallowMount(Form, {
+      global: {
+        mocks: {
+          $router: mockRouter,
+        },
+      },
+    });
   };
 
   test('Should have a main', () => {
@@ -192,5 +201,18 @@ describe('Form', () => {
       await wrapper.get('[data-testid=user-stories-tab]').trigger('click');
       expect(wrapper.getComponent(UserStories).isVisible()).toBe(true);
     });
+  });
+
+  test('Should display a launch button', () => {
+    const wrapper = createWrapper();
+    expect(wrapper.get('[data-testid=launch-button]').text()).toBe('Launch');
+  });
+
+  test('Should redirect to simulation component on launch click', () => {
+    const wrapper = createWrapper();
+    const launchButton = wrapper.get('[data-testid=launch-button]');
+    launchButton.trigger('click');
+
+    expect(mockRouter.push).toHaveBeenCalledWith('/simulate');
   });
 });

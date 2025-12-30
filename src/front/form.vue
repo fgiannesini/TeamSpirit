@@ -87,5 +87,6 @@ const activate = (tabName: TabName): void => {
   <nav class="right" data-testid="resume-panel">
     Resume
     <resume/>
+    <button data-testid="launch-button" @click="$router.push('/simulate')">Launch</button>
   </nav>
 </template>
