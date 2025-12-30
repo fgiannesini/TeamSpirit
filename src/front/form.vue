@@ -86,6 +86,6 @@ const activate = (tabName: TabName): void => {
   </main>
   <nav class="right" data-testid="resume-panel">
     Resume
-    <Resume/>
+    <resume/>
   </nav>
 </template>

@@ -110,7 +110,7 @@ describe('Form', () => {
 
     test('Should render a resume component', () => {
       const wrapper = createWrapper();
-      expect(wrapper.getComponent(Resume).isVisible()).toBe(true);
+      expect(wrapper.findComponent(Resume).isVisible()).toBe(true);
     });
   });
 
