@@ -11,5 +11,5 @@ const formStore = useFormStore();
     >{{developer.experience}}</span
   >
   <span data-testid="reviewers">{{formStore.$state.reviewers}}</span>
-  <button data-testid="launch-button">Launch</button>
+  <button data-testid="launch-button" @click="$router.push('/simulate')">Launch</button>
 </template>

@@ -1,11 +1,14 @@
 import { createTestingPinia } from '@pinia/testing';
 import { shallowMount, type VueWrapper } from '@vue/test-utils';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import type { State } from '../form-store.ts';
 import { developer } from '../front-factory-for-test.ts';
 import Resume from './resume.vue';
 
 describe('Resume', () => {
+  const mockRouter = {
+    push: vi.fn(),
+  };
   const createWrapper = (state: Partial<State> = {}): VueWrapper => {
     return shallowMount(Resume, {
       global: {
@@ -16,6 +19,9 @@ describe('Resume', () => {
             },
           }),
         ],
+        mocks: {
+          $router: mockRouter,
+        },
       },
     });
   };
@@ -49,5 +55,13 @@ describe('Resume', () => {
   test('Should display a launch button', () => {
     const wrapper = createWrapper();
     expect(wrapper.get('[data-testid=launch-button]').text()).toBe('Launch');
+  });
+
+  test('Should redirect to simulation component on launch click', () => {
+    const wrapper = createWrapper();
+    const launchButton = wrapper.get('[data-testid=launch-button]');
+    launchButton.trigger('click');
+
+    expect(mockRouter.push).toHaveBeenCalledWith('/simulate');
   });
 });
