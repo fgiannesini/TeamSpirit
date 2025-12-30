@@ -3,7 +3,7 @@ import Form from './form.vue';
 import Simulation from './simulation/simulation.vue';
 
 const routes = [
-  { path: '/main.html', component: Form },
+  { path: '/main', component: Form },
   { path: '/simulate', component: Simulation },
 ];
 

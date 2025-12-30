@@ -17,7 +17,7 @@ export default defineConfig({
     outDir: '../dist',
   },
   server: {
-    open: '/TeamSpirit/main.html',
+    open: '/TeamSpirit/main',
   },
   test: {
     globals: true,
