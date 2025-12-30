@@ -217,7 +217,7 @@ export const createChangePriority = (
   ...options,
 });
 
-export const createBacklog = (options: Partial<Backlog>): Backlog => {
+export const createBacklog = (options: Partial<Backlog> = {}): Backlog => {
   return {
     userStoriesRemaining: [todo()],
     userStoriesDone: [],
