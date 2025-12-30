@@ -9,7 +9,7 @@ import {
   getBugGenerator,
   getPriorityModificator,
   getTeamModificator,
-} from './main.ts';
+} from './index.ts';
 import {
   CustomBugGenerator,
   noBugGenerator,
@@ -46,7 +46,7 @@ describe('Main', () => {
     const htmlPath = resolve(__dirname, './index.html');
     document.body.innerHTML = readFileSync(htmlPath, 'utf-8');
     vi.mock('beercss', () => ({}));
-    await import('./main.ts');
+    await import('./index.ts');
     const event = new Event('DOMContentLoaded');
     document.dispatchEvent(event);
   });

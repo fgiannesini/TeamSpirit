@@ -1,7 +1,6 @@
 import vue from '@vitejs/plugin-vue';
 import { defineConfig } from 'vitest/config';
 
-// biome-ignore lint/style/noDefaultExport: Vite configuration
 export default defineConfig({
   plugins: [vue()],
   root: './src',
@@ -9,12 +8,16 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        main: './src/index.html',
+        main: './src/main.html',
+        index: './src/index.html',
         flow: './src/flow/flow.html',
         'time-sequence': './src/time-sequence/time-sequence.html',
       },
     },
     outDir: '../dist',
+  },
+  server: {
+    open: '/TeamSpirit/main.html',
   },
   test: {
     globals: true,
