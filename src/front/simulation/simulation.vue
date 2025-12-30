@@ -16,6 +16,7 @@ const team = parallelTeam(
   store.developers.map((developer) =>
     createThread({ id: developer.id, power: developer.experience }),
   ),
+  store.reviewers,
 );
 </script>
 

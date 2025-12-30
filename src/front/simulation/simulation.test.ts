@@ -63,16 +63,20 @@ describe('Simulation', () => {
           developer({ id: 0, experience: 2 }),
           developer({ id: 1, experience: 3 }),
         ],
+        reviewers: 0,
       });
       const launchButton = wrapper.get('[data-testid=launch-button]');
       launchButton.trigger('click');
 
       expect(simulateMock).toHaveBeenCalledWith(
         createBacklog(),
-        parallelTeam([
-          createThread({ id: 0, power: 2 }),
-          createThread({ id: 1, power: 3 }),
-        ]),
+        parallelTeam(
+          [
+            createThread({ id: 0, power: 2 }),
+            createThread({ id: 1, power: 3 }),
+          ],
+          0,
+        ),
         noBugGenerator,
         noTeamModificator,
         noPriorityModificator,
