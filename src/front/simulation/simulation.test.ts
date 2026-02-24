@@ -49,7 +49,9 @@ describe('Simulation', () => {
         timeEvents: [],
         structureEvents: [],
       }),
-      computeStatEventsMock: vi.fn<typeof computeStatEvents>(),
+      computeStatEventsMock: vi.fn<typeof computeStatEvents>().mockReturnValue(
+        [{ time: 2, leadTime: 0.5 }]
+      ),
     }));
 
     beforeEach(() => {
@@ -118,11 +120,27 @@ describe('Simulation', () => {
       expect(computeStatEventsMock).toHaveBeenCalledWith([]);
     });
 
-    test('Should display stats container', () => {
+    test('Should display stats container and header', () => {
       const wrapper = createWrapper();
       const launchButton = wrapper.get('[data-testid=launch-button]');
       launchButton.trigger('click');
-      expect(wrapper.get('[data-testid=stats-container]').text()).toStrictEqual('coucou');
+      expect(wrapper.find('[data-testid=stats-container]').exists()).toBe(true);
+    })
+
+    test('Should display stats total time', async () => {
+      const wrapper = createWrapper();
+      const launchButton = wrapper.get('[data-testid=launch-button]');
+      await launchButton.trigger('click');
+      expect(wrapper.get('[data-testid=stats-total-time-header]').text()).toBe("Total time");
+      expect(wrapper.get('[data-testid=stats-total-time-0]').text()).toBe("1");
+    })
+
+    test('Should display stats lead time', async () => {
+      const wrapper = createWrapper();
+      const launchButton = wrapper.get('[data-testid=launch-button]');
+      await launchButton.trigger('click');
+      expect(wrapper.get('[data-testid=stats-lead-time-header]').text()).toBe("Lead time");
+      expect(wrapper.find('[data-testid=stats-lead-time-0]').text()).toBe("0.5");
     })
   });
 });
