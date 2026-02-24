@@ -1,6 +1,7 @@
-import { describe, expect, test, vitest } from 'vitest';
+import {describe, expect, test, vitest} from 'vitest';
 import {
   type Backlog,
+  copy,
   getNextUserStory,
   resetUserStoriesRemainings,
   retrieveInProgressUserStories,
@@ -8,17 +9,8 @@ import {
   shouldGenerateBug,
   userStoriesWithSomeReviews,
 } from './backlog.ts';
-import {
-  createBacklog,
-  createThread,
-  done,
-  ensembleTeam,
-  inProgress,
-  inReview,
-  todo,
-  toReview,
-} from './factory.ts';
-import { idle, type UserStory } from './user-story.ts';
+import {createBacklog, createThread, done, ensembleTeam, inProgress, inReview, todo, toReview,} from './factory.ts';
+import {idle, type UserStory} from './user-story.ts';
 
 describe('Backlog', () => {
   test('Should get idle by default', () => {
@@ -338,5 +330,12 @@ describe('Backlog', () => {
         },
       }),
     ]);
+  });
+
+  test('Should copy', () => {
+    let original = createBacklog();
+    let theCopy = copy(original);
+    expect(theCopy).toStrictEqual(original);
+    expect(theCopy).not.toBe(original);
   });
 });

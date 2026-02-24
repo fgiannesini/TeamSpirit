@@ -1,15 +1,8 @@
-import { computeBugProbability } from './bug-generator.ts';
-import { hasSomeReviews } from './review.ts';
-import type { Team, Thread } from './team.ts';
-import {
-  idle,
-  isInProgressBy,
-  isInReviewBy,
-  isToDo,
-  isToReviewBy,
-  needReviewBy,
-  type UserStory,
-} from './user-story.ts';
+import {computeBugProbability} from './bug-generator.ts';
+import {createBacklog} from './factory.ts';
+import {hasSomeReviews} from './review.ts';
+import type {Team, Thread} from './team.ts';
+import {idle, isInProgressBy, isInReviewBy, isToDo, isToReviewBy, needReviewBy, type UserStory,} from './user-story.ts';
 
 export type Backlog = {
   userStoriesRemaining: UserStory[];
@@ -183,3 +176,5 @@ export const shouldGenerateBug = (
     )
   );
 };
+
+export const copy = (backlog: Backlog): Backlog => createBacklog(backlog);
