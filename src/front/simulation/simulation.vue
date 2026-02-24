@@ -3,9 +3,10 @@ import {noBugGenerator} from '../../simulate/bug-generator.ts';
 import {createBacklog, createThread, parallelTeam, todo,} from '../../simulate/factory.ts';
 import {noPriorityModificator} from '../../simulate/priority-modificator.ts';
 import {simulate} from '../../simulate/simulation.ts';
+import {computeStatEvents} from '../../simulate/stats.ts';
 import {noTeamModificator} from '../../simulate/team-modificator.ts';
 import {useFormStore} from '../form-store.ts';
-import Resume from '../resume/resume.vue';
+import Resume from "../resume/resume.vue";
 
 let store = useFormStore();
 const team = parallelTeam(
@@ -28,12 +29,23 @@ const backlog = createBacklog({
       }),
   ),
 });
+
+const launchSimulation = () => {
+  let { timeEvents } = simulate(
+    backlog,
+    team,
+    noBugGenerator,
+    noTeamModificator,
+    noPriorityModificator,
+  );
+  computeStatEvents(timeEvents);
+};
 </script>
 
 <template>
   <nav class="right" data-testid="resume-panel">
     Configuration
     <resume/>
-    <button data-testid="launch-button" @click="simulate(backlog,team, noBugGenerator, noTeamModificator, noPriorityModificator)">Launch</button>
+    <button data-testid="launch-button" @click="launchSimulation();">Launch</button>
   </nav>
 </template>

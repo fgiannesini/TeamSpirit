@@ -1,9 +1,11 @@
 import {createTestingPinia} from '@pinia/testing';
 import {shallowMount, type VueWrapper} from '@vue/test-utils';
-import {describe, expect, test, vi} from 'vitest';
+import {beforeEach, describe, expect, test, vi} from 'vitest';
 import {noBugGenerator} from '../../simulate/bug-generator.ts';
 import {createBacklog, createThread, parallelTeam, todo,} from '../../simulate/factory.ts';
 import {noPriorityModificator} from '../../simulate/priority-modificator.ts';
+import type {simulate} from '../../simulate/simulation.ts';
+import {computeStatEvents} from '../../simulate/stats.ts';
 import {noTeamModificator} from '../../simulate/team-modificator.ts';
 import type {State} from '../form-store.ts';
 import {developer, userStory} from '../front-factory-for-test.ts';
@@ -42,18 +44,28 @@ describe('Simulation', () => {
   });
 
   describe('Launch', () => {
+    const { simulateMock, computeStatEventsMock } = vi.hoisted(() => ({
+      simulateMock: vi.fn<typeof simulate>().mockReturnValue({
+        timeEvents: [],
+        structureEvents: [],
+      }),
+      computeStatEventsMock: vi.fn<typeof computeStatEvents>(),
+    }));
+
+    beforeEach(() => {
+      vi.mock('../../simulate/simulation.ts', () => ({
+        simulate: simulateMock,
+      }));
+      vi.mock('../../simulate/stats.ts', () => ({
+        computeStatEvents: computeStatEventsMock,
+      }));
+    });
     test('Should display a launch button', () => {
       const wrapper = createWrapper();
       expect(wrapper.get('[data-testid=launch-button]').text()).toBe('Launch');
     });
 
     test('Should simulate on launch click', () => {
-      const { simulateMock } = vi.hoisted(() => ({
-        simulateMock: vi.fn(),
-      }));
-      vi.mock('../../simulate/simulation.ts', () => ({
-        simulate: simulateMock,
-      }));
       const wrapper = createWrapper({
         developers: [
           developer({ id: 0, experience: 2 }),
@@ -97,6 +109,13 @@ describe('Simulation', () => {
         noTeamModificator,
         noPriorityModificator,
       );
+    });
+
+    test('Should simulate stats on launch clic', () => {
+      const wrapper = createWrapper();
+      const launchButton = wrapper.get('[data-testid=launch-button]');
+      launchButton.trigger('click');
+      expect(computeStatEventsMock).toHaveBeenCalledWith([]);
     });
   });
 });
