@@ -109,21 +109,31 @@ export const useFormStore = defineStore('form', {
     removeUserStory(targetId: number): void {
       this.userStories = this.userStories.filter(({ id }) => id !== targetId);
     },
-    toSimulationInputs() : SimulationInputs[] {
-      const backlog = createBacklog({
-        userStoriesRemaining: this.userStories.map(
-            ({id, complexity, reviewComplexity, priority}) =>
-                todo({
-                  id,
-                  complexity,
-                  review: {
-                    reviewers: new Map(),
-                    reviewComplexity,
-                  },
-                  priority,
-                }),
-        ),
-      });
+    toSimulationInputs(randomProvider = Math.random) : SimulationInputs[] {
+      let backlog
+      if(this.userStoriesMode === 'random') {
+        backlog = createBacklog({
+          userStoriesRemaining: new Array(randomProvider()).fill(
+              todo()
+          )
+        });
+      } else {
+        backlog = createBacklog({
+          userStoriesRemaining: this.userStories.map(
+              ({id, complexity, reviewComplexity, priority}) =>
+                  todo({
+                    id,
+                    complexity,
+                    review: {
+                      reviewers: new Map(),
+                      reviewComplexity,
+                    },
+                    priority,
+                  }),
+          ),
+        });
+      }
+
       let threads = this.developers.map((developer) =>
           createThread({id: developer.id, power: developer.experience}),
       );
