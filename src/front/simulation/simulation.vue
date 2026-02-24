@@ -10,39 +10,42 @@ import Resume from "../resume/resume.vue";
 
 let store = useFormStore();
 const team = parallelTeam(
-  store.developers.map((developer) =>
-    createThread({ id: developer.id, power: developer.experience }),
-  ),
-  store.reviewers,
+    store.developers.map((developer) =>
+        createThread({id: developer.id, power: developer.experience}),
+    ),
+    store.reviewers,
 );
 const backlog = createBacklog({
   userStoriesRemaining: store.userStories.map(
-    ({ id, complexity, reviewComplexity, priority }) =>
-      todo({
-        id,
-        complexity,
-        review: {
-          reviewers: new Map(),
-          reviewComplexity,
-        },
-        priority,
-      }),
+      ({id, complexity, reviewComplexity, priority}) =>
+          todo({
+            id,
+            complexity,
+            review: {
+              reviewers: new Map(),
+              reviewComplexity,
+            },
+            priority,
+          }),
   ),
 });
 
 const launchSimulation = () => {
-  let { timeEvents } = simulate(
-    backlog,
-    team,
-    noBugGenerator,
-    noTeamModificator,
-    noPriorityModificator,
+  let {timeEvents} = simulate(
+      backlog,
+      team,
+      noBugGenerator,
+      noTeamModificator,
+      noPriorityModificator,
   );
   computeStatEvents(timeEvents);
 };
 </script>
 
 <template>
+  <main class="responsive">
+    <div data-testid="stats-container">coucou</div>
+  </main>
   <nav class="right" data-testid="resume-panel">
     Configuration
     <resume/>

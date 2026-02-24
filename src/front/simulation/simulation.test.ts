@@ -117,5 +117,12 @@ describe('Simulation', () => {
       launchButton.trigger('click');
       expect(computeStatEventsMock).toHaveBeenCalledWith([]);
     });
+
+    test('Should display stats container', () => {
+      const wrapper = createWrapper();
+      const launchButton = wrapper.get('[data-testid=launch-button]');
+      launchButton.trigger('click');
+      expect(wrapper.get('[data-testid=stats-container]').text()).toStrictEqual('coucou');
+    })
   });
 });
