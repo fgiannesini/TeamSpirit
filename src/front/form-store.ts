@@ -4,149 +4,158 @@ import type {Backlog} from "../simulate/backlog.ts";
 import {createBacklog, createThread, ensembleTeam, parallelTeam, todo} from "../simulate/factory.ts";
 
 const tomorrow = (): Date => {
-  const date = new Date();
-  date.setDate(date.getDate() + 1);
-  return date;
+    const date = new Date();
+    date.setDate(date.getDate() + 1);
+    return date;
 };
 
 export type State = {
-  teamMode: SelectorMode;
-  teamModificatorMode: SelectorMode;
-  userStoriesMode: SelectorMode;
-  developers: Developer[];
-  teamModificators: TeamModification[];
-  reviewers: number;
-  userStories: UserStory[];
+    teamMode: SelectorMode;
+    teamModificatorMode: SelectorMode;
+    userStoriesMode: SelectorMode;
+    developers: Developer[];
+    teamModificators: TeamModification[];
+    reviewers: number;
+    userStories: UserStory[];
 };
 
 export type SelectorMode = 'random' | 'custom' | 'notSet';
 
 export type Developer = {
-  id: number;
-  experience: number;
+    id: number;
+    experience: number;
 };
 
 export type Period = {
-  start: Date;
-  end: Date;
+    start: Date;
+    end: Date;
 };
 export type TeamModification = {
-  id: number;
-  selectedDevelopers: Developer[];
-  period: Period;
+    id: number;
+    selectedDevelopers: Developer[];
+    period: Period;
 };
 
 export type UserStory = {
-  id: number;
-  complexity: number;
-  reviewComplexity: number;
-  priority: number;
+    id: number;
+    complexity: number;
+    reviewComplexity: number;
+    priority: number;
 };
 
 export type SimulationInputs = {
-  team: Team;
-  backlog: Backlog;
+    team: Team;
+    backlog: Backlog;
 };
 
 export const useFormStore = defineStore('form', {
-  state: (): State => ({
-    teamMode: 'notSet',
-    teamModificatorMode: 'notSet',
-    userStoriesMode: 'notSet',
-    developers: [],
-    teamModificators: [],
-    reviewers: 0,
-    userStories: [],
-  }),
-  actions: {
-    generateDeveloper(): void {
-      const max =
-        this.developers.length > 0
-          ? Math.max(...this.developers.map(({ id }) => id)) + 1
-          : 0;
-      this.developers = [...this.developers, { id: max, experience: 3 }];
-    },
-    removeDeveloper(targetId: number): void {
-      this.developers = this.developers.filter(({ id }) => id !== targetId);
-    },
-    generateTeamModification(): void {
-      const max =
-        this.teamModificators.length > 0
-          ? Math.max(...this.teamModificators.map(({ id }) => id)) + 1
-          : 0;
-      this.teamModificators = [
-        ...this.teamModificators,
-        {
-          id: max,
-          selectedDevelopers: [],
-          period: {
-            start: new Date(),
-            end: tomorrow(),
-          },
+    state: (): State => ({
+        teamMode: 'notSet',
+        teamModificatorMode: 'notSet',
+        userStoriesMode: 'notSet',
+        developers: [],
+        teamModificators: [],
+        reviewers: 0,
+        userStories: [],
+    }),
+    actions: {
+        generateDeveloper(): void {
+            const max =
+                this.developers.length > 0
+                    ? Math.max(...this.developers.map(({id}) => id)) + 1
+                    : 0;
+            this.developers = [...this.developers, {id: max, experience: 3}];
         },
-      ];
-    },
-    removeTeamModification(targetId: number): void {
-      this.teamModificators = this.teamModificators.filter(
-        ({ id }) => id !== targetId,
-      );
-    },
-    generateUserStory(): void {
-      const max =
-        this.userStories.length > 0
-          ? Math.max(...this.userStories.map(({ id }) => id)) + 1
-          : 0;
-      this.userStories = [
-        ...this.userStories,
-        {
-          id: max,
-          complexity: 3,
-          reviewComplexity: 2,
-          priority: 1,
+        removeDeveloper(targetId: number): void {
+            this.developers = this.developers.filter(({id}) => id !== targetId);
         },
-      ];
-    },
-    removeUserStory(targetId: number): void {
-      this.userStories = this.userStories.filter(({ id }) => id !== targetId);
-    },
-    toSimulationInputs(randomProvider = Math.random) : SimulationInputs[] {
-      let backlog
-      if(this.userStoriesMode === 'random') {
-        backlog = createBacklog({
-          userStoriesRemaining: new Array(randomProvider()).fill(
-              todo()
-          )
-        });
-      } else {
-        backlog = createBacklog({
-          userStoriesRemaining: this.userStories.map(
-              ({id, complexity, reviewComplexity, priority}) =>
-                  todo({
-                    id,
-                    complexity,
-                    review: {
-                      reviewers: new Map(),
-                      reviewComplexity,
+        generateTeamModification(): void {
+            const max =
+                this.teamModificators.length > 0
+                    ? Math.max(...this.teamModificators.map(({id}) => id)) + 1
+                    : 0;
+            this.teamModificators = [
+                ...this.teamModificators,
+                {
+                    id: max,
+                    selectedDevelopers: [],
+                    period: {
+                        start: new Date(),
+                        end: tomorrow(),
                     },
-                    priority,
-                  }),
-          ),
-        });
-      }
+                },
+            ];
+        },
+        removeTeamModification(targetId: number): void {
+            this.teamModificators = this.teamModificators.filter(
+                ({id}) => id !== targetId,
+            );
+        },
+        generateUserStory(): void {
+            const max =
+                this.userStories.length > 0
+                    ? Math.max(...this.userStories.map(({id}) => id)) + 1
+                    : 0;
+            this.userStories = [
+                ...this.userStories,
+                {
+                    id: max,
+                    complexity: 3,
+                    reviewComplexity: 2,
+                    priority: 1,
+                },
+            ];
+        },
+        removeUserStory(targetId: number): void {
+            this.userStories = this.userStories.filter(({id}) => id !== targetId);
+        },
+        toSimulationInputs(randomProvider =Math.random): SimulationInputs[] {
+            let backlog
+            if (this.userStoriesMode === 'random') {
+                backlog = createBacklog({
+                    userStoriesRemaining: Array.from({length: randomInt(randomProvider, 100)}, (_, index) =>
+                        todo({
+                            id: index,
+                            complexity: randomInt(randomProvider, 10),
+                            review: {
+                                reviewers: new Map(),
+                                reviewComplexity: randomInt(randomProvider, 10),
+                            },
+                            priority: randomInt(randomProvider, 10),
+                        }))
+                });
+            } else {
+                backlog = createBacklog({
+                    userStoriesRemaining: this.userStories.map(
+                        ({id, complexity, reviewComplexity, priority}) =>
+                            todo({
+                                id,
+                                complexity,
+                                review: {
+                                    reviewers: new Map(),
+                                    reviewComplexity,
+                                },
+                                priority,
+                            }),
+                    ),
+                });
+            }
 
-      let threads = this.developers.map((developer) =>
-          createThread({id: developer.id, power: developer.experience}),
-      );
-      return [{
-        team: parallelTeam(
-            threads,
-            this.reviewers,
-        ), backlog
-      },
-        {
-          team: ensembleTeam(threads),
-          backlog
-        }]
-    }
-  },
+            let threads = this.developers.map((developer) =>
+                createThread({id: developer.id, power: developer.experience}),
+            );
+            return [{
+                team: parallelTeam(
+                    threads,
+                    this.reviewers,
+                ), backlog
+            },
+                {
+                    team: ensembleTeam(threads),
+                    backlog
+                }]
+        }
+    },
 });
+
+const randomInt = (randomProvider:() => number, max: number): number => Math.floor(randomProvider() * max) + 1;

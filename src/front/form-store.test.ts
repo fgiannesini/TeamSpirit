@@ -313,10 +313,51 @@ describe('Form store', () => {
                 ],
                 userStoriesMode: 'random'
             })
-            const randomProvider = vi.fn<() => number>().mockReturnValueOnce(2)
+            const randomProvider = vi.fn<typeof Math.random>().mockReturnValue(0.01)
             const simulationInputs = store.toSimulationInputs(randomProvider);
             expect(simulationInputs[0].backlog.userStoriesRemaining.length).toStrictEqual(2)
-            expect(simulationInputs[1].backlog.userStoriesRemaining).toStrictEqual(simulationInputs[0].backlog.userStoriesRemaining)
+            expect(simulationInputs[1].backlog.userStoriesRemaining.length).toStrictEqual(2)
+        })
+
+        test('should generate random user stories properties', () => {
+            const store = useFormStore();
+            store.$patch({
+                developers: [
+                    developer({id: 0}),
+                ],
+                userStoriesMode: 'random'
+            })
+            const randomProvider = vi.fn<typeof Math.random>()
+                .mockReturnValueOnce(0.01)
+                .mockReturnValueOnce(0.1)
+                .mockReturnValueOnce(0)
+                .mockReturnValueOnce(0)
+                .mockReturnValueOnce(0.2)
+                .mockReturnValueOnce(0.1)
+                .mockReturnValue(0.1)
+            const simulationInputs = store.toSimulationInputs(randomProvider);
+            expect(simulationInputs[0].backlog).toStrictEqual(
+                createBacklog({
+                    userStoriesRemaining:[todo({
+                        id: 0,
+                        complexity: 2,
+                        review: {
+                            reviewers: new Map(),
+                            reviewComplexity: 1,
+                        },
+                        priority: 1,
+                    }),todo({
+                        id: 1,
+                        complexity: 3,
+                        review: {
+                            reviewers: new Map(),
+                            reviewComplexity: 2,
+                        },
+                        priority: 2,
+                    })]
+                })
+            )
+            expect(simulationInputs[0].backlog).toStrictEqual(simulationInputs[1].backlog)
         })
     })
 });
