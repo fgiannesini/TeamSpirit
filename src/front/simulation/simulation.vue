@@ -10,17 +10,18 @@ import {ref} from "vue";
 
 let store = useFormStore();
 
-const stats = ref<StatEvent[]>([]);
+const stats = ref<StatEvent[][]>([]);
 const launchSimulation = () => {
-  let [{backlog, team}] = store.toSimulationInputs();
-  let {timeEvents} = simulate(
-      backlog,
-      team,
-      noBugGenerator,
-      noTeamModificator,
-      noPriorityModificator,
-  );
-  stats.value = computeStatEvents(timeEvents);
+  stats.value = store.toSimulationInputs().map(({backlog, team}) =>{
+     let {timeEvents} = simulate(
+         backlog,
+         team,
+         noBugGenerator,
+         noTeamModificator,
+         noPriorityModificator,
+     );
+    return computeStatEvents(timeEvents);
+  } );
 };
 </script>
 
@@ -34,9 +35,9 @@ const launchSimulation = () => {
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <td data-testid="stats-total-time-0">{{ stats.length }}</td>
-        <td data-testid="stats-lead-time-0">{{ stats[stats.length - 1]?.leadTime }}</td>
+      <tr v-for="(stat,index) in stats" >
+        <td :data-testid="`stats-total-time-${index}`">{{ stat.length }}</td>
+        <td :data-testid="`stats-lead-time-${index}`">{{ stat[stat.length - 1]?.leadTime }}</td>
       </tr>
       </tbody>
     </table>

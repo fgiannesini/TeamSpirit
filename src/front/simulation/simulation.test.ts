@@ -43,27 +43,32 @@ describe('Simulation', () => {
     });
 
     describe('Launch', () => {
+
+        const {simulateMock, computeStatEventsMock} = vi.hoisted(() => ({
+            simulateMock: vi.fn<typeof simulate>(),
+            computeStatEventsMock: vi.fn<typeof computeStatEvents>()
+        }));
+
+
         const createWrapperWithMocks = () => {
-            const {simulateMock, computeStatEventsMock} = vi.hoisted(() => ({
-                simulateMock: vi.fn<typeof simulate>().mockReturnValue({
-                    timeEvents: [],
-                    structureEvents: [],
-                }),
-                computeStatEventsMock: vi.fn<typeof computeStatEvents>().mockReturnValue(
-                    [{time: 2, leadTime: 0.5}]
-                ),
-            }));
             let wrapper = createWrapper();
+            simulateMock.mockReturnValue({
+                timeEvents: [],
+                structureEvents: [],
+            })
+            computeStatEventsMock
+                .mockReturnValueOnce([{time: 1, leadTime: 1},{time: 2, leadTime: 0.5}])
+                .mockReturnValue([{time: 1, leadTime: 0.7}]),
                 vi.mock('../../simulate/simulation.ts', () => ({
                     simulate: simulateMock,
                 }));
                 vi.mock('../../simulate/stats.ts', () => ({
                     computeStatEvents: computeStatEventsMock,
                 }));
-                useFormStore().toSimulationInputs = vi.fn().mockReturnValue([{
+                useFormStore().toSimulationInputs = vi.fn().mockReturnValue(new Array(2).fill({
                     backlog: createBacklog(),
                     team: parallelTeam(),
-                }])
+                }))
             return {wrapper, simulateMock, computeStatEventsMock};
         }
 
@@ -105,7 +110,8 @@ describe('Simulation', () => {
             const launchButton = wrapper.get('[data-testid=launch-button]');
             await launchButton.trigger('click');
             expect(wrapper.get('[data-testid=stats-total-time-header]').text()).toBe("Total time");
-            expect(wrapper.get('[data-testid=stats-total-time-0]').text()).toBe("1");
+            expect(wrapper.get('[data-testid=stats-total-time-0]').text()).toBe("2");
+            expect(wrapper.get('[data-testid=stats-total-time-1]').text()).toBe("1");
         })
 
         test('Should display stats lead time', async () => {
@@ -114,6 +120,7 @@ describe('Simulation', () => {
             await launchButton.trigger('click');
             expect(wrapper.get('[data-testid=stats-lead-time-header]').text()).toBe("Lead time");
             expect(wrapper.get('[data-testid=stats-lead-time-0]').text()).toBe("0.5");
+            expect(wrapper.get('[data-testid=stats-lead-time-1]').text()).toBe("0.7");
         })
     });
 });
