@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {noBugGenerator} from '../../simulate/bug-generator.ts';
-import {createBacklog, createThread, parallelTeam, todo,} from '../../simulate/factory.ts';
 import {noPriorityModificator} from '../../simulate/priority-modificator.ts';
 import {simulate} from '../../simulate/simulation.ts';
 import {computeStatEvents, type StatEvent} from '../../simulate/stats.ts';
@@ -10,28 +9,10 @@ import Resume from "../resume/resume.vue";
 import {ref} from "vue";
 
 let store = useFormStore();
-const team = parallelTeam(
-    store.developers.map((developer) =>
-        createThread({id: developer.id, power: developer.experience}),
-    ),
-    store.reviewers,
-);
-const backlog = createBacklog({
-  userStoriesRemaining: store.userStories.map(
-      ({id, complexity, reviewComplexity, priority}) =>
-          todo({
-            id,
-            complexity,
-            review: {
-              reviewers: new Map(),
-              reviewComplexity,
-            },
-            priority,
-          }),
-  ),
-});
+
 const stats = ref<StatEvent[]>([]);
 const launchSimulation = () => {
+  let [{backlog, team}] = store.toSimulationInputs();
   let {timeEvents} = simulate(
       backlog,
       team,
@@ -55,7 +36,7 @@ const launchSimulation = () => {
       <tbody>
       <tr>
         <td data-testid="stats-total-time-0">{{ stats.length }}</td>
-        <td data-testid="stats-lead-time-0">{{stats[stats.length - 1]?.leadTime}}</td>
+        <td data-testid="stats-lead-time-0">{{ stats[stats.length - 1]?.leadTime }}</td>
       </tr>
       </tbody>
     </table>
