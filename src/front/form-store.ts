@@ -1,4 +1,7 @@
-import { defineStore } from 'pinia';
+import {defineStore} from 'pinia';
+import type {Team} from "../simulate/team.ts";
+import type {Backlog} from "../simulate/backlog.ts";
+import {createBacklog, createThread, ensembleTeam, parallelTeam, todo} from "../simulate/factory.ts";
 
 const tomorrow = (): Date => {
   const date = new Date();
@@ -38,6 +41,11 @@ export type UserStory = {
   complexity: number;
   reviewComplexity: number;
   priority: number;
+};
+
+export type SimulationInputs = {
+  team: Team;
+  backlog: Backlog;
 };
 
 export const useFormStore = defineStore('form', {
@@ -101,5 +109,34 @@ export const useFormStore = defineStore('form', {
     removeUserStory(targetId: number): void {
       this.userStories = this.userStories.filter(({ id }) => id !== targetId);
     },
+    toSimulationInputs() : SimulationInputs[] {
+      const backlog = createBacklog({
+        userStoriesRemaining: this.userStories.map(
+            ({id, complexity, reviewComplexity, priority}) =>
+                todo({
+                  id,
+                  complexity,
+                  review: {
+                    reviewers: new Map(),
+                    reviewComplexity,
+                  },
+                  priority,
+                }),
+        ),
+      });
+      let threads = this.developers.map((developer) =>
+          createThread({id: developer.id, power: developer.experience}),
+      );
+      return [{
+        team: parallelTeam(
+            threads,
+            this.reviewers,
+        ), backlog
+      },
+        {
+          team: ensembleTeam(threads),
+          backlog
+        }]
+    }
   },
 });

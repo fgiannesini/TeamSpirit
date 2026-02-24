@@ -1,7 +1,8 @@
-import { createPinia, setActivePinia } from 'pinia';
-import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { type State, useFormStore } from './form-store.ts';
-import { teamModification, userStory } from './front-factory-for-test.ts';
+import {createPinia, setActivePinia} from 'pinia';
+import {beforeEach, describe, expect, test, vi} from 'vitest';
+import {type SimulationInputs, type State, useFormStore} from './form-store.ts';
+import {developer, teamModification, userStory} from './front-factory-for-test.ts';
+import {createBacklog, createThread, ensembleTeam, parallelTeam, todo} from "../simulate/factory.ts";
 
 describe('Form store', () => {
   beforeEach(() => {
@@ -271,4 +272,26 @@ describe('Form store', () => {
       });
     });
   });
+
+  describe('Generate simulation inputs', () => {
+    test('should generate two teams', () => {
+      const store = useFormStore();
+      store.$patch({
+        developers: [
+          developer({ id: 0}),
+        ],
+        userStories: [
+          userStory(),
+        ],
+      })
+      const simulationInputs = store.toSimulationInputs();
+      expect(simulationInputs).toStrictEqual<SimulationInputs[]>([{
+        team: parallelTeam([createThread({id: 0, power: 3})],0),
+        backlog: createBacklog({userStoriesRemaining: [todo({ complexity: 3, priority:1, review: {reviewComplexity: 2, reviewers: new Map()}})]}),
+      }, {
+        team: ensembleTeam([createThread({id: 0, power: 3})]),
+        backlog: createBacklog({userStoriesRemaining:[todo({ complexity: 3, priority:1, review: {reviewComplexity: 2, reviewers: new Map()}})]}),
+      }]);
+    })
+  })
 });
