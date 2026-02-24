@@ -1,6 +1,6 @@
-import { describe, expect, test } from 'vitest';
-import { createThread, done, ensembleTeam, parallelTeam } from './factory.ts';
-import { EnsembleTeam, ParallelTeam, type Team } from './team.ts';
+import {describe, expect, test} from 'vitest';
+import {createThread, done, ensembleTeam, parallelTeam} from './factory.ts';
+import {EnsembleTeam, ParallelTeam, type Team} from './team.ts';
 
 describe('Team', () => {
   describe('Parallel team', () => {
@@ -135,6 +135,13 @@ describe('Team', () => {
       ]);
       expect(team.addImplicitsReviewers(done())).toStrictEqual(done());
     });
+
+    test('Should copy', () => {
+      let theOriginal = parallelTeam()
+      let theCopy = theOriginal.copy()
+      expect(theCopy).toStrictEqual(theOriginal)
+      expect(theCopy).not.toBe(theOriginal)
+    })
   });
 
   describe('Ensemble team', () => {
@@ -242,5 +249,12 @@ describe('Team', () => {
         }),
       );
     });
+
+    test('Should copy', () => {
+      let theOriginal = ensembleTeam()
+      let theCopy = theOriginal.copy()
+      expect(theCopy).toStrictEqual(theOriginal)
+      expect(theCopy).not.toBe(theOriginal)
+    })
   });
 });
