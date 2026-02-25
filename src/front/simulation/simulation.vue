@@ -7,21 +7,23 @@ import {noTeamModificator} from '../../simulate/team-modificator.ts';
 import {useFormStore} from '../form-store.ts';
 import Resume from "../resume/resume.vue";
 import {ref} from "vue";
+import {copy} from "../../simulate/backlog.ts";
 
 let store = useFormStore();
 
 const stats = ref<StatEvent[][]>([]);
 const launchSimulation = () => {
   stats.value = store.toSimulationInputs().map(({backlog, team}) =>{
-     let {timeEvents} = simulate(
-         backlog,
-         team,
+    console.log(backlog)
+    let {timeEvents} = simulate(
+         copy(backlog),
+         team.copy(),
          noBugGenerator,
          noTeamModificator,
          noPriorityModificator,
      );
     return computeStatEvents(timeEvents);
-  } );
+  });
 };
 </script>
 
