@@ -305,21 +305,8 @@ describe('Form store', () => {
                 }),
             }]);
         })
-        test('should generate random user stories count', () => {
-            const store = useFormStore();
-            store.$patch({
-                developers: [
-                    developer({id: 0}),
-                ],
-                userStoriesMode: 'random'
-            })
-            const randomProvider = vi.fn<typeof Math.random>().mockReturnValue(0.01)
-            const simulationInputs = store.toSimulationInputs(randomProvider);
-            expect(simulationInputs[0].backlog.userStoriesRemaining.length).toStrictEqual(2)
-            expect(simulationInputs[1].backlog.userStoriesRemaining.length).toStrictEqual(2)
-        })
 
-        test('should generate random user stories properties', () => {
+        test('should generate random user stories', () => {
             const store = useFormStore();
             store.$patch({
                 developers: [
@@ -327,15 +314,12 @@ describe('Form store', () => {
                 ],
                 userStoriesMode: 'random'
             })
-            const randomProvider = vi.fn<typeof Math.random>()
-                .mockReturnValueOnce(0.01)
-                .mockReturnValueOnce(0.1)
-                .mockReturnValueOnce(0)
-                .mockReturnValueOnce(0)
-                .mockReturnValueOnce(0.2)
-                .mockReturnValueOnce(0.1)
-                .mockReturnValue(0.1)
-            const simulationInputs = store.toSimulationInputs(randomProvider);
+            const simulationInputs = store.toSimulationInputs({
+                userStoriesCount: 2,
+                complexityGenerator: vi.fn<typeof Math.random>().mockReturnValueOnce(2).mockReturnValue(3),
+                reviewComplexityGenerator: vi.fn<typeof Math.random>().mockReturnValueOnce(1).mockReturnValue(2),
+                priorityGenerator: vi.fn<typeof Math.random>().mockReturnValueOnce(1).mockReturnValue(2),
+            });
             expect(simulationInputs[0].backlog).toStrictEqual(
                 createBacklog({
                     userStoriesRemaining:[todo({
