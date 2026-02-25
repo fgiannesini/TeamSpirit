@@ -24,6 +24,8 @@ const updateThreadsTime = (threads: Thread[]): Thread[] =>
     };
   });
 
+export type TeamType = 'Parallel' | 'Ensemble';
+
 export type Thread = {
   id: number;
   name: string;
@@ -44,6 +46,7 @@ export type Team = {
   getThreadsOff(): Thread[];
   addImplicitsReviewers(done: UserStory): UserStory;
   copy(): Team;
+  getType(): TeamType;
 };
 
 export class ParallelTeam implements Team {
@@ -116,6 +119,10 @@ export class ParallelTeam implements Team {
 
   copy(): Team {
     return new ParallelTeam(this.threads, this.reviewersNeeded);
+  }
+
+  getType(): TeamType {
+    return 'Parallel';
   }
 }
 
@@ -192,5 +199,9 @@ export class EnsembleTeam implements Team {
 
   copy(): Team {
     return new EnsembleTeam(this.threads);
+  }
+
+  getType(): TeamType {
+    return 'Ensemble';
   }
 }

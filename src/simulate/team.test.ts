@@ -1,6 +1,6 @@
 import {describe, expect, test} from 'vitest';
 import {createThread, done, ensembleTeam, parallelTeam} from './factory.ts';
-import {EnsembleTeam, ParallelTeam, type Team} from './team.ts';
+import {EnsembleTeam, ParallelTeam, type Team, type TeamType} from './team.ts';
 
 describe('Team', () => {
   describe('Parallel team', () => {
@@ -142,6 +142,11 @@ describe('Team', () => {
       expect(theCopy).toStrictEqual(theOriginal)
       expect(theCopy).not.toBe(theOriginal)
     })
+
+    test('Should get type', () => {
+      const team = parallelTeam()
+      expect(team.getType()).toStrictEqual<TeamType>('Parallel')
+    })
   });
 
   describe('Ensemble team', () => {
@@ -255,6 +260,11 @@ describe('Team', () => {
       let theCopy = theOriginal.copy()
       expect(theCopy).toStrictEqual(theOriginal)
       expect(theCopy).not.toBe(theOriginal)
+    })
+
+    test('Should get type', () => {
+      const team = ensembleTeam()
+      expect(team.getType()).toStrictEqual<TeamType>('Ensemble')
     })
   });
 });
