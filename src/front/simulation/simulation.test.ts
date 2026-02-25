@@ -2,7 +2,7 @@ import {createTestingPinia} from '@pinia/testing';
 import {shallowMount, type VueWrapper} from '@vue/test-utils';
 import {describe, expect, test, vi} from 'vitest';
 import {noBugGenerator} from '../../simulate/bug-generator.ts';
-import {createBacklog, parallelTeam} from '../../simulate/factory.ts';
+import {createBacklog, ensembleTeam, parallelTeam} from '../../simulate/factory.ts';
 import {noPriorityModificator} from '../../simulate/priority-modificator.ts';
 import type {simulate} from '../../simulate/simulation.ts';
 import {computeStatEvents} from '../../simulate/stats.ts';
@@ -78,10 +78,16 @@ describe('Simulation', () => {
         computeStatEvents: computeStatEventsMock,
       }));
       useFormStore().toSimulationInputs = vi.fn().mockReturnValue(
-        new Array(2).fill({
-          backlog: createBacklog(),
-          team: parallelTeam(),
-        }),
+          [
+            {
+              backlog: createBacklog(),
+              team: parallelTeam(),
+            },
+            {
+              backlog: createBacklog(),
+              team: ensembleTeam(),
+            }
+          ]
       );
       return { wrapper, simulateMock, computeStatEventsMock };
     };
@@ -150,6 +156,17 @@ describe('Simulation', () => {
       );
       expect(wrapper.get('[data-testid=user-story-count-0]').text()).toBe('1');
       expect(wrapper.get('[data-testid=user-story-count-1]').text()).toBe('1');
+    });
+
+    test('Should display team type', async () => {
+      const { wrapper } = createWrapperWithMocks();
+      const launchButton = wrapper.get('[data-testid=launch-button]');
+      await launchButton.trigger('click');
+      expect(wrapper.get('[data-testid=team-type-header]').text()).toBe(
+          'Team',
+      );
+      expect(wrapper.get('[data-testid=team-type-0]').text()).toBe('Parallel');
+      expect(wrapper.get('[data-testid=team-type-1]').text()).toBe('Ensemble');
     });
   });
 });

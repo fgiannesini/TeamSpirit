@@ -8,6 +8,7 @@ import {useFormStore} from '../form-store.ts';
 import Resume from "../resume/resume.vue";
 import {ref} from "vue";
 import {copy} from "../../simulate/backlog.ts";
+import type {TeamType} from "../../simulate/team.ts";
 
 let store = useFormStore();
 
@@ -15,6 +16,7 @@ type Line = {
   totalTime: number;
   leadTime: number;
   userStoryCount: number;
+  teamType: TeamType;
 }
 const lines = ref<Line[]>([]);
 const launchSimulation = () => {
@@ -31,6 +33,7 @@ const launchSimulation = () => {
       totalTime : statEvents.length,
       leadTime: statEvents[statEvents.length - 1]?.leadTime,
       userStoryCount: structureEvents.filter(({action}) => action === 'CreateUserStory').length,
+      teamType: team.getType(),
     };
   });
 };
@@ -44,6 +47,7 @@ const launchSimulation = () => {
         <th data-testid="stats-total-time-header">Total time</th>
         <th data-testid="stats-lead-time-header">Lead time</th>
         <th data-testid="user-story-count-header">User story count</th>
+        <th data-testid="team-type-header">Team</th>
       </tr>
       </thead>
       <tbody>
@@ -51,6 +55,7 @@ const launchSimulation = () => {
         <td :data-testid="`stats-total-time-${index}`">{{ line.totalTime }}</td>
         <td :data-testid="`stats-lead-time-${index}`">{{ line.leadTime }}</td>
         <td :data-testid="`user-story-count-${index}`">{{ line.userStoryCount }}</td>
+        <td :data-testid="`team-type-${index}`">{{ line.teamType }}</td>
       </tr>
       </tbody>
     </table>
