@@ -52,7 +52,18 @@ describe('Simulation', () => {
       let wrapper = createWrapper();
       simulateMock.mockReturnValue({
         timeEvents: [],
-        structureEvents: [],
+        structureEvents: [      {
+          time: 1,
+          id: 0,
+          name: 'thread1',
+          action: 'CreateThread',
+        },
+          {
+            time: 1,
+            id: 0,
+            name: 'userStory0',
+            action: 'CreateUserStory',
+          }],
       });
       computeStatEventsMock
         .mockReturnValueOnce([
@@ -128,6 +139,17 @@ describe('Simulation', () => {
       );
       expect(wrapper.get('[data-testid=stats-lead-time-0]').text()).toBe('0.5');
       expect(wrapper.get('[data-testid=stats-lead-time-1]').text()).toBe('0.7');
+    });
+
+    test('Should display total user stories', async () => {
+      const { wrapper } = createWrapperWithMocks();
+      const launchButton = wrapper.get('[data-testid=launch-button]');
+      await launchButton.trigger('click');
+      expect(wrapper.get('[data-testid=user-story-count-header]').text()).toBe(
+          'User story count',
+      );
+      expect(wrapper.get('[data-testid=user-story-count-0]').text()).toBe('1');
+      expect(wrapper.get('[data-testid=user-story-count-1]').text()).toBe('1');
     });
   });
 });

@@ -2,7 +2,7 @@
 import {noBugGenerator} from '../../simulate/bug-generator.ts';
 import {noPriorityModificator} from '../../simulate/priority-modificator.ts';
 import {simulate} from '../../simulate/simulation.ts';
-import {computeStatEvents, type StatEvent} from '../../simulate/stats.ts';
+import {computeStatEvents} from '../../simulate/stats.ts';
 import {noTeamModificator} from '../../simulate/team-modificator.ts';
 import {useFormStore} from '../form-store.ts';
 import Resume from "../resume/resume.vue";
@@ -11,18 +11,27 @@ import {copy} from "../../simulate/backlog.ts";
 
 let store = useFormStore();
 
-const stats = ref<StatEvent[][]>([]);
+type Line = {
+  totalTime: number;
+  leadTime: number;
+  userStoryCount: number;
+}
+const lines = ref<Line[]>([]);
 const launchSimulation = () => {
-  stats.value = store.toSimulationInputs().map(({backlog, team}) =>{
-    console.log(backlog)
-    let {timeEvents} = simulate(
+  lines.value = store.toSimulationInputs().map(({backlog, team}) =>{
+    let {timeEvents, structureEvents} = simulate(
          copy(backlog),
          team.copy(),
          noBugGenerator,
          noTeamModificator,
          noPriorityModificator,
      );
-    return computeStatEvents(timeEvents);
+    const statEvents = computeStatEvents(timeEvents);
+    return {
+      totalTime : statEvents.length,
+      leadTime: statEvents[statEvents.length - 1]?.leadTime,
+      userStoryCount: structureEvents.filter(({action}) => action === 'CreateUserStory').length,
+    };
   });
 };
 </script>
@@ -34,12 +43,14 @@ const launchSimulation = () => {
       <tr>
         <th data-testid="stats-total-time-header">Total time</th>
         <th data-testid="stats-lead-time-header">Lead time</th>
+        <th data-testid="user-story-count-header">User story count</th>
       </tr>
       </thead>
       <tbody>
-      <tr v-for="(stat,index) in stats" >
-        <td :data-testid="`stats-total-time-${index}`">{{ stat.length }}</td>
-        <td :data-testid="`stats-lead-time-${index}`">{{ stat[stat.length - 1]?.leadTime }}</td>
+      <tr v-for="(line,index) in lines" >
+        <td :data-testid="`stats-total-time-${index}`">{{ line.totalTime }}</td>
+        <td :data-testid="`stats-lead-time-${index}`">{{ line.leadTime }}</td>
+        <td :data-testid="`user-story-count-${index}`">{{ line.userStoryCount }}</td>
       </tr>
       </tbody>
     </table>
