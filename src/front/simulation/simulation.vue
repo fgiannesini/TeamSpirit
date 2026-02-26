@@ -46,7 +46,7 @@ const launchSimulation = () => {
 
 <template>
   <main class="responsive">
-    <table class="border" data-testid="stats-container">
+    <table class="no-space stripes" data-testid="stats-container">
       <thead>
       <tr>
         <th data-testid="stats-total-time-header">Total time</th>
