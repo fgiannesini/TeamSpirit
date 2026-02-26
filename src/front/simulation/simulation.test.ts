@@ -2,7 +2,7 @@ import {createTestingPinia} from '@pinia/testing';
 import {shallowMount, type VueWrapper} from '@vue/test-utils';
 import {describe, expect, test, vi} from 'vitest';
 import {noBugGenerator} from '../../simulate/bug-generator.ts';
-import {createBacklog, ensembleTeam, parallelTeam} from '../../simulate/factory.ts';
+import {createBacklog, ensembleTeam, parallelTeam,} from '../../simulate/factory.ts';
 import {noPriorityModificator} from '../../simulate/priority-modificator.ts';
 import type {simulate} from '../../simulate/simulation.ts';
 import {computeStatEvents} from '../../simulate/stats.ts';
@@ -52,18 +52,20 @@ describe('Simulation', () => {
       let wrapper = createWrapper();
       simulateMock.mockReturnValue({
         timeEvents: [],
-        structureEvents: [      {
-          time: 1,
-          id: 0,
-          name: 'thread1',
-          action: 'CreateThread',
-        },
+        structureEvents: [
+          {
+            time: 1,
+            id: 0,
+            name: 'thread1',
+            action: 'CreateThread',
+          },
           {
             time: 1,
             id: 0,
             name: 'userStory0',
             action: 'CreateUserStory',
-          }],
+          },
+        ],
       });
       computeStatEventsMock
         .mockReturnValueOnce([
@@ -77,24 +79,36 @@ describe('Simulation', () => {
       vi.mock('../../simulate/stats.ts', () => ({
         computeStatEvents: computeStatEventsMock,
       }));
-      useFormStore().toSimulationInputs = vi.fn().mockReturnValue(
-          [
-            {
-              backlog: createBacklog(),
-              team: parallelTeam(),
-            },
-            {
-              backlog: createBacklog(),
-              team: ensembleTeam(),
-            }
-          ]
-      );
+      useFormStore().toSimulationInputs = vi.fn().mockReturnValue([
+        {
+          backlog: createBacklog(),
+          team: parallelTeam(),
+        },
+        {
+          backlog: createBacklog(),
+          team: ensembleTeam(),
+        },
+      ]);
       return { wrapper, simulateMock, computeStatEventsMock };
     };
 
     test('Should display a launch button', () => {
       const { wrapper } = createWrapperWithMocks();
       expect(wrapper.get('[data-testid=launch-button]').text()).toBe('Launch');
+    });
+
+    test('Should display an iteration count label', () => {
+      const { wrapper } = createWrapperWithMocks();
+      expect(wrapper.get('[data-testid=iteration-count-label]').text()).toBe(
+        'Iteration count',
+      );
+    });
+
+    test('Should display an iteration count input', () => {
+      const { wrapper } = createWrapperWithMocks();
+      expect(wrapper.find('[data-testid=iteration-count-input]').exists()).toBe(
+        true,
+      );
     });
 
     test('Should simulate on launch click', () => {
@@ -152,7 +166,7 @@ describe('Simulation', () => {
       const launchButton = wrapper.get('[data-testid=launch-button]');
       await launchButton.trigger('click');
       expect(wrapper.get('[data-testid=user-story-count-header]').text()).toBe(
-          'User story count',
+        'User story count',
       );
       expect(wrapper.get('[data-testid=user-story-count-0]').text()).toBe('1');
       expect(wrapper.get('[data-testid=user-story-count-1]').text()).toBe('1');
@@ -162,9 +176,7 @@ describe('Simulation', () => {
       const { wrapper } = createWrapperWithMocks();
       const launchButton = wrapper.get('[data-testid=launch-button]');
       await launchButton.trigger('click');
-      expect(wrapper.get('[data-testid=team-type-header]').text()).toBe(
-          'Team',
-      );
+      expect(wrapper.get('[data-testid=team-type-header]').text()).toBe('Team');
       expect(wrapper.get('[data-testid=team-type-0]').text()).toBe('Parallel');
       expect(wrapper.get('[data-testid=team-type-1]').text()).toBe('Ensemble');
     });
