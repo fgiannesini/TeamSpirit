@@ -181,6 +181,15 @@ describe('Simulation', () => {
       expect(wrapper.get('[data-testid=team-type-1]').text()).toBe('Ensemble');
     });
 
+    test('Should run the simulation', async () => {
+      const { wrapper } = createWrapperWithMocks();
+      const launchButton = wrapper.get('[data-testid=launch-button]');
+      await launchButton.trigger('click');
+      expect(wrapper.get('[data-testid=runner-header]').text()).toBe('Run');
+      expect(wrapper.get('[data-testid=runner-0]').text()).toBe('play_arrow');
+      expect(wrapper.get('[data-testid=runner-1]').text()).toBe('play_arrow');
+    });
+
     test('Should generate several iterations', async () => {
       const { wrapper } = createWrapperWithMocks();
 

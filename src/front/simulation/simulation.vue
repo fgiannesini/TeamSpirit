@@ -2,13 +2,15 @@
 import {noBugGenerator} from '../../simulate/bug-generator.ts';
 import {noPriorityModificator} from '../../simulate/priority-modificator.ts';
 import {simulate} from '../../simulate/simulation.ts';
-import {computeStatEvents} from '../../simulate/stats.ts';
+import {computeStatEvents, type StatEvent} from '../../simulate/stats.ts';
 import {noTeamModificator} from '../../simulate/team-modificator.ts';
 import {useFormStore} from '../form-store.ts';
 import Resume from '../resume/resume.vue';
 import {ref} from 'vue';
 import {copy} from '../../simulate/backlog.ts';
 import type {TeamType} from '../../simulate/team.ts';
+import type {StructureEvent} from "../../simulate/simulation-structure.ts";
+import type {TimeEvent} from "../../simulate/events.ts";
 
 let store = useFormStore();
 
@@ -17,7 +19,11 @@ type Line = {
   leadTime: number;
   userStoryCount: number;
   teamType: TeamType;
+  timeEvents: TimeEvent[];
+  structureEvents: StructureEvent[];
+  statEvents: StatEvent[];
 };
+
 const lines = ref<Line[]>([]);
 const iterationCount = ref<number>(1);
 const launchSimulation = () => {
@@ -38,6 +44,9 @@ const launchSimulation = () => {
           ({ action }) => action === 'CreateUserStory',
         ).length,
         teamType: team.getType(),
+        timeEvents: [],
+        structureEvents:[],
+        statEvents: [],
       };
     }),
   );
@@ -53,6 +62,7 @@ const launchSimulation = () => {
         <th data-testid="stats-lead-time-header">Lead time</th>
         <th data-testid="user-story-count-header">User story count</th>
         <th data-testid="team-type-header">Team</th>
+        <th data-testid="runner-header">Run</th>
       </tr>
       </thead>
       <tbody>
@@ -61,6 +71,7 @@ const launchSimulation = () => {
         <td :data-testid="`stats-lead-time-${index}`">{{ line.leadTime }}</td>
         <td :data-testid="`user-story-count-${index}`">{{ line.userStoryCount }}</td>
         <td :data-testid="`team-type-${index}`">{{ line.teamType }}</td>
+        <td :data-testid="`runner-${index}`"><i>play_arrow</i></td>
       </tr>
       </tbody>
     </table>
