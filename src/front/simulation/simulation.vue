@@ -19,25 +19,28 @@ type Line = {
   teamType: TeamType;
 };
 const lines = ref<Line[]>([]);
+const iterationCount = ref<number>(1);
 const launchSimulation = () => {
-  lines.value = store.toSimulationInputs().map(({ backlog, team }) => {
-    let { timeEvents, structureEvents } = simulate(
-      copy(backlog),
-      team.copy(),
-      noBugGenerator,
-      noTeamModificator,
-      noPriorityModificator,
-    );
-    const statEvents = computeStatEvents(timeEvents);
-    return {
-      totalTime: statEvents.length,
-      leadTime: statEvents[statEvents.length - 1]?.leadTime,
-      userStoryCount: structureEvents.filter(
-        ({ action }) => action === 'CreateUserStory',
-      ).length,
-      teamType: team.getType(),
-    };
-  });
+  lines.value = Array.from({ length: iterationCount.value }).flatMap(() =>
+    store.toSimulationInputs().map(({ backlog, team }) => {
+      let { timeEvents, structureEvents } = simulate(
+        copy(backlog),
+        team.copy(),
+        noBugGenerator,
+        noTeamModificator,
+        noPriorityModificator,
+      );
+      const statEvents = computeStatEvents(timeEvents);
+      return {
+        totalTime: statEvents.length,
+        leadTime: statEvents[statEvents.length - 1]?.leadTime,
+        userStoryCount: structureEvents.filter(
+          ({ action }) => action === 'CreateUserStory',
+        ).length,
+        teamType: team.getType(),
+      };
+    }),
+  );
 };
 </script>
 
@@ -67,7 +70,7 @@ const launchSimulation = () => {
     <resume/>
     <div class="field label prefix border">
       <i>numbers</i>
-      <input data-testid="iteration-count-input" type="number">
+      <input data-testid="iteration-count-input" type="number" v-model="iterationCount">
       <label data-testid="iteration-count-label">Iteration count</label>
     </div>
     <button data-testid="launch-button" @click="launchSimulation();">Launch</button>

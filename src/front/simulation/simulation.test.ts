@@ -180,5 +180,28 @@ describe('Simulation', () => {
       expect(wrapper.get('[data-testid=team-type-0]').text()).toBe('Parallel');
       expect(wrapper.get('[data-testid=team-type-1]').text()).toBe('Ensemble');
     });
+
+    test('Should generate several iterations', async () => {
+      const { wrapper } = createWrapperWithMocks();
+
+      const iterationCountInput = wrapper.get(
+        '[data-testid=iteration-count-input]',
+      );
+      await iterationCountInput.setValue(2);
+
+      const launchButton = wrapper.get('[data-testid=launch-button]');
+      await launchButton.trigger('click');
+
+      expect(wrapper.findAll('tbody tr').length).toStrictEqual(4);
+    });
+
+    test('Should generate one iteration by default', async () => {
+      const { wrapper } = createWrapperWithMocks();
+
+      const launchButton = wrapper.get('[data-testid=launch-button]');
+      await launchButton.trigger('click');
+
+      expect(wrapper.findAll('tbody tr').length).toStrictEqual(2);
+    });
   });
 });
