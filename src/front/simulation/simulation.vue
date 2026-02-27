@@ -3,11 +3,9 @@ import {ref} from 'vue';
 import {useRouter} from 'vue-router';
 import {copy} from '../../simulate/backlog.ts';
 import {noBugGenerator} from '../../simulate/bug-generator.ts';
-import type {TimeEvent} from '../../simulate/events.ts';
 import {noPriorityModificator} from '../../simulate/priority-modificator.ts';
 import {simulate} from '../../simulate/simulation.ts';
-import type {StructureEvent} from '../../simulate/simulation-structure.ts';
-import {computeStatEvents, type StatEvent} from '../../simulate/stats.ts';
+import {computeStatEvents} from '../../simulate/stats.ts';
 import type {TeamType} from '../../simulate/team.ts';
 import {noTeamModificator} from '../../simulate/team-modificator.ts';
 import {useFormStore} from '../form-store.ts';
@@ -20,15 +18,12 @@ type Line = {
   leadTime: number;
   userStoryCount: number;
   teamType: TeamType;
-  timeEvents: TimeEvent[];
-  structureEvents: StructureEvent[];
-  statEvents: StatEvent[];
 };
 
 const lines = ref<Line[]>([]);
-const iterationCount = ref<number>(1);
-const launchSimulation = () => {
-  lines.value = Array.from({ length: iterationCount.value }).flatMap(() =>
+const iterationCountRef = ref<number>(1);
+const launchSimulation = (iterationCount: number) => {
+  lines.value = Array.from({ length: iterationCount }).flatMap(() =>
     store.toSimulationInputs().map(({ backlog, team }) => {
       let { timeEvents, structureEvents } = simulate(
         copy(backlog),
@@ -45,9 +40,6 @@ const launchSimulation = () => {
           ({ action }) => action === 'CreateUserStory',
         ).length,
         teamType: team.getType(),
-        timeEvents: [],
-        structureEvents: [],
-        statEvents: [],
       };
     }),
   );
@@ -86,9 +78,9 @@ const toPlay = async () => {
     <resume/>
     <div class="field label prefix border">
       <i>numbers</i>
-      <input data-testid="iteration-count-input" type="number" v-model="iterationCount">
+      <input data-testid="iteration-count-input" type="number" v-model="iterationCountRef">
       <label data-testid="iteration-count-label">Iteration count</label>
     </div>
-    <button data-testid="launch-button" @click="launchSimulation();">Launch</button>
+    <button data-testid="launch-button" @click="launchSimulation(iterationCountRef);">Launch</button>
   </nav>
 </template>

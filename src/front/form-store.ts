@@ -1,7 +1,14 @@
 import {defineStore} from 'pinia';
-import type {Backlog} from '../simulate/backlog.ts';
+import {type Backlog, copy} from '../simulate/backlog.ts';
+import type {TimeEvent} from '../simulate/events.ts';
 import {createBacklog, createThread, ensembleTeam, parallelTeam, todo,} from '../simulate/factory.ts';
-import type {Team} from '../simulate/team.ts';
+import type {StructureEvent} from '../simulate/simulation-structure.ts';
+import {computeStatEvents, type StatEvent} from '../simulate/stats.ts';
+import type {Team, TeamType} from '../simulate/team.ts';
+import {simulate} from "../simulate/simulation.ts";
+import {noBugGenerator} from "../simulate/bug-generator.ts";
+import {noTeamModificator} from "../simulate/team-modificator.ts";
+import {noPriorityModificator} from "../simulate/priority-modificator.ts";
 
 const tomorrow = (): Date => {
   const date = new Date();
@@ -17,6 +24,7 @@ export type State = {
   teamModificators: TeamModification[];
   reviewers: number;
   userStories: UserStory[];
+  simulationOutputs: SimulationOutputs[];
 };
 
 export type SelectorMode = 'random' | 'custom' | 'notSet';
@@ -48,6 +56,13 @@ export type SimulationInputs = {
   backlog: Backlog;
 };
 
+export type SimulationOutputs = {
+  teamType: TeamType;
+  structureEvents: StructureEvent[];
+  timeEvents: TimeEvent[];
+  statEvents: StatEvent[];
+};
+
 export const useFormStore = defineStore('form', {
   state: (): State => ({
     teamMode: 'notSet',
@@ -57,6 +72,7 @@ export const useFormStore = defineStore('form', {
     teamModificators: [],
     reviewers: 0,
     userStories: [],
+    simulationOutputs: [],
   }),
   actions: {
     generateDeveloper(): void {
@@ -117,7 +133,7 @@ export const useFormStore = defineStore('form', {
         priorityGenerator: () => randomInt(Math.random, 10),
       },
     ): SimulationInputs[] {
-      let backlog;
+      let backlog: Backlog;
       if (this.userStoriesMode === 'random') {
         backlog = createBacklog({
           userStoriesRemaining: Array.from(
@@ -164,6 +180,27 @@ export const useFormStore = defineStore('form', {
           backlog,
         },
       ];
+    },
+    runSimulation(
+        iterationCount: number,
+      inputs?: SimulationInputs[] ,
+    ): void {
+      const resolvedInputs = inputs ?? this.toSimulationInputs()
+      this.simulationOutputs = Array.from({ length: iterationCount })
+          .flatMap(() =>
+              resolvedInputs.map(({ backlog, team }) => {
+            let { timeEvents, structureEvents } = simulate(
+                copy(backlog),
+                team.copy(),
+                noBugGenerator,
+                noTeamModificator,
+                noPriorityModificator,
+            );
+            const statEvents = computeStatEvents(timeEvents);
+            return {
+              timeEvents, statEvents, structureEvents, teamType:team.getType()
+            };
+          }))
     },
   },
 });
