@@ -1,5 +1,5 @@
 import {createTestingPinia} from '@pinia/testing';
-import {shallowMount, type VueWrapper} from '@vue/test-utils';
+import {flushPromises, shallowMount} from '@vue/test-utils';
 import {describe, expect, test, vi} from 'vitest';
 import {noBugGenerator} from '../../simulate/bug-generator.ts';
 import {createBacklog, ensembleTeam, parallelTeam,} from '../../simulate/factory.ts';
@@ -10,34 +10,40 @@ import {noTeamModificator} from '../../simulate/team-modificator.ts';
 import {type State, useFormStore} from '../form-store.ts';
 import Resume from '../resume/resume.vue';
 import Simulation from './simulation.vue';
+import {createTestRouter} from "../router-test.ts";
 
 describe('Simulation', () => {
-  const createWrapper = (state: Partial<State> = {}): VueWrapper =>
-    shallowMount(Simulation, {
+  const createWrapper = async (state: Partial<State> = {}) => {
+    const router = createTestRouter()
+    await router.push('/main')
+    const wrapper = shallowMount(Simulation, {
       global: {
         plugins: [
           createTestingPinia({
             initialState: {
-              form: { ...state },
+              form: {...state},
             },
           }),
+          router
         ],
       },
     });
+    return {wrapper, router}
+  };
 
-  test('Should render', () => {
-    const wrapper = createWrapper();
+  test('Should render', async () => {
+    const {wrapper} =await  createWrapper();
     expect(wrapper.exists()).toBe(true);
   });
 
   describe('Resume', () => {
-    test('Should render a resume panel', () => {
-      const wrapper = createWrapper();
+    test('Should render a resume panel', async () => {
+      const {wrapper} =await  createWrapper();
       expect(wrapper.get('[data-testid=resume-panel]').isVisible()).toBe(true);
     });
 
-    test('Should render a resume component', () => {
-      const wrapper = createWrapper();
+    test('Should render a resume component', async () => {
+      const {wrapper} =await  createWrapper();
       expect(wrapper.findComponent(Resume).isVisible()).toBe(true);
     });
   });
@@ -48,8 +54,8 @@ describe('Simulation', () => {
       computeStatEventsMock: vi.fn<typeof computeStatEvents>(),
     }));
 
-    const createWrapperWithMocks = () => {
-      let wrapper = createWrapper();
+    const createWrapperWithMocks = async () => {
+      let {wrapper, router} =await  createWrapper();
       simulateMock.mockReturnValue({
         timeEvents: [],
         structureEvents: [
@@ -89,32 +95,32 @@ describe('Simulation', () => {
           team: ensembleTeam(),
         },
       ]);
-      return { wrapper, simulateMock, computeStatEventsMock };
+      return { wrapper, simulateMock, computeStatEventsMock, router };
     };
 
-    test('Should display a launch button', () => {
-      const { wrapper } = createWrapperWithMocks();
+    test('Should display a launch button', async () => {
+      const { wrapper } = await createWrapperWithMocks();
       expect(wrapper.get('[data-testid=launch-button]').text()).toBe('Launch');
     });
 
-    test('Should display an iteration count label', () => {
-      const { wrapper } = createWrapperWithMocks();
+    test('Should display an iteration count label', async () => {
+      const { wrapper } = await createWrapperWithMocks();
       expect(wrapper.get('[data-testid=iteration-count-label]').text()).toBe(
         'Iteration count',
       );
     });
 
-    test('Should display an iteration count input', () => {
-      const { wrapper } = createWrapperWithMocks();
+    test('Should display an iteration count input', async () => {
+      const { wrapper } = await createWrapperWithMocks();
       expect(wrapper.find('[data-testid=iteration-count-input]').exists()).toBe(
         true,
       );
     });
 
-    test('Should simulate on launch click', () => {
-      const { wrapper, simulateMock } = createWrapperWithMocks();
+    test('Should simulate on launch click', async () => {
+      const { wrapper, simulateMock } = await createWrapperWithMocks();
       const launchButton = wrapper.get('[data-testid=launch-button]');
-      launchButton.trigger('click');
+      await launchButton.trigger('click');
 
       expect(simulateMock).toHaveBeenCalledWith(
         createBacklog(),
@@ -125,22 +131,22 @@ describe('Simulation', () => {
       );
     });
 
-    test('Should simulate stats on launch clic', () => {
-      const { wrapper, computeStatEventsMock } = createWrapperWithMocks();
+    test('Should simulate stats on launch clic', async () => {
+      const { wrapper, computeStatEventsMock } = await createWrapperWithMocks();
       const launchButton = wrapper.get('[data-testid=launch-button]');
-      launchButton.trigger('click');
+      await launchButton.trigger('click');
       expect(computeStatEventsMock).toHaveBeenCalledWith([]);
     });
 
-    test('Should display stats container and header', () => {
-      const { wrapper } = createWrapperWithMocks();
+    test('Should display stats container and header', async () => {
+      const { wrapper } = await createWrapperWithMocks();
       const launchButton = wrapper.get('[data-testid=launch-button]');
-      launchButton.trigger('click');
+      await launchButton.trigger('click');
       expect(wrapper.find('[data-testid=stats-container]').exists()).toBe(true);
     });
 
     test('Should display stats total time', async () => {
-      const { wrapper } = createWrapperWithMocks();
+      const { wrapper } = await createWrapperWithMocks();
       const launchButton = wrapper.get('[data-testid=launch-button]');
       await launchButton.trigger('click');
       expect(wrapper.get('[data-testid=stats-total-time-header]').text()).toBe(
@@ -151,7 +157,7 @@ describe('Simulation', () => {
     });
 
     test('Should display stats lead time', async () => {
-      const { wrapper } = createWrapperWithMocks();
+      const { wrapper } = await createWrapperWithMocks();
       const launchButton = wrapper.get('[data-testid=launch-button]');
       await launchButton.trigger('click');
       expect(wrapper.get('[data-testid=stats-lead-time-header]').text()).toBe(
@@ -162,7 +168,7 @@ describe('Simulation', () => {
     });
 
     test('Should display total user stories', async () => {
-      const { wrapper } = createWrapperWithMocks();
+      const { wrapper } = await createWrapperWithMocks();
       const launchButton = wrapper.get('[data-testid=launch-button]');
       await launchButton.trigger('click');
       expect(wrapper.get('[data-testid=user-story-count-header]').text()).toBe(
@@ -173,7 +179,7 @@ describe('Simulation', () => {
     });
 
     test('Should display team type', async () => {
-      const { wrapper } = createWrapperWithMocks();
+      const { wrapper } = await createWrapperWithMocks();
       const launchButton = wrapper.get('[data-testid=launch-button]');
       await launchButton.trigger('click');
       expect(wrapper.get('[data-testid=team-type-header]').text()).toBe('Team');
@@ -182,7 +188,7 @@ describe('Simulation', () => {
     });
 
     test('Should run the simulation', async () => {
-      const { wrapper } = createWrapperWithMocks();
+      const { wrapper } = await createWrapperWithMocks();
       const launchButton = wrapper.get('[data-testid=launch-button]');
       await launchButton.trigger('click');
       expect(wrapper.get('[data-testid=runner-header]').text()).toBe('Run');
@@ -190,8 +196,17 @@ describe('Simulation', () => {
       expect(wrapper.get('[data-testid=runner-1]').text()).toBe('play_arrow');
     });
 
+    test('Should redirect to play page', async () => {
+      const { wrapper, router } = await createWrapperWithMocks();
+      await wrapper.get('[data-testid=launch-button]').trigger('click');
+
+      await wrapper.get('[data-testid=runner-button-0]').trigger('click');
+      await flushPromises()
+      expect(router.currentRoute.value.path).toBe('/play');
+    });
+
     test('Should generate several iterations', async () => {
-      const { wrapper } = createWrapperWithMocks();
+      const { wrapper } = await createWrapperWithMocks();
 
       const iterationCountInput = wrapper.get(
         '[data-testid=iteration-count-input]',
@@ -205,7 +220,7 @@ describe('Simulation', () => {
     });
 
     test('Should generate one iteration by default', async () => {
-      const { wrapper } = createWrapperWithMocks();
+      const { wrapper } = await createWrapperWithMocks();
 
       const launchButton = wrapper.get('[data-testid=launch-button]');
       await launchButton.trigger('click');

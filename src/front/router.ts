@@ -1,10 +1,12 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import {createRouter, createWebHistory} from 'vue-router';
 import Form from './form.vue';
 import Simulation from './simulation/simulation.vue';
+import Play from "./play.vue";
 
-const routes = [
+export const routes = [
   { path: '/main', component: Form },
   { path: '/simulate', component: Simulation },
+  { path: '/play', component: Play },
 ];
 
 export const router = createRouter({

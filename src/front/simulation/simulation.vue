@@ -11,6 +11,7 @@ import {copy} from '../../simulate/backlog.ts';
 import type {TeamType} from '../../simulate/team.ts';
 import type {StructureEvent} from "../../simulate/simulation-structure.ts";
 import type {TimeEvent} from "../../simulate/events.ts";
+import {useRouter} from "vue-router";
 
 let store = useFormStore();
 
@@ -51,6 +52,10 @@ const launchSimulation = () => {
     }),
   );
 };
+const router = useRouter()
+const toPlay = async () => {
+  await router.push('/play')
+};
 </script>
 
 <template>
@@ -71,7 +76,7 @@ const launchSimulation = () => {
         <td :data-testid="`stats-lead-time-${index}`">{{ line.leadTime }}</td>
         <td :data-testid="`user-story-count-${index}`">{{ line.userStoryCount }}</td>
         <td :data-testid="`team-type-${index}`">{{ line.teamType }}</td>
-        <td :data-testid="`runner-${index}`"><i>play_arrow</i></td>
+        <td :data-testid="`runner-${index}`"><button :data-testid="`runner-button-${index}`" class="transparent circle small" @click="toPlay();"><i>play_arrow</i></button></td>
       </tr>
       </tbody>
     </table>
