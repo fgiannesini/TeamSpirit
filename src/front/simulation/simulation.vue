@@ -1,17 +1,17 @@
 <script setup lang="ts">
+import {ref} from 'vue';
+import {useRouter} from 'vue-router';
+import {copy} from '../../simulate/backlog.ts';
 import {noBugGenerator} from '../../simulate/bug-generator.ts';
+import type {TimeEvent} from '../../simulate/events.ts';
 import {noPriorityModificator} from '../../simulate/priority-modificator.ts';
 import {simulate} from '../../simulate/simulation.ts';
+import type {StructureEvent} from '../../simulate/simulation-structure.ts';
 import {computeStatEvents, type StatEvent} from '../../simulate/stats.ts';
+import type {TeamType} from '../../simulate/team.ts';
 import {noTeamModificator} from '../../simulate/team-modificator.ts';
 import {useFormStore} from '../form-store.ts';
 import Resume from '../resume/resume.vue';
-import {ref} from 'vue';
-import {copy} from '../../simulate/backlog.ts';
-import type {TeamType} from '../../simulate/team.ts';
-import type {StructureEvent} from "../../simulate/simulation-structure.ts";
-import type {TimeEvent} from "../../simulate/events.ts";
-import {useRouter} from "vue-router";
 
 let store = useFormStore();
 
@@ -46,15 +46,15 @@ const launchSimulation = () => {
         ).length,
         teamType: team.getType(),
         timeEvents: [],
-        structureEvents:[],
+        structureEvents: [],
         statEvents: [],
       };
     }),
   );
 };
-const router = useRouter()
+const router = useRouter();
 const toPlay = async () => {
-  await router.push('/play')
+  await router.push('/play');
 };
 </script>
 

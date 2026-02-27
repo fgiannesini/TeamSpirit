@@ -179,6 +179,6 @@ export const shouldGenerateBug = (
 export const copy = (backlog: Backlog): Backlog => {
   return {
     userStoriesRemaining: [...backlog.userStoriesRemaining],
-    userStoriesDone: [...backlog.userStoriesDone]
+    userStoriesDone: [...backlog.userStoriesDone],
   };
 };

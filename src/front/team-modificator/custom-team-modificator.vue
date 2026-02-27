@@ -28,8 +28,8 @@
   </article>
 </template>
 <script setup lang="ts">
-import AddButton from '../shared/add-button.vue';
 import {useFormStore} from '../form-store.ts';
+import AddButton from '../shared/add-button.vue';
 import PeriodCard from './period-card.vue';
 
 const store = useFormStore();

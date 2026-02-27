@@ -5,45 +5,45 @@ import {noBugGenerator} from '../../simulate/bug-generator.ts';
 import {createBacklog, ensembleTeam, parallelTeam,} from '../../simulate/factory.ts';
 import {noPriorityModificator} from '../../simulate/priority-modificator.ts';
 import type {simulate} from '../../simulate/simulation.ts';
-import {computeStatEvents} from '../../simulate/stats.ts';
+import type {computeStatEvents} from '../../simulate/stats.ts';
 import {noTeamModificator} from '../../simulate/team-modificator.ts';
 import {type State, useFormStore} from '../form-store.ts';
 import Resume from '../resume/resume.vue';
+import {createTestRouter} from '../router-test.ts';
 import Simulation from './simulation.vue';
-import {createTestRouter} from "../router-test.ts";
 
 describe('Simulation', () => {
   const createWrapper = async (state: Partial<State> = {}) => {
-    const router = createTestRouter()
-    await router.push('/main')
+    const router = createTestRouter();
+    await router.push('/main');
     const wrapper = shallowMount(Simulation, {
       global: {
         plugins: [
           createTestingPinia({
             initialState: {
-              form: {...state},
+              form: { ...state },
             },
           }),
-          router
+          router,
         ],
       },
     });
-    return {wrapper, router}
+    return { wrapper, router };
   };
 
   test('Should render', async () => {
-    const {wrapper} =await  createWrapper();
+    const { wrapper } = await createWrapper();
     expect(wrapper.exists()).toBe(true);
   });
 
   describe('Resume', () => {
     test('Should render a resume panel', async () => {
-      const {wrapper} =await  createWrapper();
+      const { wrapper } = await createWrapper();
       expect(wrapper.get('[data-testid=resume-panel]').isVisible()).toBe(true);
     });
 
     test('Should render a resume component', async () => {
-      const {wrapper} =await  createWrapper();
+      const { wrapper } = await createWrapper();
       expect(wrapper.findComponent(Resume).isVisible()).toBe(true);
     });
   });
@@ -55,7 +55,7 @@ describe('Simulation', () => {
     }));
 
     const createWrapperWithMocks = async () => {
-      let {wrapper, router} =await  createWrapper();
+      const { wrapper, router } = await createWrapper();
       simulateMock.mockReturnValue({
         timeEvents: [],
         structureEvents: [
@@ -201,7 +201,7 @@ describe('Simulation', () => {
       await wrapper.get('[data-testid=launch-button]').trigger('click');
 
       await wrapper.get('[data-testid=runner-button-0]').trigger('click');
-      await flushPromises()
+      await flushPromises();
       expect(router.currentRoute.value.path).toBe('/play');
     });
 

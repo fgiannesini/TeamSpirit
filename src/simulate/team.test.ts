@@ -1,6 +1,6 @@
 import {describe, expect, test} from 'vitest';
 import {createThread, done, ensembleTeam, parallelTeam} from './factory.ts';
-import {EnsembleTeam, ParallelTeam, type Team, type TeamType} from './team.ts';
+import {EnsembleTeam, ParallelTeam, type Team, type TeamType,} from './team.ts';
 
 describe('Team', () => {
   describe('Parallel team', () => {
@@ -137,16 +137,16 @@ describe('Team', () => {
     });
 
     test('Should copy', () => {
-      let theOriginal = parallelTeam()
-      let theCopy = theOriginal.copy()
-      expect(theCopy).toStrictEqual(theOriginal)
-      expect(theCopy).not.toBe(theOriginal)
-    })
+      const theOriginal = parallelTeam();
+      const theCopy = theOriginal.copy();
+      expect(theCopy).toStrictEqual(theOriginal);
+      expect(theCopy).not.toBe(theOriginal);
+    });
 
     test('Should get type', () => {
-      const team = parallelTeam()
-      expect(team.getType()).toStrictEqual<TeamType>('Parallel')
-    })
+      const team = parallelTeam();
+      expect(team.getType()).toStrictEqual<TeamType>('Parallel');
+    });
   });
 
   describe('Ensemble team', () => {
@@ -256,15 +256,15 @@ describe('Team', () => {
     });
 
     test('Should copy', () => {
-      let theOriginal = ensembleTeam()
-      let theCopy = theOriginal.copy()
-      expect(theCopy).toStrictEqual(theOriginal)
-      expect(theCopy).not.toBe(theOriginal)
-    })
+      const theOriginal = ensembleTeam();
+      const theCopy = theOriginal.copy();
+      expect(theCopy).toStrictEqual(theOriginal);
+      expect(theCopy).not.toBe(theOriginal);
+    });
 
     test('Should get type', () => {
-      const team = ensembleTeam()
-      expect(team.getType()).toStrictEqual<TeamType>('Ensemble')
-    })
+      const team = ensembleTeam();
+      expect(team.getType()).toStrictEqual<TeamType>('Ensemble');
+    });
   });
 });
