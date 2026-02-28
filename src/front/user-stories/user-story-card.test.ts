@@ -1,5 +1,5 @@
-import {flushPromises, shallowMount, type VueWrapper} from '@vue/test-utils';
-import {describe, expect, test} from 'vitest';
+import { flushPromises, shallowMount, type VueWrapper } from '@vue/test-utils';
+import { describe, expect, test } from 'vitest';
 import RemoveButton from '../shared/remove-button.vue';
 import type Slider from '../shared/slider.vue';
 import UserStoryCard from './user-story-card.vue';

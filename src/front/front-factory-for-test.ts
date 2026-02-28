@@ -1,4 +1,4 @@
-import type {Developer, TeamModification, UserStory} from './form-store.ts';
+import type { Developer, TeamModification, UserStory } from './form-store.ts';
 
 export const developer = (option: Partial<Developer> = {}): Developer => ({
   id: 0,

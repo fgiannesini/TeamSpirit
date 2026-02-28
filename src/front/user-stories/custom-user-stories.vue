@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {useFormStore} from '../form-store.ts';
+import { useFormStore } from '../form-store.ts';
 import AddButton from '../shared/add-button.vue';
 import UserStoryCard from './user-story-card.vue';
 

@@ -1,14 +1,20 @@
-import {defineStore} from 'pinia';
-import {type Backlog, copy} from '../simulate/backlog.ts';
-import type {TimeEvent} from '../simulate/events.ts';
-import {createBacklog, createThread, ensembleTeam, parallelTeam, todo,} from '../simulate/factory.ts';
-import type {StructureEvent} from '../simulate/simulation-structure.ts';
-import {computeStatEvents, type StatEvent} from '../simulate/stats.ts';
-import type {Team, TeamType} from '../simulate/team.ts';
-import {simulate} from "../simulate/simulation.ts";
-import {noBugGenerator} from "../simulate/bug-generator.ts";
-import {noTeamModificator} from "../simulate/team-modificator.ts";
-import {noPriorityModificator} from "../simulate/priority-modificator.ts";
+import { defineStore } from 'pinia';
+import { type Backlog, copy } from '../simulate/backlog.ts';
+import { noBugGenerator } from '../simulate/bug-generator.ts';
+import type { TimeEvent } from '../simulate/events.ts';
+import {
+  createBacklog,
+  createThread,
+  ensembleTeam,
+  parallelTeam,
+  todo,
+} from '../simulate/factory.ts';
+import { noPriorityModificator } from '../simulate/priority-modificator.ts';
+import { simulate } from '../simulate/simulation.ts';
+import type { StructureEvent } from '../simulate/simulation-structure.ts';
+import { computeStatEvents, type StatEvent } from '../simulate/stats.ts';
+import type { Team, TeamType } from '../simulate/team.ts';
+import { noTeamModificator } from '../simulate/team-modificator.ts';
 
 const tomorrow = (): Date => {
   const date = new Date();
@@ -181,26 +187,27 @@ export const useFormStore = defineStore('form', {
         },
       ];
     },
-    runSimulation(
-        iterationCount: number,
-      inputs?: SimulationInputs[] ,
-    ): void {
-      const resolvedInputs = inputs ?? this.toSimulationInputs()
-      this.simulationOutputs = Array.from({ length: iterationCount })
-          .flatMap(() =>
-              resolvedInputs.map(({ backlog, team }) => {
-            let { timeEvents, structureEvents } = simulate(
-                copy(backlog),
-                team.copy(),
-                noBugGenerator,
-                noTeamModificator,
-                noPriorityModificator,
+    runSimulation(iterationCount: number, inputs?: SimulationInputs[]): void {
+      const resolvedInputs = inputs ?? this.toSimulationInputs();
+      this.simulationOutputs = Array.from({ length: iterationCount }).flatMap(
+        () =>
+          resolvedInputs.map(({ backlog, team }) => {
+            const { timeEvents, structureEvents } = simulate(
+              copy(backlog),
+              team.copy(),
+              noBugGenerator,
+              noTeamModificator,
+              noPriorityModificator,
             );
             const statEvents = computeStatEvents(timeEvents);
             return {
-              timeEvents, statEvents, structureEvents, teamType:team.getType()
+              timeEvents,
+              statEvents,
+              structureEvents,
+              teamType: team.getType(),
             };
-          }))
+          }),
+      );
     },
   },
 });

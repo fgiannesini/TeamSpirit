@@ -1,5 +1,9 @@
-import {type DOMWrapper, shallowMount, type VueWrapper,} from '@vue/test-utils';
-import {describe, expect, test} from 'vitest';
+import {
+  type DOMWrapper,
+  shallowMount,
+  type VueWrapper,
+} from '@vue/test-utils';
+import { describe, expect, test } from 'vitest';
 import Selector from './selector.vue';
 
 describe('Selector', () => {

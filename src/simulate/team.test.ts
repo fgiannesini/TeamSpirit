@@ -1,6 +1,11 @@
-import {describe, expect, test} from 'vitest';
-import {createThread, done, ensembleTeam, parallelTeam} from './factory.ts';
-import {EnsembleTeam, ParallelTeam, type Team, type TeamType,} from './team.ts';
+import { describe, expect, test } from 'vitest';
+import { createThread, done, ensembleTeam, parallelTeam } from './factory.ts';
+import {
+  EnsembleTeam,
+  ParallelTeam,
+  type Team,
+  type TeamType,
+} from './team.ts';
 
 describe('Team', () => {
   describe('Parallel team', () => {

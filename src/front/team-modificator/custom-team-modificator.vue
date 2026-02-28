@@ -28,7 +28,7 @@
   </article>
 </template>
 <script setup lang="ts">
-import {useFormStore} from '../form-store.ts';
+import { useFormStore } from '../form-store.ts';
 import AddButton from '../shared/add-button.vue';
 import PeriodCard from './period-card.vue';
 

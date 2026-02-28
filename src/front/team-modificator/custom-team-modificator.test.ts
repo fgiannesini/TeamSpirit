@@ -1,8 +1,8 @@
-import {createTestingPinia} from '@pinia/testing';
-import {shallowMount, type VueWrapper} from '@vue/test-utils';
-import {describe, expect, test} from 'vitest';
-import {type Period, type State, useFormStore} from '../form-store.ts';
-import {developer, teamModification} from '../front-factory-for-test.ts';
+import { createTestingPinia } from '@pinia/testing';
+import { shallowMount, type VueWrapper } from '@vue/test-utils';
+import { describe, expect, test } from 'vitest';
+import { type Period, type State, useFormStore } from '../form-store.ts';
+import { developer, teamModification } from '../front-factory-for-test.ts';
 import AddButton from '../shared/add-button.vue';
 import CustomTeamModificator from './custom-team-modificator.vue';
 import PeriodCard from './period-card.vue';

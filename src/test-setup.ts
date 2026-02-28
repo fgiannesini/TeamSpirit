@@ -1,5 +1,5 @@
-import {config} from '@vue/test-utils';
-import {type ConcreteComponent, defineComponent} from 'vue';
+import { config } from '@vue/test-utils';
+import { type ConcreteComponent, defineComponent } from 'vue';
 import Selector from './front/shared/selector.vue';
 
 const createSelectorStub = (): ReturnType<typeof defineComponent> => {

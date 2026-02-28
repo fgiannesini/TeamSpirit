@@ -1,8 +1,8 @@
-import {createTestingPinia} from '@pinia/testing';
-import {flushPromises, shallowMount, type VueWrapper} from '@vue/test-utils';
-import {describe, expect, test} from 'vitest';
-import {type State, useFormStore} from '../form-store.ts';
-import {developer} from '../front-factory-for-test.ts';
+import { createTestingPinia } from '@pinia/testing';
+import { flushPromises, shallowMount, type VueWrapper } from '@vue/test-utils';
+import { describe, expect, test } from 'vitest';
+import { type State, useFormStore } from '../form-store.ts';
+import { developer } from '../front-factory-for-test.ts';
 import AddButton from '../shared/add-button.vue';
 import CustomTeam from './custom-team.vue';
 import type DeveloperCard from './developer-card.vue';

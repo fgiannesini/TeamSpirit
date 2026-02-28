@@ -1,4 +1,4 @@
-import type {UserStory} from './user-story.ts';
+import type { UserStory } from './user-story.ts';
 
 const buildMob = (allActiveThreads: Thread[]): Thread[] => {
   const sum = allActiveThreads

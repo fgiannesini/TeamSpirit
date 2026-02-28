@@ -10,7 +10,7 @@
   </fieldset>
 </template>
 <script setup lang="ts">
-import {useFormStore} from '../form-store.ts';
+import { useFormStore } from '../form-store.ts';
 import Slider from '../shared/slider.vue';
 
 const formStore = useFormStore();

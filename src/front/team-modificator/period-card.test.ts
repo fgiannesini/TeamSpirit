@@ -1,6 +1,6 @@
-import {flushPromises, shallowMount, type VueWrapper} from '@vue/test-utils';
-import {describe, expect, test} from 'vitest';
-import {developer} from '../front-factory-for-test.ts';
+import { flushPromises, shallowMount, type VueWrapper } from '@vue/test-utils';
+import { describe, expect, test } from 'vitest';
+import { developer } from '../front-factory-for-test.ts';
 import RemoveButton from '../shared/remove-button.vue';
 import PeriodCard from './period-card.vue';
 

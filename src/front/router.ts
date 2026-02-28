@@ -1,4 +1,4 @@
-import {createRouter, createWebHistory} from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 import Form from './form.vue';
 import Play from './play.vue';
 import Simulation from './simulation/simulation.vue';

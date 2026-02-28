@@ -1,17 +1,26 @@
-import {describe, expect, test, vitest} from 'vitest';
+import { describe, expect, test, vitest } from 'vitest';
 import {
-    addUserStory,
-    type Backlog,
-    copy,
-    getNextUserStory,
-    resetUserStoriesRemainings,
-    retrieveInProgressUserStories,
-    retrieveInReviewUserStories,
-    shouldGenerateBug,
-    userStoriesWithSomeReviews,
+  addUserStory,
+  type Backlog,
+  copy,
+  getNextUserStory,
+  resetUserStoriesRemainings,
+  retrieveInProgressUserStories,
+  retrieveInReviewUserStories,
+  shouldGenerateBug,
+  userStoriesWithSomeReviews,
 } from './backlog.ts';
-import {createBacklog, createThread, done, ensembleTeam, inProgress, inReview, todo, toReview,} from './factory.ts';
-import {idle, type UserStory} from './user-story.ts';
+import {
+  createBacklog,
+  createThread,
+  done,
+  ensembleTeam,
+  inProgress,
+  inReview,
+  todo,
+  toReview,
+} from './factory.ts';
+import { idle, type UserStory } from './user-story.ts';
 
 describe('Backlog', () => {
   test('Should get idle by default', () => {
