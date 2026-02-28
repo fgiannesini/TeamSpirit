@@ -69,6 +69,23 @@ export type SimulationOutputs = {
   statEvents: StatEvent[];
 };
 
+type SimulationProviders = {
+  userStoriesCount: number;
+  complexityGenerator: () => number;
+  reviewComplexityGenerator: () => number;
+  priorityGenerator: () => number;
+};
+
+type TeamProvider = {
+  teamCount: number;
+  experienceGenerator: () => number;
+};
+
+type ToSimulationInputsOptions = {
+  providers?: Partial<SimulationProviders>;
+  teamProvider?: Partial<TeamProvider>;
+};
+
 export const useFormStore = defineStore('form', {
   state: (): State => ({
     teamMode: 'notSet',
@@ -132,27 +149,29 @@ export const useFormStore = defineStore('form', {
       this.userStories = this.userStories.filter(({ id }) => id !== targetId);
     },
     toSimulationInputs(
-      userStoryProviders = {
-        userStoriesCount: randomInt(Math.random, 100),
-        complexityGenerator: () => randomInt(Math.random, 10),
-        reviewComplexityGenerator: () => randomInt(Math.random, 10),
-        priorityGenerator: () => randomInt(Math.random, 10),
-      },
+      options: ToSimulationInputsOptions = {},
     ): SimulationInputs[] {
       let backlog: Backlog;
       if (this.userStoriesMode === 'random') {
+        const providers: SimulationProviders = {
+          userStoriesCount: randomInt(Math.random, 100),
+          complexityGenerator: () => randomInt(Math.random, 10),
+          reviewComplexityGenerator: () => randomInt(Math.random, 10),
+          priorityGenerator: () => randomInt(Math.random, 10),
+          ...options.providers,
+        };
         backlog = createBacklog({
           userStoriesRemaining: Array.from(
-            { length: userStoryProviders.userStoriesCount },
+            { length: providers.userStoriesCount },
             (_, index) =>
               todo({
                 id: index,
-                complexity: userStoryProviders.complexityGenerator(),
+                complexity: providers.complexityGenerator(),
                 review: {
                   reviewers: new Map(),
-                  reviewComplexity: userStoryProviders.reviewComplexityGenerator(),
+                  reviewComplexity: providers.reviewComplexityGenerator(),
                 },
-                priority: userStoryProviders.priorityGenerator(),
+                priority: providers.priorityGenerator(),
               }),
           ),
         });
@@ -173,9 +192,24 @@ export const useFormStore = defineStore('form', {
         });
       }
 
-      const threads = this.developers.map((developer) =>
-        createThread({ id: developer.id, power: developer.experience }),
-      );
+      let threads;
+      if (this.teamMode === 'random') {
+        const teamProvider: TeamProvider = {
+          teamCount: randomInt(Math.random, 10),
+          experienceGenerator: () => randomInt(Math.random, 7),
+          ...options.teamProvider,
+        };
+        threads = Array.from({ length: teamProvider.teamCount }, (_, index) =>
+          createThread({
+            id: index,
+            power: teamProvider.experienceGenerator(),
+          }),
+        );
+      } else {
+        threads = this.developers.map((developer) =>
+          createThread({ id: developer.id, power: developer.experience }),
+        );
+      }
       return [
         {
           team: parallelTeam(threads, this.reviewers),
@@ -191,13 +225,13 @@ export const useFormStore = defineStore('form', {
       this.simulationOutputs = Array.from({ length: iterationCount }).flatMap(
         () => {
           const resolvedInputs = inputs ?? this.toSimulationInputs();
-          return resolvedInputs.map(({backlog, team}) => {
-            const {timeEvents, structureEvents} = simulate(
-                copy(backlog),
-                team.copy(),
-                noBugGenerator,
-                noTeamModificator,
-                noPriorityModificator,
+          return resolvedInputs.map(({ backlog, team }) => {
+            const { timeEvents, structureEvents } = simulate(
+              copy(backlog),
+              team.copy(),
+              noBugGenerator,
+              noTeamModificator,
+              noPriorityModificator,
             );
             const statEvents = computeStatEvents(timeEvents);
             return {

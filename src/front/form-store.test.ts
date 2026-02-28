@@ -24,8 +24,7 @@ import {
 describe('Form store', () => {
   beforeEach(() => {
     const { simulateMock, computeStatEventsMock } = vi.hoisted(() => ({
-      simulateMock: vi.fn<typeof simulate>()
-          .mockReturnValue({
+      simulateMock: vi.fn<typeof simulate>().mockReturnValue({
         timeEvents: [
           { time: 1, state: 'InProgress', threadId: 0, userStoryId: 0 },
         ],
@@ -38,9 +37,10 @@ describe('Form store', () => {
           },
         ],
       }),
-      computeStatEventsMock: vi.fn<typeof computeStatEvents>()
-          .mockReturnValueOnce([{ time: 1, leadTime: 1 }])
-          .mockReturnValue([{ time: 1, leadTime: 0.7 }])
+      computeStatEventsMock: vi
+        .fn<typeof computeStatEvents>()
+        .mockReturnValueOnce([{ time: 1, leadTime: 1 }])
+        .mockReturnValue([{ time: 1, leadTime: 0.7 }]),
     }));
 
     vi.mock('../simulate/simulation.ts', () => ({
@@ -360,19 +360,21 @@ describe('Form store', () => {
         userStoriesMode: 'random',
       });
       const simulationInputs = store.toSimulationInputs({
-        userStoriesCount: 2,
-        complexityGenerator: vi
-          .fn<typeof Math.random>()
-          .mockReturnValueOnce(2)
-          .mockReturnValue(3),
-        reviewComplexityGenerator: vi
-          .fn<typeof Math.random>()
-          .mockReturnValueOnce(1)
-          .mockReturnValue(2),
-        priorityGenerator: vi
-          .fn<typeof Math.random>()
-          .mockReturnValueOnce(1)
-          .mockReturnValue(2),
+        providers: {
+          userStoriesCount: 2,
+          complexityGenerator: vi
+            .fn<typeof Math.random>()
+            .mockReturnValueOnce(2)
+            .mockReturnValue(3),
+          reviewComplexityGenerator: vi
+            .fn<typeof Math.random>()
+            .mockReturnValueOnce(1)
+            .mockReturnValue(2),
+          priorityGenerator: vi
+            .fn<typeof Math.random>()
+            .mockReturnValueOnce(1)
+            .mockReturnValue(2),
+        },
       });
       expect(simulationInputs[0].backlog).toStrictEqual(
         createBacklog({
@@ -402,6 +404,37 @@ describe('Form store', () => {
         simulationInputs[1].backlog,
       );
     });
+
+    test('Should generate random team', () => {
+      const store = useFormStore();
+      store.$patch({
+        teamMode: 'random',
+      });
+      const simulationInputs = store.toSimulationInputs({
+        teamProvider: {
+          teamCount: 2,
+          experienceGenerator: vi
+            .fn()
+            .mockReturnValueOnce(1)
+            .mockReturnValue(2),
+        },
+      });
+      expect(simulationInputs[0].team).toStrictEqual(
+        parallelTeam(
+          [
+            createThread({ id: 0, power: 1 }),
+            createThread({ id: 1, power: 2 }),
+          ],
+          0,
+        ),
+      );
+      expect(simulationInputs[1].team).toStrictEqual(
+        ensembleTeam([
+          createThread({ id: 0, power: 1 }),
+          createThread({ id: 1, power: 2 }),
+        ]),
+      );
+    });
   });
   describe('Simulation', () => {
     test('Should run simulation and store in state', () => {
@@ -413,7 +446,7 @@ describe('Form store', () => {
         },
       ]);
       expect(
-          store.$state.simulationOutputs[0],
+        store.$state.simulationOutputs[0],
       ).toStrictEqual<SimulationOutputs>({
         teamType: 'Parallel',
         timeEvents: [
@@ -429,7 +462,9 @@ describe('Form store', () => {
         ],
         statEvents: [{ time: 1, leadTime: 1 }],
       });
-      expect(store.$state.simulationOutputs[1]).toStrictEqual<SimulationOutputs>({
+      expect(
+        store.$state.simulationOutputs[1],
+      ).toStrictEqual<SimulationOutputs>({
         teamType: 'Parallel',
         timeEvents: [
           { time: 1, state: 'InProgress', threadId: 0, userStoryId: 0 },
@@ -448,11 +483,9 @@ describe('Form store', () => {
 
     test('Should get new inputs on each iteration', () => {
       const store = useFormStore();
-      store.toSimulationInputs=vi.fn().mockReturnValue([])
+      store.toSimulationInputs = vi.fn().mockReturnValue([]);
       store.runSimulation(2);
-      expect(
-          store.toSimulationInputs
-      ).toHaveBeenCalledTimes(2)
+      expect(store.toSimulationInputs).toHaveBeenCalledTimes(2);
     });
-  })
+  });
 });
