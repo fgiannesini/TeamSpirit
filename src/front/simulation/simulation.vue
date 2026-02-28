@@ -1,14 +1,8 @@
 <script setup lang="ts">
-import {ref} from 'vue';
-import {useRouter} from 'vue-router';
-import {copy} from '../../simulate/backlog.ts';
-import {noBugGenerator} from '../../simulate/bug-generator.ts';
-import {noPriorityModificator} from '../../simulate/priority-modificator.ts';
-import {simulate} from '../../simulate/simulation.ts';
-import {computeStatEvents} from '../../simulate/stats.ts';
-import type {TeamType} from '../../simulate/team.ts';
-import {noTeamModificator} from '../../simulate/team-modificator.ts';
-import {useFormStore} from '../form-store.ts';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import type { TeamType } from '../../simulate/team.ts';
+import { useFormStore } from '../form-store.ts';
 import Resume from '../resume/resume.vue';
 
 let store = useFormStore();
@@ -23,25 +17,18 @@ type Line = {
 const lines = ref<Line[]>([]);
 const iterationCountRef = ref<number>(1);
 const launchSimulation = (iterationCount: number) => {
-  lines.value = Array.from({ length: iterationCount }).flatMap(() =>
-    store.toSimulationInputs().map(({ backlog, team }) => {
-      let { timeEvents, structureEvents } = simulate(
-        copy(backlog),
-        team.copy(),
-        noBugGenerator,
-        noTeamModificator,
-        noPriorityModificator,
-      );
-      const statEvents = computeStatEvents(timeEvents);
+  store.runSimulation(iterationCount);
+  lines.value = store.simulationOutputs.map(
+    ({ statEvents, structureEvents, teamType }) => {
       return {
         totalTime: statEvents.length,
         leadTime: statEvents[statEvents.length - 1]?.leadTime,
         userStoryCount: structureEvents.filter(
           ({ action }) => action === 'CreateUserStory',
         ).length,
-        teamType: team.getType(),
+        teamType,
       };
-    }),
+    },
   );
 };
 const router = useRouter();

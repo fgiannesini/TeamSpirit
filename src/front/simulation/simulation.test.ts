@@ -1,15 +1,9 @@
-import {createTestingPinia} from '@pinia/testing';
-import {flushPromises, shallowMount} from '@vue/test-utils';
-import {describe, expect, test, vi} from 'vitest';
-import {noBugGenerator} from '../../simulate/bug-generator.ts';
-import {createBacklog, ensembleTeam, parallelTeam,} from '../../simulate/factory.ts';
-import {noPriorityModificator} from '../../simulate/priority-modificator.ts';
-import type {simulate} from '../../simulate/simulation.ts';
-import type {computeStatEvents} from '../../simulate/stats.ts';
-import {noTeamModificator} from '../../simulate/team-modificator.ts';
-import {type State, useFormStore} from '../form-store.ts';
+import { createTestingPinia } from '@pinia/testing';
+import { flushPromises, shallowMount } from '@vue/test-utils';
+import { describe, expect, test } from 'vitest';
+import { type State, useFormStore } from '../form-store.ts';
 import Resume from '../resume/resume.vue';
-import {createTestRouter} from '../router-test.ts';
+import { createTestRouter } from '../router-test.ts';
 import Simulation from './simulation.vue';
 
 describe('Simulation', () => {
@@ -49,53 +43,54 @@ describe('Simulation', () => {
   });
 
   describe('Launch', () => {
-    const { simulateMock, computeStatEventsMock } = vi.hoisted(() => ({
-      simulateMock: vi.fn<typeof simulate>(),
-      computeStatEventsMock: vi.fn<typeof computeStatEvents>(),
-    }));
-
     const createWrapperWithMocks = async () => {
       const { wrapper, router } = await createWrapper();
-      simulateMock.mockReturnValue({
-        timeEvents: [],
-        structureEvents: [
+      useFormStore().$patch({
+        simulationOutputs: [
           {
-            time: 1,
-            id: 0,
-            name: 'thread1',
-            action: 'CreateThread',
+            teamType: 'Parallel',
+            statEvents: [
+              { time: 1, leadTime: 1 },
+              { time: 2, leadTime: 0.5 },
+            ],
+            timeEvents: [],
+            structureEvents: [
+              {
+                time: 1,
+                id: 0,
+                name: 'thread1',
+                action: 'CreateThread',
+              },
+              {
+                time: 1,
+                id: 0,
+                name: 'userStory0',
+                action: 'CreateUserStory',
+              },
+            ],
           },
           {
-            time: 1,
-            id: 0,
-            name: 'userStory0',
-            action: 'CreateUserStory',
+            teamType: 'Ensemble',
+            statEvents: [{ time: 1, leadTime: 0.7 }],
+            timeEvents: [],
+            structureEvents: [
+              {
+                time: 1,
+                id: 0,
+                name: 'thread1',
+                action: 'CreateThread',
+              },
+              {
+                time: 1,
+                id: 0,
+                name: 'userStory0',
+                action: 'CreateUserStory',
+              },
+            ],
           },
         ],
       });
-      computeStatEventsMock
-        .mockReturnValueOnce([
-          { time: 1, leadTime: 1 },
-          { time: 2, leadTime: 0.5 },
-        ])
-        .mockReturnValue([{ time: 1, leadTime: 0.7 }]);
-      vi.mock('../../simulate/simulation.ts', () => ({
-        simulate: simulateMock,
-      }));
-      vi.mock('../../simulate/stats.ts', () => ({
-        computeStatEvents: computeStatEventsMock,
-      }));
-      useFormStore().toSimulationInputs = vi.fn().mockReturnValue([
-        {
-          backlog: createBacklog(),
-          team: parallelTeam(),
-        },
-        {
-          backlog: createBacklog(),
-          team: ensembleTeam(),
-        },
-      ]);
-      return { wrapper, simulateMock, computeStatEventsMock, router };
+      return { wrapper, router };
     };
 
     test('Should display a launch button', async () => {
@@ -115,27 +110,6 @@ describe('Simulation', () => {
       expect(wrapper.find('[data-testid=iteration-count-input]').exists()).toBe(
         true,
       );
-    });
-
-    test('Should simulate on launch click', async () => {
-      const { wrapper, simulateMock } = await createWrapperWithMocks();
-      const launchButton = wrapper.get('[data-testid=launch-button]');
-      await launchButton.trigger('click');
-
-      expect(simulateMock).toHaveBeenCalledWith(
-        createBacklog(),
-        parallelTeam(),
-        noBugGenerator,
-        noTeamModificator,
-        noPriorityModificator,
-      );
-    });
-
-    test('Should simulate stats on launch clic', async () => {
-      const { wrapper, computeStatEventsMock } = await createWrapperWithMocks();
-      const launchButton = wrapper.get('[data-testid=launch-button]');
-      await launchButton.trigger('click');
-      expect(computeStatEventsMock).toHaveBeenCalledWith([]);
     });
 
     test('Should display stats container and header', async () => {
@@ -216,7 +190,7 @@ describe('Simulation', () => {
       const launchButton = wrapper.get('[data-testid=launch-button]');
       await launchButton.trigger('click');
 
-      expect(wrapper.findAll('tbody tr').length).toStrictEqual(4);
+      expect(useFormStore().runSimulation).toHaveBeenCalledWith(2);
     });
 
     test('Should generate one iteration by default', async () => {
@@ -225,7 +199,7 @@ describe('Simulation', () => {
       const launchButton = wrapper.get('[data-testid=launch-button]');
       await launchButton.trigger('click');
 
-      expect(wrapper.findAll('tbody tr').length).toStrictEqual(2);
+      expect(useFormStore().runSimulation).toHaveBeenCalledWith(1);
     });
   });
 });
