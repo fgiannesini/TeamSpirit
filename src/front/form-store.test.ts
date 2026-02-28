@@ -402,7 +402,8 @@ describe('Form store', () => {
         simulationInputs[1].backlog,
       );
     });
-
+  });
+  describe('Simulation', () => {
     test('Should run simulation and store in state', () => {
       const store = useFormStore();
       store.runSimulation(2, [
@@ -412,7 +413,7 @@ describe('Form store', () => {
         },
       ]);
       expect(
-        store.$state.simulationOutputs[0],
+          store.$state.simulationOutputs[0],
       ).toStrictEqual<SimulationOutputs>({
         teamType: 'Parallel',
         timeEvents: [
@@ -453,5 +454,5 @@ describe('Form store', () => {
           store.toSimulationInputs
       ).toHaveBeenCalledTimes(2)
     });
-  });
+  })
 });

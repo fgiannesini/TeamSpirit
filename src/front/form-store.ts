@@ -132,7 +132,7 @@ export const useFormStore = defineStore('form', {
       this.userStories = this.userStories.filter(({ id }) => id !== targetId);
     },
     toSimulationInputs(
-      providers = {
+      userStoryProviders = {
         userStoriesCount: randomInt(Math.random, 100),
         complexityGenerator: () => randomInt(Math.random, 10),
         reviewComplexityGenerator: () => randomInt(Math.random, 10),
@@ -143,16 +143,16 @@ export const useFormStore = defineStore('form', {
       if (this.userStoriesMode === 'random') {
         backlog = createBacklog({
           userStoriesRemaining: Array.from(
-            { length: providers.userStoriesCount },
+            { length: userStoryProviders.userStoriesCount },
             (_, index) =>
               todo({
                 id: index,
-                complexity: providers.complexityGenerator(),
+                complexity: userStoryProviders.complexityGenerator(),
                 review: {
                   reviewers: new Map(),
-                  reviewComplexity: providers.reviewComplexityGenerator(),
+                  reviewComplexity: userStoryProviders.reviewComplexityGenerator(),
                 },
-                priority: providers.priorityGenerator(),
+                priority: userStoryProviders.priorityGenerator(),
               }),
           ),
         });
