@@ -6,7 +6,7 @@ import Simulation from './simulation/simulation.vue';
 export const routes = [
   { path: '/main', component: Form },
   { path: '/simulate', component: Simulation },
-  { path: '/play', component: Play },
+  { path: '/play/:id', component: Play, props: true },
 ];
 
 export const router = createRouter({

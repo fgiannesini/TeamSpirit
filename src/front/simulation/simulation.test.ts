@@ -176,7 +176,7 @@ describe('Simulation', () => {
 
       await wrapper.get('[data-testid=runner-button-0]').trigger('click');
       await flushPromises();
-      expect(router.currentRoute.value.path).toBe('/play');
+      expect(router.currentRoute.value.path).toBe('/play/0');
     });
 
     test('Should generate several iterations', async () => {

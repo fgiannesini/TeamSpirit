@@ -32,8 +32,8 @@ const launchSimulation = (iterationCount: number) => {
   );
 };
 const router = useRouter();
-const toPlay = async () => {
-  await router.push('/play');
+const toPlay = async (id: number) => {
+  await router.push(`/play/${id}`);
 };
 </script>
 
@@ -55,7 +55,7 @@ const toPlay = async () => {
         <td :data-testid="`stats-lead-time-${index}`">{{ line.leadTime }}</td>
         <td :data-testid="`user-story-count-${index}`">{{ line.userStoryCount }}</td>
         <td :data-testid="`team-type-${index}`">{{ line.teamType }}</td>
-        <td :data-testid="`runner-${index}`"><button :data-testid="`runner-button-${index}`" class="transparent circle small" @click="toPlay();"><i>play_arrow</i></button></td>
+        <td :data-testid="`runner-${index}`"><button :data-testid="`runner-button-${index}`" class="transparent circle small" @click="toPlay(index);"><i>play_arrow</i></button></td>
       </tr>
       </tbody>
     </table>
