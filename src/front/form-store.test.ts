@@ -24,25 +24,25 @@ import {
 describe('Form store', () => {
   beforeEach(() => {
     const { simulateMock, computeStatEventsMock } = vi.hoisted(() => ({
-      simulateMock: vi.fn<typeof simulate>(),
-      computeStatEventsMock: vi.fn<typeof computeStatEvents>(),
+      simulateMock: vi.fn<typeof simulate>()
+          .mockReturnValue({
+        timeEvents: [
+          { time: 1, state: 'InProgress', threadId: 0, userStoryId: 0 },
+        ],
+        structureEvents: [
+          {
+            time: 1,
+            id: 0,
+            name: 'thread',
+            action: 'CreateThread',
+          },
+        ],
+      }),
+      computeStatEventsMock: vi.fn<typeof computeStatEvents>()
+          .mockReturnValueOnce([{ time: 1, leadTime: 1 }])
+          .mockReturnValue([{ time: 1, leadTime: 0.7 }])
     }));
-    simulateMock.mockReturnValue({
-      timeEvents: [
-        { time: 1, state: 'InProgress', threadId: 0, userStoryId: 0 },
-      ],
-      structureEvents: [
-        {
-          time: 1,
-          id: 0,
-          name: 'thread',
-          action: 'CreateThread',
-        },
-      ],
-    });
-    computeStatEventsMock
-      .mockReturnValueOnce([{ time: 1, leadTime: 1 }])
-      .mockReturnValue([{ time: 1, leadTime: 0.7 }]);
+
     vi.mock('../simulate/simulation.ts', () => ({
       simulate: simulateMock,
     }));
@@ -428,9 +428,30 @@ describe('Form store', () => {
         ],
         statEvents: [{ time: 1, leadTime: 1 }],
       });
-      expect(store.$state.simulationOutputs[0]).toStrictEqual(
-        store.$state.simulationOutputs[1],
-      );
+      expect(store.$state.simulationOutputs[1]).toStrictEqual<SimulationOutputs>({
+        teamType: 'Parallel',
+        timeEvents: [
+          { time: 1, state: 'InProgress', threadId: 0, userStoryId: 0 },
+        ],
+        structureEvents: [
+          {
+            time: 1,
+            id: 0,
+            name: 'thread',
+            action: 'CreateThread',
+          },
+        ],
+        statEvents: [{ time: 1, leadTime: 0.7 }],
+      });
+    });
+
+    test('Should get new inputs on each iteration', () => {
+      const store = useFormStore();
+      store.toSimulationInputs=vi.fn().mockReturnValue([])
+      store.runSimulation(2);
+      expect(
+          store.toSimulationInputs
+      ).toHaveBeenCalledTimes(2)
     });
   });
 });

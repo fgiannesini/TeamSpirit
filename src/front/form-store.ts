@@ -188,16 +188,16 @@ export const useFormStore = defineStore('form', {
       ];
     },
     runSimulation(iterationCount: number, inputs?: SimulationInputs[]): void {
-      const resolvedInputs = inputs ?? this.toSimulationInputs();
       this.simulationOutputs = Array.from({ length: iterationCount }).flatMap(
-        () =>
-          resolvedInputs.map(({ backlog, team }) => {
-            const { timeEvents, structureEvents } = simulate(
-              copy(backlog),
-              team.copy(),
-              noBugGenerator,
-              noTeamModificator,
-              noPriorityModificator,
+        () => {
+          const resolvedInputs = inputs ?? this.toSimulationInputs();
+          return resolvedInputs.map(({backlog, team}) => {
+            const {timeEvents, structureEvents} = simulate(
+                copy(backlog),
+                team.copy(),
+                noBugGenerator,
+                noTeamModificator,
+                noPriorityModificator,
             );
             const statEvents = computeStatEvents(timeEvents);
             return {
@@ -206,7 +206,8 @@ export const useFormStore = defineStore('form', {
               structureEvents,
               teamType: team.getType(),
             };
-          }),
+          });
+        },
       );
     },
   },
