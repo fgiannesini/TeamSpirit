@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Form from './form.vue';
-import Play from './play.vue';
+import Play from './play/play.vue';
 import Simulation from './simulation/simulation.vue';
 
 export const routes = [
