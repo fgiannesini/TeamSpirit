@@ -14,22 +14,24 @@ type Line = {
   teamType: TeamType;
 };
 
-const lines = ref<Line[]>([]);
+const mapOutputs = () =>
+  store.simulationOutputs.map(({ statEvents, structureEvents, teamType }) => {
+    return {
+      totalTime: statEvents.length,
+      leadTime: statEvents[statEvents.length - 1]?.leadTime,
+      userStoryCount: structureEvents.filter(
+        ({ action }) => action === 'CreateUserStory',
+      ).length,
+      teamType,
+    };
+  });
+const lines = ref<Line[]>(mapOutputs());
+
 const iterationCountRef = ref<number>(1);
+
 const launchSimulation = (iterationCount: number) => {
   store.runSimulation(iterationCount);
-  lines.value = store.simulationOutputs.map(
-    ({ statEvents, structureEvents, teamType }) => {
-      return {
-        totalTime: statEvents.length,
-        leadTime: statEvents[statEvents.length - 1]?.leadTime,
-        userStoryCount: structureEvents.filter(
-          ({ action }) => action === 'CreateUserStory',
-        ).length,
-        teamType,
-      };
-    },
-  );
+  lines.value = mapOutputs();
 };
 const router = useRouter();
 const toPlay = async (id: number) => {

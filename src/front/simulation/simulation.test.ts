@@ -42,6 +42,32 @@ describe('Simulation', () => {
     });
   });
 
+  test('Should render existing outputs', async () => {
+    const { wrapper } = await createWrapper({
+      simulationOutputs: [
+        {
+          teamType: 'Parallel',
+          statEvents: [{ time: 1, leadTime: 1 }],
+          timeEvents: [],
+          structureEvents: [
+            {
+              time: 1,
+              id: 0,
+              name: 'thread1',
+              action: 'CreateThread',
+            },
+            {
+              time: 1,
+              id: 0,
+              name: 'userStory0',
+              action: 'CreateUserStory',
+            },
+          ],
+        },
+      ],
+    });
+    expect(wrapper.find('[data-testid=stats-total-time-0]').exists()).toBe(true);
+  });
   describe('Launch', () => {
     const createWrapperWithMocks = async () => {
       const { wrapper, router } = await createWrapper();
