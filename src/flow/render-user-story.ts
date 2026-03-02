@@ -7,6 +7,7 @@ export const createUserStory = (id: number, name: string): HTMLDivElement => {
   nameSpan.className = 'name';
   const userStoryHtmlElement = document.createElement('div');
   userStoryHtmlElement.id = `user-story-${id}`;
+  userStoryHtmlElement.setAttribute('data-testid', `user-story-${id}`);
   userStoryHtmlElement.className = 'userStory';
   userStoryHtmlElement.appendChild(nameSpan);
   return userStoryHtmlElement;

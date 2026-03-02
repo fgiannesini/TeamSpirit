@@ -4,17 +4,22 @@ import { getThread } from './selector.ts';
 const addThread = (threadNumber: number, name: string): HTMLDivElement => {
   const threadHtmlElement = document.createElement('div');
   threadHtmlElement.id = `thread${threadNumber}`;
+    threadHtmlElement.setAttribute('data-testid', `thread${threadNumber}`);
   threadHtmlElement.className = 'thread';
 
   const threadTitle = document.createElement('div');
   threadTitle.id = `thread-title-${threadNumber}`;
+    threadTitle.setAttribute('data-testid', `thread-title-${threadNumber}`);
   threadTitle.textContent = name;
 
   const threadContent = document.createElement('div');
   threadContent.id = `thread-user-story-${threadNumber}`;
+    threadContent.setAttribute('data-testid', `thread-user-story-${threadNumber}`);
 
   const threadState = document.createElement('div');
   threadState.id = `thread-state-${threadNumber}`;
+  threadState.setAttribute('data-testid', `thread-state-${threadNumber}`);
+
   threadState.textContent = 'Wait';
 
   threadHtmlElement.append(threadTitle, threadContent, threadState);
