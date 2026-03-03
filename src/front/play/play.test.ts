@@ -46,13 +46,9 @@ describe('Play', () => {
         },
       ],
     });
-    expect(wrapper.find("[data-testid='threads-container']").exists()).toBe(
-      true,
-    );
-    expect(wrapper.find("[data-testid='backlog-container']").exists()).toBe(
-      true,
-    );
-    expect(wrapper.find("[data-testid='done-container']").exists()).toBe(true);
+    expect(wrapper.find("[data-testid='threads']").exists()).toBe(true);
+    expect(wrapper.find("[data-testid='backlog']").exists()).toBe(true);
+    expect(wrapper.find("[data-testid='done']").exists()).toBe(true);
   });
 
   const createThread0 = (): StructureEvent => ({
@@ -80,15 +76,15 @@ describe('Play', () => {
           },
         ],
       });
-      expect(wrapper.get(`thread0`).classes).toContain('thread');
-      expect(wrapper.get(`thread-title-0`).text()).toStrictEqual('dev0');
-      expect(wrapper.find(`thread-user-story-0`).exists()).toBe(true);
-      expect(wrapper.find(`thread-state-0`).text()).toBe('Wait');
+      expect(wrapper.get(`[data-testid=thread0]`).classes()).toContain('thread');
+      expect(wrapper.get(`[data-testid=thread-title-0]`).text()).toStrictEqual('dev0');
+      expect(wrapper.find(`[data-testid=thread-user-story-0]`).exists()).toBe(true);
+      expect(wrapper.find(`[data-testid=thread-state-0]`).text()).toBe('Wait');
 
-      expect(wrapper.get(`thread1`).classes).toContain('thread');
-      expect(wrapper.get(`thread-title-1`).text()).toStrictEqual('dev1');
-      expect(wrapper.find(`thread-user-story-1`).exists()).toBe(true);
-      expect(wrapper.find(`thread-state-1`).text()).toBe('Wait');
+      expect(wrapper.get(`[data-testid=thread1]`).classes()).toContain('thread');
+      expect(wrapper.get(`[data-testid=thread-title-1]`).text()).toStrictEqual('dev1');
+      expect(wrapper.find(`[data-testid=thread-user-story-1]`).exists()).toBe(true);
+      expect(wrapper.find(`[data-testid=thread-state-1]`).text()).toBe('Wait');
     });
 
     test('Should set thread off on computation click', async () => {
@@ -106,12 +102,12 @@ describe('Play', () => {
         ],
       });
 
-      expect(wrapper.get(`thread0`).attributes('opacity')).toStrictEqual('');
+      expect(wrapper.get(`[data-testid=thread0]`).classes()).not.toContain('off');
 
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.advanceTimersToNextTimerAsync();
 
-      expect(wrapper.get(`thread0`).attributes('opacity')).toStrictEqual('50%');
+      expect(wrapper.get(`[data-testid=thread0]`).classes()).toContain('off');
     });
 
     test('Should set thread off on all computation click', async () => {
@@ -129,12 +125,12 @@ describe('Play', () => {
         ],
       });
 
-      expect(wrapper.get(`thread0`).attributes('opacity')).toStrictEqual('');
+      expect(wrapper.get(`[data-testid=thread0]`).attributes('opacity')).toStrictEqual('');
 
       await wrapper.get('[data-testid=compute-all]').trigger('click');
       await vi.runAllTimersAsync();
 
-      expect(wrapper.get(`thread0`).attributes('opacity')).toStrictEqual('50%');
+      expect(wrapper.get(`[data-testid=thread0]`).attributes('opacity')).toStrictEqual('50%');
     });
 
     test('Should set thread in on computation click', async () => {
@@ -149,12 +145,12 @@ describe('Play', () => {
         ],
       });
 
-      expect(wrapper.get(`thread0`).attributes('opacity')).toStrictEqual('');
+      expect(wrapper.get(`[data-testid=thread0]`).attributes('opacity')).toStrictEqual('');
 
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.advanceTimersToNextTimerAsync();
 
-      expect(wrapper.get(`thread0`).attributes('opacity')).toStrictEqual(
+      expect(wrapper.get(`[data-testid=thread0]`).attributes('opacity')).toStrictEqual(
         '100%',
       );
     });
@@ -171,12 +167,12 @@ describe('Play', () => {
         ],
       });
 
-      expect(wrapper.get(`thread0`).attributes('opacity')).toStrictEqual('');
+      expect(wrapper.get(`[data-testid=thread0]`).attributes('opacity')).toStrictEqual('');
 
       await wrapper.get('[data-testid=compute-all]').trigger('click');
       await vi.runAllTimersAsync();
 
-      expect(wrapper.get(`thread0`).attributes('opacity')).toStrictEqual(
+      expect(wrapper.get(`[data-testid=thread0]`).attributes('opacity')).toStrictEqual(
         '100%',
       );
     });
@@ -196,10 +192,10 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
 
       await vi.advanceTimersToNextTimerAsync();
-      expect(wrapper.find(`thread-state-0`).text()).toBe('Develop');
+      expect(wrapper.find(`[data-testid=thread-state-0]`).text()).toBe('Develop');
 
       await vi.advanceTimersToNextTimerAsync();
-      expect(wrapper.find(`thread-state-0`).text()).toBe('Develop');
+      expect(wrapper.find(`[data-testid=thread-state-0]`).text()).toBe('Develop');
     });
 
     test('Should set thread state to "Review" when in review', async () => {
@@ -217,10 +213,10 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
 
       await vi.advanceTimersToNextTimerAsync();
-      expect(wrapper.find(`thread-state-0`).text()).toBe('Review');
+      expect(wrapper.find(`[data-testid=thread-state-0]`).text()).toBe('Review');
 
       await vi.advanceTimersToNextTimerAsync();
-      expect(wrapper.find(`thread-state-0`).text()).toBe('Review');
+      expect(wrapper.find(`[data-testid=thread-state-0]`).text()).toBe('Review');
     });
 
     test('Should set thread state to "Develop" when to review', async () => {
@@ -238,7 +234,7 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
 
-      expect(wrapper.find(`thread-state-0`).text()).toBe('Develop');
+      expect(wrapper.find(`[data-testid=thread-state-0]`).text()).toBe('Develop');
     });
 
     test('Should set thread state to "Wait" when idle', async () => {
@@ -260,7 +256,7 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute-all]').trigger('click');
       await vi.runAllTimersAsync();
 
-      expect(wrapper.find(`thread-state-0`).text()).toBe('Wait');
+      expect(wrapper.find(`[data-testid=[thread-state-0]`).text()).toBe('Wait');
     });
   });
 
