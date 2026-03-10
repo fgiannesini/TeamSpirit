@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { renderStatEvents } from '../../flow/render-stats.ts';
 import {
   addThreads,
@@ -10,26 +11,29 @@ import { addUserStories } from '../../flow/render-user-story.ts';
 import {
   getBacklog,
   getCompute,
-  getComputeAll, getThread,
+  getComputeAll,
+  getThread,
   getThreads,
 } from '../../flow/selector.ts';
 import type { TimeEvent } from '../../simulate/events.ts';
 import type { StructureEvent } from '../../simulate/simulation-structure.ts';
 import type { StatEvent } from '../../simulate/stats.ts';
 import { useFormStore } from '../form-store.ts';
-import {ref} from "vue";
 
 const props = defineProps<{ id: number }>();
 const data = useFormStore().simulationOutputs[props.id];
 
 const threads = data.structureEvents
-    .filter(
-        (event): event is Extract<StructureEvent, { action: 'CreateThread' }> =>
-            event.action === 'CreateThread',
-    )
-    .map(({ id, name }) => ({
-      id, name, state: 'Wait', presence: ''
-    }));
+  .filter(
+    (event): event is Extract<StructureEvent, { action: 'CreateThread' }> =>
+      event.action === 'CreateThread',
+  )
+  .map(({ id, name }) => ({
+    id,
+    name,
+    state: 'Wait',
+    presence: '',
+  }));
 const buildUserStories = (
   structureEvents: StructureEvent[],
   timeCount: number,
@@ -72,7 +76,7 @@ const render = (
     computeButtonAll.disabled = true;
   });
 };
-const computeDisabled = ref(false)
+const computeDisabled = ref(false);
 const runNext = async () => {
   computeDisabled.value = true;
   currentTime++;
@@ -80,19 +84,29 @@ const runNext = async () => {
   renderStatEvents(data.statEvents, currentTime, maxTime);
   buildUserStories(data.structureEvents, currentTime + 1);
   data.structureEvents
-      .filter(({ action, time }) => action === 'ThreadOff' && time === currentTime + 1)
-      .forEach(({ id }) => {
-        const thread = threads.find(thread=> thread.id === id);
-        if (thread) {
-          thread.presence= 'off';
-        }
-      });
-  setThreadsOff(data.structureEvents, currentTime + 1);
-  setThreadsIn(data.structureEvents, currentTime + 1);
+    .filter(
+      ({ action, time }) => action === 'ThreadOff' && time === currentTime + 1,
+    )
+    .forEach(({ id }) => {
+      const thread = threads.find((thread) => thread.id === id);
+      if (thread) {
+        thread.presence = 'off';
+      }
+    });
+  data.structureEvents
+    .filter(
+      ({ action, time }) => action === 'ThreadIn' && time === currentTime + 1,
+    )
+    .forEach(({ id }) => {
+      const thread = threads.find((thread) => thread.id === id);
+      if (thread) {
+        thread.presence = '';
+      }
+    });
   if (maxTime !== currentTime) {
     computeDisabled.value = false;
   }
-}
+};
 render(data.timeEvents, data.statEvents, data.structureEvents);
 </script>
 
@@ -103,7 +117,7 @@ render(data.timeEvents, data.statEvents, data.structureEvents);
     <div>Lead Time: <span data-testid="lead-time" id="lead-time"></span></div>
   </div>
   <button id="compute" data-testid="compute" @click="runNext()" :disabled="computeDisabled">Play next</button>
-  <button id="compute-all" data-testid="compute-all">Play All</button>
+  <button id="compute-all" data-testid="compute-all" @click="runNext()">Play All</button>
   </div>
 
   <div data-testid="backlog" id="backlog" class="backlog"><span class="title">Backlog</span></div>
