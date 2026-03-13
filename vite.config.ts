@@ -6,7 +6,7 @@ export default defineConfig({
   root: './src',
   base: '/TeamSpirit/',
   build: {
-    rollupOptions: {
+    rolldownOptions: {
       input: {
         main: './src/main.html',
         index: './src/index.html',
