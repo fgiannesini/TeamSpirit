@@ -54,7 +54,7 @@ const render = (
   computeButton?.addEventListener('click', async () => {
     computeButton.disabled = true;
     currentTime++;
-    await renderTimeEvents(events, currentTime, 600);
+    await renderTimeEvents(events, currentTime, 600, threads);
     renderStatEvents(statEvents, currentTime, maxTime);
     buildUserStories(structureEvents, currentTime + 1);
     setThreadsOff(structureEvents, currentTime + 1);
@@ -68,7 +68,7 @@ const render = (
   computeButtonAll?.addEventListener('click', async () => {
     while (maxTime !== currentTime) {
       currentTime++;
-      await renderTimeEvents(events, currentTime, 300);
+      await renderTimeEvents(events, currentTime, 300, threads);
       renderStatEvents(statEvents, currentTime, maxTime);
       buildUserStories(structureEvents, currentTime + 1);
       setThreadsOff(structureEvents, currentTime + 1);

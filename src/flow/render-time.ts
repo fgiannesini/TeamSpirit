@@ -1,18 +1,18 @@
-import type { TimeEvent } from '../simulate/events.ts';
+import type {TimeEvent} from '../simulate/events.ts';
 import {
   getAllUserStories,
   getBacklog,
   getDone,
-  getThreadState,
   getThreadUserStoryContainer,
   getUserStory,
   getUserStoryOfThread,
 } from './selector.ts';
+import type {ThreadState, ThreadVue} from "../front/play/play.vue";
 
-const setThreadStateTo = (threadIndex: number, textContent: string): void => {
-  const threadState = getThreadState(threadIndex);
-  if (threadState) {
-    threadState.textContent = textContent;
+const setThreadStateTo = (threads: ThreadVue[], threadIndex: number, threadState: ThreadState): void => {
+  const thread = threads.find((thread) => thread.id === threadIndex);
+  if (thread) {
+    thread.state = threadState;
   }
 };
 
@@ -84,15 +84,15 @@ const handleDone = (currentEvent: TimeEvent): void => {
 };
 
 export const renderTimeEvents = async (
-  events: TimeEvent[],
-  time: number,
-  animationTime: number,
-): Promise<void> => {
+    events: TimeEvent[],
+    time: number,
+    animationTime: number,
+    threads: ThreadVue[]): Promise<void> => {
   const currentEvents = events.filter((event) => event.time === time);
   for (const currentEvent of currentEvents) {
     if (currentEvent.userStoryId === -1) {
       removeCurrentTaskOfThread(currentEvent);
-      setThreadStateTo(currentEvent.threadId, 'Wait');
+      setThreadStateTo(threads, currentEvent.threadId, 'Wait');
       continue;
     }
     switch (currentEvent.state) {
@@ -105,7 +105,7 @@ export const renderTimeEvents = async (
       }
       case 'InProgress': {
         handleInProgress(currentEvent);
-        setThreadStateTo(currentEvent.threadId, 'Develop');
+        setThreadStateTo(threads, currentEvent.threadId, 'Develop');
         break;
       }
       case 'Review': {
@@ -116,7 +116,7 @@ export const renderTimeEvents = async (
         }
         removeCurrentTaskOfThread(currentEvent);
         handleReview(currentEvent);
-        setThreadStateTo(currentEvent.threadId, 'Review');
+        setThreadStateTo(threads, currentEvent.threadId, 'Review');
         break;
       }
       case 'ToReview': {

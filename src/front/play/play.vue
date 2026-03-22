@@ -22,8 +22,15 @@ import { useFormStore } from '../form-store.ts';
 
 const props = defineProps<{ id: number }>();
 const data = useFormStore().simulationOutputs[props.id];
+export type ThreadState = 'Wait' | 'Develop' | 'Review';
+export type ThreadVue = {
+  id: number;
+  name: string;
+  state: ThreadState;
+  presence: string;
+};
 
-const threads = data.structureEvents
+const threads: ThreadVue[] = data.structureEvents
   .filter(
     (event): event is Extract<StructureEvent, { action: 'CreateThread' }> =>
       event.action === 'CreateThread',
@@ -68,7 +75,7 @@ const render = (
   computeButtonAll?.addEventListener('click', async () => {
     while (maxTime !== currentTime) {
       currentTime++;
-      await renderTimeEvents(events, currentTime, 300);
+      await renderTimeEvents(events, currentTime, 300, threads);
       renderStatEvents(statEvents, currentTime, maxTime);
       buildUserStories(structureEvents, currentTime + 1);
       setThreadsOff(structureEvents, currentTime + 1);
@@ -95,7 +102,7 @@ const setThreadOff = () => {
 const runNext = async () => {
   computeDisabled.value = true;
   currentTime++;
-  await renderTimeEvents(data.timeEvents, currentTime, 600);
+  await renderTimeEvents(data.timeEvents, currentTime, 600, threads);
   renderStatEvents(data.statEvents, currentTime, maxTime);
   buildUserStories(data.structureEvents, currentTime + 1);
   setThreadOff();

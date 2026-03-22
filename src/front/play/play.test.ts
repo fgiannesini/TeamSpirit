@@ -292,10 +292,12 @@ describe('Play', () => {
         ],
       });
 
-      await wrapper.get('[data-testid=compute-all]').trigger('click');
+      await wrapper.get('[data-testid=compute]').trigger('click');
+      await vi.runAllTimersAsync();
+      await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
 
-      expect(wrapper.find(`[data-testid=[thread-state-0]`).text()).toBe('Wait');
+      expect(wrapper.find(`[data-testid=thread-state-0]`).text()).toBe('Wait');
     });
   });
 
