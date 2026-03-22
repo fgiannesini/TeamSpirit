@@ -34,6 +34,7 @@ const threads = data.structureEvents
     state: 'Wait',
     presence: '',
   }));
+
 const buildUserStories = (
   structureEvents: StructureEvent[],
   timeCount: number,
@@ -62,7 +63,7 @@ const render = (
     );
     addUserStories(backlog, initStructureEvents);
   }
-
+  setThreadOff()
   const computeButtonAll = getComputeAll();
   computeButtonAll?.addEventListener('click', async () => {
     while (maxTime !== currentTime) {
@@ -77,22 +78,27 @@ const render = (
   });
 };
 const computeDisabled = ref(false);
+
+const setThreadOff = () => {
+  data.structureEvents
+      .filter(
+          ({action, time}) => action === 'ThreadOff' && time === currentTime + 1,
+      )
+      .forEach(({id}) => {
+        const thread = threads.find((thread) => thread.id === id);
+        if (thread) {
+          thread.presence = 'off';
+        }
+      });
+};
+
 const runNext = async () => {
   computeDisabled.value = true;
   currentTime++;
   await renderTimeEvents(data.timeEvents, currentTime, 600);
   renderStatEvents(data.statEvents, currentTime, maxTime);
   buildUserStories(data.structureEvents, currentTime + 1);
-  data.structureEvents
-    .filter(
-      ({ action, time }) => action === 'ThreadOff' && time === currentTime + 1,
-    )
-    .forEach(({ id }) => {
-      const thread = threads.find((thread) => thread.id === id);
-      if (thread) {
-        thread.presence = 'off';
-      }
-    });
+  setThreadOff();
   data.structureEvents
     .filter(
       ({ action, time }) => action === 'ThreadIn' && time === currentTime + 1,

@@ -99,6 +99,24 @@ describe('Play', () => {
       expect(wrapper.find(`[data-testid=thread-state-1]`).text()).toBe('Wait');
     });
 
+    test('Should set thread off by default', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [
+              createThread0(),
+              setThreadOff({ id: 0, time: 1 }),
+            ],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.get(`[data-testid=thread0]`).classes()).toContain('off');
+    });
+
     test('Should set thread off on computation click', async () => {
       const wrapper = createWrapper({
         simulationOutputs: [
@@ -155,22 +173,19 @@ describe('Play', () => {
           {
             timeEvents: [],
             statEvents: [],
-            structureEvents: [createThread0(), setThreadIn({ id: 0, time: 2 })],
+            structureEvents: [
+              createThread0(),
+              setThreadOff({ id: 0, time: 1 }),
+              setThreadIn({ id: 0, time: 2 }),
+            ],
             teamType: 'Parallel',
           },
         ],
       });
 
-      expect(
-        wrapper.get(`[data-testid=thread0]`).attributes('opacity'),
-      ).toStrictEqual('');
-
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.advanceTimersToNextTimerAsync();
-
-      expect(
-        wrapper.get(`[data-testid=thread0]`).attributes('opacity'),
-      ).toStrictEqual('100%');
+      expect(wrapper.get(`[data-testid=thread0]`).classes()).not.toContain('off');
     });
 
     test('Should set thread in on all computation click', async () => {
@@ -179,22 +194,16 @@ describe('Play', () => {
           {
             timeEvents: [doneEvent({ time: 2 })],
             statEvents: [],
-            structureEvents: [createThread0(), setThreadIn({ id: 0, time: 2 })],
+            structureEvents: [createThread0(), setThreadOff({ id: 0, time: 1 }),setThreadIn({ id: 0, time: 2 })],
             teamType: 'Parallel',
           },
         ],
       });
 
-      expect(
-        wrapper.get(`[data-testid=thread0]`).attributes('opacity'),
-      ).toStrictEqual('');
-
       await wrapper.get('[data-testid=compute-all]').trigger('click');
       await vi.runAllTimersAsync();
 
-      expect(
-        wrapper.get(`[data-testid=thread0]`).attributes('opacity'),
-      ).toStrictEqual('100%');
+      expect(wrapper.get(`[data-testid=thread0]`).classes()).not.toContain('off');
     });
 
     test('Should set thread state to "Develop" when in progress', async () => {
