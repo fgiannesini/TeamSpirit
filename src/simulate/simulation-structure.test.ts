@@ -1,9 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { createBacklog, createThread, todo } from './factory.ts';
-import {
-  type StructureEvent,
-  structureEventsOnInitialization,
-} from './simulation-structure.ts';
+import { type StructureEvent, structureEventsOnInitialization } from './simulation-structure.ts';
 import { ParallelTeam } from './team.ts';
 
 describe('simulation-structure', () => {

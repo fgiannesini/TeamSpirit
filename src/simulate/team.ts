@@ -1,13 +1,9 @@
 import type { UserStory } from './user-story.ts';
 
 const buildMob = (allActiveThreads: Thread[]): Thread[] => {
-  const sum = allActiveThreads
-    .map((thread) => thread.power)
-    .reduce((acc, val) => acc + val, 0);
+  const sum = allActiveThreads.map((thread) => thread.power).reduce((acc, val) => acc + val, 0);
   const mean = Math.round(sum / allActiveThreads.length);
-  return [
-    { id: 0, name: 'mob', power: mean, inTime: 0, offTime: 0, off: false },
-  ];
+  return [{ id: 0, name: 'mob', power: mean, inTime: 0, offTime: 0, off: false }];
 };
 
 const updateThreadsTime = (threads: Thread[]): Thread[] =>
@@ -53,10 +49,7 @@ export class ParallelTeam implements Team {
   private readonly threads: Thread[] = [];
   private readonly reviewersNeeded: number;
 
-  constructor(
-    threads: Thread[],
-    reviewersNeeded: number = Math.ceil(threads.length / 2),
-  ) {
+  constructor(threads: Thread[], reviewersNeeded: number = Math.ceil(threads.length / 2)) {
     this.threads = threads;
     this.reviewersNeeded = reviewersNeeded;
   }
@@ -66,10 +59,7 @@ export class ParallelTeam implements Team {
   }
 
   updateTimes(): Team {
-    return new ParallelTeam(
-      updateThreadsTime(this.threads),
-      this.reviewersNeeded,
-    );
+    return new ParallelTeam(updateThreadsTime(this.threads), this.reviewersNeeded);
   }
 
   getReviewersNeeded(): number {
@@ -82,9 +72,7 @@ export class ParallelTeam implements Team {
   setOff(threadId: number): Team {
     const index = this.threads.findIndex((thread) => thread.id === threadId);
     const newThread: Thread = { ...this.threads[index], off: true, inTime: 0 };
-    const newThreads = this.threads.map((item, i) =>
-      i === index ? newThread : item,
-    );
+    const newThreads = this.threads.map((item, i) => (i === index ? newThread : item));
     return new ParallelTeam(newThreads, this.reviewersNeeded);
   }
 
@@ -95,9 +83,7 @@ export class ParallelTeam implements Team {
       off: false,
       offTime: 0,
     };
-    const newThreads = this.threads.map((item, i) =>
-      i === index ? newThread : item,
-    );
+    const newThreads = this.threads.map((item, i) => (i === index ? newThread : item));
     return new ParallelTeam(newThreads, this.reviewersNeeded);
   }
 
@@ -137,10 +123,7 @@ export class EnsembleTeam implements Team {
     const allActiveThreads = this.getAllActiveThreads();
     allActiveThreads.shift();
     const reviewers = new Map(
-      allActiveThreads.map((thread) => [
-        thread.id,
-        userStory.review.reviewComplexity,
-      ]),
+      allActiveThreads.map((thread) => [thread.id, userStory.review.reviewComplexity]),
     );
     return {
       ...userStory,
@@ -162,9 +145,7 @@ export class EnsembleTeam implements Team {
   setOff(threadId: number): Team {
     const index = this.threads.findIndex((thread) => thread.id === threadId);
     const newThread: Thread = { ...this.threads[index], off: true, inTime: 0 };
-    const newThreads = this.threads.map((item, i) =>
-      i === index ? newThread : item,
-    );
+    const newThreads = this.threads.map((item, i) => (i === index ? newThread : item));
     return new EnsembleTeam(newThreads);
   }
 
@@ -175,9 +156,7 @@ export class EnsembleTeam implements Team {
       off: false,
       offTime: 0,
     };
-    const newThreads = this.threads.map((item, i) =>
-      i === index ? newThread : item,
-    );
+    const newThreads = this.threads.map((item, i) => (i === index ? newThread : item));
     return new EnsembleTeam(newThreads);
   }
 

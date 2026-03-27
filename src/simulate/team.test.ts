@@ -1,11 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { createThread, done, ensembleTeam, parallelTeam } from './factory.ts';
-import {
-  EnsembleTeam,
-  ParallelTeam,
-  type Team,
-  type TeamType,
-} from './team.ts';
+import { EnsembleTeam, ParallelTeam, type Team, type TeamType } from './team.ts';
 
 describe('Team', () => {
   describe('Parallel team', () => {
@@ -34,9 +29,7 @@ describe('Team', () => {
         createThread({ id: 0 }),
         createThread({ id: 1, off: true }),
       ]);
-      expect(team.getEffectiveActiveThreads()).toEqual([
-        createThread({ id: 0 }),
-      ]);
+      expect(team.getEffectiveActiveThreads()).toEqual([createThread({ id: 0 })]);
     });
 
     test('Should set thread in', () => {
@@ -68,10 +61,7 @@ describe('Team', () => {
       expect(newTeam).toBeInstanceOf(ParallelTeam);
       expect(newTeam).toEqual(
         parallelTeam(
-          [
-            createThread({ id: 0, off: false }),
-            createThread({ id: 1, off: true, inTime: 0 }),
-          ],
+          [createThread({ id: 0, off: false }), createThread({ id: 1, off: true, inTime: 0 })],
           0,
         ),
       );
@@ -128,9 +118,7 @@ describe('Team', () => {
         createThread({ id: 0, off: false }),
         createThread({ id: 1, off: true }),
       ]);
-      expect(team.getThreadsOff()).toStrictEqual([
-        createThread({ id: 1, off: true }),
-      ]);
+      expect(team.getThreadsOff()).toStrictEqual([createThread({ id: 1, off: true })]);
     });
 
     test('Should not add implicit reviewers', () => {
@@ -162,9 +150,7 @@ describe('Team', () => {
         createThread({ id: 2, power: 15 }),
         createThread({ id: 3, power: 50, off: true }),
       ]);
-      expect(team.getEffectiveThreads()).toEqual([
-        createThread({ id: 0, name: 'mob', power: 25 }),
-      ]);
+      expect(team.getEffectiveThreads()).toEqual([createThread({ id: 0, name: 'mob', power: 25 })]);
     });
 
     test('Should get all active threads', () => {
@@ -239,9 +225,7 @@ describe('Team', () => {
         createThread({ id: 0, off: false }),
         createThread({ id: 1, off: true }),
       ]);
-      expect(team.getThreadsOff()).toStrictEqual([
-        createThread({ id: 1, off: true }),
-      ]);
+      expect(team.getThreadsOff()).toStrictEqual([createThread({ id: 1, off: true })]);
     });
 
     test('Should add implicit reviewers', () => {

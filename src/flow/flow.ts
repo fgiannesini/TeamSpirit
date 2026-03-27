@@ -6,27 +6,13 @@ import { renderStatEvents } from './render-stats.ts';
 import { addThreads, setThreadsIn, setThreadsOff } from './render-thread.ts';
 import { renderTimeEvents } from './render-time.ts';
 import { addUserStories } from './render-user-story.ts';
-import {
-  getBacklog,
-  getCompute,
-  getComputeAll,
-  getThreads,
-} from './selector.ts';
-import {
-  loadStatEvents,
-  loadStructureEvents,
-  loadTimeEvents,
-} from './storage/session-storage.ts';
+import { getBacklog, getCompute, getComputeAll, getThreads } from './selector.ts';
+import { loadStatEvents, loadStructureEvents, loadTimeEvents } from './storage/session-storage.ts';
 
-const buildUserStories = (
-  structureEvents: StructureEvent[],
-  timeCount: number,
-): void => {
+const buildUserStories = (structureEvents: StructureEvent[], timeCount: number): void => {
   const backlog = getBacklog();
   if (backlog) {
-    const initStructureEvents = structureEvents.filter(
-      ({ time }) => time === timeCount,
-    );
+    const initStructureEvents = structureEvents.filter(({ time }) => time === timeCount);
     addUserStories(backlog, initStructureEvents);
   }
 };
@@ -42,9 +28,7 @@ const render = (
   }
   const backlog = getBacklog();
   if (backlog) {
-    const initStructureEvents = structureEvents.filter(
-      ({ time }) => time === 1,
-    );
+    const initStructureEvents = structureEvents.filter(({ time }) => time === 1);
     addUserStories(backlog, initStructureEvents);
   }
 

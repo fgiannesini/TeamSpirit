@@ -15,19 +15,13 @@ import {
   type State,
   useFormStore,
 } from './form-store.ts';
-import {
-  developer,
-  teamModification,
-  userStory,
-} from './front-factory-for-test.ts';
+import { developer, teamModification, userStory } from './front-factory-for-test.ts';
 
 describe('Form store', () => {
   beforeEach(() => {
     const { simulateMock, computeStatEventsMock } = vi.hoisted(() => ({
       simulateMock: vi.fn<typeof simulate>().mockReturnValue({
-        timeEvents: [
-          { time: 1, state: 'InProgress', threadId: 0, userStoryId: 0 },
-        ],
+        timeEvents: [{ time: 1, state: 'InProgress', threadId: 0, userStoryId: 0 }],
         structureEvents: [
           {
             time: 1,
@@ -370,10 +364,7 @@ describe('Form store', () => {
             .fn<typeof Math.random>()
             .mockReturnValueOnce(1)
             .mockReturnValue(2),
-          priorityGenerator: vi
-            .fn<typeof Math.random>()
-            .mockReturnValueOnce(1)
-            .mockReturnValue(2),
+          priorityGenerator: vi.fn<typeof Math.random>().mockReturnValueOnce(1).mockReturnValue(2),
         },
       });
       expect(simulationInputs[0].backlog).toStrictEqual(
@@ -400,9 +391,7 @@ describe('Form store', () => {
           ],
         }),
       );
-      expect(simulationInputs[0].backlog).toStrictEqual(
-        simulationInputs[1].backlog,
-      );
+      expect(simulationInputs[0].backlog).toStrictEqual(simulationInputs[1].backlog);
     });
 
     test('Should generate random team', () => {
@@ -413,26 +402,14 @@ describe('Form store', () => {
       const simulationInputs = store.toSimulationInputs({
         teamProvider: {
           teamCount: 2,
-          experienceGenerator: vi
-            .fn()
-            .mockReturnValueOnce(1)
-            .mockReturnValue(2),
+          experienceGenerator: vi.fn().mockReturnValueOnce(1).mockReturnValue(2),
         },
       });
       expect(simulationInputs[0].team).toStrictEqual(
-        parallelTeam(
-          [
-            createThread({ id: 0, power: 1 }),
-            createThread({ id: 1, power: 2 }),
-          ],
-          0,
-        ),
+        parallelTeam([createThread({ id: 0, power: 1 }), createThread({ id: 1, power: 2 })], 0),
       );
       expect(simulationInputs[1].team).toStrictEqual(
-        ensembleTeam([
-          createThread({ id: 0, power: 1 }),
-          createThread({ id: 1, power: 2 }),
-        ]),
+        ensembleTeam([createThread({ id: 0, power: 1 }), createThread({ id: 1, power: 2 })]),
       );
     });
   });
@@ -445,13 +422,9 @@ describe('Form store', () => {
           team: parallelTeam(),
         },
       ]);
-      expect(
-        store.$state.simulationOutputs[0],
-      ).toStrictEqual<SimulationOutputs>({
+      expect(store.$state.simulationOutputs[0]).toStrictEqual<SimulationOutputs>({
         teamType: 'Parallel',
-        timeEvents: [
-          { time: 1, state: 'InProgress', threadId: 0, userStoryId: 0 },
-        ],
+        timeEvents: [{ time: 1, state: 'InProgress', threadId: 0, userStoryId: 0 }],
         structureEvents: [
           {
             time: 1,
@@ -462,13 +435,9 @@ describe('Form store', () => {
         ],
         statEvents: [{ time: 1, leadTime: 1 }],
       });
-      expect(
-        store.$state.simulationOutputs[1],
-      ).toStrictEqual<SimulationOutputs>({
+      expect(store.$state.simulationOutputs[1]).toStrictEqual<SimulationOutputs>({
         teamType: 'Parallel',
-        timeEvents: [
-          { time: 1, state: 'InProgress', threadId: 0, userStoryId: 0 },
-        ],
+        timeEvents: [{ time: 1, state: 'InProgress', threadId: 0, userStoryId: 0 }],
         structureEvents: [
           {
             time: 1,

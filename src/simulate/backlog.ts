@@ -27,9 +27,7 @@ export const getNextUserStory = (
   reviewersNeeded: number,
 ): UserStory => {
   const priorities = [
-    ...new Set(
-      backlog.userStoriesRemaining.map((userStory) => userStory.priority),
-    ),
+    ...new Set(backlog.userStoriesRemaining.map((userStory) => userStory.priority)),
   ].toSorted((a, b) => b - a);
 
   let nextUserStory: UserStory | undefined;
@@ -38,14 +36,10 @@ export const getNextUserStory = (
       (userStory) => userStory.priority === priority,
     );
 
-    nextUserStory = userStories.find((userStory) =>
-      isInProgressBy(userStory, thread),
-    );
+    nextUserStory = userStories.find((userStory) => isInProgressBy(userStory, thread));
 
     if (!nextUserStory) {
-      nextUserStory = userStories.find((userStory) =>
-        isInReviewBy(userStory, thread),
-      );
+      nextUserStory = userStories.find((userStory) => isInReviewBy(userStory, thread));
     }
 
     if (!nextUserStory) {
@@ -59,9 +53,7 @@ export const getNextUserStory = (
       userStories
         .filter((userStory) => isToReviewBy(userStory, thread))
         .forEach((userStory) => {
-          const diff = Math.abs(
-            userStory.review.reviewComplexity - thread.power,
-          );
+          const diff = Math.abs(userStory.review.reviewComplexity - thread.power);
           if (diff < minDiff) {
             minDiff = diff;
             nextUserStory = userStory;
@@ -99,11 +91,7 @@ export const userStoriesWithSomeReviews = (
   return backlog.userStoriesRemaining
     .filter((userStory) => userStory.state === 'Review')
     .filter((userStory) =>
-      hasSomeReviews(
-        userStory.review,
-        userStory.review.reviewComplexity,
-        reviewersNeeded,
-      ),
+      hasSomeReviews(userStory.review, userStory.review.reviewComplexity, reviewersNeeded),
     );
 };
 
@@ -123,10 +111,7 @@ export const getUserStoriesRemainings = (backlog: Backlog): UserStory[] => {
   return backlog.userStoriesRemaining;
 };
 
-export const retrieveInProgressUserStories = (
-  backlog: Backlog,
-  thread: Thread,
-): UserStory[] => {
+export const retrieveInProgressUserStories = (backlog: Backlog, thread: Thread): UserStory[] => {
   const inProgressUserStories: UserStory[] = [];
   [...backlog.userStoriesRemaining].forEach((userStory, index) => {
     if (isInProgressBy(userStory, thread)) {
@@ -137,10 +122,7 @@ export const retrieveInProgressUserStories = (
   return inProgressUserStories;
 };
 
-export const retrieveInReviewUserStories = (
-  backlog: Backlog,
-  thread: Thread,
-): UserStory[] => {
+export const retrieveInReviewUserStories = (backlog: Backlog, thread: Thread): UserStory[] => {
   const inReviewUserStories: UserStory[] = [];
   [...backlog.userStoriesRemaining].forEach((userStory, index) => {
     if (isInReviewBy(userStory, thread)) {
@@ -151,10 +133,7 @@ export const retrieveInReviewUserStories = (
   return inReviewUserStories;
 };
 
-export const resetUserStoriesRemainings = (
-  backlog: Backlog,
-  userStories: UserStory[],
-): Backlog => {
+export const resetUserStoriesRemainings = (backlog: Backlog, userStories: UserStory[]): Backlog => {
   return { ...backlog, userStoriesRemaining: userStories };
 };
 
@@ -170,9 +149,7 @@ export const shouldGenerateBug = (
 ): boolean => {
   const number = randomProvider();
   const experience =
-    team
-      .getEffectiveThreads()
-      .find((thread) => thread.id === userStory.threadId)?.power ?? 0;
+    team.getEffectiveThreads().find((thread) => thread.id === userStory.threadId)?.power ?? 0;
   return (
     number <
     computeBugProbability(

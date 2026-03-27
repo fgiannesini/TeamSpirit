@@ -1,21 +1,7 @@
 import { describe, expect, test, vi } from 'vitest';
-import {
-  addUserStory,
-  getUserStoriesDone,
-  getUserStoriesRemainings,
-} from './backlog.ts';
-import {
-  type BugGenerator,
-  CustomBugGenerator,
-  noBugGenerator,
-} from './bug-generator.ts';
-import {
-  createBacklog,
-  createThread,
-  done,
-  ensembleTeam,
-  todo,
-} from './factory.ts';
+import { addUserStory, getUserStoriesDone, getUserStoriesRemainings } from './backlog.ts';
+import { type BugGenerator, CustomBugGenerator, noBugGenerator } from './bug-generator.ts';
+import { createBacklog, createThread, done, ensembleTeam, todo } from './factory.ts';
 import {
   CustomPriorityModificator,
   noPriorityModificator,
@@ -194,14 +180,13 @@ describe('Simulation', () => {
   });
 
   test('Should modify priority', () => {
-    const priorityModificator: PriorityModificator =
-      new CustomPriorityModificator([
-        {
-          time: 1,
-          id: 0,
-          priority: 3,
-        },
-      ]);
+    const priorityModificator: PriorityModificator = new CustomPriorityModificator([
+      {
+        time: 1,
+        id: 0,
+        priority: 3,
+      },
+    ]);
     const team = ensembleTeam();
     const { structureEvents } = simulate(
       createBacklog({ userStoriesRemaining: [todo()] }),

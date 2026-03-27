@@ -7,6 +7,6 @@ const store = useFormStore();
 </script>
 <template>
   <Selector v-model:selectedMode="store.teamModificatorMode" :mandatory="false">
-    <CustomTeamModificator/>
+    <CustomTeamModificator />
   </Selector>
 </template>

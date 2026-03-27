@@ -76,16 +76,12 @@ describe('Main', () => {
       clickOn('#calculate-button');
 
       const timeEventsForParallelTeam = JSON.parse(
-        sessionStorage.getItem(
-          'computation-e4567-e89b-12d3-a456-426614174000',
-        ) ?? '[]',
+        sessionStorage.getItem('computation-e4567-e89b-12d3-a456-426614174000') ?? '[]',
       ) as TimeEvent[];
       expect(timeEventsForParallelTeam.length).greaterThan(0);
 
       const timeEventsForEnsembleTeam = JSON.parse(
-        sessionStorage.getItem(
-          'computation-e4567-e89b-12d3-a456-426614174001',
-        ) ?? '[]',
+        sessionStorage.getItem('computation-e4567-e89b-12d3-a456-426614174001') ?? '[]',
       ) as TimeEvent[];
       expect(timeEventsForEnsembleTeam.length).greaterThan(0);
 
@@ -106,14 +102,12 @@ describe('Main', () => {
       clickOn('#calculate-button');
 
       const statEventsForParallelTeam = JSON.parse(
-        sessionStorage.getItem('stats-e4567-e89b-12d3-a456-426614174000') ??
-          '[]',
+        sessionStorage.getItem('stats-e4567-e89b-12d3-a456-426614174000') ?? '[]',
       ) as StatEvent[];
       expect(statEventsForParallelTeam.length).greaterThan(0);
 
       const statEventsForEnsembleTeam = JSON.parse(
-        sessionStorage.getItem('stats-e4567-e89b-12d3-a456-426614174001') ??
-          '[]',
+        sessionStorage.getItem('stats-e4567-e89b-12d3-a456-426614174001') ?? '[]',
       ) as StatEvent[];
       expect(statEventsForEnsembleTeam.length).greaterThan(0);
 
@@ -134,14 +128,12 @@ describe('Main', () => {
       clickOn('#calculate-button');
 
       const structureEventsForParallelTeam = JSON.parse(
-        sessionStorage.getItem('structure-e4567-e89b-12d3-a456-426614174000') ??
-          '[]',
+        sessionStorage.getItem('structure-e4567-e89b-12d3-a456-426614174000') ?? '[]',
       ) as StructureEvent[];
       expect(structureEventsForParallelTeam.length).greaterThan(0);
 
       const structureEventsForEnsembleTeam = JSON.parse(
-        sessionStorage.getItem('stats-e4567-e89b-12d3-a456-426614174001') ??
-          '[]',
+        sessionStorage.getItem('stats-e4567-e89b-12d3-a456-426614174001') ?? '[]',
       ) as StructureEvent[];
       expect(structureEventsForEnsembleTeam.length).greaterThan(0);
 
@@ -272,19 +264,14 @@ describe('Main', () => {
         .mockReturnValue(0.99);
       setValueTo('#user-story-count-input', '2');
       clickOn('#generate-user-stories-button');
-      const userStories = Array.from(
-        document.querySelectorAll('#user-stories-container div'),
-      );
+      const userStories = Array.from(document.querySelectorAll('#user-stories-container div'));
       expect(userStories.length).toEqual(2);
       expect(
-        document.querySelector(
-          '#user-stories-container #user-story-identifier-0',
-        )?.textContent,
+        document.querySelector('#user-stories-container #user-story-identifier-0')?.textContent,
       ).toEqual('0');
       expect(
-        document.querySelector<HTMLInputElement>(
-          '#user-stories-container #complexity-input-0',
-        )?.value,
+        document.querySelector<HTMLInputElement>('#user-stories-container #complexity-input-0')
+          ?.value,
       ).toEqual('1');
       expect(
         document.querySelector<HTMLInputElement>(
@@ -292,19 +279,15 @@ describe('Main', () => {
         )?.value,
       ).toEqual('1');
       expect(
-        document.querySelector<HTMLInputElement>(
-          '#user-stories-container #priority-input-0',
-        )?.value,
+        document.querySelector<HTMLInputElement>('#user-stories-container #priority-input-0')
+          ?.value,
       ).toEqual('0');
       expect(
-        document.querySelector(
-          '#user-stories-container #user-story-identifier-1',
-        )?.textContent,
+        document.querySelector('#user-stories-container #user-story-identifier-1')?.textContent,
       ).toEqual('1');
       expect(
-        document.querySelector<HTMLInputElement>(
-          '#user-stories-container #complexity-input-1',
-        )?.value,
+        document.querySelector<HTMLInputElement>('#user-stories-container #complexity-input-1')
+          ?.value,
       ).toEqual('10');
       expect(
         document.querySelector<HTMLInputElement>(
@@ -312,9 +295,8 @@ describe('Main', () => {
         )?.value,
       ).toEqual('9');
       expect(
-        document.querySelector<HTMLInputElement>(
-          '#user-stories-container #priority-input-1',
-        )?.value,
+        document.querySelector<HTMLInputElement>('#user-stories-container #priority-input-1')
+          ?.value,
       ).toEqual('5');
     });
   });
@@ -326,23 +308,13 @@ describe('Main', () => {
       clickOn('#generate-devs-button');
       const devs = Array.from(document.querySelectorAll('#devs-container div'));
       expect(devs.length).toEqual(2);
+      expect(document.querySelector('#devs-container #dev-identifier-0')?.textContent).toEqual('0');
       expect(
-        document.querySelector('#devs-container #dev-identifier-0')
-          ?.textContent,
-      ).toEqual('0');
-      expect(
-        document.querySelector<HTMLInputElement>(
-          '#devs-container #power-input-0',
-        )?.value,
+        document.querySelector<HTMLInputElement>('#devs-container #power-input-0')?.value,
       ).toEqual('1');
+      expect(document.querySelector('#devs-container #dev-identifier-1')?.textContent).toEqual('1');
       expect(
-        document.querySelector('#devs-container #dev-identifier-1')
-          ?.textContent,
-      ).toEqual('1');
-      expect(
-        document.querySelector<HTMLInputElement>(
-          '#devs-container #power-input-1',
-        )?.value,
+        document.querySelector<HTMLInputElement>('#devs-container #power-input-1')?.value,
       ).toEqual('5');
     });
 
@@ -401,9 +373,7 @@ describe('Main', () => {
 
   describe('Team modificator', () => {
     const getAddEventButton = (): HTMLButtonElement | null =>
-      document.querySelector<HTMLButtonElement>(
-        '#team-modificator-add-event-button',
-      );
+      document.querySelector<HTMLButtonElement>('#team-modificator-add-event-button');
 
     const getRemoveEventButton = (id: number): HTMLButtonElement | null =>
       document.querySelector<HTMLButtonElement>(`#remove-event-button-${id}`);
@@ -479,36 +449,23 @@ describe('Main', () => {
     test('Should add a line on click of the button to add event', () => {
       setSelectOption('team-modificator', 'custom');
       getAddEventButton()?.click();
-      expect(
-        getTeamModificatorDivEvents()?.querySelectorAll<HTMLDivElement>('div')
-          .length,
-      ).toEqual(1);
+      expect(getTeamModificatorDivEvents()?.querySelectorAll<HTMLDivElement>('div').length).toEqual(
+        1,
+      );
     });
 
     test('Should display fields to add an event', () => {
       setSelectOption('team-modificator', 'custom');
       getAddEventButton()?.click();
       const divEvent = getTeamModificatorDivEvents();
+      expect(divEvent?.querySelector('[for=team-modificator-event-0-in-input]')).not.toBeNull();
+      expect(divEvent?.querySelector('#team-modificator-event-0-in-input')).not.toBeNull();
+      expect(divEvent?.querySelector('[for=team-modificator-event-0-off-input]')).not.toBeNull();
+      expect(divEvent?.querySelector('#team-modificator-event-0-off-input')).not.toBeNull();
       expect(
-        divEvent?.querySelector('[for=team-modificator-event-0-in-input]'),
+        divEvent?.querySelector('[for=team-modificator-event-0-thread-name-input]'),
       ).not.toBeNull();
-      expect(
-        divEvent?.querySelector('#team-modificator-event-0-in-input'),
-      ).not.toBeNull();
-      expect(
-        divEvent?.querySelector('[for=team-modificator-event-0-off-input]'),
-      ).not.toBeNull();
-      expect(
-        divEvent?.querySelector('#team-modificator-event-0-off-input'),
-      ).not.toBeNull();
-      expect(
-        divEvent?.querySelector(
-          '[for=team-modificator-event-0-thread-name-input]',
-        ),
-      ).not.toBeNull();
-      expect(
-        divEvent?.querySelector('#team-modificator-event-0-thread-name-input'),
-      ).not.toBeNull();
+      expect(divEvent?.querySelector('#team-modificator-event-0-thread-name-input')).not.toBeNull();
     });
 
     test('Should add two lines to add an event', () => {
@@ -517,9 +474,7 @@ describe('Main', () => {
       getAddEventButton()?.click();
       const divEvent = getTeamModificatorDivEvents();
       divEvent?.querySelectorAll<HTMLDivElement>('div');
-      expect(
-        divEvent?.querySelector('#team-modificator-event-1-in-input'),
-      ).not.toBeNull();
+      expect(divEvent?.querySelector('#team-modificator-event-1-in-input')).not.toBeNull();
     });
 
     test('Should remove an event line', () => {
@@ -533,14 +488,10 @@ describe('Main', () => {
 
   describe('Bug generator', () => {
     const getAddEventButton = (): HTMLButtonElement | null =>
-      document.querySelector<HTMLButtonElement>(
-        '#bug-generator-add-event-button',
-      );
+      document.querySelector<HTMLButtonElement>('#bug-generator-add-event-button');
 
     const getRemoveEventButton = (id: number): HTMLButtonElement | null =>
-      document.querySelector<HTMLButtonElement>(
-        `#bug-generator-remove-event-button-${id}`,
-      );
+      document.querySelector<HTMLButtonElement>(`#bug-generator-remove-event-button-${id}`);
 
     const getBugGeneratorDivEvents = (): HTMLDivElement | null =>
       document.querySelector<HTMLDivElement>('#bug-generator-events');
@@ -616,10 +567,7 @@ describe('Main', () => {
     test('Should add a line on click of the button to add event', () => {
       setSelectOption('bug-generator', 'custom');
       getAddEventButton()?.click();
-      expect(
-        getBugGeneratorDivEvents()?.querySelectorAll<HTMLDivElement>('div')
-          .length,
-      ).toEqual(1);
+      expect(getBugGeneratorDivEvents()?.querySelectorAll<HTMLDivElement>('div').length).toEqual(1);
     });
 
     test('Should display fields to add an event', () => {
@@ -629,24 +577,14 @@ describe('Main', () => {
       expect(
         divEvent?.querySelector('[for=bug-generator-event-0-complexity-input]'),
       ).not.toBeNull();
+      expect(divEvent?.querySelector('#bug-generator-event-0-complexity-input')).not.toBeNull();
+      expect(divEvent?.querySelector('[for=bug-generator-event-0-time-input]')).not.toBeNull();
+      expect(divEvent?.querySelector('#bug-generator-event-0-time-input')).not.toBeNull();
       expect(
-        divEvent?.querySelector('#bug-generator-event-0-complexity-input'),
+        divEvent?.querySelector('[for=bug-generator-event-0-review-complexity-input]'),
       ).not.toBeNull();
       expect(
-        divEvent?.querySelector('[for=bug-generator-event-0-time-input]'),
-      ).not.toBeNull();
-      expect(
-        divEvent?.querySelector('#bug-generator-event-0-time-input'),
-      ).not.toBeNull();
-      expect(
-        divEvent?.querySelector(
-          '[for=bug-generator-event-0-review-complexity-input]',
-        ),
-      ).not.toBeNull();
-      expect(
-        divEvent?.querySelector(
-          '#bug-generator-event-0-review-complexity-input',
-        ),
+        divEvent?.querySelector('#bug-generator-event-0-review-complexity-input'),
       ).not.toBeNull();
     });
 
@@ -656,9 +594,7 @@ describe('Main', () => {
       getAddEventButton()?.click();
       const divEvent = getBugGeneratorDivEvents();
       divEvent?.querySelectorAll<HTMLDivElement>('div');
-      expect(
-        divEvent?.querySelector('#bug-generator-event-1-complexity-input'),
-      ).not.toBeNull();
+      expect(divEvent?.querySelector('#bug-generator-event-1-complexity-input')).not.toBeNull();
     });
 
     test('Should remove an event line', () => {
@@ -672,14 +608,10 @@ describe('Main', () => {
 
   describe('Priority modificator', () => {
     const getAddEventButton = (): HTMLButtonElement | null =>
-      document.querySelector<HTMLButtonElement>(
-        '#priority-modificator-add-event-button',
-      );
+      document.querySelector<HTMLButtonElement>('#priority-modificator-add-event-button');
 
     const getRemoveEventButton = (id: number): HTMLButtonElement | null =>
-      document.querySelector<HTMLButtonElement>(
-        `#priority-modificator-remove-event-button-${id}`,
-      );
+      document.querySelector<HTMLButtonElement>(`#priority-modificator-remove-event-button-${id}`);
 
     const getPriorityModificatorDivEvents = (): HTMLDivElement | null =>
       document.querySelector<HTMLDivElement>('#priority-modificator-events');
@@ -753,9 +685,7 @@ describe('Main', () => {
       setSelectOption('priority-modificator', 'custom');
       getAddEventButton()?.click();
       expect(
-        getPriorityModificatorDivEvents()?.querySelectorAll<HTMLDivElement>(
-          'div',
-        ).length,
+        getPriorityModificatorDivEvents()?.querySelectorAll<HTMLDivElement>('div').length,
       ).toEqual(1);
     });
 
@@ -763,24 +693,14 @@ describe('Main', () => {
       setSelectOption('priority-modificator', 'custom');
       getAddEventButton()?.click();
       const divEvent = getPriorityModificatorDivEvents();
+      expect(divEvent?.querySelector('[for=priority-modificator-event-0-id-input]')).not.toBeNull();
+      expect(divEvent?.querySelector('#priority-modificator-event-0-id-input')).not.toBeNull();
       expect(
-        divEvent?.querySelector('[for=priority-modificator-event-0-id-input]'),
+        divEvent?.querySelector('[for=priority-modificator-event-0-time-input]'),
       ).not.toBeNull();
+      expect(divEvent?.querySelector('#priority-modificator-event-0-time-input')).not.toBeNull();
       expect(
-        divEvent?.querySelector('#priority-modificator-event-0-id-input'),
-      ).not.toBeNull();
-      expect(
-        divEvent?.querySelector(
-          '[for=priority-modificator-event-0-time-input]',
-        ),
-      ).not.toBeNull();
-      expect(
-        divEvent?.querySelector('#priority-modificator-event-0-time-input'),
-      ).not.toBeNull();
-      expect(
-        divEvent?.querySelector(
-          '[for=priority-modificator-event-0-priority-input]',
-        ),
+        divEvent?.querySelector('[for=priority-modificator-event-0-priority-input]'),
       ).not.toBeNull();
       expect(
         divEvent?.querySelector('#priority-modificator-event-0-priority-input'),
@@ -793,9 +713,7 @@ describe('Main', () => {
       getAddEventButton()?.click();
       const divEvent = getPriorityModificatorDivEvents();
       divEvent?.querySelectorAll<HTMLDivElement>('div');
-      expect(
-        divEvent?.querySelector('#priority-modificator-event-1-time-input'),
-      ).not.toBeNull();
+      expect(divEvent?.querySelector('#priority-modificator-event-1-time-input')).not.toBeNull();
     });
 
     test('Should remove an event line', () => {

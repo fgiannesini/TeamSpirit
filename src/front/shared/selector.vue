@@ -43,8 +43,8 @@ defineEmits(['update:selectedMode']);
   </nav>
   <div
     data-testid="custom-container"
-    :class="[selectedMode === 'custom'?'active' : '', 'page', 'padding']"
+    :class="[selectedMode === 'custom' ? 'active' : '', 'page', 'padding']"
   >
-    <slot/>
+    <slot />
   </div>
 </template>

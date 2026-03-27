@@ -76,26 +76,14 @@ describe('Play', () => {
           },
         ],
       });
-      expect(wrapper.get(`[data-testid=thread0]`).classes()).toContain(
-        'thread',
-      );
-      expect(wrapper.get(`[data-testid=thread-title-0]`).text()).toStrictEqual(
-        'dev0',
-      );
-      expect(wrapper.find(`[data-testid=thread-user-story-0]`).exists()).toBe(
-        true,
-      );
+      expect(wrapper.get(`[data-testid=thread0]`).classes()).toContain('thread');
+      expect(wrapper.get(`[data-testid=thread-title-0]`).text()).toStrictEqual('dev0');
+      expect(wrapper.find(`[data-testid=thread-user-story-0]`).exists()).toBe(true);
       expect(wrapper.find(`[data-testid=thread-state-0]`).text()).toBe('Wait');
 
-      expect(wrapper.get(`[data-testid=thread1]`).classes()).toContain(
-        'thread',
-      );
-      expect(wrapper.get(`[data-testid=thread-title-1]`).text()).toStrictEqual(
-        'dev1',
-      );
-      expect(wrapper.find(`[data-testid=thread-user-story-1]`).exists()).toBe(
-        true,
-      );
+      expect(wrapper.get(`[data-testid=thread1]`).classes()).toContain('thread');
+      expect(wrapper.get(`[data-testid=thread-title-1]`).text()).toStrictEqual('dev1');
+      expect(wrapper.find(`[data-testid=thread-user-story-1]`).exists()).toBe(true);
       expect(wrapper.find(`[data-testid=thread-state-1]`).text()).toBe('Wait');
     });
 
@@ -105,10 +93,7 @@ describe('Play', () => {
           {
             timeEvents: [],
             statEvents: [],
-            structureEvents: [
-              createThread0(),
-              setThreadOff({ id: 0, time: 1 }),
-            ],
+            structureEvents: [createThread0(), setThreadOff({ id: 0, time: 1 })],
             teamType: 'Parallel',
           },
         ],
@@ -123,18 +108,13 @@ describe('Play', () => {
           {
             timeEvents: [],
             statEvents: [],
-            structureEvents: [
-              createThread0(),
-              setThreadOff({ id: 0, time: 2 }),
-            ],
+            structureEvents: [createThread0(), setThreadOff({ id: 0, time: 2 })],
             teamType: 'Parallel',
           },
         ],
       });
 
-      expect(wrapper.get(`[data-testid=thread0]`).classes()).not.toContain(
-        'off',
-      );
+      expect(wrapper.get(`[data-testid=thread0]`).classes()).not.toContain('off');
 
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.advanceTimersToNextTimerAsync();
@@ -148,18 +128,13 @@ describe('Play', () => {
           {
             timeEvents: [doneEvent({ time: 2 })],
             statEvents: [],
-            structureEvents: [
-              createThread0(),
-              setThreadOff({ id: 0, time: 2 }),
-            ],
+            structureEvents: [createThread0(), setThreadOff({ id: 0, time: 2 })],
             teamType: 'Parallel',
           },
         ],
       });
 
-      expect(wrapper.get(`[data-testid=thread0]`).classes()).not.toContain(
-        'off',
-      );
+      expect(wrapper.get(`[data-testid=thread0]`).classes()).not.toContain('off');
 
       await wrapper.get('[data-testid=compute-all]').trigger('click');
       await vi.runAllTimersAsync();
@@ -194,7 +169,11 @@ describe('Play', () => {
           {
             timeEvents: [doneEvent({ time: 2 })],
             statEvents: [],
-            structureEvents: [createThread0(), setThreadOff({ id: 0, time: 1 }),setThreadIn({ id: 0, time: 2 })],
+            structureEvents: [
+              createThread0(),
+              setThreadOff({ id: 0, time: 1 }),
+              setThreadIn({ id: 0, time: 2 }),
+            ],
             teamType: 'Parallel',
           },
         ],
@@ -221,14 +200,10 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
 
       await vi.advanceTimersToNextTimerAsync();
-      expect(wrapper.find(`[data-testid=thread-state-0]`).text()).toBe(
-        'Develop',
-      );
+      expect(wrapper.find(`[data-testid=thread-state-0]`).text()).toBe('Develop');
 
       await vi.advanceTimersToNextTimerAsync();
-      expect(wrapper.find(`[data-testid=thread-state-0]`).text()).toBe(
-        'Develop',
-      );
+      expect(wrapper.find(`[data-testid=thread-state-0]`).text()).toBe('Develop');
     });
 
     test('Should set thread state to "Review" when in review', async () => {
@@ -246,14 +221,10 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
 
       await vi.advanceTimersToNextTimerAsync();
-      expect(wrapper.find(`[data-testid=thread-state-0]`).text()).toBe(
-        'Review',
-      );
+      expect(wrapper.find(`[data-testid=thread-state-0]`).text()).toBe('Review');
 
       await vi.advanceTimersToNextTimerAsync();
-      expect(wrapper.find(`[data-testid=thread-state-0]`).text()).toBe(
-        'Review',
-      );
+      expect(wrapper.find(`[data-testid=thread-state-0]`).text()).toBe('Review');
     });
 
     test('Should set thread state to "Develop" when to review', async () => {
@@ -271,9 +242,7 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
 
-      expect(wrapper.find(`[data-testid=thread-state-0]`).text()).toBe(
-        'Develop',
-      );
+      expect(wrapper.find(`[data-testid=thread-state-0]`).text()).toBe('Develop');
     });
 
     test('Should set thread state to "Wait" when idle', async () => {
@@ -306,10 +275,7 @@ describe('Play', () => {
       const wrapper = createWrapper({
         simulationOutputs: [
           {
-            timeEvents: [
-              inProgressEvent({ userStoryId: 0 }),
-              inProgressEvent({ userStoryId: 1 }),
-            ],
+            timeEvents: [inProgressEvent({ userStoryId: 0 }), inProgressEvent({ userStoryId: 1 })],
             statEvents: [],
             structureEvents: [
               createUserStory({ id: 0, name: 'US0' }),
@@ -386,9 +352,7 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.advanceTimersToNextTimerAsync();
       const threadUserStory = wrapper.get('[data-testid=thread-user-story-0]');
-      expect(
-        threadUserStory.find('[data-testid=user-story-0-0]').exists(),
-      ).toBe(true);
+      expect(threadUserStory.find('[data-testid=user-story-0-0]').exists()).toBe(true);
 
       await vi.advanceTimersToNextTimerAsync();
       const done = wrapper.get('[data-testid=done]');
@@ -442,15 +406,11 @@ describe('Play', () => {
 
       await vi.advanceTimersToNextTimerAsync();
       const threadUserStory0 = wrapper.get('[data-testid=thread-user-story-0]');
-      expect(
-        threadUserStory0.find('[data-testid=user-story-1-0]').exists(),
-      ).toBe(true);
+      expect(threadUserStory0.find('[data-testid=user-story-1-0]').exists()).toBe(true);
 
       await vi.advanceTimersToNextTimerAsync();
       const threadUserStory1 = wrapper.get('[data-testid=thread-user-story-1]');
-      expect(
-        threadUserStory1.find('[data-testid=user-story-10-0]').exists(),
-      ).toBe(true);
+      expect(threadUserStory1.find('[data-testid=user-story-10-0]').exists()).toBe(true);
 
       const done = wrapper.get('[data-testid=done]');
 
@@ -475,19 +435,14 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
       const threadUserStory0 = wrapper.get('[data-testid=thread-user-story-0]');
-      expect(
-        threadUserStory0.find('[data-testid=user-story-0-0]').exists(),
-      ).toBe(true);
+      expect(threadUserStory0.find('[data-testid=user-story-0-0]').exists()).toBe(true);
     });
 
     test('Should move userStories to thread when in review, then done', async () => {
       const wrapper = createWrapper({
         simulationOutputs: [
           {
-            timeEvents: [
-              reviewEvent({ threadId: 1 }),
-              doneEvent({ threadId: 0 }),
-            ],
+            timeEvents: [reviewEvent({ threadId: 1 }), doneEvent({ threadId: 0 })],
             statEvents: [],
             structureEvents: [createThread1(), createUserStory({ id: 0 })],
             teamType: 'Parallel',
@@ -498,9 +453,7 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.advanceTimersToNextTimerAsync();
       const threadUserStory1 = wrapper.get('[data-testid=thread-user-story-1]');
-      expect(
-        threadUserStory1.find('[data-testid=user-story-0-1]').exists(),
-      ).toBe(true);
+      expect(threadUserStory1.find('[data-testid=user-story-0-1]').exists()).toBe(true);
 
       await vi.advanceTimersToNextTimerAsync();
 
@@ -518,11 +471,7 @@ describe('Play', () => {
               doneEvent({ threadId: 2, userStoryId: 2 }),
             ],
             statEvents: [],
-            structureEvents: [
-              createThread0(),
-              createThread1(),
-              createUserStory({ id: 2 }),
-            ],
+            structureEvents: [createThread0(), createThread1(), createUserStory({ id: 2 })],
             teamType: 'Parallel',
           },
         ],
@@ -531,13 +480,9 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
       const threadUserStory1 = wrapper.get('[data-testid=thread-user-story-1]');
-      expect(
-        threadUserStory1.find('[data-testid=user-story-2-1]').exists(),
-      ).toBe(false);
+      expect(threadUserStory1.find('[data-testid=user-story-2-1]').exists()).toBe(false);
       const threadUserStory0 = wrapper.get('[data-testid=thread-user-story-0]');
-      expect(
-        threadUserStory0.find('[data-testid=user-story-2-0]').exists(),
-      ).toBe(false);
+      expect(threadUserStory0.find('[data-testid=user-story-2-0]').exists()).toBe(false);
       const done = wrapper.get('[data-testid=done]');
       expect(done.find('[data-testid=user-story-2]').exists()).toBe(true);
     });
@@ -552,11 +497,7 @@ describe('Play', () => {
               toReviewEvent({ threadId: 2, userStoryId: 2 }),
             ],
             statEvents: [],
-            structureEvents: [
-              createThread0(),
-              createThread1(),
-              createUserStory({ id: 2 }),
-            ],
+            structureEvents: [createThread0(), createThread1(), createUserStory({ id: 2 })],
             teamType: 'Parallel',
           },
         ],
@@ -565,13 +506,9 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
       const threadUserStory1 = wrapper.get('[data-testid=thread-user-story-1]');
-      expect(
-        threadUserStory1.find('[data-testid=user-story-2-1]').exists(),
-      ).toBe(false);
+      expect(threadUserStory1.find('[data-testid=user-story-2-1]').exists()).toBe(false);
       const threadUserStory0 = wrapper.get('[data-testid=thread-user-story-0]');
-      expect(
-        threadUserStory0.find('[data-testid=user-story-2-0]').exists(),
-      ).toBe(false);
+      expect(threadUserStory0.find('[data-testid=user-story-2-0]').exists()).toBe(false);
       const backlog = wrapper.get('[data-testid=backlog]');
       expect(backlog.find('[data-testid=user-story-2]').exists()).toBe(true);
     });
@@ -598,10 +535,7 @@ describe('Play', () => {
       const wrapper = createWrapper({
         simulationOutputs: [
           {
-            timeEvents: [
-              reviewEvent({ threadId: 0 }),
-              reviewEvent({ threadId: 1 }),
-            ],
+            timeEvents: [reviewEvent({ threadId: 0 }), reviewEvent({ threadId: 1 })],
             statEvents: [],
             structureEvents: [
               createThread0(),
@@ -640,11 +574,7 @@ describe('Play', () => {
               reviewEvent({ time: 2, threadId: 1 }),
             ],
             statEvents: [],
-            structureEvents: [
-              createThread0(),
-              createThread1(),
-              createUserStory({ id: 0 }),
-            ],
+            structureEvents: [createThread0(), createThread1(), createUserStory({ id: 0 })],
             teamType: 'Parallel',
           },
         ],
@@ -657,13 +587,9 @@ describe('Play', () => {
       await vi.runAllTimersAsync();
 
       const threadUserStory1 = wrapper.get('[data-testid=thread-user-story-1]');
-      expect(
-        threadUserStory1.find('[data-testid=user-story-0-1]').exists(),
-      ).toBe(true);
+      expect(threadUserStory1.find('[data-testid=user-story-0-1]').exists()).toBe(true);
       const threadUserStory0 = wrapper.get('[data-testid=thread-user-story-0]');
-      expect(
-        threadUserStory0.find('[data-testid=user-story-0-0]').exists(),
-      ).toBe(false);
+      expect(threadUserStory0.find('[data-testid=user-story-0-0]').exists()).toBe(false);
     });
 
     test('Should remove ended review when a in progress task starts', async () => {
@@ -695,13 +621,9 @@ describe('Play', () => {
       await vi.runAllTimersAsync();
 
       const threadUserStory1 = wrapper.get('[data-testid=thread-user-story-1]');
-      expect(
-        threadUserStory1.find('[data-testid=user-story-0-1]').exists(),
-      ).toBe(true);
+      expect(threadUserStory1.find('[data-testid=user-story-0-1]').exists()).toBe(true);
       const threadUserStory0 = wrapper.get('[data-testid=thread-user-story-0]');
-      expect(
-        threadUserStory0.find('[data-testid=user-story-0-0]').exists(),
-      ).toBe(false);
+      expect(threadUserStory0.find('[data-testid=user-story-0-0]').exists()).toBe(false);
     });
 
     test('Should keep two reviews when reviews last', async () => {
@@ -715,11 +637,7 @@ describe('Play', () => {
               reviewEvent({ time: 2, threadId: 1 }),
             ],
             statEvents: [],
-            structureEvents: [
-              createThread0(),
-              createThread1(),
-              createUserStory({ id: 0 }),
-            ],
+            structureEvents: [createThread0(), createThread1(), createUserStory({ id: 0 })],
             teamType: 'Parallel',
           },
         ],
@@ -732,13 +650,9 @@ describe('Play', () => {
       await vi.runAllTimersAsync();
 
       const threadUserStory0 = wrapper.get('[data-testid=thread-user-story-0]');
-      expect(
-        threadUserStory0.findAll('[data-testid=user-story-0-0]').length,
-      ).toStrictEqual(1);
+      expect(threadUserStory0.findAll('[data-testid=user-story-0-0]').length).toStrictEqual(1);
       const threadUserStory1 = wrapper.get('[data-testid=thread-user-story-1]');
-      expect(
-        threadUserStory1.findAll('[data-testid=user-story-0-1]').length,
-      ).toStrictEqual(1);
+      expect(threadUserStory1.findAll('[data-testid=user-story-0-1]').length).toStrictEqual(1);
       expect(wrapper.find('[data-testid=user-story-0]').exists()).toBe(false);
     });
 

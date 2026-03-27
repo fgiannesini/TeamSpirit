@@ -4,17 +4,17 @@ import { getThread } from './selector.ts';
 const addThread = (threadNumber: number, name: string): HTMLDivElement => {
   const threadHtmlElement = document.createElement('div');
   threadHtmlElement.id = `thread${threadNumber}`;
-    threadHtmlElement.setAttribute('data-testid', `thread${threadNumber}`);
+  threadHtmlElement.setAttribute('data-testid', `thread${threadNumber}`);
   threadHtmlElement.className = 'thread';
 
   const threadTitle = document.createElement('div');
   threadTitle.id = `thread-title-${threadNumber}`;
-    threadTitle.setAttribute('data-testid', `thread-title-${threadNumber}`);
+  threadTitle.setAttribute('data-testid', `thread-title-${threadNumber}`);
   threadTitle.textContent = name;
 
   const threadContent = document.createElement('div');
   threadContent.id = `thread-user-story-${threadNumber}`;
-    threadContent.setAttribute('data-testid', `thread-user-story-${threadNumber}`);
+  threadContent.setAttribute('data-testid', `thread-user-story-${threadNumber}`);
 
   const threadState = document.createElement('div');
   threadState.id = `thread-state-${threadNumber}`;
@@ -26,10 +26,7 @@ const addThread = (threadNumber: number, name: string): HTMLDivElement => {
   return threadHtmlElement;
 };
 
-export const addThreads = (
-  parent: Element,
-  structureEvents: StructureEvent[],
-): void => {
+export const addThreads = (parent: Element, structureEvents: StructureEvent[]): void => {
   structureEvents
     .filter(
       (event): event is Extract<StructureEvent, { action: 'CreateThread' }> =>
@@ -41,10 +38,7 @@ export const addThreads = (
     });
 };
 
-export const setThreadsOff = (
-  structureEvents: StructureEvent[],
-  timeCount: number,
-): void => {
+export const setThreadsOff = (structureEvents: StructureEvent[], timeCount: number): void => {
   structureEvents
     .filter(({ action, time }) => action === 'ThreadOff' && time === timeCount)
     .forEach(({ id }) => {
@@ -55,10 +49,7 @@ export const setThreadsOff = (
     });
 };
 
-export const setThreadsIn = (
-  structureEvents: StructureEvent[],
-  timeCount: number,
-): void => {
+export const setThreadsIn = (structureEvents: StructureEvent[], timeCount: number): void => {
   structureEvents
     .filter(({ action, time }) => action === 'ThreadIn' && time === timeCount)
     .forEach(({ id }) => {

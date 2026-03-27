@@ -8,10 +8,7 @@ import {
 import type { BugGenerator } from './bug-generator.ts';
 import type { TimeEvent } from './events.ts';
 import type { PriorityModificator } from './priority-modificator.ts';
-import {
-  type StructureEvent,
-  structureEventsOnInitialization,
-} from './simulation-structure.ts';
+import { type StructureEvent, structureEventsOnInitialization } from './simulation-structure.ts';
 import { simulateTimeEvents } from './simulation-time.ts';
 import type { Team } from './team.ts';
 import type { TeamModificator } from './team-modificator.ts';
@@ -74,10 +71,7 @@ export const simulate = (
       getUserStoriesRemainings(backlog),
       time,
     );
-    backlog = resetUserStoriesRemainings(
-      backlog,
-      userStoriesWithModifications.userStories,
-    );
+    backlog = resetUserStoriesRemainings(backlog, userStoriesWithModifications.userStories);
     userStoriesWithModifications.modifications.forEach((modification) => {
       structureEvents.push({
         time,

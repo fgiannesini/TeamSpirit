@@ -17,9 +17,7 @@ const emit = defineEmits<{
 
 const developersToDisplay: Ref<Developer[]> = computed(() => {
   const selectedIds = props.selectedDevelopers.map((d) => d.id);
-  return props.developers.filter(
-    (developer) => !selectedIds.includes(developer.id),
-  );
+  return props.developers.filter((developer) => !selectedIds.includes(developer.id));
 });
 
 const addDeveloper = (developer: Developer): void => {
@@ -38,7 +36,7 @@ const removeDeveloper = (developerToRemove: Developer): void => {
   <article class="medium-width">
     <nav>
       <h4 data-testid="title" class="max small">Period {{ id }}</h4>
-      <remove-button @click="$emit('remove')"/>
+      <remove-button @click="$emit('remove')" />
     </nav>
     <div class="field label suffix border round small">
       <select>
@@ -60,11 +58,11 @@ const removeDeveloper = (developerToRemove: Developer): void => {
           v-for="developer in selectedDevelopers"
           :key="developer.id"
           :data-testid="`dev-selected-button-${developer.id}`"
-          @click="removeDeveloper(developer);"
+          @click="removeDeveloper(developer)"
         >
-          <span :data-testid="`dev-selected-label-${developer.id}`"
-            >{{ `Developer ${developer.id} - XP ${developer.experience}` }}</span
-          >
+          <span :data-testid="`dev-selected-label-${developer.id}`">{{
+            `Developer ${developer.id} - XP ${developer.experience}`
+          }}</span>
           <i>close</i>
         </button>
       </output>
@@ -74,8 +72,13 @@ const removeDeveloper = (developerToRemove: Developer): void => {
         data-testid="start-date-input"
         type="date"
         :value="period.start.toISOString().split('T')[0]"
-        @input="$emit('update:period', { ...period, start: new Date(($event.target as InputHTMLAttributes).value)})"
-      >
+        @input="
+          $emit('update:period', {
+            ...period,
+            start: new Date(($event.target as InputHTMLAttributes).value),
+          })
+        "
+      />
       <label data-testid="start-date-label">Start</label>
     </div>
     <div class="field label border fill">
@@ -83,8 +86,13 @@ const removeDeveloper = (developerToRemove: Developer): void => {
         data-testid="end-date-input"
         type="date"
         :value="period.end.toISOString().split('T')[0]"
-        @input="$emit('update:period', {...period,end:new Date(($event.target as InputHTMLAttributes).value)})"
-      >
+        @input="
+          $emit('update:period', {
+            ...period,
+            end: new Date(($event.target as InputHTMLAttributes).value),
+          })
+        "
+      />
       <label data-testid="end-date-label">End</label>
     </div>
   </article>

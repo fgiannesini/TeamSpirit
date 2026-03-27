@@ -22,11 +22,7 @@ import {
   getThreadUserStoryContainer,
   getUserStory,
 } from './selector.ts';
-import {
-  saveStatEvents,
-  saveStructureEvents,
-  saveTimeEvents,
-} from './storage/session-storage.ts';
+import { saveStatEvents, saveStructureEvents, saveTimeEvents } from './storage/session-storage.ts';
 
 describe('Flow', () => {
   beforeEach(() => {
@@ -68,10 +64,7 @@ describe('Flow', () => {
 
   describe('Thread', () => {
     test('Should initialize 2 thread elements', async () => {
-      saveStructureEvents(
-        [createThread0(), createThread1()],
-        'e4567-e89b-12d3-a456-426614174000',
-      );
+      saveStructureEvents([createThread0(), createThread1()], 'e4567-e89b-12d3-a456-426614174000');
 
       await import('./flow.ts');
       const thread0 = getThread(0);
@@ -119,10 +112,7 @@ describe('Flow', () => {
         [createThread0(), setThreadOff({ id: 0, time: 2 })],
         'e4567-e89b-12d3-a456-426614174000',
       );
-      saveTimeEvents(
-        [doneEvent({ time: 2 })],
-        'e4567-e89b-12d3-a456-426614174000',
-      );
+      saveTimeEvents([doneEvent({ time: 2 })], 'e4567-e89b-12d3-a456-426614174000');
       await import('./flow.ts');
 
       expect(getThread(0)?.style.opacity).toEqual('');
@@ -153,10 +143,7 @@ describe('Flow', () => {
         [createThread0(), setThreadIn({ id: 0, time: 2 })],
         'e4567-e89b-12d3-a456-426614174000',
       );
-      saveTimeEvents(
-        [doneEvent({ time: 2 })],
-        'e4567-e89b-12d3-a456-426614174000',
-      );
+      saveTimeEvents([doneEvent({ time: 2 })], 'e4567-e89b-12d3-a456-426614174000');
       await import('./flow.ts');
 
       expect(getThread(0)?.style.opacity).toEqual('');
@@ -172,10 +159,7 @@ describe('Flow', () => {
         [createThread0(), createUserStory({ id: 0 })],
         'e4567-e89b-12d3-a456-426614174000',
       );
-      saveTimeEvents(
-        [inProgressEvent(), doneEvent()],
-        'e4567-e89b-12d3-a456-426614174000',
-      );
+      saveTimeEvents([inProgressEvent(), doneEvent()], 'e4567-e89b-12d3-a456-426614174000');
       await import('./flow.ts');
 
       getCompute()?.click();
@@ -191,10 +175,7 @@ describe('Flow', () => {
         [createThread0(), createUserStory({ id: 0 })],
         'e4567-e89b-12d3-a456-426614174000',
       );
-      saveTimeEvents(
-        [reviewEvent(), doneEvent()],
-        'e4567-e89b-12d3-a456-426614174000',
-      );
+      saveTimeEvents([reviewEvent(), doneEvent()], 'e4567-e89b-12d3-a456-426614174000');
       await import('./flow.ts');
 
       getCompute()?.click();
@@ -210,10 +191,7 @@ describe('Flow', () => {
         [createThread0(), createUserStory({ id: 0 })],
         'e4567-e89b-12d3-a456-426614174000',
       );
-      saveTimeEvents(
-        [inProgressEvent(), toReviewEvent()],
-        'e4567-e89b-12d3-a456-426614174000',
-      );
+      saveTimeEvents([inProgressEvent(), toReviewEvent()], 'e4567-e89b-12d3-a456-426614174000');
       await import('./flow.ts');
 
       getCompute()?.click();
@@ -228,11 +206,7 @@ describe('Flow', () => {
         'e4567-e89b-12d3-a456-426614174000',
       );
       saveTimeEvents(
-        [
-          inProgressEvent(),
-          toReviewEvent(),
-          doneEvent({ time: 2, userStoryId: -1 }),
-        ],
+        [inProgressEvent(), toReviewEvent(), doneEvent({ time: 2, userStoryId: -1 })],
         'e4567-e89b-12d3-a456-426614174000',
       );
       await import('./flow.ts');
@@ -256,26 +230,19 @@ describe('Flow', () => {
         'e4567-e89b-12d3-a456-426614174000',
       );
       saveTimeEvents(
-        [
-          inProgressEvent({ userStoryId: 0 }),
-          inProgressEvent({ userStoryId: 1 }),
-        ],
+        [inProgressEvent({ userStoryId: 0 }), inProgressEvent({ userStoryId: 1 })],
         'e4567-e89b-12d3-a456-426614174000',
       );
       await import('./flow.ts');
       const userStory1 = getUserStory(0);
       expect(userStory1?.className).toEqual('userStory');
       expect(userStory1?.querySelector('.name')?.textContent).toEqual('US0');
-      expect(userStory1?.querySelector('.priority')?.textContent).toEqual(
-        '(1)',
-      );
+      expect(userStory1?.querySelector('.priority')?.textContent).toEqual('(1)');
 
       const userStory2 = getUserStory(1);
       expect(userStory2?.className).toEqual('userStory');
       expect(userStory2?.querySelector('.name')?.textContent).toEqual('US1');
-      expect(userStory2?.querySelector('.priority')?.textContent).toEqual(
-        '(2)',
-      );
+      expect(userStory2?.querySelector('.priority')?.textContent).toEqual('(2)');
     });
 
     test('Should add a user story on computation click', async () => {
@@ -298,10 +265,7 @@ describe('Flow', () => {
         [createUserStory({ id: 0, time: 2 })],
         'e4567-e89b-12d3-a456-426614174000',
       );
-      saveTimeEvents(
-        [doneEvent({ time: 2 })],
-        'e4567-e89b-12d3-a456-426614174000',
-      );
+      saveTimeEvents([doneEvent({ time: 2 })], 'e4567-e89b-12d3-a456-426614174000');
       await import('./flow.ts');
 
       expect(getUserStory(0)).toBeNull();
@@ -317,17 +281,12 @@ describe('Flow', () => {
         [createThread0(), createUserStory({ id: 0 })],
         'e4567-e89b-12d3-a456-426614174000',
       );
-      saveTimeEvents(
-        [inProgressEvent(), doneEvent()],
-        'e4567-e89b-12d3-a456-426614174000',
-      );
+      saveTimeEvents([inProgressEvent(), doneEvent()], 'e4567-e89b-12d3-a456-426614174000');
       await import('./flow.ts');
 
       getCompute()?.click();
       await vi.advanceTimersToNextTimerAsync();
-      expect(
-        document.querySelector('#thread-user-story-0 #user-story-0-0'),
-      ).not.toBeNull();
+      expect(document.querySelector('#thread-user-story-0 #user-story-0-0')).not.toBeNull();
 
       await vi.advanceTimersToNextTimerAsync();
       expect(document.querySelector('#done #user-story-0')).not.toBeNull();
@@ -339,10 +298,7 @@ describe('Flow', () => {
         'e4567-e89b-12d3-a456-426614174000',
       );
       saveTimeEvents(
-        [
-          inProgressEvent({ userStoryId: 0 }),
-          todoEvent({ userStoryId: 0, time: 2 }),
-        ],
+        [inProgressEvent({ userStoryId: 0 }), todoEvent({ userStoryId: 0, time: 2 })],
         'e4567-e89b-12d3-a456-426614174000',
       );
       await import('./flow.ts');
@@ -377,13 +333,9 @@ describe('Flow', () => {
       getCompute()?.click();
 
       await vi.advanceTimersToNextTimerAsync();
-      expect(
-        document.querySelector('#thread-user-story-0 #user-story-1-0'),
-      ).not.toBeNull();
+      expect(document.querySelector('#thread-user-story-0 #user-story-1-0')).not.toBeNull();
       await vi.advanceTimersToNextTimerAsync();
-      expect(
-        document.querySelector('#thread-user-story-1 #user-story-10-1'),
-      ).not.toBeNull();
+      expect(document.querySelector('#thread-user-story-1 #user-story-10-1')).not.toBeNull();
 
       await vi.advanceTimersToNextTimerAsync();
       expect(document.querySelector('#done #user-story-1')).not.toBeNull();
@@ -396,17 +348,12 @@ describe('Flow', () => {
         [createThread0(), createUserStory({ id: 0 })],
         'e4567-e89b-12d3-a456-426614174000',
       );
-      saveTimeEvents(
-        [inProgressEvent(), inProgressEvent()],
-        'e4567-e89b-12d3-a456-426614174000',
-      );
+      saveTimeEvents([inProgressEvent(), inProgressEvent()], 'e4567-e89b-12d3-a456-426614174000');
       await import('./flow.ts');
 
       getCompute()?.click();
       await vi.runAllTimersAsync();
-      expect(
-        document.querySelector('#thread-user-story-0 #user-story-0-0'),
-      ).not.toBeNull();
+      expect(document.querySelector('#thread-user-story-0 #user-story-0-0')).not.toBeNull();
     });
 
     test('Should move userStories to thread when in review, then done', async () => {
@@ -422,9 +369,7 @@ describe('Flow', () => {
 
       getCompute()?.click();
       await vi.advanceTimersToNextTimerAsync();
-      expect(
-        document.querySelector('#thread-user-story-1 #user-story-0-1'),
-      ).not.toBeNull();
+      expect(document.querySelector('#thread-user-story-1 #user-story-0-1')).not.toBeNull();
 
       await vi.advanceTimersToNextTimerAsync();
       expect(document.querySelector('#done #user-story-0')).not.toBeNull();
@@ -447,12 +392,8 @@ describe('Flow', () => {
 
       getCompute()?.click();
       await vi.runAllTimersAsync();
-      expect(
-        document.querySelector('#thread-user-story-1 #user-story-2-1'),
-      ).toBeNull();
-      expect(
-        document.querySelector('#thread-user-story-0 #user-story-2-0'),
-      ).toBeNull();
+      expect(document.querySelector('#thread-user-story-1 #user-story-2-1')).toBeNull();
+      expect(document.querySelector('#thread-user-story-0 #user-story-2-0')).toBeNull();
       expect(document.querySelector('#done #user-story-2')).not.toBeNull();
     });
 
@@ -473,12 +414,8 @@ describe('Flow', () => {
 
       getCompute()?.click();
       await vi.runAllTimersAsync();
-      expect(
-        document.querySelector('#thread-user-story-1 #user-story-2-1'),
-      ).toBeNull();
-      expect(
-        document.querySelector('#thread-user-story-0 #user-story-2-0'),
-      ).toBeNull();
+      expect(document.querySelector('#thread-user-story-1 #user-story-2-1')).toBeNull();
+      expect(document.querySelector('#thread-user-story-0 #user-story-2-0')).toBeNull();
       expect(document.querySelector('#backlog #user-story-2')).not.toBeNull();
     });
 
@@ -487,10 +424,7 @@ describe('Flow', () => {
         [createThread0(), createUserStory({ id: 0 })],
         'e4567-e89b-12d3-a456-426614174000',
       );
-      saveTimeEvents(
-        [inProgressEvent(), toReviewEvent()],
-        'e4567-e89b-12d3-a456-426614174000',
-      );
+      saveTimeEvents([inProgressEvent(), toReviewEvent()], 'e4567-e89b-12d3-a456-426614174000');
       await import('./flow.ts');
 
       getCompute()?.click();
@@ -501,11 +435,7 @@ describe('Flow', () => {
 
     test('Should move userStories to the corresponding threads when reviewed by several threads', async () => {
       saveStructureEvents(
-        [
-          createThread0(),
-          createThread1(),
-          createUserStory({ id: 0, name: 'US0' }),
-        ],
+        [createThread0(), createThread1(), createUserStory({ id: 0, name: 'US0' })],
         'e4567-e89b-12d3-a456-426614174000',
       );
       saveTimeEvents(
@@ -516,14 +446,10 @@ describe('Flow', () => {
 
       getCompute()?.click();
       await vi.runAllTimersAsync();
-      const firstDiv = document.querySelector(
-        '#thread-user-story-0 #user-story-0-0',
-      );
+      const firstDiv = document.querySelector('#thread-user-story-0 #user-story-0-0');
       expect(firstDiv).not.toBeNull();
       expect(firstDiv?.textContent).toEqual('US0');
-      const secondDiv = document.querySelector(
-        '#thread-user-story-1 #user-story-0-1',
-      );
+      const secondDiv = document.querySelector('#thread-user-story-1 #user-story-0-1');
       expect(secondDiv).not.toBeNull();
       expect(secondDiv?.textContent).toEqual('US0');
       expect(document.querySelector('#backlog #user-story-0')).toBeNull();
@@ -551,22 +477,13 @@ describe('Flow', () => {
       getCompute()?.click();
       await vi.runAllTimersAsync();
 
-      expect(
-        document.querySelector('#thread-user-story-1 #user-story-0-1'),
-      ).not.toBeNull();
-      expect(
-        document.querySelector('#thread-user-story-0 #user-story-0-0'),
-      ).toBeNull();
+      expect(document.querySelector('#thread-user-story-1 #user-story-0-1')).not.toBeNull();
+      expect(document.querySelector('#thread-user-story-0 #user-story-0-0')).toBeNull();
     });
 
     test('Should remove ended review when a in progress task starts', async () => {
       saveStructureEvents(
-        [
-          createThread0(),
-          createThread1(),
-          createUserStory({ id: 0 }),
-          createUserStory({ id: 1 }),
-        ],
+        [createThread0(), createThread1(), createUserStory({ id: 0 }), createUserStory({ id: 1 })],
         'e4567-e89b-12d3-a456-426614174000',
       );
       saveTimeEvents(
@@ -586,12 +503,8 @@ describe('Flow', () => {
       getCompute()?.click();
       await vi.runAllTimersAsync();
 
-      expect(
-        document.querySelector('#thread-user-story-1 #user-story-0-1'),
-      ).not.toBeNull();
-      expect(
-        document.querySelector('#thread-user-story-0 #user-story-0-0'),
-      ).toBeNull();
+      expect(document.querySelector('#thread-user-story-1 #user-story-0-1')).not.toBeNull();
+      expect(document.querySelector('#thread-user-story-0 #user-story-0-0')).toBeNull();
     });
 
     test('Should keep two reviews when reviews last', async () => {
@@ -616,22 +529,13 @@ describe('Flow', () => {
       getCompute()?.click();
       await vi.runAllTimersAsync();
 
-      expect(
-        document.querySelectorAll('#thread-user-story-0 #user-story-0-0')
-          .length,
-      ).toEqual(1);
-      expect(
-        document.querySelectorAll('#thread-user-story-1 #user-story-0-1')
-          .length,
-      ).toEqual(1);
+      expect(document.querySelectorAll('#thread-user-story-0 #user-story-0-0').length).toEqual(1);
+      expect(document.querySelectorAll('#thread-user-story-1 #user-story-0-1').length).toEqual(1);
       expect(document.querySelector('#user-story-0')).toBeNull();
     });
 
     test('Should not display "idle" user story', async () => {
-      saveStructureEvents(
-        [createUserStory({ id: 0 })],
-        'e4567-e89b-12d3-a456-426614174000',
-      );
+      saveStructureEvents([createUserStory({ id: 0 })], 'e4567-e89b-12d3-a456-426614174000');
       saveTimeEvents(
         [
           inProgressEvent({ time: 1, threadId: 0 }),
@@ -676,11 +580,7 @@ describe('Flow', () => {
         'e4567-e89b-12d3-a456-426614174000',
       );
       saveTimeEvents(
-        [
-          inProgressEvent({ time: 1 }),
-          inProgressEvent({ time: 2 }),
-          doneEvent({ time: 2 }),
-        ],
+        [inProgressEvent({ time: 1 }), inProgressEvent({ time: 2 }), doneEvent({ time: 2 })],
         'e4567-e89b-12d3-a456-426614174000',
       );
 
@@ -693,16 +593,9 @@ describe('Flow', () => {
     });
 
     test('Should disable "compute" button during display', async () => {
-      saveStructureEvents(
-        [createUserStory({ id: 0 })],
-        'e4567-e89b-12d3-a456-426614174000',
-      );
+      saveStructureEvents([createUserStory({ id: 0 })], 'e4567-e89b-12d3-a456-426614174000');
       saveTimeEvents(
-        [
-          inProgressEvent({ time: 1 }),
-          inProgressEvent({ time: 2 }),
-          doneEvent({ time: 2 }),
-        ],
+        [inProgressEvent({ time: 1 }), inProgressEvent({ time: 2 }), doneEvent({ time: 2 })],
         'e4567-e89b-12d3-a456-426614174000',
       );
 
@@ -716,14 +609,8 @@ describe('Flow', () => {
     });
 
     test('Should disable "compute" button when finished', async () => {
-      saveStructureEvents(
-        [createUserStory({ id: 0 })],
-        'e4567-e89b-12d3-a456-426614174000',
-      );
-      saveTimeEvents(
-        [inProgressEvent(), doneEvent()],
-        'e4567-e89b-12d3-a456-426614174000',
-      );
+      saveStructureEvents([createUserStory({ id: 0 })], 'e4567-e89b-12d3-a456-426614174000');
+      saveTimeEvents([inProgressEvent(), doneEvent()], 'e4567-e89b-12d3-a456-426614174000');
 
       await import('./flow.ts');
 
@@ -734,14 +621,8 @@ describe('Flow', () => {
     });
 
     test('Should disable "compute all" button when finished', async () => {
-      saveStructureEvents(
-        [createUserStory({ id: 0 })],
-        'e4567-e89b-12d3-a456-426614174000',
-      );
-      saveTimeEvents(
-        [inProgressEvent(), doneEvent()],
-        'e4567-e89b-12d3-a456-426614174000',
-      );
+      saveStructureEvents([createUserStory({ id: 0 })], 'e4567-e89b-12d3-a456-426614174000');
+      saveTimeEvents([inProgressEvent(), doneEvent()], 'e4567-e89b-12d3-a456-426614174000');
 
       await import('./flow.ts');
 

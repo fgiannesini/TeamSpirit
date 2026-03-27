@@ -13,15 +13,10 @@ export const createUserStory = (id: number, name: string): HTMLDivElement => {
   return userStoryHtmlElement;
 };
 
-export const addUserStories = (
-  parent: Element,
-  structureEvents: StructureEvent[],
-): void => {
+export const addUserStories = (parent: Element, structureEvents: StructureEvent[]): void => {
   structureEvents
     .filter(
-      (
-        event,
-      ): event is Extract<StructureEvent, { action: 'CreateUserStory' }> =>
+      (event): event is Extract<StructureEvent, { action: 'CreateUserStory' }> =>
         event.action === 'CreateUserStory',
     )
     .filter(({ id }) => id !== -1)

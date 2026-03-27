@@ -56,17 +56,13 @@ describe('Period Card', () => {
 
     test('Should bind date value', () => {
       const wrapper = createWrapper();
-      const input = wrapper.get<HTMLInputElement>(
-        '[data-testid=start-date-input]',
-      );
+      const input = wrapper.get<HTMLInputElement>('[data-testid=start-date-input]');
       expect(input.element.value).toStrictEqual('2023-01-01');
     });
 
     test('Should send an update event on date change', async () => {
       const wrapper = createWrapper();
-      const input = wrapper.get<HTMLInputElement>(
-        '[data-testid=start-date-input]',
-      );
+      const input = wrapper.get<HTMLInputElement>('[data-testid=start-date-input]');
       await input.setValue('2023-01-02');
       await flushPromises();
 
@@ -95,17 +91,13 @@ describe('Period Card', () => {
 
     test('Should bind date value', () => {
       const wrapper = createWrapper();
-      const input = wrapper.get<HTMLInputElement>(
-        '[data-testid=end-date-input]',
-      );
+      const input = wrapper.get<HTMLInputElement>('[data-testid=end-date-input]');
       expect(input.element.value).toStrictEqual('2024-01-01');
     });
 
     test('Should send an update event on date change', async () => {
       const wrapper = createWrapper();
-      const input = wrapper.get<HTMLInputElement>(
-        '[data-testid=end-date-input]',
-      );
+      const input = wrapper.get<HTMLInputElement>('[data-testid=end-date-input]');
       await input.setValue('2024-01-02');
       await flushPromises();
 

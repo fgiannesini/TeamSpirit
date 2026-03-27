@@ -20,37 +20,32 @@ export type StructureEvent =
       action: 'ChangePriority';
     };
 
-export const structureEventsOnInitialization = (
-  backlog: Backlog,
-  team: Team,
-): StructureEvent[] => {
-  const userStoryStructureEvents: StructureEvent[] = getUserStories(
-    backlog,
-  ).flatMap((userStory) => {
-    return [
-      {
-        time: 1,
-        id: userStory.id,
-        name: userStory.name,
-        action: 'CreateUserStory',
-      },
-      {
-        time: 1,
-        id: userStory.id,
-        value: userStory.priority,
-        action: 'ChangePriority',
-      },
-    ];
+export const structureEventsOnInitialization = (backlog: Backlog, team: Team): StructureEvent[] => {
+  const userStoryStructureEvents: StructureEvent[] = getUserStories(backlog).flatMap(
+    (userStory) => {
+      return [
+        {
+          time: 1,
+          id: userStory.id,
+          name: userStory.name,
+          action: 'CreateUserStory',
+        },
+        {
+          time: 1,
+          id: userStory.id,
+          value: userStory.priority,
+          action: 'ChangePriority',
+        },
+      ];
+    },
+  );
+  const threadStructureEvents: StructureEvent[] = team.getEffectiveThreads().map((thread) => {
+    return {
+      time: 1,
+      id: thread.id,
+      name: thread.name,
+      action: 'CreateThread',
+    };
   });
-  const threadStructureEvents: StructureEvent[] = team
-    .getEffectiveThreads()
-    .map((thread) => {
-      return {
-        time: 1,
-        id: thread.id,
-        name: thread.name,
-        action: 'CreateThread',
-      };
-    });
   return [...threadStructureEvents, ...userStoryStructureEvents];
 };

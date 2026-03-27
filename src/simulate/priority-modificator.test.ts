@@ -24,10 +24,7 @@ describe('Priority Modificator', () => {
         .mockReturnValueOnce(0.05)
         .mockReturnValue(0.2);
       const priorityModificator = new RandomPriorityModificator(randomProvider);
-      const userStories = priorityModificator.generate(
-        [todo({ priority: 0 })],
-        0,
-      );
+      const userStories = priorityModificator.generate([todo({ priority: 0 })], 0);
       expect(userStories).toEqual({
         userStories: [todo({ priority: 1 })],
         modifications: [{ id: 0, priority: 1 }],
@@ -43,15 +40,23 @@ describe('Priority Modificator', () => {
       [0.05, 0.01, 0.5, 2],
       [0.05, 0.01, 0.01, 8],
       [0.05, 0.99, 0.5, 5],
-    ])('Should generate probability with change probability %s Box Moller %s and %s', (changeProbability: number, boxMuller1: number, boxMuller2: number, expectedPriority: number) => {
-      const randomProvider = vitest
-        .fn<() => number>()
-        .mockReturnValueOnce(changeProbability)
-        .mockReturnValueOnce(boxMuller1)
-        .mockReturnValue(boxMuller2);
-      const newPriority = tickJump(5, randomProvider);
-      expect(newPriority).toEqual(expectedPriority);
-    });
+    ])(
+      'Should generate probability with change probability %s Box Moller %s and %s',
+      (
+        changeProbability: number,
+        boxMuller1: number,
+        boxMuller2: number,
+        expectedPriority: number,
+      ) => {
+        const randomProvider = vitest
+          .fn<() => number>()
+          .mockReturnValueOnce(changeProbability)
+          .mockReturnValueOnce(boxMuller1)
+          .mockReturnValue(boxMuller2);
+        const newPriority = tickJump(5, randomProvider);
+        expect(newPriority).toEqual(expectedPriority);
+      },
+    );
   });
 
   describe('Custom', () => {

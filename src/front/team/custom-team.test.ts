@@ -30,9 +30,7 @@ describe('Custom Team', () => {
     wrapper: VueWrapper,
     selector: string,
   ): VueWrapper<InstanceType<typeof DeveloperCard>> => {
-    return wrapper.findComponent<typeof DeveloperCard>(
-      `[data-testid=${selector}]`,
-    );
+    return wrapper.findComponent<typeof DeveloperCard>(`[data-testid=${selector}]`);
   };
 
   test('Should generate a developper card in settings state', async () => {
@@ -50,12 +48,8 @@ describe('Custom Team', () => {
       developers: [developer(), { id: 1, experience: 3 }],
     });
 
-    expect(getDeveloperCard(wrapper, 'developer-card-0').props('id')).toEqual(
-      0,
-    );
-    expect(getDeveloperCard(wrapper, 'developer-card-1').props('id')).toEqual(
-      1,
-    );
+    expect(getDeveloperCard(wrapper, 'developer-card-0').props('id')).toEqual(0);
+    expect(getDeveloperCard(wrapper, 'developer-card-1').props('id')).toEqual(1);
   });
 
   test('Should bind developer experience', () => {
@@ -63,9 +57,7 @@ describe('Custom Team', () => {
       developers: [developer({ id: 0, experience: 4 })],
     });
 
-    expect(
-      getDeveloperCard(wrapper, 'developer-card-0').props('experience'),
-    ).toEqual(4);
+    expect(getDeveloperCard(wrapper, 'developer-card-0').props('experience')).toEqual(4);
   });
 
   test('Should update developer experience', async () => {

@@ -25,7 +25,7 @@ const activate = (tabName: TabName): void => {
         </button>
         <div class="small-margin">Team</div>
       </div>
-      <hr class="small-width">
+      <hr class="small-width" />
       <div class="center-align">
         <button
           data-testid="reviewers-tab"
@@ -36,7 +36,7 @@ const activate = (tabName: TabName): void => {
         </button>
         <div class="small-margin">Reviewers</div>
       </div>
-      <hr class="small-width">
+      <hr class="small-width" />
       <div class="center-align">
         <button
           data-testid="team-modificator-tab"
@@ -47,7 +47,7 @@ const activate = (tabName: TabName): void => {
         </button>
         <div class="small-margin">Team Modificator</div>
       </div>
-      <hr class="small-width">
+      <hr class="small-width" />
       <div class="center-align">
         <button
           data-testid="user-stories-tab"
@@ -61,32 +61,32 @@ const activate = (tabName: TabName): void => {
     </nav>
     <div
       data-testid="team-container"
-      :class="[active === 'team' ? 'active' : '','page', 'padding']"
+      :class="[active === 'team' ? 'active' : '', 'page', 'padding']"
     >
       <Team></Team>
     </div>
     <div
       data-testid="reviewers-container"
-      :class="[active === 'reviewers' ? 'active' : '','page', 'padding']"
+      :class="[active === 'reviewers' ? 'active' : '', 'page', 'padding']"
     >
-      <Reviewers/>
+      <Reviewers />
     </div>
     <div
       data-testid="team-modificator-container"
-      :class="[active === 'team-modificator' ? 'active' : '','page', 'padding']"
+      :class="[active === 'team-modificator' ? 'active' : '', 'page', 'padding']"
     >
-      <TeamModificator/>
+      <TeamModificator />
     </div>
     <div
       data-testid="user-stories-container"
-      :class="[active === 'user-stories' ? 'active' : '','page', 'padding']"
+      :class="[active === 'user-stories' ? 'active' : '', 'page', 'padding']"
     >
       <UserStories></UserStories>
     </div>
   </main>
   <nav class="right" data-testid="resume-panel">
     Resume
-    <resume/>
+    <resume />
     <button data-testid="launch-button" @click="$router.push('/simulate')">Launch</button>
   </nav>
 </template>

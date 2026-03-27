@@ -1,4 +1,4 @@
-import type {TimeEvent} from '../simulate/events.ts';
+import type { TimeEvent } from '../simulate/events.ts';
 import {
   getAllUserStories,
   getBacklog,
@@ -7,9 +7,13 @@ import {
   getUserStory,
   getUserStoryOfThread,
 } from './selector.ts';
-import type {ThreadState, ThreadVue} from "../front/play/play.vue";
+import type { ThreadState, ThreadVue } from '../front/play/play.vue';
 
-const setThreadStateTo = (threads: ThreadVue[], threadIndex: number, threadState: ThreadState): void => {
+const setThreadStateTo = (
+  threads: ThreadVue[],
+  threadIndex: number,
+  threadState: ThreadState,
+): void => {
   const thread = threads.find((thread) => thread.id === threadIndex);
   if (thread) {
     thread.state = threadState;
@@ -17,15 +21,14 @@ const setThreadStateTo = (threads: ThreadVue[], threadIndex: number, threadState
 };
 
 const removeCurrentTaskOfThread = (currentEvent: TimeEvent): void => {
-  Array.from(
-    getThreadUserStoryContainer(currentEvent.threadId)?.children ?? [],
-  ).forEach((child) => {
-    child.remove();
-  });
+  Array.from(getThreadUserStoryContainer(currentEvent.threadId)?.children ?? []).forEach(
+    (child) => {
+      child.remove();
+    },
+  );
 };
 
-const sleep = (ms: number): Promise<unknown> =>
-  new Promise((resolve) => setTimeout(resolve, ms));
+const sleep = (ms: number): Promise<unknown> => new Promise((resolve) => setTimeout(resolve, ms));
 
 const handleInProgress = (currentEvent: TimeEvent): void => {
   const id = `user-story-${currentEvent.userStoryId}-${currentEvent.threadId}`;
@@ -42,20 +45,14 @@ const handleInProgress = (currentEvent: TimeEvent): void => {
 };
 
 const handleReview = (currentEvent: TimeEvent): void => {
-  const newUserStory = getUserStory(currentEvent.userStoryId)?.cloneNode(
-    true,
-  ) as HTMLElement;
+  const newUserStory = getUserStory(currentEvent.userStoryId)?.cloneNode(true) as HTMLElement;
   if (newUserStory) {
     newUserStory.id = `user-story-${currentEvent.userStoryId}-${currentEvent.threadId}`;
-    const threadUserStoryContainer = getThreadUserStoryContainer(
-      currentEvent.threadId,
-    );
+    const threadUserStoryContainer = getThreadUserStoryContainer(currentEvent.threadId);
     threadUserStoryContainer?.appendChild(newUserStory);
   }
   document
-    .querySelector<HTMLDivElement>(
-      `#backlog #user-story-${currentEvent.userStoryId}`,
-    )
+    .querySelector<HTMLDivElement>(`#backlog #user-story-${currentEvent.userStoryId}`)
     ?.remove();
 };
 
@@ -84,10 +81,11 @@ const handleDone = (currentEvent: TimeEvent): void => {
 };
 
 export const renderTimeEvents = async (
-    events: TimeEvent[],
-    time: number,
-    animationTime: number,
-    threads: ThreadVue[]): Promise<void> => {
+  events: TimeEvent[],
+  time: number,
+  animationTime: number,
+  threads: ThreadVue[],
+): Promise<void> => {
   const currentEvents = events.filter((event) => event.time === time);
   for (const currentEvent of currentEvents) {
     if (currentEvent.userStoryId === -1) {
@@ -109,9 +107,7 @@ export const renderTimeEvents = async (
         break;
       }
       case 'Review': {
-        if (
-          getUserStoryOfThread(currentEvent.userStoryId, currentEvent.threadId)
-        ) {
+        if (getUserStoryOfThread(currentEvent.userStoryId, currentEvent.threadId)) {
           continue;
         }
         removeCurrentTaskOfThread(currentEvent);

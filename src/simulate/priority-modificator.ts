@@ -19,10 +19,7 @@ const sampleTruncatedNormalInt = (
   return Math.round(x);
 };
 
-export const tickJump = (
-  priority: number,
-  randomProvider: () => number,
-): number => {
+export const tickJump = (priority: number, randomProvider: () => number): number => {
   if (randomProvider() >= 0.08) {
     return priority;
   }

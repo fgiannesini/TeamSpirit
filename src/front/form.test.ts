@@ -62,14 +62,10 @@ describe('Form', () => {
     test('Should set the team page active on team tab click', async () => {
       const wrapper = createWrapper();
       await wrapper.get('[data-testid=reviewers-tab]').trigger('click');
-      expect(
-        wrapper.get('[data-testid=team-container]').classes(),
-      ).not.toContain('active');
+      expect(wrapper.get('[data-testid=team-container]').classes()).not.toContain('active');
 
       await wrapper.get('[data-testid=team-tab]').trigger('click');
-      expect(wrapper.get('[data-testid=team-container]').classes()).toContain(
-        'active',
-      );
+      expect(wrapper.get('[data-testid=team-container]').classes()).toContain('active');
     });
   });
 
@@ -84,9 +80,7 @@ describe('Form', () => {
 
       const reviewers = wrapper.get('[data-testid=reviewers-tab]');
       await reviewers.trigger('click');
-      expect(wrapper.get('[data-testid=reviewers-tab]').classes()).toContain(
-        'active',
-      );
+      expect(wrapper.get('[data-testid=reviewers-tab]').classes()).toContain('active');
 
       const teamClasses = wrapper.get('[data-testid=team-tab]').classes();
       expect(teamClasses).not.toContain('active');
@@ -94,14 +88,10 @@ describe('Form', () => {
 
     test('Should set the reviewers page active on reviewers tab click', async () => {
       const wrapper = createWrapper();
-      expect(
-        wrapper.get('[data-testid=reviewers-container]').classes(),
-      ).not.toContain('active');
+      expect(wrapper.get('[data-testid=reviewers-container]').classes()).not.toContain('active');
 
       await wrapper.get('[data-testid=reviewers-tab]').trigger('click');
-      expect(
-        wrapper.get('[data-testid=reviewers-container]').classes(),
-      ).toContain('active');
+      expect(wrapper.get('[data-testid=reviewers-container]').classes()).toContain('active');
     });
 
     test('Should render a reviewers component', async () => {
@@ -126,9 +116,7 @@ describe('Form', () => {
   describe('Team modificator', () => {
     test('Should render a navigation team modificator tab', () => {
       const wrapper = createWrapper();
-      expect(
-        wrapper.get('[data-testid=team-modificator-tab]').isVisible(),
-      ).toBe(true);
+      expect(wrapper.get('[data-testid=team-modificator-tab]').isVisible()).toBe(true);
     });
 
     test('Should set the navigation tab team modificator active onclick', async () => {
@@ -136,9 +124,7 @@ describe('Form', () => {
 
       const teamModificator = wrapper.get('[data-testid=team-modificator-tab]');
       await teamModificator.trigger('click');
-      expect(
-        wrapper.get('[data-testid=team-modificator-tab]').classes(),
-      ).toContain('active');
+      expect(wrapper.get('[data-testid=team-modificator-tab]').classes()).toContain('active');
 
       const teamClasses = wrapper.get('[data-testid=team-tab]').classes();
       expect(teamClasses).not.toContain('active');
@@ -146,14 +132,12 @@ describe('Form', () => {
 
     test('Should set the modificator team page active on modificator tab click', async () => {
       const wrapper = createWrapper();
-      expect(
-        wrapper.get('[data-testid=team-modificator-container]').classes(),
-      ).not.toContain('active');
+      expect(wrapper.get('[data-testid=team-modificator-container]').classes()).not.toContain(
+        'active',
+      );
 
       await wrapper.get('[data-testid=team-modificator-tab]').trigger('click');
-      expect(
-        wrapper.get('[data-testid=team-modificator-container]').classes(),
-      ).toContain('active');
+      expect(wrapper.get('[data-testid=team-modificator-container]').classes()).toContain('active');
     });
 
     test('Should render a team modificator component', async () => {
@@ -166,9 +150,7 @@ describe('Form', () => {
   describe('User Stories', () => {
     test('Should render a navigation user stories tab', () => {
       const wrapper = createWrapper();
-      expect(wrapper.get('[data-testid=user-stories-tab]').isVisible()).toBe(
-        true,
-      );
+      expect(wrapper.get('[data-testid=user-stories-tab]').isVisible()).toBe(true);
     });
 
     test('Should set the navigation tab user stories active onclick', async () => {
@@ -176,9 +158,7 @@ describe('Form', () => {
 
       const userStories = wrapper.get('[data-testid=user-stories-tab]');
       await userStories.trigger('click');
-      expect(wrapper.get('[data-testid=user-stories-tab]').classes()).toContain(
-        'active',
-      );
+      expect(wrapper.get('[data-testid=user-stories-tab]').classes()).toContain('active');
 
       const teamClasses = wrapper.get('[data-testid=team-tab]').classes();
       expect(teamClasses).not.toContain('active');
@@ -186,14 +166,10 @@ describe('Form', () => {
 
     test('Should set the user stories page active on user stories tab click', async () => {
       const wrapper = createWrapper();
-      expect(
-        wrapper.get('[data-testid=user-stories-container]').classes(),
-      ).not.toContain('active');
+      expect(wrapper.get('[data-testid=user-stories-container]').classes()).not.toContain('active');
 
       await wrapper.get('[data-testid=user-stories-tab]').trigger('click');
-      expect(
-        wrapper.get('[data-testid=user-stories-container]').classes(),
-      ).toContain('active');
+      expect(wrapper.get('[data-testid=user-stories-container]').classes()).toContain('active');
     });
 
     test('Should render a user stories component', async () => {

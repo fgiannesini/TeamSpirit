@@ -15,30 +15,30 @@ const hasUserStories = () => store.userStories.length > 0;
 
 <template>
   <div v-if="hasUserStories()" data-testid="setting-state">
-    <add-button text="Add a user story" @click="addUserStory"/>
+    <add-button text="Add a user story" @click="addUserStory" />
     <div class="grid">
       <div class="m6 l3" v-for="userStory in store.userStories">
         <user-story-card
-            :id="userStory.id"
-            v-model:complexity="userStory.complexity"
-            v-model:review-complexity="userStory.reviewComplexity"
-            v-model:priority="userStory.priority"
-            :data-testid="'user-story-card-' + userStory.id"
-            @remove="removeUserStory(userStory.id)"
+          :id="userStory.id"
+          v-model:complexity="userStory.complexity"
+          v-model:review-complexity="userStory.reviewComplexity"
+          v-model:priority="userStory.priority"
+          :data-testid="'user-story-card-' + userStory.id"
+          @remove="removeUserStory(userStory.id)"
         ></user-story-card>
       </div>
     </div>
   </div>
   <article
-      v-if="!hasUserStories()"
-      class="medium middle-align center-align"
-      data-testid="empty-state"
+    v-if="!hasUserStories()"
+    class="medium middle-align center-align"
+    data-testid="empty-state"
   >
     <div>
       <i class="extra">groups</i>
       <h5>Your don't have a user story</h5>
       <div class="medium-space"></div>
-      <add-button text="Add a developer" @click="addUserStory"/>
+      <add-button text="Add a developer" @click="addUserStory" />
     </div>
   </article>
 </template>

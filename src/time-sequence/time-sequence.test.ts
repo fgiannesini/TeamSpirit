@@ -1,10 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import {
-  saveStructureEvents,
-  saveTimeEvents,
-} from '../flow/storage/session-storage.ts';
+import { saveStructureEvents, saveTimeEvents } from '../flow/storage/session-storage.ts';
 import { createUserStory } from '../simulate/factory.ts';
 import type { State } from '../simulate/user-story.ts';
 
@@ -21,10 +18,7 @@ describe('Time sequence', () => {
   });
 
   test('Should render the page with two events on one user story in progress and done', async () => {
-    saveStructureEvents(
-      [createUserStory({ id: 0 })],
-      'e4567-e89b-12d3-a456-426614174000',
-    );
+    saveStructureEvents([createUserStory({ id: 0 })], 'e4567-e89b-12d3-a456-426614174000');
     saveTimeEvents(
       [
         {
@@ -46,19 +40,12 @@ describe('Time sequence', () => {
 
     const userStories = document.querySelectorAll('.user-story');
     expect(userStories.length).toEqual(1);
-    expect(userStoryClassNames('user-story-0')).toEqual([
-      'vertical',
-      'horizontal-top',
-      'vertical',
-    ]);
+    expect(userStoryClassNames('user-story-0')).toEqual(['vertical', 'horizontal-top', 'vertical']);
   });
 
   test('Should render the page with two user stories', async () => {
     saveStructureEvents(
-      [
-        createUserStory({ id: 0, name: 'US0' }),
-        createUserStory({ id: 1, name: 'US1' }),
-      ],
+      [createUserStory({ id: 0, name: 'US0' }), createUserStory({ id: 1, name: 'US1' })],
       'e4567-e89b-12d3-a456-426614174000',
     );
     saveTimeEvents(
@@ -98,9 +85,9 @@ describe('Time sequence', () => {
     );
     await import('./time-sequence.ts');
 
-    const userStoriesTitle = Array.from(
-      document.querySelectorAll('.user-story span'),
-    ).map((div) => div.textContent);
+    const userStoriesTitle = Array.from(document.querySelectorAll('.user-story span')).map(
+      (div) => div.textContent,
+    );
     expect(userStoriesTitle).toEqual(['US0', 'US1']);
   });
 
@@ -157,10 +144,7 @@ describe('Time sequence', () => {
   });
 
   test('Should render the page with one user story in progress and to review', async () => {
-    saveStructureEvents(
-      [createUserStory({ id: 0 })],
-      'e4567-e89b-12d3-a456-426614174000',
-    );
+    saveStructureEvents([createUserStory({ id: 0 })], 'e4567-e89b-12d3-a456-426614174000');
     saveTimeEvents(
       [
         {
@@ -180,54 +164,44 @@ describe('Time sequence', () => {
     );
     await import('./time-sequence.ts');
 
-    expect(userStoryClassNames('user-story-0')).toEqual([
-      'vertical',
-      'horizontal-top',
-      'vertical',
-    ]);
+    expect(userStoryClassNames('user-story-0')).toEqual(['vertical', 'horizontal-top', 'vertical']);
   });
 
-  test.each([
-    'InProgress' as State,
-    'Review' as State,
-  ])('Should render the page with one user story still processed', async (state: State) => {
-    saveStructureEvents(
-      [createUserStory({ id: 0 })],
-      'e4567-e89b-12d3-a456-426614174000',
-    );
-    saveTimeEvents(
-      [
-        {
-          time: 1,
-          userStoryId: 0,
-          threadId: 0,
-          state,
-        },
-        {
-          time: 2,
-          userStoryId: 0,
-          threadId: 0,
-          state,
-        },
-      ],
-      'e4567-e89b-12d3-a456-426614174000',
-    );
-    await import('./time-sequence.ts');
+  test.each(['InProgress' as State, 'Review' as State])(
+    'Should render the page with one user story still processed',
+    async (state: State) => {
+      saveStructureEvents([createUserStory({ id: 0 })], 'e4567-e89b-12d3-a456-426614174000');
+      saveTimeEvents(
+        [
+          {
+            time: 1,
+            userStoryId: 0,
+            threadId: 0,
+            state,
+          },
+          {
+            time: 2,
+            userStoryId: 0,
+            threadId: 0,
+            state,
+          },
+        ],
+        'e4567-e89b-12d3-a456-426614174000',
+      );
+      await import('./time-sequence.ts');
 
-    expect(userStoryClassNames('user-story-0')).toEqual([
-      'vertical',
-      'horizontal-top',
-      'vertical-dashed',
-      'horizontal-top',
-      'vertical',
-    ]);
-  });
+      expect(userStoryClassNames('user-story-0')).toEqual([
+        'vertical',
+        'horizontal-top',
+        'vertical-dashed',
+        'horizontal-top',
+        'vertical',
+      ]);
+    },
+  );
 
   test('Should render the page with one user story to review and reviewed', async () => {
-    saveStructureEvents(
-      [createUserStory({ id: 0 })],
-      'e4567-e89b-12d3-a456-426614174000',
-    );
+    saveStructureEvents([createUserStory({ id: 0 })], 'e4567-e89b-12d3-a456-426614174000');
     saveTimeEvents(
       [
         {
@@ -263,10 +237,7 @@ describe('Time sequence', () => {
   });
 
   test('Should render the page with one user story reviewed by two threads', async () => {
-    saveStructureEvents(
-      [createUserStory({ id: 0 })],
-      'e4567-e89b-12d3-a456-426614174000',
-    );
+    saveStructureEvents([createUserStory({ id: 0 })], 'e4567-e89b-12d3-a456-426614174000');
     saveTimeEvents(
       [
         {
@@ -286,11 +257,7 @@ describe('Time sequence', () => {
     );
     await import('./time-sequence.ts');
 
-    expect(userStoryClassNames('user-story-0')).toEqual([
-      'vertical',
-      'horizontal-top',
-      'vertical',
-    ]);
+    expect(userStoryClassNames('user-story-0')).toEqual(['vertical', 'horizontal-top', 'vertical']);
   });
 
   test('Should render the page with one user story reviewed by two threads', async () => {
@@ -347,7 +314,5 @@ describe('Time sequence', () => {
   });
 
   const userStoryClassNames = (userStoryId: string): string[] =>
-    Array.from(document.querySelectorAll(`#${userStoryId} div`)).map(
-      (div) => div.className,
-    );
+    Array.from(document.querySelectorAll(`#${userStoryId} div`)).map((div) => div.className);
 });

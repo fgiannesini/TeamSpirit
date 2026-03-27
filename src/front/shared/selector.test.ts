@@ -1,8 +1,4 @@
-import {
-  type DOMWrapper,
-  shallowMount,
-  type VueWrapper,
-} from '@vue/test-utils';
+import { type DOMWrapper, shallowMount, type VueWrapper } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
 import Selector from './selector.vue';
 
@@ -22,10 +18,7 @@ describe('Selector', () => {
     expect(wrapper.exists()).toBe(true);
   });
 
-  const radio = (
-    wrapper: VueWrapper,
-    radioName: string,
-  ): DOMWrapper<HTMLInputElement> => {
+  const radio = (wrapper: VueWrapper, radioName: string): DOMWrapper<HTMLInputElement> => {
     return wrapper.find<HTMLInputElement>(`[data-testid=${radioName}-radio]`);
   };
 
@@ -49,10 +42,7 @@ describe('Selector', () => {
       await wrapper.setProps({ mandatory: false });
       await radio(wrapper, 'random').trigger('click');
       await radio(wrapper, 'notSet').trigger('click');
-      expect(wrapper.emitted('update:selectedMode')).toStrictEqual([
-        ['random'],
-        ['notSet'],
-      ]);
+      expect(wrapper.emitted('update:selectedMode')).toStrictEqual([['random'], ['notSet']]);
     });
   });
 
@@ -118,9 +108,7 @@ describe('Selector', () => {
       selectedMode: 'custom',
     });
 
-    expect(wrapper.get('[data-testid=custom-container]').classes()).toContain(
-      'active',
-    );
+    expect(wrapper.get('[data-testid=custom-container]').classes()).toContain('active');
 
     expect(wrapper.get('[data-testid=slot]')).toBeDefined();
   });
@@ -131,8 +119,6 @@ describe('Selector', () => {
       selectedMode: 'random',
     });
 
-    expect(
-      wrapper.get('[data-testid=custom-container]').classes(),
-    ).not.toContain('active');
+    expect(wrapper.get('[data-testid=custom-container]').classes()).not.toContain('active');
   });
 });

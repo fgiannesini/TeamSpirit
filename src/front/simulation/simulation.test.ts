@@ -126,16 +126,12 @@ describe('Simulation', () => {
 
     test('Should display an iteration count label', async () => {
       const { wrapper } = await createWrapperWithMocks();
-      expect(wrapper.get('[data-testid=iteration-count-label]').text()).toBe(
-        'Iteration count',
-      );
+      expect(wrapper.get('[data-testid=iteration-count-label]').text()).toBe('Iteration count');
     });
 
     test('Should display an iteration count input', async () => {
       const { wrapper } = await createWrapperWithMocks();
-      expect(wrapper.find('[data-testid=iteration-count-input]').exists()).toBe(
-        true,
-      );
+      expect(wrapper.find('[data-testid=iteration-count-input]').exists()).toBe(true);
     });
 
     test('Should display stats container and header', async () => {
@@ -149,9 +145,7 @@ describe('Simulation', () => {
       const { wrapper } = await createWrapperWithMocks();
       const launchButton = wrapper.get('[data-testid=launch-button]');
       await launchButton.trigger('click');
-      expect(wrapper.get('[data-testid=stats-total-time-header]').text()).toBe(
-        'Total time',
-      );
+      expect(wrapper.get('[data-testid=stats-total-time-header]').text()).toBe('Total time');
       expect(wrapper.get('[data-testid=stats-total-time-0]').text()).toBe('2');
       expect(wrapper.get('[data-testid=stats-total-time-1]').text()).toBe('1');
     });
@@ -160,9 +154,7 @@ describe('Simulation', () => {
       const { wrapper } = await createWrapperWithMocks();
       const launchButton = wrapper.get('[data-testid=launch-button]');
       await launchButton.trigger('click');
-      expect(wrapper.get('[data-testid=stats-lead-time-header]').text()).toBe(
-        'Lead time',
-      );
+      expect(wrapper.get('[data-testid=stats-lead-time-header]').text()).toBe('Lead time');
       expect(wrapper.get('[data-testid=stats-lead-time-0]').text()).toBe('0.5');
       expect(wrapper.get('[data-testid=stats-lead-time-1]').text()).toBe('0.7');
     });
@@ -171,9 +163,7 @@ describe('Simulation', () => {
       const { wrapper } = await createWrapperWithMocks();
       const launchButton = wrapper.get('[data-testid=launch-button]');
       await launchButton.trigger('click');
-      expect(wrapper.get('[data-testid=user-story-count-header]').text()).toBe(
-        'User story count',
-      );
+      expect(wrapper.get('[data-testid=user-story-count-header]').text()).toBe('User story count');
       expect(wrapper.get('[data-testid=user-story-count-0]').text()).toBe('1');
       expect(wrapper.get('[data-testid=user-story-count-1]').text()).toBe('1');
     });
@@ -208,9 +198,7 @@ describe('Simulation', () => {
     test('Should generate several iterations', async () => {
       const { wrapper } = await createWrapperWithMocks();
 
-      const iterationCountInput = wrapper.get(
-        '[data-testid=iteration-count-input]',
-      );
+      const iterationCountInput = wrapper.get('[data-testid=iteration-count-input]');
       await iterationCountInput.setValue(2);
 
       const launchButton = wrapper.get('[data-testid=launch-button]');

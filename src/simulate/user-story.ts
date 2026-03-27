@@ -8,15 +8,8 @@ import {
 } from './review.ts';
 import type { Thread } from './team.ts';
 
-const updateReviewPoints = (
-  review: Review,
-  dev: Thread,
-  newReviewPoints: number,
-): Review => {
-  const newReviewers = new Map<number, number>(review.reviewers).set(
-    dev.id,
-    newReviewPoints,
-  );
+const updateReviewPoints = (review: Review, dev: Thread, newReviewPoints: number): Review => {
+  const newReviewers = new Map<number, number>(review.reviewers).set(dev.id, newReviewPoints);
   return {
     ...review,
     reviewers: newReviewers,
@@ -55,10 +48,7 @@ export const setTodo = (userStory: UserStory): UserStory => {
 export const setInProgress = (userStory: UserStory, dev: Thread): UserStory => {
   return {
     ...userStory,
-    progression: Math.min(
-      userStory.progression + dev.power,
-      userStory.complexity,
-    ),
+    progression: Math.min(userStory.progression + dev.power, userStory.complexity),
     threadId: dev.id,
     state: 'InProgress',
   };
@@ -77,17 +67,11 @@ export const setDoneBy = (
   };
 };
 
-export const setDone = (
-  userStory: UserStory,
-  currentTime: number,
-): UserStory => {
+export const setDone = (userStory: UserStory, currentTime: number): UserStory => {
   return { ...userStory, state: 'Done', timeDone: currentTime };
 };
 
-export const setToReview = (
-  userStory: UserStory,
-  threadId: number,
-): UserStory => {
+export const setToReview = (userStory: UserStory, threadId: number): UserStory => {
   return {
     ...userStory,
     state: 'ToReview',
@@ -115,20 +99,14 @@ export const isDeveloped = (userStory: UserStory): boolean => {
   return userStory.progression === userStory.complexity;
 };
 
-export const isReviewed = (
-  userStory: UserStory,
-  reviewersNeeded: number,
-): boolean => {
-  return hasAllReviews(
-    userStory.review,
-    userStory.review.reviewComplexity,
-    reviewersNeeded,
-  );
+export const isReviewed = (userStory: UserStory, reviewersNeeded: number): boolean => {
+  return hasAllReviews(userStory.review, userStory.review.reviewComplexity, reviewersNeeded);
 };
 
-export const isInProgressBy: (userStory: UserStory, thread: Thread) => boolean =
-  (userStory: UserStory, thread: Thread) =>
-    userStory.state === 'InProgress' && userStory.threadId === thread.id;
+export const isInProgressBy: (userStory: UserStory, thread: Thread) => boolean = (
+  userStory: UserStory,
+  thread: Thread,
+) => userStory.state === 'InProgress' && userStory.threadId === thread.id;
 
 export const isInReviewBy: (userStory: UserStory, thread: Thread) => boolean = (
   userStory: UserStory,
@@ -137,11 +115,7 @@ export const isInReviewBy: (userStory: UserStory, thread: Thread) => boolean = (
   if (userStory.state !== 'Review' || userStory.threadId === thread.id) {
     return false;
   }
-  return hasReviewStarted(
-    userStory.review,
-    thread,
-    userStory.review.reviewComplexity,
-  );
+  return hasReviewStarted(userStory.review, thread, userStory.review.reviewComplexity);
 };
 
 export const needReviewBy = (
@@ -158,6 +132,5 @@ export const isToReviewBy: (userStory: UserStory, thread: Thread) => boolean = (
   thread: Thread,
 ) => userStory.state === 'ToReview' && userStory.threadId !== thread.id;
 
-export const isToDo: (userStory: UserStory) => boolean = (
-  userStory: UserStory,
-) => userStory.state === 'Todo';
+export const isToDo: (userStory: UserStory) => boolean = (userStory: UserStory) =>
+  userStory.state === 'Todo';

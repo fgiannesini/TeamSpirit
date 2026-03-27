@@ -6,9 +6,7 @@ export const developer = (option: Partial<Developer> = {}): Developer => ({
   ...option,
 });
 
-export const teamModification = (
-  option: Partial<TeamModification> = {},
-): TeamModification => ({
+export const teamModification = (option: Partial<TeamModification> = {}): TeamModification => ({
   id: 0,
   selectedDevelopers: [],
   period: {

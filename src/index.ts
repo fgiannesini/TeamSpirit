@@ -30,12 +30,7 @@ import {
 import { noReview } from './simulate/review.ts';
 import { simulate } from './simulate/simulation.ts';
 import { computeStatEvents } from './simulate/stats.ts';
-import {
-  EnsembleTeam,
-  ParallelTeam,
-  type Team,
-  type Thread,
-} from './simulate/team.ts';
+import { EnsembleTeam, ParallelTeam, type Team, type Thread } from './simulate/team.ts';
 import {
   CustomTeamModificator,
   noTeamModificator,
@@ -76,53 +71,43 @@ const runSimulation = (
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-  document
-    .querySelector<HTMLButtonElement>('#calculate-button')
-    ?.addEventListener('click', () => {
-      const ensembleTeamBacklog = buildBacklogForEnsembleTeam();
+  document.querySelector<HTMLButtonElement>('#calculate-button')?.addEventListener('click', () => {
+    const ensembleTeamBacklog = buildBacklogForEnsembleTeam();
 
-      const ensembleRandomKey = runSimulation(
-        ensembleTeamBacklog,
-        buildEnsembleTeam(),
-        getBugGenerator(),
-        getTeamModificator(),
-        getPriorityModificator(),
-      );
-      window.open(`/TeamSpirit/flow/flow.html?id=${ensembleRandomKey}`);
-      window.open(
-        `/TeamSpirit/time-sequence/time-sequence.html?id=${ensembleRandomKey}`,
-      );
-      const parallelTeamBacklog = buildBacklogForParallelTeam();
-      const parallelRandomKey = runSimulation(
-        parallelTeamBacklog,
-        buildParallelTeam(),
-        getBugGenerator(),
-        getTeamModificator(),
-        getPriorityModificator(),
-      );
-      window.open(`/TeamSpirit/flow/flow.html?id=${parallelRandomKey}`);
-      window.open(
-        `/TeamSpirit/time-sequence/time-sequence.html?id=${parallelRandomKey}`,
-      );
-    });
+    const ensembleRandomKey = runSimulation(
+      ensembleTeamBacklog,
+      buildEnsembleTeam(),
+      getBugGenerator(),
+      getTeamModificator(),
+      getPriorityModificator(),
+    );
+    window.open(`/TeamSpirit/flow/flow.html?id=${ensembleRandomKey}`);
+    window.open(`/TeamSpirit/time-sequence/time-sequence.html?id=${ensembleRandomKey}`);
+    const parallelTeamBacklog = buildBacklogForParallelTeam();
+    const parallelRandomKey = runSimulation(
+      parallelTeamBacklog,
+      buildParallelTeam(),
+      getBugGenerator(),
+      getTeamModificator(),
+      getPriorityModificator(),
+    );
+    window.open(`/TeamSpirit/flow/flow.html?id=${parallelRandomKey}`);
+    window.open(`/TeamSpirit/time-sequence/time-sequence.html?id=${parallelRandomKey}`);
+  });
 
   document
     .querySelector<HTMLButtonElement>('#generate-devs-button')
     ?.addEventListener('click', () => {
       const devsContainer = document.getElementById('devs-container');
       const devCount = getInputValueOf('#dev-count-input');
-      const devs = Array.from({ length: devCount }, (_, i) =>
-        generateDevForm(i),
-      );
+      const devs = Array.from({ length: devCount }, (_, i) => generateDevForm(i));
       devsContainer?.replaceChildren(...devs);
     });
 
   document
     .querySelector<HTMLButtonElement>('#generate-user-stories-button')
     ?.addEventListener('click', () => {
-      const userStoriesContainer = document.getElementById(
-        'user-stories-container',
-      );
+      const userStoriesContainer = document.getElementById('user-stories-container');
       const userStoriesCount = getInputValueOf('#user-story-count-input');
       const userStories = Array.from({ length: userStoriesCount }, (_, i) =>
         generateUserStoriesForm(i),
@@ -135,16 +120,12 @@ document.addEventListener('DOMContentLoaded', () => {
     ?.addEventListener('change', (event) => {
       const target = event.target as HTMLSelectElement;
       if (target.value === 'custom') {
-        const eventsDiv = document.querySelector<HTMLDivElement>(
-          '#team-modificator-events',
-        );
+        const eventsDiv = document.querySelector<HTMLDivElement>('#team-modificator-events');
         if (eventsDiv) {
           eventsDiv.style.display = 'block';
         }
       } else {
-        const eventsDiv = document.querySelector<HTMLDivElement>(
-          '#team-modificator-events',
-        );
+        const eventsDiv = document.querySelector<HTMLDivElement>('#team-modificator-events');
         if (eventsDiv) {
           eventsDiv.style.display = 'none';
         }
@@ -167,16 +148,12 @@ document.addEventListener('DOMContentLoaded', () => {
     ?.addEventListener('change', (event) => {
       const target = event.target as HTMLSelectElement;
       if (target.value === 'custom') {
-        const eventsDiv = document.querySelector<HTMLDivElement>(
-          '#bug-generator-events',
-        );
+        const eventsDiv = document.querySelector<HTMLDivElement>('#bug-generator-events');
         if (eventsDiv) {
           eventsDiv.style.display = 'block';
         }
       } else {
-        const eventsDiv = document.querySelector<HTMLDivElement>(
-          '#bug-generator-events',
-        );
+        const eventsDiv = document.querySelector<HTMLDivElement>('#bug-generator-events');
         if (eventsDiv) {
           eventsDiv.style.display = 'none';
         }
@@ -199,16 +176,12 @@ document.addEventListener('DOMContentLoaded', () => {
     ?.addEventListener('change', (event) => {
       const target = event.target as HTMLSelectElement;
       if (target.value === 'custom') {
-        const eventsDiv = document.querySelector<HTMLDivElement>(
-          '#priority-modificator-events',
-        );
+        const eventsDiv = document.querySelector<HTMLDivElement>('#priority-modificator-events');
         if (eventsDiv) {
           eventsDiv.style.display = 'block';
         }
       } else {
-        const eventsDiv = document.querySelector<HTMLDivElement>(
-          '#priority-modificator-events',
-        );
+        const eventsDiv = document.querySelector<HTMLDivElement>('#priority-modificator-events');
         if (eventsDiv) {
           eventsDiv.style.display = 'none';
         }
@@ -220,9 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document
     .querySelector<HTMLSelectElement>('#priority-modificator-add-event-button')
     ?.addEventListener('click', (event) => {
-      const form = generatePriorityModificatorEventsForm(
-        priorityModificatorEventCount,
-      );
+      const form = generatePriorityModificatorEventsForm(priorityModificatorEventCount);
       const target = event.target as HTMLDivElement;
       target.parentElement?.append(form);
       priorityModificatorEventCount++;
@@ -230,8 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 export const getBugGenerator = (): BugGenerator => {
-  const generator =
-    document.querySelector<HTMLSelectElement>('#bug-generator')?.value;
+  const generator = document.querySelector<HTMLSelectElement>('#bug-generator')?.value;
   if (generator === 'random') {
     return new RandomBugGenerator(
       () => Math.random(),
@@ -240,17 +210,13 @@ export const getBugGenerator = (): BugGenerator => {
     );
   }
   if (generator === 'custom') {
-    const eventsDivContainer = document.querySelectorAll(
-      '#bug-generator-events div',
-    );
+    const eventsDivContainer = document.querySelectorAll('#bug-generator-events div');
     const events: BugGeneratorEvent[] = [];
     for (const eventDiv of eventsDivContainer) {
       events.push({
         time: getInputValueOf(`#${eventDiv.id}-time-input`),
         complexity: getInputValueOf(`#${eventDiv.id}-complexity-input`),
-        reviewComplexity: getInputValueOf(
-          `#${eventDiv.id}-review-complexity-input`,
-        ),
+        reviewComplexity: getInputValueOf(`#${eventDiv.id}-review-complexity-input`),
         priority: getInputValueOf(`#${eventDiv.id}-priority-input`),
       });
     }
@@ -260,24 +226,20 @@ export const getBugGenerator = (): BugGenerator => {
 };
 
 export const getTeamModificator = (): TeamModificator => {
-  const modificator =
-    document.querySelector<HTMLSelectElement>('#team-modificator')?.value;
+  const modificator = document.querySelector<HTMLSelectElement>('#team-modificator')?.value;
   if (modificator === 'random') {
     return new RandomTeamModificator(() => Math.random());
   }
   if (modificator === 'custom') {
-    const eventsDivContainer = document.querySelectorAll(
-      '#team-modificator-events div',
-    );
+    const eventsDivContainer = document.querySelectorAll('#team-modificator-events div');
     const events: TeamModificatorEvent[] = [];
     for (const eventDiv of eventsDivContainer) {
       events.push({
         off: getInputValueOf(`#${eventDiv.id}-off-input`),
         in: getInputValueOf(`#${eventDiv.id}-in-input`),
         threadName:
-          document.querySelector<HTMLInputElement>(
-            `#${eventDiv.id}-thread-name-input`,
-          )?.value ?? '',
+          document.querySelector<HTMLInputElement>(`#${eventDiv.id}-thread-name-input`)?.value ??
+          '',
       });
     }
     return new CustomTeamModificator(events);
@@ -286,16 +248,12 @@ export const getTeamModificator = (): TeamModificator => {
 };
 
 export const getPriorityModificator = (): PriorityModificator => {
-  const modificator = document.querySelector<HTMLSelectElement>(
-    '#priority-modificator',
-  )?.value;
+  const modificator = document.querySelector<HTMLSelectElement>('#priority-modificator')?.value;
   if (modificator === 'random') {
     return new RandomPriorityModificator(Math.random);
   }
   if (modificator === 'custom') {
-    const eventsDivContainer = document.querySelectorAll(
-      '#priority-modificator-events div',
-    );
+    const eventsDivContainer = document.querySelectorAll('#priority-modificator-events div');
     const events: PriorityModificatorEvent[] = [];
     for (const eventDiv of eventsDivContainer) {
       events.push({

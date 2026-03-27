@@ -48,12 +48,8 @@ describe('Custom Team Modificator', () => {
       teamModificators: [teamModification(), teamModification({ id: 1 })],
     });
 
-    expect(
-      getTeamModificator(wrapper, 'team-modificator-0').props('id'),
-    ).toEqual(0);
-    expect(
-      getTeamModificator(wrapper, 'team-modificator-1').props('id'),
-    ).toEqual(1);
+    expect(getTeamModificator(wrapper, 'team-modificator-0').props('id')).toEqual(0);
+    expect(getTeamModificator(wrapper, 'team-modificator-1').props('id')).toEqual(1);
   });
 
   test('Should remove a team modificator', async () => {
@@ -77,30 +73,22 @@ describe('Custom Team Modificator', () => {
     test('should bind selected developers for period card', () => {
       const wrapper = createWrapper({
         developers: [developer({ id: 0 })],
-        teamModificators: [
-          teamModification({ selectedDevelopers: [developer({ id: 1 })] }),
-        ],
+        teamModificators: [teamModification({ selectedDevelopers: [developer({ id: 1 })] })],
       });
       const periodCard = wrapper.getComponent(PeriodCard);
-      expect(periodCard.props('selectedDevelopers')).toStrictEqual([
-        developer({ id: 1 }),
-      ]);
+      expect(periodCard.props('selectedDevelopers')).toStrictEqual([developer({ id: 1 })]);
     });
 
     test('should update selected developers on update', () => {
       const wrapper = createWrapper({
-        teamModificators: [
-          teamModification({ selectedDevelopers: [developer({ id: 1 })] }),
-        ],
+        teamModificators: [teamModification({ selectedDevelopers: [developer({ id: 1 })] })],
       });
       const periodCard = wrapper.getComponent(PeriodCard);
-      periodCard.vm.$emit('update:selectedDevelopers', [
+      periodCard.vm.$emit('update:selectedDevelopers', [developer({ id: 1 }), developer()]);
+      expect(useFormStore().teamModificators[0].selectedDevelopers).toStrictEqual([
         developer({ id: 1 }),
         developer(),
       ]);
-      expect(
-        useFormStore().teamModificators[0].selectedDevelopers,
-      ).toStrictEqual([developer({ id: 1 }), developer()]);
     });
 
     test('should bind period for period card', () => {

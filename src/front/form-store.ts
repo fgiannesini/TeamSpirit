@@ -100,9 +100,7 @@ export const useFormStore = defineStore('form', {
   actions: {
     generateDeveloper(): void {
       const max =
-        this.developers.length > 0
-          ? Math.max(...this.developers.map(({ id }) => id)) + 1
-          : 0;
+        this.developers.length > 0 ? Math.max(...this.developers.map(({ id }) => id)) + 1 : 0;
       this.developers = [...this.developers, { id: max, experience: 3 }];
     },
     removeDeveloper(targetId: number): void {
@@ -126,15 +124,11 @@ export const useFormStore = defineStore('form', {
       ];
     },
     removeTeamModification(targetId: number): void {
-      this.teamModificators = this.teamModificators.filter(
-        ({ id }) => id !== targetId,
-      );
+      this.teamModificators = this.teamModificators.filter(({ id }) => id !== targetId);
     },
     generateUserStory(): void {
       const max =
-        this.userStories.length > 0
-          ? Math.max(...this.userStories.map(({ id }) => id)) + 1
-          : 0;
+        this.userStories.length > 0 ? Math.max(...this.userStories.map(({ id }) => id)) + 1 : 0;
       this.userStories = [
         ...this.userStories,
         {
@@ -148,9 +142,7 @@ export const useFormStore = defineStore('form', {
     removeUserStory(targetId: number): void {
       this.userStories = this.userStories.filter(({ id }) => id !== targetId);
     },
-    toSimulationInputs(
-      options: ToSimulationInputsOptions = {},
-    ): SimulationInputs[] {
+    toSimulationInputs(options: ToSimulationInputsOptions = {}): SimulationInputs[] {
       let backlog: Backlog;
       if (this.userStoriesMode === 'random') {
         const providers: SimulationProviders = {
@@ -161,18 +153,16 @@ export const useFormStore = defineStore('form', {
           ...options.providers,
         };
         backlog = createBacklog({
-          userStoriesRemaining: Array.from(
-            { length: providers.userStoriesCount },
-            (_, index) =>
-              todo({
-                id: index,
-                complexity: providers.complexityGenerator(),
-                review: {
-                  reviewers: new Map(),
-                  reviewComplexity: providers.reviewComplexityGenerator(),
-                },
-                priority: providers.priorityGenerator(),
-              }),
+          userStoriesRemaining: Array.from({ length: providers.userStoriesCount }, (_, index) =>
+            todo({
+              id: index,
+              complexity: providers.complexityGenerator(),
+              review: {
+                reviewers: new Map(),
+                reviewComplexity: providers.reviewComplexityGenerator(),
+              },
+              priority: providers.priorityGenerator(),
+            }),
           ),
         });
       } else {
@@ -222,27 +212,25 @@ export const useFormStore = defineStore('form', {
       ];
     },
     runSimulation(iterationCount: number, inputs?: SimulationInputs[]): void {
-      this.simulationOutputs = Array.from({ length: iterationCount }).flatMap(
-        () => {
-          const resolvedInputs = inputs ?? this.toSimulationInputs();
-          return resolvedInputs.map(({ backlog, team }) => {
-            const { timeEvents, structureEvents } = simulate(
-              copy(backlog),
-              team.copy(),
-              noBugGenerator,
-              noTeamModificator,
-              noPriorityModificator,
-            );
-            const statEvents = computeStatEvents(timeEvents);
-            return {
-              timeEvents,
-              statEvents,
-              structureEvents,
-              teamType: team.getType(),
-            };
-          });
-        },
-      );
+      this.simulationOutputs = Array.from({ length: iterationCount }).flatMap(() => {
+        const resolvedInputs = inputs ?? this.toSimulationInputs();
+        return resolvedInputs.map(({ backlog, team }) => {
+          const { timeEvents, structureEvents } = simulate(
+            copy(backlog),
+            team.copy(),
+            noBugGenerator,
+            noTeamModificator,
+            noPriorityModificator,
+          );
+          const statEvents = computeStatEvents(timeEvents);
+          return {
+            timeEvents,
+            statEvents,
+            structureEvents,
+            teamType: team.getType(),
+          };
+        });
+      });
     },
   },
 });

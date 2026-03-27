@@ -8,11 +8,7 @@ const getTime = (): Element | null => {
   return document.querySelector('#time');
 };
 
-export const renderStatEvents = (
-  events: StatEvent[],
-  time: number,
-  maxTime: number,
-): void => {
+export const renderStatEvents = (events: StatEvent[], time: number, maxTime: number): void => {
   const currentEvents = events.filter((event) => event.time === time);
   if (currentEvents.length === 0) {
     return;

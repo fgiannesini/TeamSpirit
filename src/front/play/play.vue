@@ -1,11 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { renderStatEvents } from '../../flow/render-stats.ts';
-import {
-  addThreads,
-  setThreadsIn,
-  setThreadsOff,
-} from '../../flow/render-thread.ts';
+import { addThreads, setThreadsIn, setThreadsOff } from '../../flow/render-thread.ts';
 import { renderTimeEvents } from '../../flow/render-time.ts';
 import { addUserStories } from '../../flow/render-user-story.ts';
 import {
@@ -42,15 +38,10 @@ const threads: ThreadVue[] = data.structureEvents
     presence: '',
   }));
 
-const buildUserStories = (
-  structureEvents: StructureEvent[],
-  timeCount: number,
-): void => {
+const buildUserStories = (structureEvents: StructureEvent[], timeCount: number): void => {
   const backlog = getBacklog();
   if (backlog) {
-    const initStructureEvents = structureEvents.filter(
-      ({ time }) => time === timeCount,
-    );
+    const initStructureEvents = structureEvents.filter(({ time }) => time === timeCount);
     addUserStories(backlog, initStructureEvents);
   }
 };
@@ -65,12 +56,10 @@ const render = (
 ): void => {
   const backlog = getBacklog();
   if (backlog) {
-    const initStructureEvents = structureEvents.filter(
-      ({ time }) => time === 1,
-    );
+    const initStructureEvents = structureEvents.filter(({ time }) => time === 1);
     addUserStories(backlog, initStructureEvents);
   }
-  setThreadOff()
+  setThreadOff();
   const computeButtonAll = getComputeAll();
   computeButtonAll?.addEventListener('click', async () => {
     while (maxTime !== currentTime) {
@@ -88,15 +77,13 @@ const computeDisabled = ref(false);
 
 const setThreadOff = () => {
   data.structureEvents
-      .filter(
-          ({action, time}) => action === 'ThreadOff' && time === currentTime + 1,
-      )
-      .forEach(({id}) => {
-        const thread = threads.find((thread) => thread.id === id);
-        if (thread) {
-          thread.presence = 'off';
-        }
-      });
+    .filter(({ action, time }) => action === 'ThreadOff' && time === currentTime + 1)
+    .forEach(({ id }) => {
+      const thread = threads.find((thread) => thread.id === id);
+      if (thread) {
+        thread.presence = 'off';
+      }
+    });
 };
 
 const runNext = async () => {
@@ -107,9 +94,7 @@ const runNext = async () => {
   buildUserStories(data.structureEvents, currentTime + 1);
   setThreadOff();
   data.structureEvents
-    .filter(
-      ({ action, time }) => action === 'ThreadIn' && time === currentTime + 1,
-    )
+    .filter(({ action, time }) => action === 'ThreadIn' && time === currentTime + 1)
     .forEach(({ id }) => {
       const thread = threads.find((thread) => thread.id === id);
       if (thread) {
@@ -125,20 +110,35 @@ render(data.timeEvents, data.statEvents, data.structureEvents);
 
 <template>
   <div class="meta">
-  <div data-testid="stats" class="stats">
-    <div>Time: <span data-testid="time" id="time"></span></div>
-    <div>Lead Time: <span data-testid="lead-time" id="lead-time"></span></div>
-  </div>
-  <button id="compute" data-testid="compute" @click="runNext()" :disabled="computeDisabled">Play next</button>
-  <button id="compute-all" data-testid="compute-all" @click="runNext()">Play All</button>
+    <div data-testid="stats" class="stats">
+      <div>Time: <span data-testid="time" id="time"></span></div>
+      <div>Lead Time: <span data-testid="lead-time" id="lead-time"></span></div>
+    </div>
+    <button id="compute" data-testid="compute" @click="runNext()" :disabled="computeDisabled">
+      Play next
+    </button>
+    <button id="compute-all" data-testid="compute-all" @click="runNext()">Play All</button>
   </div>
 
   <div data-testid="backlog" id="backlog" class="backlog"><span class="title">Backlog</span></div>
-  <div data-testid="threads" id="threads" class="threads"><span class="title">Threads</span>
-    <div v-for="thread in threads" :id="`thread${thread.id}`" :data-testid="`thread${thread.id}`" :class="'thread ' + thread.presence">
-      <div :id="`thread-title-${thread.id}`" :data-testid="`thread-title-${thread.id}`">{{thread.name}}</div>
-      <div :id="`thread-user-story-${thread.id}`" :data-testid="`thread-user-story-${thread.id}`"></div>
-      <div :id="`thread-state-${thread.id}`" :data-testid="`thread-state-${thread.id}`">{{thread.state}}</div>
+  <div data-testid="threads" id="threads" class="threads">
+    <span class="title">Threads</span>
+    <div
+      v-for="thread in threads"
+      :id="`thread${thread.id}`"
+      :data-testid="`thread${thread.id}`"
+      :class="'thread ' + thread.presence"
+    >
+      <div :id="`thread-title-${thread.id}`" :data-testid="`thread-title-${thread.id}`">
+        {{ thread.name }}
+      </div>
+      <div
+        :id="`thread-user-story-${thread.id}`"
+        :data-testid="`thread-user-story-${thread.id}`"
+      ></div>
+      <div :id="`thread-state-${thread.id}`" :data-testid="`thread-state-${thread.id}`">
+        {{ thread.state }}
+      </div>
     </div>
   </div>
   <div data-testid="done" id="done" class="done"><span class="title">Done</span></div>
@@ -194,7 +194,7 @@ button {
 }
 
 .off {
-  opacity:50%;
+  opacity: 50%;
 }
 .title {
   width: 100%;

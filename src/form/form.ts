@@ -41,10 +41,7 @@ export const generateUserStoriesForm = (id: number): HTMLDivElement => {
   const complexityInput = generateInput(complexityInputId, complexity);
 
   const reviewComplexityInputId = `review-complexity-input-${id}`;
-  const reviewComplexityLabel = generateLabel(
-    'Review complexity',
-    reviewComplexityInputId,
-  );
+  const reviewComplexityLabel = generateLabel('Review complexity', reviewComplexityInputId);
   const reviewComplexityInput = generateInput(
     reviewComplexityInputId,
     Math.max(1, randomInt(complexity - 1)),
@@ -67,9 +64,7 @@ export const generateUserStoriesForm = (id: number): HTMLDivElement => {
   return userStory;
 };
 
-export const generateTeamModificatorEventsForm = (
-  eventCount: number,
-): HTMLDivElement => {
+export const generateTeamModificatorEventsForm = (eventCount: number): HTMLDivElement => {
   const offInputId = `team-modificator-event-${eventCount}-off-input`;
   const offLabel = generateLabel('Off', offInputId);
   const offInput = generateInput(offInputId, 3);
@@ -105,9 +100,7 @@ export const generateTeamModificatorEventsForm = (
   return divElement;
 };
 
-export const generateBugGeneratorEventsForm = (
-  eventCount: number,
-): HTMLDivElement => {
+export const generateBugGeneratorEventsForm = (eventCount: number): HTMLDivElement => {
   const timeInputId = `bug-generator-event-${eventCount}-time-input`;
   const timeLabel = generateLabel('Time', timeInputId);
   const timeInput = generateInput(timeInputId, 3);
@@ -117,10 +110,7 @@ export const generateBugGeneratorEventsForm = (
   const complexityInput = generateInput(complexityInputId, 1);
 
   const reviewComplexityInputId = `bug-generator-event-${eventCount}-review-complexity-input`;
-  const reviewComplexityLabel = generateLabel(
-    'Review complexity',
-    reviewComplexityInputId,
-  );
+  const reviewComplexityLabel = generateLabel('Review complexity', reviewComplexityInputId);
   const reviewComplexityInput = generateInput(reviewComplexityInputId, 1);
 
   const priorityInputId = `bug-generator-event-${eventCount}-priority-input`;
@@ -151,9 +141,7 @@ export const generateBugGeneratorEventsForm = (
   return divElement;
 };
 
-export const generatePriorityModificatorEventsForm = (
-  eventCount: number,
-): HTMLDivElement => {
+export const generatePriorityModificatorEventsForm = (eventCount: number): HTMLDivElement => {
   const timeInputId = `priority-modificator-event-${eventCount}-time-input`;
   const timeLabel = generateLabel('Time', timeInputId);
   const timeInput = generateInput(timeInputId, 2);

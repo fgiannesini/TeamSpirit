@@ -2,27 +2,20 @@ import type { Team, Thread } from './team.ts';
 
 type ThreadMoveProbabilities = Record<number, number>;
 
-export const computeThreadsOffProbabilities = (
-  threads: Thread[],
-): ThreadMoveProbabilities => {
+export const computeThreadsOffProbabilities = (threads: Thread[]): ThreadMoveProbabilities => {
   const maxTime = 30;
   const maxProb = 0.5;
   const probabilities: ThreadMoveProbabilities = {};
   for (const thread of threads) {
     const timeFactor = Math.min(1, (thread.inTime / maxTime) ** 2.2); // entre 0 et 1
     const experienceFactor = (6 - thread.power) / 5; // entre 0.2 et 1
-    probabilities[thread.id] = Math.min(
-      maxProb,
-      timeFactor * experienceFactor * maxProb,
-    );
+    probabilities[thread.id] = Math.min(maxProb, timeFactor * experienceFactor * maxProb);
   }
 
   return probabilities;
 };
 
-export const computeThreadsInProbabilities = (
-  threads: Thread[],
-): ThreadMoveProbabilities => {
+export const computeThreadsInProbabilities = (threads: Thread[]): ThreadMoveProbabilities => {
   const probabilities: ThreadMoveProbabilities = {};
   for (const thread of threads) {
     if (thread.offTime <= 4) {
@@ -146,9 +139,7 @@ export class CustomTeamModificator implements TeamModificator {
     const newThreadsIn: Pick<Thread, 'id' | 'name'>[] = [];
     for (const event of this.events) {
       if (event.in === time) {
-        const thread = team
-          .getThreadsOff()
-          .find(({ name }) => name === event.threadName);
+        const thread = team.getThreadsOff().find(({ name }) => name === event.threadName);
         if (thread !== undefined) {
           team = team.setIn(thread.id);
           newThreadsIn.push({ id: thread.id, name: thread.name });
@@ -167,9 +158,7 @@ export class CustomTeamModificator implements TeamModificator {
     const newThreadsOff: Pick<Thread, 'id' | 'name'>[] = [];
     for (const event of this.events) {
       if (event.off === time) {
-        const thread = team
-          .getAllActiveThreads()
-          .find(({ name }) => name === event.threadName);
+        const thread = team.getAllActiveThreads().find(({ name }) => name === event.threadName);
         if (thread !== undefined) {
           team = team.setOff(thread.id);
           newThreadsOff.push({ id: thread.id, name: thread.name });

@@ -15,7 +15,7 @@ const hasDevelopers = () => store.developers.length > 0;
 </script>
 <template>
   <div v-if="hasDevelopers()" data-testid="setting-state">
-    <add-button text="Add a developer" @click="addDeveloper"/>
+    <add-button text="Add a developer" @click="addDeveloper" />
     <div class="grid">
       <div class="s12 m6 l4" v-for="developer in store.developers">
         <developer-card
@@ -36,7 +36,7 @@ const hasDevelopers = () => store.developers.length > 0;
       <i class="extra">groups</i>
       <h5>Your team is empty</h5>
       <div class="medium-space"></div>
-      <add-button text="Add a developer" @click="addDeveloper"/>
+      <add-button text="Add a developer" @click="addDeveloper" />
     </div>
   </article>
 </template>

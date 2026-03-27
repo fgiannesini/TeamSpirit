@@ -1,8 +1,5 @@
 import './time-sequence.scss';
-import {
-  loadStructureEvents,
-  loadTimeEvents,
-} from '../flow/storage/session-storage.ts';
+import { loadStructureEvents, loadTimeEvents } from '../flow/storage/session-storage.ts';
 import type { TimeEvent } from '../simulate/events.ts';
 import type { StructureEvent } from '../simulate/simulation-structure.ts';
 import type { State } from '../simulate/user-story.ts';
@@ -33,14 +30,11 @@ const getDeduplicatesEventsStates = (
   state: State;
 }[] => {
   const values = currentEvents
-    .reduce<Map<string, { userStoryId: number; state: State }>>(
-      (acc, { userStoryId, state }) => {
-        const key = `${userStoryId}_${state}`;
-        acc.set(key, { userStoryId, state });
-        return acc;
-      },
-      new Map(),
-    )
+    .reduce<Map<string, { userStoryId: number; state: State }>>((acc, { userStoryId, state }) => {
+      const key = `${userStoryId}_${state}`;
+      acc.set(key, { userStoryId, state });
+      return acc;
+    }, new Map())
     .values();
   return Array.from(values);
 };
@@ -69,9 +63,7 @@ const generateSequences = (
       }
     });
     userStoriesSequence.forEach((sequences) => {
-      const horizontalCount = sequences.filter((s) =>
-        s.startsWith('horizontal'),
-      ).length;
+      const horizontalCount = sequences.filter((s) => s.startsWith('horizontal')).length;
       const missingBottoms = time - horizontalCount;
       sequences.push(
         ...Array.from({ length: missingBottoms }).flatMap(() => [
@@ -112,9 +104,7 @@ const cleanConsecutiveVerticals = (
   return newUserStoriesSequence;
 };
 
-const addSequencesToDom = (
-  cleanedUserStoriesSequence: Map<number, string[]>,
-): void => {
+const addSequencesToDom = (cleanedUserStoriesSequence: Map<number, string[]>): void => {
   cleanedUserStoriesSequence.forEach((sequences, userStoryId) => {
     const userStory = document.querySelector(`#user-story-${userStoryId}`);
     if (!userStory) {
@@ -126,10 +116,7 @@ const addSequencesToDom = (
   });
 };
 
-const renderTimeSequence = (
-  timeEvents: TimeEvent[],
-  structureEvents: StructureEvent[],
-): void => {
+const renderTimeSequence = (timeEvents: TimeEvent[], structureEvents: StructureEvent[]): void => {
   const parent = document.querySelector('#user-stories');
   if (!parent) {
     return;
@@ -146,8 +133,7 @@ const renderTimeSequence = (
     });
   const userStoriesIds = userStoryCreations.map(({ id }) => id);
   const userStoriesSequence = generateSequences(timeEvents, userStoriesIds);
-  const cleanedUserStoriesSequence =
-    cleanConsecutiveVerticals(userStoriesSequence);
+  const cleanedUserStoriesSequence = cleanConsecutiveVerticals(userStoriesSequence);
   addSequencesToDom(cleanedUserStoriesSequence);
 };
 

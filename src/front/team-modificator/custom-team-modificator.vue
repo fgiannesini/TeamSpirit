@@ -1,6 +1,6 @@
 <template>
   <div v-if="hasTeamModificators()" data-testid="setting-state">
-    <add-button text="Add a team modification" @click="addTeamModificator"/>
+    <add-button text="Add a team modification" @click="addTeamModificator" />
     <div class="grid">
       <div class="s12 m6 l4" v-for="teamModificator in store.teamModificators">
         <PeriodCard
@@ -23,7 +23,7 @@
       <i class="extra">group_remove</i>
       <h5>No team modification exists</h5>
       <div class="medium-space"></div>
-      <add-button text="Add a team modification" @click="addTeamModificator"/>
+      <add-button text="Add a team modification" @click="addTeamModificator" />
     </div>
   </article>
 </template>

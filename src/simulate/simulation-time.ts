@@ -21,32 +21,21 @@ import {
   type UserStory,
 } from './user-story.ts';
 
-export const simulateTimeEvents = (
-  team: Team,
-  backlog: Backlog,
-  time: number,
-): TimeEvent[] => {
+export const simulateTimeEvents = (team: Team, backlog: Backlog, time: number): TimeEvent[] => {
   const events: TimeEvent[] = [];
   const toAddBacklog: UserStory[] = [];
   const sortedThreads = team
     .getEffectiveActiveThreads()
     .toSorted((a: Thread, b: Thread) => b.power - a.power);
   for (const thread of sortedThreads) {
-    const userStory: UserStory = getNextUserStory(
-      backlog,
-      thread,
-      team.getReviewersNeeded(),
-    );
+    const userStory: UserStory = getNextUserStory(backlog, thread, team.getReviewersNeeded());
     if (userStory === idle) {
       idle.threadId = thread.id;
       events.push(createTimeEvent(time, idle, thread.id));
       continue;
     }
     if (['Todo', 'ToReview'].includes(userStory.state)) {
-      const inProgressUserStories = retrieveInProgressUserStories(
-        backlog,
-        thread,
-      );
+      const inProgressUserStories = retrieveInProgressUserStories(backlog, thread);
       inProgressUserStories.forEach((inProgress) => {
         const todo = setTodo(inProgress);
         events.push(createTimeEvent(time, todo, thread.id));
@@ -88,12 +77,10 @@ export const simulateTimeEvents = (
       }
     }
   }
-  userStoriesWithSomeReviews(backlog, team.getReviewersNeeded()).forEach(
-    (review: UserStory) => {
-      const toReview = setToReview(review, review.threadId as number);
-      events.push(createTimeEvent(time, toReview, review.threadId as number));
-    },
-  );
+  userStoriesWithSomeReviews(backlog, team.getReviewersNeeded()).forEach((review: UserStory) => {
+    const toReview = setToReview(review, review.threadId as number);
+    events.push(createTimeEvent(time, toReview, review.threadId as number));
+  });
   toAddBacklog.forEach((userStory) => {
     addUserStory(userStory, backlog);
   });

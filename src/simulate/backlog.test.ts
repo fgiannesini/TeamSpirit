@@ -37,11 +37,7 @@ describe('Backlog', () => {
         todo({ complexity: 1, priority: 1 }),
       ],
     });
-    const userStory = getNextUserStory(
-      backlog,
-      createThread({ id: 0, power: 2 }),
-      2,
-    );
+    const userStory = getNextUserStory(backlog, createThread({ id: 0, power: 2 }), 2);
     expect(userStory).toEqual(todo({ complexity: 1, priority: 1 }));
   });
 
@@ -53,21 +49,13 @@ describe('Backlog', () => {
         todo({ complexity: 1 }),
       ],
     });
-    const userStory = getNextUserStory(
-      backlog,
-      createThread({ id: 0, power: 2 }),
-      2,
-    );
+    const userStory = getNextUserStory(backlog, createThread({ id: 0, power: 2 }), 2);
     expect(userStory).toEqual(todo({ complexity: 1 }));
   });
 
   test('Should get IN_PROGRESS by the corresponding thread 1', () => {
     const backlog = createBacklog({
-      userStoriesRemaining: [
-        todo(),
-        inProgress({ threadId: 0 }),
-        inProgress({ threadId: 1 }),
-      ],
+      userStoriesRemaining: [todo(), inProgress({ threadId: 0 }), inProgress({ threadId: 1 })],
     });
     const userStory = getNextUserStory(backlog, createThread({ id: 1 }), 2);
     expect(userStory).toEqual(inProgress({ threadId: 1 }));
@@ -75,10 +63,7 @@ describe('Backlog', () => {
 
   test('Should switch from IN_PROGRESS to TODO if priority is higher', () => {
     const backlog = createBacklog({
-      userStoriesRemaining: [
-        todo({ priority: 2 }),
-        inProgress({ threadId: 1, priority: 1 }),
-      ],
+      userStoriesRemaining: [todo({ priority: 2 }), inProgress({ threadId: 1, priority: 1 })],
     });
     const userStory = getNextUserStory(backlog, createThread({ id: 1 }), 2);
     expect(userStory).toEqual(todo({ priority: 2 }));
@@ -98,11 +83,7 @@ describe('Backlog', () => {
         toReview({ threadId: 1 }),
       ],
     });
-    const userStory = getNextUserStory(
-      backlog,
-      createThread({ id: 0, power: 2 }),
-      2,
-    );
+    const userStory = getNextUserStory(backlog, createThread({ id: 0, power: 2 }), 2);
     expect(userStory).toEqual(toReview({ threadId: 1 }));
   });
 
@@ -117,21 +98,13 @@ describe('Backlog', () => {
         toReview({ threadId: 1, priority: 1 }),
       ],
     });
-    const userStory = getNextUserStory(
-      backlog,
-      createThread({ id: 0, power: 2 }),
-      2,
-    );
+    const userStory = getNextUserStory(backlog, createThread({ id: 0, power: 2 }), 2);
     expect(userStory).toEqual(toReview({ threadId: 1, priority: 1 }));
   });
 
   test('Should get first IN_REVIEW', () => {
     const backlog = createBacklog({
-      userStoriesRemaining: [
-        todo(),
-        toReview({ threadId: 1 }),
-        inReviewWith(1, []),
-      ],
+      userStoriesRemaining: [todo(), toReview({ threadId: 1 }), inReviewWith(1, [])],
     });
     const userStory = getNextUserStory(backlog, createThread({ id: 0 }), 2);
     expect(userStory).toEqual(inReviewWith(1, []));
@@ -241,10 +214,7 @@ describe('Backlog', () => {
     expect(userStory).toEqual([inReviewWith(0, [[0, 2]])]);
   });
 
-  const inReviewWith = (
-    threadId: number,
-    reviewers: [number, number][],
-  ): UserStory => {
+  const inReviewWith = (threadId: number, reviewers: [number, number][]): UserStory => {
     return inReview({
       threadId,
       review: {
@@ -255,20 +225,13 @@ describe('Backlog', () => {
   };
 
   test('should generate a bug', () => {
-    const randomProvider = vitest
-      .fn()
-      .mockReturnValueOnce(0)
-      .mockReturnValue(1);
-    expect(
-      shouldGenerateBug(randomProvider, done(), ensembleTeam(), 0),
-    ).toEqual(true);
+    const randomProvider = vitest.fn().mockReturnValueOnce(0).mockReturnValue(1);
+    expect(shouldGenerateBug(randomProvider, done(), ensembleTeam(), 0)).toEqual(true);
   });
 
   test('should not generate a bug', () => {
     const randomProvider = vitest.fn().mockReturnValue(1);
-    expect(
-      shouldGenerateBug(randomProvider, done(), ensembleTeam(), 0),
-    ).toEqual(false);
+    expect(shouldGenerateBug(randomProvider, done(), ensembleTeam(), 0)).toEqual(false);
   });
 
   test('should reset remaining user stories', () => {

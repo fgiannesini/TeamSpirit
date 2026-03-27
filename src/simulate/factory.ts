@@ -106,9 +106,7 @@ export const todoEvent = (options: Partial<TimeEvent> = {}): TimeEvent => {
   };
 };
 
-export const inProgressEvent = (
-  options: Partial<TimeEvent> = {},
-): TimeEvent => {
+export const inProgressEvent = (options: Partial<TimeEvent> = {}): TimeEvent => {
   return {
     state: 'InProgress',
     threadId: 0,
@@ -160,9 +158,7 @@ export const createThread = (options: Partial<Thread> = {}): Thread => {
   };
 };
 
-export const ensembleTeam = (
-  threads: Thread[] = [createThread()],
-): EnsembleTeam => {
+export const ensembleTeam = (threads: Thread[] = [createThread()]): EnsembleTeam => {
   return new EnsembleTeam(threads);
 };
 
@@ -174,9 +170,7 @@ export const parallelTeam = (
 };
 
 export const setThreadOff = (
-  options: Partial<
-    Extract<StructureEvent, { action: 'ThreadOff' | 'ThreadIn' }>
-  >,
+  options: Partial<Extract<StructureEvent, { action: 'ThreadOff' | 'ThreadIn' }>>,
 ): StructureEvent => ({
   id: 0,
   action: 'ThreadOff',
@@ -185,9 +179,7 @@ export const setThreadOff = (
 });
 
 export const setThreadIn = (
-  options: Partial<
-    Extract<StructureEvent, { action: 'ThreadOff' | 'ThreadIn' }>
-  >,
+  options: Partial<Extract<StructureEvent, { action: 'ThreadOff' | 'ThreadIn' }>>,
 ): StructureEvent => ({
   id: 0,
   action: 'ThreadIn',
@@ -196,9 +188,7 @@ export const setThreadIn = (
 });
 
 export const createUserStory = (
-  options: Partial<
-    Extract<StructureEvent, { action: 'CreateUserStory' | 'CreateThread' }>
-  >,
+  options: Partial<Extract<StructureEvent, { action: 'CreateUserStory' | 'CreateThread' }>>,
 ): StructureEvent => ({
   id: 0,
   name: 'user-story-0',

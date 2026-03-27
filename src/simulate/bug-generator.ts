@@ -27,11 +27,7 @@ export const computeBugProbability = (
 export const getBugPriority = (
   userStoryPriority: number,
   priorityRandomProvider: () => number,
-): number =>
-  Math.max(
-    0,
-    userStoryPriority + (Math.floor(priorityRandomProvider() * 5) - 2),
-  );
+): number => Math.max(0, userStoryPriority + (Math.floor(priorityRandomProvider() * 5) - 2));
 
 export type BugGenerator = {
   generate(backlog: Backlog, team: Team, time: number): UserStory[];
@@ -99,9 +95,7 @@ export class RandomBugGenerator implements BugGenerator {
   generate(backlog: Backlog, team: Team, time: number): UserStory[] {
     return backlog.userStoriesDone
       .map((userStory) =>
-        shouldGenerateBug(this.creationRandomProvider, userStory, team, time)
-          ? userStory
-          : null,
+        shouldGenerateBug(this.creationRandomProvider, userStory, team, time) ? userStory : null,
       )
       .filter((result) => result !== null)
       .map((userStory, index): UserStory => {
@@ -111,10 +105,7 @@ export class RandomBugGenerator implements BugGenerator {
         return {
           id,
           name,
-          complexity: Math.max(
-            1,
-            Math.floor(complexityRandom * userStory.complexity),
-          ),
+          complexity: Math.max(1, Math.floor(complexityRandom * userStory.complexity)),
           progression: 0,
           review: {
             reviewComplexity: Math.max(
@@ -126,10 +117,7 @@ export class RandomBugGenerator implements BugGenerator {
           threadId: undefined,
           state: 'Todo',
           timeDone: 0,
-          priority: getBugPriority(
-            userStory.priority,
-            this.priorityRandomProvider,
-          ),
+          priority: getBugPriority(userStory.priority, this.priorityRandomProvider),
         };
       });
   }

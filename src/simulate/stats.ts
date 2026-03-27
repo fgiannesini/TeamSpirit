@@ -17,9 +17,7 @@ export const computeStatEvents = (timeEvents: TimeEvent[]): StatEvent[] => {
   let time = 1;
 
   while (true) {
-    const currentEvents = timeEvents.filter(
-      (event: TimeEvent) => event.time === time,
-    );
+    const currentEvents = timeEvents.filter((event: TimeEvent) => event.time === time);
     if (currentEvents.length === 0) {
       break;
     }
@@ -41,9 +39,7 @@ export const computeStatEvents = (timeEvents: TimeEvent[]): StatEvent[] => {
     });
 
     const uniqueUserStoryIdsDone = new Set(
-      currentEvents
-        .filter((event) => event.state === 'Done')
-        .map((event) => event.userStoryId),
+      currentEvents.filter((event) => event.state === 'Done').map((event) => event.userStoryId),
     );
     for (const userStoryId of uniqueUserStoryIdsDone) {
       const doneTime = timesOfRunningUserStoriesByName.get(userStoryId);

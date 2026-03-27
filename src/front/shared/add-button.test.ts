@@ -18,8 +18,6 @@ describe('Add button', () => {
 
   test('Should display a text', () => {
     const wrapper = createWrapper();
-    expect(wrapper.get('[data-testid=add-button-text]').text()).toBe(
-      'Add something',
-    );
+    expect(wrapper.get('[data-testid=add-button-text]').text()).toBe('Add something');
   });
 });

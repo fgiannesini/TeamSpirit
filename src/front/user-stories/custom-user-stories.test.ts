@@ -48,12 +48,8 @@ describe('Custom User Stories', () => {
       userStories: [userStory(), userStory({ id: 1 })],
     });
 
-    expect(getUserStoryCard(wrapper, 'user-story-card-0').props('id')).toEqual(
-      0,
-    );
-    expect(getUserStoryCard(wrapper, 'user-story-card-1').props('id')).toEqual(
-      1,
-    );
+    expect(getUserStoryCard(wrapper, 'user-story-card-0').props('id')).toEqual(0);
+    expect(getUserStoryCard(wrapper, 'user-story-card-1').props('id')).toEqual(1);
   });
 
   test('Should remove a user story card', async () => {

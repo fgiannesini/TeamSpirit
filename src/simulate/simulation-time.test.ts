@@ -36,10 +36,7 @@ describe('simulation time', () => {
     ]);
     const backlog = createBacklog({ userStoriesRemaining: [] });
     const timeEvents = simulateTimeEvents(team, backlog, 1);
-    expect(timeEvents).toEqual([
-      idleEvent({ threadId: 0 }),
-      idleEvent({ threadId: 1 }),
-    ]);
+    expect(timeEvents).toEqual([idleEvent({ threadId: 0 }), idleEvent({ threadId: 1 })]);
   });
 
   test('should have a thread develop and done a user story', () => {
@@ -74,10 +71,7 @@ describe('simulation time', () => {
   });
 
   test('Should have a thread develop a user story with review', () => {
-    const team = parallelTeam([
-      createThread({ id: 0, power: 1 }),
-      createThread({ id: 1 }),
-    ]);
+    const team = parallelTeam([createThread({ id: 0, power: 1 }), createThread({ id: 1 })]);
     const backlog = createBacklog({
       userStoriesRemaining: [
         todo({
@@ -89,20 +83,13 @@ describe('simulation time', () => {
       ],
     });
     const timeEvents = simulateTimeEvents(team, backlog, 1);
-    expect(timeEvents).toEqual([
-      inProgressEvent(),
-      toReviewEvent(),
-      idleEvent({ threadId: 1 }),
-    ]);
+    expect(timeEvents).toEqual([inProgressEvent(), toReviewEvent(), idleEvent({ threadId: 1 })]);
     expect(getUserStoriesDone(backlog)).toHaveLength(0);
     expect(getUserStoriesRemainings(backlog)).toHaveLength(1);
   });
 
   test('Should have an experimented thread develop a complex user story with review', () => {
-    const team = new ParallelTeam([
-      createThread({ id: 0, power: 3 }),
-      createThread({ id: 1 }),
-    ]);
+    const team = new ParallelTeam([createThread({ id: 0, power: 3 }), createThread({ id: 1 })]);
     const backlog = createBacklog({
       userStoriesRemaining: [
         todo({
@@ -115,20 +102,13 @@ describe('simulation time', () => {
       ],
     });
     const timeEvents = simulateTimeEvents(team, backlog, 1);
-    expect(timeEvents).toEqual([
-      inProgressEvent(),
-      toReviewEvent(),
-      idleEvent({ threadId: 1 }),
-    ]);
+    expect(timeEvents).toEqual([inProgressEvent(), toReviewEvent(), idleEvent({ threadId: 1 })]);
     expect(getUserStoriesDone(backlog)).toHaveLength(0);
     expect(getUserStoriesRemainings(backlog)).toHaveLength(1);
   });
 
   test('Should have a thread review a user story', () => {
-    const team = new ParallelTeam([
-      createThread({ id: 0, power: 1 }),
-      createThread({ id: 1 }),
-    ]);
+    const team = new ParallelTeam([createThread({ id: 0, power: 1 }), createThread({ id: 1 })]);
     const backlog = createBacklog({
       userStoriesRemaining: [
         toReview({
@@ -151,10 +131,7 @@ describe('simulation time', () => {
   });
 
   test('Should have a thread review a complex user story', () => {
-    const team = parallelTeam([
-      createThread({ id: 0, power: 1 }),
-      createThread({ id: 1 }),
-    ]);
+    const team = parallelTeam([createThread({ id: 0, power: 1 }), createThread({ id: 1 })]);
     const backlog = createBacklog({
       userStoriesRemaining: [
         toReview({
@@ -173,10 +150,7 @@ describe('simulation time', () => {
   });
 
   test('Should have an experimented thread review a simple user story', () => {
-    const team = new ParallelTeam([
-      createThread({ id: 0, power: 3 }),
-      createThread({ id: 1 }),
-    ]);
+    const team = new ParallelTeam([createThread({ id: 0, power: 3 }), createThread({ id: 1 })]);
     const backlog = createBacklog({
       userStoriesRemaining: [
         toReview({
@@ -298,10 +272,7 @@ describe('simulation time', () => {
       ],
     });
     const timeEvents = simulateTimeEvents(team, backlog, 1);
-    expect(timeEvents).toEqual([
-      inProgressEvent({ threadId: 0 }),
-      doneEvent({ threadId: 0 }),
-    ]);
+    expect(timeEvents).toEqual([inProgressEvent({ threadId: 0 }), doneEvent({ threadId: 0 })]);
     expect(getUserStoriesDone(backlog)).toStrictEqual([
       done({
         review: {
@@ -408,10 +379,7 @@ describe('simulation time', () => {
   });
 
   test('Should set previous review user story to toReview when a thread chose another user story to review', () => {
-    const team = parallelTeam(
-      [createThread({ id: 0 }), createThread({ id: 1 })],
-      1,
-    );
+    const team = parallelTeam([createThread({ id: 0 }), createThread({ id: 1 })], 1);
     const backlog = createBacklog({
       userStoriesRemaining: [
         inReview({
@@ -466,10 +434,7 @@ describe('simulation time', () => {
   });
 
   test('Should set previous in progress user story to todo when a thread chose another user story to review', () => {
-    const team = parallelTeam(
-      [createThread({ id: 0 }), createThread({ id: 1 })],
-      1,
-    );
+    const team = parallelTeam([createThread({ id: 0 }), createThread({ id: 1 })], 1);
     const backlog = createBacklog({
       userStoriesRemaining: [
         inProgress({
