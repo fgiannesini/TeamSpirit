@@ -288,12 +288,12 @@ describe('Play', () => {
         ],
       });
       const userStory1 = wrapper.get('[data-testid=user-story-0]');
-      expect(userStory1.classes).toContain('userStory');
+      expect(userStory1.classes()).toContain('userStory');
       expect(userStory1.get('.name').text()).toStrictEqual('US0');
       expect(userStory1.get('.priority').text()).toStrictEqual('(1)');
 
       const userStory2 = wrapper.get('[data-testid=user-story-1]');
-      expect(userStory2.classes).toContain('userStory');
+      expect(userStory2.classes()).toContain('userStory');
       expect(userStory2.get('.name').text()).toStrictEqual('US1');
       expect(userStory2.get('.priority').text()).toStrictEqual('(2)');
     });
@@ -350,11 +350,10 @@ describe('Play', () => {
       });
 
       await wrapper.get('[data-testid=compute]').trigger('click');
-      await vi.advanceTimersToNextTimerAsync();
       const threadUserStory = wrapper.get('[data-testid=thread-user-story-0]');
       expect(threadUserStory.find('[data-testid=user-story-0-0]').exists()).toBe(true);
 
-      await vi.advanceTimersToNextTimerAsync();
+      await vi.runAllTimersAsync();
       const done = wrapper.get('[data-testid=done]');
       expect(done.find('[data-testid=user-story-0]').exists()).toBe(true);
     });
@@ -404,13 +403,12 @@ describe('Play', () => {
       });
       await wrapper.get('[data-testid=compute]').trigger('click');
 
-      await vi.advanceTimersToNextTimerAsync();
       const threadUserStory0 = wrapper.get('[data-testid=thread-user-story-0]');
       expect(threadUserStory0.find('[data-testid=user-story-1-0]').exists()).toBe(true);
 
       await vi.advanceTimersToNextTimerAsync();
       const threadUserStory1 = wrapper.get('[data-testid=thread-user-story-1]');
-      expect(threadUserStory1.find('[data-testid=user-story-10-0]').exists()).toBe(true);
+      expect(threadUserStory1.find('[data-testid=user-story-10-1]').exists()).toBe(true);
 
       const done = wrapper.get('[data-testid=done]');
 
@@ -451,11 +449,10 @@ describe('Play', () => {
       });
 
       await wrapper.get('[data-testid=compute]').trigger('click');
-      await vi.advanceTimersToNextTimerAsync();
       const threadUserStory1 = wrapper.get('[data-testid=thread-user-story-1]');
       expect(threadUserStory1.find('[data-testid=user-story-0-1]').exists()).toBe(true);
 
-      await vi.advanceTimersToNextTimerAsync();
+      await vi.runAllTimersAsync();
 
       const done = wrapper.get('[data-testid=done]');
       expect(done.find('[data-testid=user-story-0]').exists()).toBe(true);

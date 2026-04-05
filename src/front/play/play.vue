@@ -1,133 +1,316 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { renderStatEvents } from '../../flow/render-stats.ts';
-import { addThreads, setThreadsIn, setThreadsOff } from '../../flow/render-thread.ts';
-import { renderTimeEvents } from '../../flow/render-time.ts';
-import { addUserStories } from '../../flow/render-user-story.ts';
-import {
-  getBacklog,
-  getCompute,
-  getComputeAll,
-  getThread,
-  getThreads,
-} from '../../flow/selector.ts';
+import { reactive, ref } from 'vue';
 import type { TimeEvent } from '../../simulate/events.ts';
 import type { StructureEvent } from '../../simulate/simulation-structure.ts';
-import type { StatEvent } from '../../simulate/stats.ts';
 import { useFormStore } from '../form-store.ts';
 
 const props = defineProps<{ id: number }>();
 const data = useFormStore().simulationOutputs[props.id];
+
 export type ThreadState = 'Wait' | 'Develop' | 'Review';
 export type ThreadVue = {
   id: number;
   name: string;
   state: ThreadState;
   presence: string;
+  userStories: UserStoryVue[];
 };
 
-const threads: ThreadVue[] = data.structureEvents
-  .filter(
-    (event): event is Extract<StructureEvent, { action: 'CreateThread' }> =>
-      event.action === 'CreateThread',
-  )
-  .map(({ id, name }) => ({
-    id,
-    name,
-    state: 'Wait',
-    presence: '',
-  }));
-
-const buildUserStories = (structureEvents: StructureEvent[], timeCount: number): void => {
-  const backlog = getBacklog();
-  if (backlog) {
-    const initStructureEvents = structureEvents.filter(({ time }) => time === timeCount);
-    addUserStories(backlog, initStructureEvents);
-  }
+type UserStoryVue = {
+  id: number;
+  name: string;
+  priority: number | null;
+  testId: string;
 };
 
-let currentTime = 0;
-const maxTime = Math.max(...data.timeEvents.map((event) => event.time));
-
-const render = (
-  events: TimeEvent[],
-  statEvents: StatEvent[],
-  structureEvents: StructureEvent[],
-): void => {
-  const backlog = getBacklog();
-  if (backlog) {
-    const initStructureEvents = structureEvents.filter(({ time }) => time === 1);
-    addUserStories(backlog, initStructureEvents);
-  }
-  setThreadOff();
-  const computeButtonAll = getComputeAll();
-  computeButtonAll?.addEventListener('click', async () => {
-    while (maxTime !== currentTime) {
-      currentTime++;
-      await renderTimeEvents(events, currentTime, 300, threads);
-      renderStatEvents(statEvents, currentTime, maxTime);
-      buildUserStories(structureEvents, currentTime + 1);
-      setThreadsOff(structureEvents, currentTime + 1);
-      setThreadsIn(structureEvents, currentTime + 1);
-    }
-    computeButtonAll.disabled = true;
-  });
-};
-const computeDisabled = ref(false);
-
-const setThreadOff = () => {
+const threads = reactive<ThreadVue[]>(
   data.structureEvents
-    .filter(({ action, time }) => action === 'ThreadOff' && time === currentTime + 1)
-    .forEach(({ id }) => {
-      const thread = threads.find((thread) => thread.id === id);
-      if (thread) {
-        thread.presence = 'off';
-      }
-    });
+    .filter(
+      (e): e is Extract<StructureEvent, { action: 'CreateThread' }> =>
+        e.action === 'CreateThread',
+    )
+    .map(({ id, name }) => ({
+      id,
+      name,
+      state: 'Wait' as ThreadState,
+      presence: '',
+      userStories: [],
+    })),
+);
+
+const backlogStories = reactive<UserStoryVue[]>([]);
+const doneStories = reactive<UserStoryVue[]>([]);
+
+const leadTime = ref('');
+const timeDisplay = ref('');
+
+const maxTime = Math.max(...data.timeEvents.map((e) => e.time));
+let currentTime = 0;
+
+const computeDisabled = ref(false);
+const computeAllDisabled = ref(false);
+
+const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
+
+const findStoryById = (id: number): UserStoryVue | undefined => {
+  const inBacklog = backlogStories.find((s) => s.id === id);
+  if (inBacklog) return inBacklog;
+  for (const thread of threads) {
+    const inThread = thread.userStories.find((s) => s.id === id);
+    if (inThread) return inThread;
+  }
+  return undefined;
 };
 
-const runNext = async () => {
+const removeStoryFromItsLocation = (story: UserStoryVue): void => {
+  const backlogIdx = backlogStories.indexOf(story);
+  if (backlogIdx !== -1) {
+    backlogStories.splice(backlogIdx, 1);
+    return;
+  }
+  for (const thread of threads) {
+    const idx = thread.userStories.indexOf(story);
+    if (idx !== -1) {
+      thread.userStories.splice(idx, 1);
+      return;
+    }
+  }
+};
+
+const setThreadState = (threadId: number, state: ThreadState): void => {
+  const thread = threads.find((t) => t.id === threadId);
+  if (thread) thread.state = state;
+};
+
+const buildUserStories = (time: number): void => {
+  for (const event of data.structureEvents.filter((e) => e.time === time)) {
+    if (event.action === 'CreateUserStory' && event.id !== -1) {
+      backlogStories.push({
+        id: event.id,
+        name: (event as Extract<StructureEvent, { action: 'CreateUserStory' }>).name,
+        priority: null,
+        testId: `user-story-${event.id}`,
+      });
+    }
+    if (event.action === 'ChangePriority') {
+      const story = findStoryById(event.id);
+      if (story)
+        story.priority = (event as Extract<StructureEvent, { action: 'ChangePriority' }>).value;
+    }
+  }
+};
+
+const updateThreadPresence = (time: number): void => {
+  for (const event of data.structureEvents.filter((e) => e.time === time)) {
+    const thread = threads.find((t) => t.id === event.id);
+    if (!thread) continue;
+    if (event.action === 'ThreadOff') thread.presence = 'off';
+    else if (event.action === 'ThreadIn') thread.presence = '';
+  }
+};
+
+const handleTodo = (event: TimeEvent): void => {
+  for (const thread of threads) {
+    const idx = thread.userStories.findIndex((s) => s.id === event.userStoryId);
+    if (idx !== -1) {
+      const [story] = thread.userStories.splice(idx, 1);
+      backlogStories.push(story);
+      return;
+    }
+  }
+};
+
+const handleInProgress = (event: TimeEvent): void => {
+  const targetTestId = `user-story-${event.userStoryId}-${event.threadId}`;
+  const thread = threads.find((t) => t.id === event.threadId);
+  if (!thread) return;
+
+  const toMove = thread.userStories.filter((s) => s.testId !== targetTestId);
+  for (const story of toMove) {
+    thread.userStories.splice(thread.userStories.indexOf(story), 1);
+    backlogStories.push(story);
+  }
+
+  const story = findStoryById(event.userStoryId);
+  if (story && story.testId !== targetTestId) {
+    removeStoryFromItsLocation(story);
+    story.testId = targetTestId;
+    thread.userStories.push(story);
+  }
+
+  setThreadState(event.threadId, 'Develop');
+};
+
+const handleReview = (event: TimeEvent): void => {
+  const thread = threads.find((t) => t.id === event.threadId);
+  if (!thread) return;
+
+  thread.userStories.splice(0);
+
+  const original = findStoryById(event.userStoryId);
+  if (original) {
+    thread.userStories.push({
+      ...original,
+      testId: `user-story-${event.userStoryId}-${event.threadId}`,
+    });
+  }
+
+  const backlogIdx = backlogStories.findIndex((s) => s.id === event.userStoryId);
+  if (backlogIdx !== -1) backlogStories.splice(backlogIdx, 1);
+
+  setThreadState(event.threadId, 'Review');
+};
+
+const handleToReview = (event: TimeEvent): void => {
+  let firstMoved = false;
+  for (const thread of threads) {
+    const story = thread.userStories.find((s) => s.id === event.userStoryId);
+    if (story) {
+      thread.userStories.splice(thread.userStories.indexOf(story), 1);
+      if (!firstMoved) {
+        story.testId = `user-story-${event.userStoryId}`;
+        backlogStories.push(story);
+        firstMoved = true;
+      }
+    }
+  }
+};
+
+const handleDone = (event: TimeEvent): void => {
+  let firstMoved = false;
+  for (const thread of threads) {
+    const story = thread.userStories.find((s) => s.id === event.userStoryId);
+    if (story) {
+      thread.userStories.splice(thread.userStories.indexOf(story), 1);
+      if (!firstMoved) {
+        story.testId = `user-story-${event.userStoryId}`;
+        doneStories.push(story);
+        firstMoved = true;
+      }
+    }
+  }
+};
+
+const updateStats = (time: number): void => {
+  const events = data.statEvents.filter((e) => e.time === time);
+  if (events.length === 0) return;
+  leadTime.value = events[0].leadTime?.toFixed(2) ?? String(Number.NaN);
+  timeDisplay.value = `${events[0].time}/${maxTime}`;
+};
+
+const processEvents = async (time: number, animationTime: number): Promise<void> => {
+  const currentEvents = data.timeEvents.filter((e) => e.time === time);
+  for (const event of currentEvents) {
+    let shouldSleep = true;
+
+    if (event.userStoryId === -1) {
+      const thread = threads.find((t) => t.id === event.threadId);
+      if (thread) thread.userStories.splice(0);
+      setThreadState(event.threadId, 'Wait');
+    } else {
+      switch (event.state) {
+        case 'Todo':
+          handleTodo(event);
+          break;
+        case 'InProgress':
+          handleInProgress(event);
+          break;
+        case 'Review': {
+          const thread = threads.find((t) => t.id === event.threadId);
+          if (thread?.userStories.some((s) => s.id === event.userStoryId)) {
+            shouldSleep = false;
+            break;
+          }
+          handleReview(event);
+          break;
+        }
+        case 'ToReview':
+          handleToReview(event);
+          break;
+        case 'Done':
+          handleDone(event);
+          break;
+        default:
+          break;
+      }
+    }
+
+    if (shouldSleep) {
+      await sleep(animationTime);
+    }
+  }
+};
+
+const runNext = async (): Promise<void> => {
   computeDisabled.value = true;
   currentTime++;
-  await renderTimeEvents(data.timeEvents, currentTime, 600, threads);
-  renderStatEvents(data.statEvents, currentTime, maxTime);
-  buildUserStories(data.structureEvents, currentTime + 1);
-  setThreadOff();
-  data.structureEvents
-    .filter(({ action, time }) => action === 'ThreadIn' && time === currentTime + 1)
-    .forEach(({ id }) => {
-      const thread = threads.find((thread) => thread.id === id);
-      if (thread) {
-        thread.presence = '';
-      }
-    });
+  await processEvents(currentTime, 600);
+  updateStats(currentTime);
+  buildUserStories(currentTime + 1);
+  updateThreadPresence(currentTime + 1);
   if (maxTime !== currentTime) {
     computeDisabled.value = false;
   }
 };
-render(data.timeEvents, data.statEvents, data.structureEvents);
+
+const runAll = async (): Promise<void> => {
+  while (maxTime !== currentTime) {
+    currentTime++;
+    await processEvents(currentTime, 300);
+    updateStats(currentTime);
+    buildUserStories(currentTime + 1);
+    updateThreadPresence(currentTime + 1);
+  }
+  computeAllDisabled.value = true;
+};
+
+buildUserStories(1);
+updateThreadPresence(1);
 </script>
 
 <template>
   <div class="meta">
     <div data-testid="stats" class="stats">
-      <div>Time: <span data-testid="time" id="time"></span></div>
-      <div>Lead Time: <span data-testid="lead-time" id="lead-time"></span></div>
+      <div>Time: <span data-testid="time" id="time">{{ timeDisplay }}</span></div>
+      <div>Lead Time: <span data-testid="lead-time" id="lead-time">{{ leadTime }}</span></div>
     </div>
-    <button id="compute" data-testid="compute" @click="runNext()" :disabled="computeDisabled">
+    <button
+      id="compute"
+      data-testid="compute"
+      @click="runNext()"
+      :disabled="computeDisabled"
+    >
       Play next
     </button>
-    <button id="compute-all" data-testid="compute-all" @click="runNext()">Play All</button>
+    <button
+      id="compute-all"
+      data-testid="compute-all"
+      @click="runAll()"
+      :disabled="computeAllDisabled"
+    >
+      Play All
+    </button>
   </div>
 
-  <div data-testid="backlog" id="backlog" class="backlog"><span class="title">Backlog</span></div>
+  <div data-testid="backlog" id="backlog" class="backlog">
+    <span class="title">Backlog</span>
+    <div
+      v-for="story in backlogStories"
+      :key="story.testId"
+      :data-testid="story.testId"
+      class="userStory"
+    >
+      <span class="name">{{ story.name }}</span>
+      <span v-if="story.priority !== null" class="priority">({{ story.priority }})</span>
+    </div>
+  </div>
   <div data-testid="threads" id="threads" class="threads">
     <span class="title">Threads</span>
     <div
       v-for="thread in threads"
       :id="`thread${thread.id}`"
       :data-testid="`thread${thread.id}`"
-      :class="'thread ' + thread.presence"
+      :class="['thread', thread.presence]"
     >
       <div :id="`thread-title-${thread.id}`" :data-testid="`thread-title-${thread.id}`">
         {{ thread.name }}
@@ -135,13 +318,34 @@ render(data.timeEvents, data.statEvents, data.structureEvents);
       <div
         :id="`thread-user-story-${thread.id}`"
         :data-testid="`thread-user-story-${thread.id}`"
-      ></div>
+      >
+        <div
+          v-for="story in thread.userStories"
+          :key="story.testId"
+          :data-testid="story.testId"
+          class="userStory"
+        >
+          <span class="name">{{ story.name }}</span>
+          <span v-if="story.priority !== null" class="priority">({{ story.priority }})</span>
+        </div>
+      </div>
       <div :id="`thread-state-${thread.id}`" :data-testid="`thread-state-${thread.id}`">
         {{ thread.state }}
       </div>
     </div>
   </div>
-  <div data-testid="done" id="done" class="done"><span class="title">Done</span></div>
+  <div data-testid="done" id="done" class="done">
+    <span class="title">Done</span>
+    <div
+      v-for="story in doneStories"
+      :key="story.testId"
+      :data-testid="story.testId"
+      class="userStory"
+    >
+      <span class="name">{{ story.name }}</span>
+      <span v-if="story.priority !== null" class="priority">({{ story.priority }})</span>
+    </div>
+  </div>
 </template>
 <style scoped>
 :root {
