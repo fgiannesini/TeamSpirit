@@ -9,8 +9,6 @@ export default defineConfig({
     rolldownOptions: {
       input: {
         main: './src/main.html',
-        index: './src/index.html',
-        flow: './src/flow/flow.html',
         'time-sequence': './src/time-sequence/time-sequence.html',
       },
     },
