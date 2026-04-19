@@ -26,8 +26,7 @@ type UserStoryVue = {
 const threads = reactive<ThreadVue[]>(
   data.structureEvents
     .filter(
-      (e): e is Extract<StructureEvent, { action: 'CreateThread' }> =>
-        e.action === 'CreateThread',
+      (e): e is Extract<StructureEvent, { action: 'CreateThread' }> => e.action === 'CreateThread',
     )
     .map(({ id, name }) => ({
       id,
@@ -87,15 +86,14 @@ const buildUserStories = (time: number): void => {
     if (event.action === 'CreateUserStory' && event.id !== -1) {
       backlogStories.push({
         id: event.id,
-        name: (event as Extract<StructureEvent, { action: 'CreateUserStory' }>).name,
+        name: event.name,
         priority: null,
         testId: `user-story-${event.id}`,
       });
     }
     if (event.action === 'ChangePriority') {
       const story = findStoryById(event.id);
-      if (story)
-        story.priority = (event as Extract<StructureEvent, { action: 'ChangePriority' }>).value;
+      if (story) story.priority = event.value;
     }
   }
 };
@@ -271,15 +269,14 @@ updateThreadPresence(1);
 <template>
   <div class="meta">
     <div data-testid="stats" class="stats">
-      <div>Time: <span data-testid="time" id="time">{{ timeDisplay }}</span></div>
-      <div>Lead Time: <span data-testid="lead-time" id="lead-time">{{ leadTime }}</span></div>
+      <div>
+        Time: <span data-testid="time" id="time">{{ timeDisplay }}</span>
+      </div>
+      <div>
+        Lead Time: <span data-testid="lead-time" id="lead-time">{{ leadTime }}</span>
+      </div>
     </div>
-    <button
-      id="compute"
-      data-testid="compute"
-      @click="runNext()"
-      :disabled="computeDisabled"
-    >
+    <button id="compute" data-testid="compute" @click="runNext()" :disabled="computeDisabled">
       Play next
     </button>
     <button
@@ -315,10 +312,7 @@ updateThreadPresence(1);
       <div :id="`thread-title-${thread.id}`" :data-testid="`thread-title-${thread.id}`">
         {{ thread.name }}
       </div>
-      <div
-        :id="`thread-user-story-${thread.id}`"
-        :data-testid="`thread-user-story-${thread.id}`"
-      >
+      <div :id="`thread-user-story-${thread.id}`" :data-testid="`thread-user-story-${thread.id}`">
         <div
           v-for="story in thread.userStories"
           :key="story.testId"
