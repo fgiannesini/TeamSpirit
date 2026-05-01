@@ -17,32 +17,35 @@ import {
 } from './form-store.ts';
 import { developer, teamModification, userStory } from './front-factory-for-test.ts';
 
+const { simulateMock, computeStatEventsMock } = vi.hoisted(() => ({
+  simulateMock: vi.fn<typeof simulate>(),
+  computeStatEventsMock: vi.fn<typeof computeStatEvents>(),
+}));
+
+vi.mock('../simulate/simulation.ts', () => ({
+  simulate: simulateMock,
+}));
+vi.mock('../simulate/stats.ts', () => ({
+  computeStatEvents: computeStatEventsMock,
+}));
+
 describe('Form store', () => {
   beforeEach(() => {
-    const { simulateMock, computeStatEventsMock } = vi.hoisted(() => ({
-      simulateMock: vi.fn<typeof simulate>().mockReturnValue({
-        timeEvents: [{ time: 1, state: 'InProgress', threadId: 0, userStoryId: 0 }],
-        structureEvents: [
-          {
-            time: 1,
-            id: 0,
-            name: 'thread',
-            action: 'CreateThread',
-          },
-        ],
-      }),
-      computeStatEventsMock: vi
-        .fn<typeof computeStatEvents>()
-        .mockReturnValueOnce([{ time: 1, leadTime: 1 }])
-        .mockReturnValue([{ time: 1, leadTime: 0.7 }]),
-    }));
-
-    vi.mock('../simulate/simulation.ts', () => ({
-      simulate: simulateMock,
-    }));
-    vi.mock('../simulate/stats.ts', () => ({
-      computeStatEvents: computeStatEventsMock,
-    }));
+    vi.resetAllMocks();
+    simulateMock.mockReturnValue({
+      timeEvents: [{ time: 1, state: 'InProgress', threadId: 0, userStoryId: 0 }],
+      structureEvents: [
+        {
+          time: 1,
+          id: 0,
+          name: 'thread',
+          action: 'CreateThread',
+        },
+      ],
+    });
+    computeStatEventsMock
+      .mockReturnValueOnce([{ time: 1, leadTime: 1 }])
+      .mockReturnValue([{ time: 1, leadTime: 0.7 }]);
 
     setActivePinia(createPinia());
     vi.useFakeTimers({
@@ -357,14 +360,14 @@ describe('Form store', () => {
         providers: {
           userStoriesCount: 2,
           complexityGenerator: vi
-            .fn<typeof Math.random>()
+            .fn<() => number>()
             .mockReturnValueOnce(2)
             .mockReturnValue(3),
           reviewComplexityGenerator: vi
-            .fn<typeof Math.random>()
+            .fn<() => number>()
             .mockReturnValueOnce(1)
             .mockReturnValue(2),
-          priorityGenerator: vi.fn<typeof Math.random>().mockReturnValueOnce(1).mockReturnValue(2),
+          priorityGenerator: vi.fn<() => number>().mockReturnValueOnce(1).mockReturnValue(2),
         },
       });
       expect(simulationInputs[0].backlog).toStrictEqual(
@@ -402,7 +405,7 @@ describe('Form store', () => {
       const simulationInputs = store.toSimulationInputs({
         teamProvider: {
           teamCount: 2,
-          experienceGenerator: vi.fn().mockReturnValueOnce(1).mockReturnValue(2),
+          experienceGenerator: vi.fn<() => number>().mockReturnValueOnce(1).mockReturnValue(2),
         },
       });
       expect(simulationInputs[0].team).toStrictEqual(
@@ -452,7 +455,7 @@ describe('Form store', () => {
 
     test('Should get new inputs on each iteration', () => {
       const store = useFormStore();
-      store.toSimulationInputs = vi.fn().mockReturnValue([]);
+      store.toSimulationInputs = vi.fn<() => SimulationInputs[]>().mockReturnValue([]);
       store.runSimulation(2);
       expect(store.toSimulationInputs).toHaveBeenCalledTimes(2);
     });

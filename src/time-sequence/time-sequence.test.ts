@@ -9,7 +9,7 @@ describe('Time sequence', () => {
   beforeEach(() => {
     vi.resetModules();
     vi.spyOn(window, 'location', 'get').mockReturnValue({
-      assign: vi.fn(),
+      assign: vi.fn<() => void>(),
       search: '?id=e4567-e89b-12d3-a456-426614174000',
     } as unknown as Location);
     const htmlPath = resolve(__dirname, './time-sequence.html');

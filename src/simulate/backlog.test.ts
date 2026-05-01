@@ -1,4 +1,4 @@
-import { describe, expect, test, vitest } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import {
   addUserStory,
   type Backlog,
@@ -225,12 +225,12 @@ describe('Backlog', () => {
   };
 
   test('should generate a bug', () => {
-    const randomProvider = vitest.fn().mockReturnValueOnce(0).mockReturnValue(1);
+    const randomProvider = vi.fn<() => number>().mockReturnValueOnce(0).mockReturnValue(1);
     expect(shouldGenerateBug(randomProvider, done(), ensembleTeam(), 0)).toEqual(true);
   });
 
   test('should not generate a bug', () => {
-    const randomProvider = vitest.fn().mockReturnValue(1);
+    const randomProvider = vi.fn<() => number>().mockReturnValue(1);
     expect(shouldGenerateBug(randomProvider, done(), ensembleTeam(), 0)).toEqual(false);
   });
 

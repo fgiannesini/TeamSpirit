@@ -1,4 +1,4 @@
-import { describe, expect, test, vitest } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { todo } from './factory.ts';
 import {
   CustomPriorityModificator,
@@ -19,7 +19,7 @@ describe('Priority Modificator', () => {
     });
 
     test('Should modify priority', () => {
-      const randomProvider = vitest
+      const randomProvider = vi
         .fn<() => number>()
         .mockReturnValueOnce(0.05)
         .mockReturnValue(0.2);
@@ -48,7 +48,7 @@ describe('Priority Modificator', () => {
         boxMuller2: number,
         expectedPriority: number,
       ) => {
-        const randomProvider = vitest
+        const randomProvider = vi
           .fn<() => number>()
           .mockReturnValueOnce(changeProbability)
           .mockReturnValueOnce(boxMuller1)

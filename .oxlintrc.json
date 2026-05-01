@@ -4,5 +4,7 @@
   "env": {
     "browser": true
   },
-  "rules": {}
+  "rules": {
+    "vitest/require-mock-type-parameters": "off"
+  }
 }

@@ -1,4 +1,4 @@
-import { describe, expect, test, vitest } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { createThread, ensembleTeam, parallelTeam } from './factory.ts';
 import {
   CustomTeamModificator,
@@ -14,7 +14,10 @@ describe('Team modificator', () => {
         createThread({ id: 0, off: true }),
         createThread({ id: 1, off: true }),
       ]);
-      const randomProvider = vitest.fn<() => number>().mockReturnValueOnce(1).mockReturnValue(0);
+      const randomProvider = vi
+        .fn<() => number>()
+        .mockReturnValueOnce(1)
+        .mockReturnValue(0);
       const teamModificator = new RandomTeamModificator(randomProvider);
       const { team, newThreadsIn } = teamModificator.setThreadsIn(initialTeam, 0);
       expect(team).toEqual(
@@ -28,7 +31,10 @@ describe('Team modificator', () => {
         createThread({ id: 0, off: true }),
         createThread({ id: 1, off: true }),
       ]);
-      const randomProvider = vitest.fn<() => number>().mockReturnValueOnce(1).mockReturnValue(0);
+      const randomProvider = vi
+        .fn<() => number>()
+        .mockReturnValueOnce(1)
+        .mockReturnValue(0);
       const teamModificator = new RandomTeamModificator(randomProvider);
       const { team, newThreadsIn } = teamModificator.setThreadsIn(initialTeam, 0);
       expect(team).toEqual(
@@ -42,7 +48,10 @@ describe('Team modificator', () => {
         createThread({ id: 0, off: false, inTime: 1 }),
         createThread({ id: 1, off: false, inTime: 1 }),
       ]);
-      const randomProvider = vitest.fn<() => number>().mockReturnValueOnce(1).mockReturnValue(0);
+      const randomProvider = vi
+        .fn<() => number>()
+        .mockReturnValueOnce(1)
+        .mockReturnValue(0);
       const teamModificator = new RandomTeamModificator(randomProvider);
       const { team, newThreadsOff } = teamModificator.setThreadsOff(initialTeam, 0);
       expect(team).toEqual(
@@ -59,7 +68,10 @@ describe('Team modificator', () => {
         createThread({ id: 0, off: false, inTime: 1 }),
         createThread({ id: 1, off: false, inTime: 1 }),
       ]);
-      const randomProvider = vitest.fn<() => number>().mockReturnValueOnce(1).mockReturnValue(0);
+      const randomProvider = vi
+        .fn<() => number>()
+        .mockReturnValueOnce(1)
+        .mockReturnValue(0);
       const teamModificator = new RandomTeamModificator(randomProvider);
       const { team, newThreadsOff } = teamModificator.setThreadsOff(initialTeam, 0);
       expect(team).toEqual(
@@ -76,7 +88,7 @@ describe('Team modificator', () => {
         createThread({ id: 0, off: true }),
         createThread({ id: 1, off: false }),
       ]);
-      const randomProvider = vitest.fn<() => number>().mockReturnValue(0);
+      const randomProvider = vi.fn<() => number>().mockReturnValue(0);
       const teamModificator = new RandomTeamModificator(randomProvider);
       const { team, newThreadsOff } = teamModificator.setThreadsOff(initialTeam, 0);
       expect(team).toEqual(

@@ -9,7 +9,7 @@ import UserStories from './user-stories/user-stories.vue';
 
 describe('Form', () => {
   const mockRouter = {
-    push: vi.fn(),
+    push: vi.fn<() => void>(),
   };
   const createWrapper = (): VueWrapper => {
     return shallowMount(Form, {
