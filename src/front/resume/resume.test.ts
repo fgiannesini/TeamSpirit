@@ -28,15 +28,31 @@ describe('Resume', () => {
   test('Should display team mode', () => {
     const wrapper = createWrapper({ teamMode: 'random' });
     const teamMode = wrapper.get('[data-testid=team-mode]');
-    expect(teamMode.text()).toBe('random');
+    expect(teamMode.text()).toBe('Random');
+  });
+
+  test('Should display not set label', () => {
+    const wrapper = createWrapper({ teamMode: 'notSet' });
+    expect(wrapper.get('[data-testid=team-mode]').text()).toBe('Not set');
   });
 
   test('Should display the developers', () => {
     const wrapper = createWrapper({
+      teamMode: 'custom',
       developers: [developer(), developer({ id: 1, experience: 2 })],
     });
-    expect(wrapper.get('[data-testid=developer-0]').text()).toBe('3');
-    expect(wrapper.get('[data-testid=developer-1]').text()).toBe('2');
+    expect(wrapper.get('[data-testid=developer-0]').text()).toBe('Dev 0 — exp. 3');
+    expect(wrapper.get('[data-testid=developer-1]').text()).toBe('Dev 1 — exp. 2');
+  });
+
+  test('Should not display developers when mode is random', () => {
+    const wrapper = createWrapper({ teamMode: 'random', developers: [developer()] });
+    expect(wrapper.find('[data-testid=developer-0]').exists()).toBe(false);
+  });
+
+  test('Should not display developers when mode is notSet', () => {
+    const wrapper = createWrapper({ teamMode: 'notSet', developers: [developer()] });
+    expect(wrapper.find('[data-testid=developer-0]').exists()).toBe(false);
   });
 
   test('Should display the reviewers count', () => {
