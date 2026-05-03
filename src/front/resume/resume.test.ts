@@ -57,8 +57,14 @@ describe('Resume', () => {
 
   test('Should display the reviewers count', () => {
     const wrapper = createWrapper({
+      teamMode: 'random',
       reviewers: 1,
     });
-    expect(wrapper.get('[data-testid=reviewers]').text()).toBe('1');
+    expect(wrapper.get('[data-testid=reviewers]').text()).toBe('Reviewers — 1');
+  });
+
+  test('Should not display reviewers when mode is notSet', () => {
+    const wrapper = createWrapper({ teamMode: 'notSet', reviewers: 1 });
+    expect(wrapper.find('[data-testid=reviewers]').exists()).toBe(false);
   });
 });

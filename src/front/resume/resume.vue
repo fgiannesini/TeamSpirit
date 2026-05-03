@@ -26,5 +26,5 @@ const teamModeLabel = computed(() => {
       Dev {{ developer.id }} — exp. {{ developer.experience }}
     </li>
   </ul>
-  <span data-testid="reviewers">{{ formStore.$state.reviewers }}</span>
+  <span v-if="formStore.teamMode !== 'notSet'" data-testid="reviewers">Reviewers — {{ formStore.reviewers }}</span>
 </template>
