@@ -152,24 +152,26 @@ const handleInProgress = async (event: TimeEvent): Promise<void> => {
   });
 };
 
-const handleReview = (event: TimeEvent): void => {
-  const thread = threads.find((t) => t.id === event.threadId);
-  if (!thread) return;
+const handleReview = async (event: TimeEvent): Promise<void> => {
+  await animateMove(() => {
+    const thread = threads.find((t) => t.id === event.threadId);
+    if (!thread) return;
 
-  thread.userStories.splice(0);
+    thread.userStories.splice(0);
 
-  const original = findStoryById(event.userStoryId);
-  if (original) {
-    thread.userStories.push({
-      ...original,
-      testId: `user-story-${event.userStoryId}-${event.threadId}`,
-    });
-  }
+    const original = findStoryById(event.userStoryId);
+    if (original) {
+      thread.userStories.push({
+        ...original,
+        testId: `user-story-${event.userStoryId}-${event.threadId}`,
+      });
+    }
 
-  const backlogIdx = backlogStories.findIndex((s) => s.id === event.userStoryId);
-  if (backlogIdx !== -1) backlogStories.splice(backlogIdx, 1);
+    const backlogIdx = backlogStories.findIndex((s) => s.id === event.userStoryId);
+    if (backlogIdx !== -1) backlogStories.splice(backlogIdx, 1);
 
-  setThreadState(event.threadId, 'Review');
+    setThreadState(event.threadId, 'Review');
+  });
 };
 
 const handleToReview = (event: TimeEvent): void => {
