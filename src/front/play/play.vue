@@ -230,7 +230,7 @@ const processEvents = async (time: number, animationTime: number): Promise<void>
           handleTodo(event);
           break;
         case 'InProgress':
-          handleInProgress(event);
+          await handleInProgress(event);
           break;
         case 'Review': {
           const thread = threads.find((t) => t.id === event.threadId);
@@ -238,14 +238,14 @@ const processEvents = async (time: number, animationTime: number): Promise<void>
             shouldSleep = false;
             break;
           }
-          handleReview(event);
+          await handleReview(event);
           break;
         }
         case 'ToReview':
-          handleToReview(event);
+          await handleToReview(event);
           break;
         case 'Done':
-          handleDone(event);
+          await handleDone(event);
           break;
         default:
           break;
@@ -314,6 +314,7 @@ updateThreadPresence(1);
       v-for="story in backlogStories"
       :key="story.testId"
       :data-testid="story.testId"
+      :data-flip-id="'story-' + story.id"
       class="userStory"
     >
       <span class="name">{{ story.name }}</span>
@@ -336,6 +337,7 @@ updateThreadPresence(1);
           v-for="story in thread.userStories"
           :key="story.testId"
           :data-testid="story.testId"
+          :data-flip-id="'story-' + story.id"
           class="userStory"
         >
           <span class="name">{{ story.name }}</span>
@@ -353,6 +355,7 @@ updateThreadPresence(1);
       v-for="story in doneStories"
       :key="story.testId"
       :data-testid="story.testId"
+      :data-flip-id="'story-' + story.id"
       class="userStory"
     >
       <span class="name">{{ story.name }}</span>
