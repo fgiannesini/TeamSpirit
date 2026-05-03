@@ -1,6 +1,9 @@
 import { createTestingPinia } from '@pinia/testing';
 import { shallowMount, type VueWrapper } from '@vue/test-utils';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
+
+vi.mock('gsap/Flip', () => ({ Flip: { getState: () => ({}), from: () => {} } }));
+vi.mock('gsap', () => ({ gsap: { registerPlugin: () => {} } }));
 import {
   createChangePriority,
   createUserStory,

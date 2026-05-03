@@ -1,8 +1,12 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import { gsap } from 'gsap';
+import { Flip } from 'gsap/Flip';
+import { nextTick, reactive, ref } from 'vue';
 import type { TimeEvent } from '../../simulate/events.ts';
 import type { StructureEvent } from '../../simulate/simulation-structure.ts';
 import { useFormStore } from '../form-store.ts';
+
+gsap.registerPlugin(Flip);
 
 const props = defineProps<{ id: number }>();
 const data = useFormStore().simulationOutputs[props.id];
@@ -50,6 +54,13 @@ const computeDisabled = ref(false);
 const computeAllDisabled = ref(false);
 
 const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
+
+const animateMove = async (mutate: () => void): Promise<void> => {
+  const state = Flip.getState('[data-flip-id]');
+  mutate();
+  await nextTick();
+  Flip.from(state, { duration: 0.4, ease: 'power1.inOut', absolute: true });
+};
 
 const findStoryById = (id: number): UserStoryVue | undefined => {
   const inBacklog = backlogStories.find((s) => s.id === id);
@@ -118,25 +129,27 @@ const handleTodo = (event: TimeEvent): void => {
   }
 };
 
-const handleInProgress = (event: TimeEvent): void => {
-  const targetTestId = `user-story-${event.userStoryId}-${event.threadId}`;
-  const thread = threads.find((t) => t.id === event.threadId);
-  if (!thread) return;
+const handleInProgress = async (event: TimeEvent): Promise<void> => {
+  await animateMove(() => {
+    const targetTestId = `user-story-${event.userStoryId}-${event.threadId}`;
+    const thread = threads.find((t) => t.id === event.threadId);
+    if (!thread) return;
 
-  const toMove = thread.userStories.filter((s) => s.testId !== targetTestId);
-  for (const story of toMove) {
-    thread.userStories.splice(thread.userStories.indexOf(story), 1);
-    backlogStories.push(story);
-  }
+    const toMove = thread.userStories.filter((s) => s.testId !== targetTestId);
+    for (const story of toMove) {
+      thread.userStories.splice(thread.userStories.indexOf(story), 1);
+      backlogStories.push(story);
+    }
 
-  const story = findStoryById(event.userStoryId);
-  if (story && story.testId !== targetTestId) {
-    removeStoryFromItsLocation(story);
-    story.testId = targetTestId;
-    thread.userStories.push(story);
-  }
+    const story = findStoryById(event.userStoryId);
+    if (story && story.testId !== targetTestId) {
+      removeStoryFromItsLocation(story);
+      story.testId = targetTestId;
+      thread.userStories.push(story);
+    }
 
-  setThreadState(event.threadId, 'Develop');
+    setThreadState(event.threadId, 'Develop');
+  });
 };
 
 const handleReview = (event: TimeEvent): void => {
