@@ -16,15 +16,26 @@ const teamModeLabel = computed(() => {
 });
 </script>
 <template>
-  <span data-testid="team-mode">{{ teamModeLabel }}</span>
-  <ul v-if="formStore.teamMode === 'custom'">
-    <li
-      v-for="developer in formStore.developers"
-      :key="developer.id"
-      :data-testid="'developer-' + developer.id"
-    >
-      Dev {{ developer.id }} — exp. {{ developer.experience }}
-    </li>
-  </ul>
-  <span v-if="formStore.teamMode !== 'notSet'" data-testid="reviewers">Reviewers — {{ formStore.reviewers }}</span>
+  <article>
+    <nav>
+      <i>groups</i>
+      <span class="max">Équipe</span>
+      <span class="chip" data-testid="team-mode">{{ teamModeLabel }}</span>
+    </nav>
+    <div v-if="formStore.teamMode === 'custom'" class="wrap">
+      <button
+        class="chip"
+        v-for="developer in formStore.developers"
+        :key="developer.id"
+        :data-testid="'developer-' + developer.id"
+      >
+        Dev {{ developer.id }} — exp. {{ developer.experience }}
+      </button>
+    </div>
+    <nav v-if="formStore.teamMode !== 'notSet'">
+      <i>rate_review</i>
+      <span class="max">Reviewers</span>
+      <span class="chip" data-testid="reviewers">{{ formStore.reviewers }}</span>
+    </nav>
+  </article>
 </template>

@@ -60,7 +60,7 @@ describe('Resume', () => {
       teamMode: 'random',
       reviewers: 1,
     });
-    expect(wrapper.get('[data-testid=reviewers]').text()).toBe('Reviewers — 1');
+    expect(wrapper.get('[data-testid=reviewers]').text()).toBe('1');
   });
 
   test('Should not display reviewers when mode is notSet', () => {
