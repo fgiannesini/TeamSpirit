@@ -174,19 +174,21 @@ const handleReview = async (event: TimeEvent): Promise<void> => {
   });
 };
 
-const handleToReview = (event: TimeEvent): void => {
-  let firstMoved = false;
-  for (const thread of threads) {
-    const story = thread.userStories.find((s) => s.id === event.userStoryId);
-    if (story) {
-      thread.userStories.splice(thread.userStories.indexOf(story), 1);
-      if (!firstMoved) {
-        story.testId = `user-story-${event.userStoryId}`;
-        backlogStories.push(story);
-        firstMoved = true;
+const handleToReview = async (event: TimeEvent): Promise<void> => {
+  await animateMove(() => {
+    let firstMoved = false;
+    for (const thread of threads) {
+      const story = thread.userStories.find((s) => s.id === event.userStoryId);
+      if (story) {
+        thread.userStories.splice(thread.userStories.indexOf(story), 1);
+        if (!firstMoved) {
+          story.testId = `user-story-${event.userStoryId}`;
+          backlogStories.push(story);
+          firstMoved = true;
+        }
       }
     }
-  }
+  });
 };
 
 const handleDone = (event: TimeEvent): void => {
