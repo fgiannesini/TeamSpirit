@@ -19,10 +19,7 @@ describe('Priority Modificator', () => {
     });
 
     test('Should modify priority', () => {
-      const randomProvider = vi
-        .fn<() => number>()
-        .mockReturnValueOnce(0.05)
-        .mockReturnValue(0.2);
+      const randomProvider = vi.fn<() => number>().mockReturnValueOnce(0.05).mockReturnValue(0.2);
       const priorityModificator = new RandomPriorityModificator(randomProvider);
       const userStories = priorityModificator.generate([todo({ priority: 0 })], 0);
       expect(userStories).toEqual({

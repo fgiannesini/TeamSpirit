@@ -359,10 +359,7 @@ describe('Form store', () => {
       const simulationInputs = store.toSimulationInputs({
         providers: {
           userStoriesCount: 2,
-          complexityGenerator: vi
-            .fn<() => number>()
-            .mockReturnValueOnce(2)
-            .mockReturnValue(3),
+          complexityGenerator: vi.fn<() => number>().mockReturnValueOnce(2).mockReturnValue(3),
           reviewComplexityGenerator: vi
             .fn<() => number>()
             .mockReturnValueOnce(1)

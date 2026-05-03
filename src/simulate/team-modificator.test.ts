@@ -14,10 +14,7 @@ describe('Team modificator', () => {
         createThread({ id: 0, off: true }),
         createThread({ id: 1, off: true }),
       ]);
-      const randomProvider = vi
-        .fn<() => number>()
-        .mockReturnValueOnce(1)
-        .mockReturnValue(0);
+      const randomProvider = vi.fn<() => number>().mockReturnValueOnce(1).mockReturnValue(0);
       const teamModificator = new RandomTeamModificator(randomProvider);
       const { team, newThreadsIn } = teamModificator.setThreadsIn(initialTeam, 0);
       expect(team).toEqual(
@@ -31,10 +28,7 @@ describe('Team modificator', () => {
         createThread({ id: 0, off: true }),
         createThread({ id: 1, off: true }),
       ]);
-      const randomProvider = vi
-        .fn<() => number>()
-        .mockReturnValueOnce(1)
-        .mockReturnValue(0);
+      const randomProvider = vi.fn<() => number>().mockReturnValueOnce(1).mockReturnValue(0);
       const teamModificator = new RandomTeamModificator(randomProvider);
       const { team, newThreadsIn } = teamModificator.setThreadsIn(initialTeam, 0);
       expect(team).toEqual(
@@ -48,10 +42,7 @@ describe('Team modificator', () => {
         createThread({ id: 0, off: false, inTime: 1 }),
         createThread({ id: 1, off: false, inTime: 1 }),
       ]);
-      const randomProvider = vi
-        .fn<() => number>()
-        .mockReturnValueOnce(1)
-        .mockReturnValue(0);
+      const randomProvider = vi.fn<() => number>().mockReturnValueOnce(1).mockReturnValue(0);
       const teamModificator = new RandomTeamModificator(randomProvider);
       const { team, newThreadsOff } = teamModificator.setThreadsOff(initialTeam, 0);
       expect(team).toEqual(
@@ -68,10 +59,7 @@ describe('Team modificator', () => {
         createThread({ id: 0, off: false, inTime: 1 }),
         createThread({ id: 1, off: false, inTime: 1 }),
       ]);
-      const randomProvider = vi
-        .fn<() => number>()
-        .mockReturnValueOnce(1)
-        .mockReturnValue(0);
+      const randomProvider = vi.fn<() => number>().mockReturnValueOnce(1).mockReturnValue(0);
       const teamModificator = new RandomTeamModificator(randomProvider);
       const { team, newThreadsOff } = teamModificator.setThreadsOff(initialTeam, 0);
       expect(team).toEqual(
