@@ -53,13 +53,18 @@ let currentTime = 0;
 const computeDisabled = ref(false);
 const computeAllDisabled = ref(false);
 
-const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
-
-const animateMove = async (mutate: () => void): Promise<void> => {
+const animateMove = async (mutate: () => void, durationMs: number): Promise<void> => {
   const state = Flip.getState('[data-flip-id]');
   mutate();
   await nextTick();
-  Flip.from(state, { duration: 0.4, ease: 'power1.inOut', absolute: true });
+  await new Promise<void>((resolve) => {
+    Flip.from(state, {
+      duration: durationMs / 1000,
+      ease: 'power1.inOut',
+      absolute: true,
+      onComplete: resolve,
+    });
+  });
 };
 
 const findStoryById = (id: number): UserStoryVue | undefined => {
@@ -129,7 +134,7 @@ const handleTodo = (event: TimeEvent): void => {
   }
 };
 
-const handleInProgress = async (event: TimeEvent): Promise<void> => {
+const handleInProgress = async (event: TimeEvent, durationMs: number): Promise<void> => {
   await animateMove(() => {
     const targetTestId = `user-story-${event.userStoryId}-${event.threadId}`;
     const thread = threads.find((t) => t.id === event.threadId);
@@ -149,10 +154,10 @@ const handleInProgress = async (event: TimeEvent): Promise<void> => {
     }
 
     setThreadState(event.threadId, 'Develop');
-  });
+  }, durationMs);
 };
 
-const handleReview = async (event: TimeEvent): Promise<void> => {
+const handleReview = async (event: TimeEvent, durationMs: number): Promise<void> => {
   await animateMove(() => {
     const thread = threads.find((t) => t.id === event.threadId);
     if (!thread) return;
@@ -171,10 +176,10 @@ const handleReview = async (event: TimeEvent): Promise<void> => {
     if (backlogIdx !== -1) backlogStories.splice(backlogIdx, 1);
 
     setThreadState(event.threadId, 'Review');
-  });
+  }, durationMs);
 };
 
-const handleToReview = async (event: TimeEvent): Promise<void> => {
+const handleToReview = async (event: TimeEvent, durationMs: number): Promise<void> => {
   await animateMove(() => {
     let firstMoved = false;
     for (const thread of threads) {
@@ -188,10 +193,10 @@ const handleToReview = async (event: TimeEvent): Promise<void> => {
         }
       }
     }
-  });
+  }, durationMs);
 };
 
-const handleDone = async (event: TimeEvent): Promise<void> => {
+const handleDone = async (event: TimeEvent, durationMs: number): Promise<void> => {
   await animateMove(() => {
     let firstMoved = false;
     for (const thread of threads) {
@@ -205,7 +210,7 @@ const handleDone = async (event: TimeEvent): Promise<void> => {
         }
       }
     }
-  });
+  }, durationMs);
 };
 
 const updateStats = (time: number): void => {
@@ -218,8 +223,6 @@ const updateStats = (time: number): void => {
 const processEvents = async (time: number, animationTime: number): Promise<void> => {
   const currentEvents = data.timeEvents.filter((e) => e.time === time);
   for (const event of currentEvents) {
-    let shouldSleep = true;
-
     if (event.userStoryId === -1) {
       const thread = threads.find((t) => t.id === event.threadId);
       if (thread) thread.userStories.splice(0);
@@ -230,30 +233,25 @@ const processEvents = async (time: number, animationTime: number): Promise<void>
           handleTodo(event);
           break;
         case 'InProgress':
-          await handleInProgress(event);
+          await handleInProgress(event, animationTime);
           break;
         case 'Review': {
           const thread = threads.find((t) => t.id === event.threadId);
           if (thread?.userStories.some((s) => s.id === event.userStoryId)) {
-            shouldSleep = false;
             break;
           }
-          await handleReview(event);
+          await handleReview(event, animationTime);
           break;
         }
         case 'ToReview':
-          await handleToReview(event);
+          await handleToReview(event, animationTime);
           break;
         case 'Done':
-          await handleDone(event);
+          await handleDone(event, animationTime);
           break;
         default:
           break;
       }
-    }
-
-    if (shouldSleep) {
-      await sleep(animationTime);
     }
   }
 };
@@ -396,6 +394,7 @@ button {
 
 .backlog,
 .done {
+  position: relative;
   width: 100%;
   height: 15vh;
   display: flex;
@@ -405,6 +404,7 @@ button {
 }
 
 .threads {
+  position: relative;
   width: 100%;
   height: 30vh;
   display: flex;
