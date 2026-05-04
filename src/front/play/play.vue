@@ -50,16 +50,16 @@ let currentTime = 0;
 const computeDisabled = ref(false);
 const computeAllDisabled = ref(false);
 
-const animateMove = async (mutate: () => void, durationMs: number): Promise<void> => {
+const captureFlipPositions = (): Map<string, DOMRect> => {
   const positions = new Map<string, DOMRect>();
   document.querySelectorAll('[data-flip-id]').forEach((el) => {
     positions.set(el.getAttribute('data-flip-id')!, el.getBoundingClientRect());
   });
+  return positions;
+};
 
-  mutate();
-  await nextTick();
-
-  await new Promise<void>((resolve) => {
+const animateFromPositions = (positions: Map<string, DOMRect>, durationMs: number): Promise<void> =>
+  new Promise<void>((resolve) => {
     const tl = gsap.timeline({ onComplete: resolve });
     document.querySelectorAll('[data-flip-id]').forEach((el) => {
       const flipId = el.getAttribute('data-flip-id')!;
@@ -77,6 +77,12 @@ const animateMove = async (mutate: () => void, durationMs: number): Promise<void
       );
     });
   });
+
+const animateMove = async (mutate: () => void, durationMs: number): Promise<void> => {
+  const positions = captureFlipPositions();
+  mutate();
+  await nextTick();
+  await animateFromPositions(positions, durationMs);
 };
 
 const findStoryById = (id: number): UserStoryVue | undefined => {
