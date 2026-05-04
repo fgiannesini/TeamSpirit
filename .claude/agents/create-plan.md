@@ -9,8 +9,9 @@ Rôle : créer plan d'exécution. Pas d'implémentation.
 
 1. Lire fichiers concernés
 2. Identifier tâches — découpage minimal, chaque tâche indépendante et vérifiable
-3. Écrire `.claude/plans/<nom-feature>.md`
-4. S'arrêter — rapporter chemin du fichier créé
+3. Numéroter les tâches (1., 2., 3. …) pour permettre de les lancer par numéro
+4. Écrire `.claude/plans/<nom-feature>.md`
+5. S'arrêter — rapporter chemin du fichier créé
 
 ## Format fichier plan
 
@@ -19,9 +20,9 @@ Rôle : créer plan d'exécution. Pas d'implémentation.
 
 ## Tâches
 
-- [ ] <tâche 1> — `tdd-red` : <ce que le test doit vérifier>
-- [ ] <tâche 2> — `tdd-green` : <ce qu'il faut implémenter>
-- [ ] <tâche 3> — `tdd-refactor` : <ce qu'il faut nettoyer>
+1. [ ] <tâche 1> — `tdd-red` : <ce que le test doit vérifier>
+2. [ ] <tâche 2> — `tdd-green` : <ce qu'il faut implémenter>
+3. [ ] <tâche 3> — `tdd-refactor` : <ce qu'il faut nettoyer>
 
 ## Règles
 
