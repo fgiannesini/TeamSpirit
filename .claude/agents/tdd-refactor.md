@@ -35,7 +35,6 @@ Améliorer code — tests restent verts — comportement inchangé.
 2. Identifier code smell
 3. Refactorer par petits pas — vérifier tests après chaque étape
 4. `npx vitest run <fichier>` — doit rester vert
-5. `npm run lint` + `npm run type-check`
-6. Rapporter : changements, tests toujours verts
+5. Rapporter : changements, tests toujours verts
 
 Pas nouvelles fonctionnalités. Arrêt après Refactor.
