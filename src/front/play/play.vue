@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import { gsap } from 'gsap';
-import { Flip } from 'gsap/Flip';
 import { nextTick, reactive, ref } from 'vue';
 import type { TimeEvent } from '../../simulate/events.ts';
 import type { StructureEvent } from '../../simulate/simulation-structure.ts';
 import { useFormStore } from '../form-store.ts';
-
-gsap.registerPlugin(Flip);
 
 const props = defineProps<{ id: number }>();
 const data = useFormStore().simulationOutputs[props.id];
@@ -54,15 +51,30 @@ const computeDisabled = ref(false);
 const computeAllDisabled = ref(false);
 
 const animateMove = async (mutate: () => void, durationMs: number): Promise<void> => {
-  const state = Flip.getState('[data-flip-id]');
+  const positions = new Map<string, DOMRect>();
+  document.querySelectorAll('[data-flip-id]').forEach((el) => {
+    positions.set(el.getAttribute('data-flip-id')!, el.getBoundingClientRect());
+  });
+
   mutate();
   await nextTick();
+
   await new Promise<void>((resolve) => {
-    Flip.from(state, {
-      duration: durationMs / 1000,
-      ease: 'power1.inOut',
-      absolute: true,
-      onComplete: resolve,
+    const tl = gsap.timeline({ onComplete: resolve });
+    document.querySelectorAll('[data-flip-id]').forEach((el) => {
+      const flipId = el.getAttribute('data-flip-id')!;
+      const oldRect = positions.get(flipId);
+      if (!oldRect) return;
+      const newRect = el.getBoundingClientRect();
+      const dx = oldRect.left - newRect.left;
+      const dy = oldRect.top - newRect.top;
+      if (dx === 0 && dy === 0) return;
+      tl.fromTo(
+        el,
+        { x: dx, y: dy },
+        { x: 0, y: 0, duration: durationMs / 1000, ease: 'power1.inOut' },
+        0,
+      );
     });
   });
 };
@@ -310,7 +322,7 @@ updateThreadPresence(1);
     <span class="title">Backlog</span>
     <div
       v-for="story in backlogStories"
-      :key="story.testId"
+      :key="story.id"
       :data-testid="story.testId"
       :data-flip-id="'story-' + story.id"
       class="userStory"
@@ -333,7 +345,7 @@ updateThreadPresence(1);
       <div :id="`thread-user-story-${thread.id}`" :data-testid="`thread-user-story-${thread.id}`">
         <div
           v-for="story in thread.userStories"
-          :key="story.testId"
+          :key="story.id"
           :data-testid="story.testId"
           :data-flip-id="'story-' + story.id"
           class="userStory"
@@ -351,7 +363,7 @@ updateThreadPresence(1);
     <span class="title">Done</span>
     <div
       v-for="story in doneStories"
-      :key="story.testId"
+      :key="story.id"
       :data-testid="story.testId"
       :data-flip-id="'story-' + story.id"
       class="userStory"

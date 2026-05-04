@@ -2,15 +2,14 @@ import { createTestingPinia } from '@pinia/testing';
 import { shallowMount, type VueWrapper } from '@vue/test-utils';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-vi.mock('gsap/Flip', () => ({
-  Flip: {
-    getState: () => ({}),
-    from: (_state: unknown, opts?: { onComplete?: () => void }) => {
+vi.mock('gsap', () => ({
+  gsap: {
+    timeline: (opts?: { onComplete?: () => void }) => {
       setTimeout(() => opts?.onComplete?.(), 0);
+      return { fromTo: () => {} };
     },
   },
 }));
-vi.mock('gsap', () => ({ gsap: { registerPlugin: () => {} } }));
 import {
   createChangePriority,
   createUserStory,
