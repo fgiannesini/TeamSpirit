@@ -74,6 +74,13 @@ Vitest, `globals:true`, env jsdom, setup `src/test-setup.ts`.
 - `backlogStories: UserStoryVue[]`, `doneStories: UserStoryVue[]`
 - `UserStoryVue.testId` — `user-story-{id}` (backlog/done) ou `user-story-{id}-{threadId}` (thread)
 
+### Fichiers config IA
+
+`.claude/agents/*.md` → style **caveman** obligatoire :
+- Supprimer articles, auxiliaires, prépositions superflues
+- Listes > phrases complètes
+- Blocs code + chemins intacts
+
 ### Style code
 
 - Format: **Oxfmt** — quotes simples, indent 2 espaces.
