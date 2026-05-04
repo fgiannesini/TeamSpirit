@@ -267,13 +267,17 @@ const processEvents = async (time: number, animationTime: number): Promise<void>
   }
 };
 
+const advanceStep = async (time: number, animationMs: number): Promise<void> => {
+  await processEvents(time, animationMs);
+  updateStats(time);
+  buildUserStories(time + 1);
+  updateThreadPresence(time + 1);
+};
+
 const runNext = async (): Promise<void> => {
   computeDisabled.value = true;
   currentTime++;
-  await processEvents(currentTime, 600);
-  updateStats(currentTime);
-  buildUserStories(currentTime + 1);
-  updateThreadPresence(currentTime + 1);
+  await advanceStep(currentTime, 600);
   if (maxTime !== currentTime) {
     computeDisabled.value = false;
   }
@@ -282,10 +286,7 @@ const runNext = async (): Promise<void> => {
 const runAll = async (): Promise<void> => {
   while (maxTime !== currentTime) {
     currentTime++;
-    await processEvents(currentTime, 300);
-    updateStats(currentTime);
-    buildUserStories(currentTime + 1);
-    updateThreadPresence(currentTime + 1);
+    await advanceStep(currentTime, 300);
   }
   computeAllDisabled.value = true;
 };
