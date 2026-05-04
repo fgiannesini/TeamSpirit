@@ -1,5 +1,4 @@
 ---
-name: create-plan
 description: Crée un plan todo dans .claude/plans/ avant toute tâche multi-étapes. Analyser, découper, écrire fichier, s'arrêter. Utiliser avant tdd-red/tdd-green/tdd-refactor.
 ---
 
