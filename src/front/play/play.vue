@@ -203,38 +203,27 @@ const handleReview = async (event: TimeEvent, durationMs: number): Promise<void>
   }, durationMs);
 };
 
-const handleToReview = async (event: TimeEvent, durationMs: number): Promise<void> => {
-  await animateMove(() => {
-    let firstMoved = false;
-    for (const thread of threads) {
-      const story = thread.userStories.find((s) => s.id === event.userStoryId);
-      if (story) {
-        thread.userStories.splice(thread.userStories.indexOf(story), 1);
-        if (!firstMoved) {
-          story.testId = `user-story-${event.userStoryId}`;
-          backlogStories.push(story);
-          firstMoved = true;
-        }
+const moveStoryFromThreadsTo = (storyId: number, destination: UserStoryVue[]): void => {
+  let firstMoved = false;
+  for (const thread of threads) {
+    const story = thread.userStories.find((s) => s.id === storyId);
+    if (story) {
+      thread.userStories.splice(thread.userStories.indexOf(story), 1);
+      if (!firstMoved) {
+        story.testId = `user-story-${storyId}`;
+        destination.push(story);
+        firstMoved = true;
       }
     }
-  }, durationMs);
+  }
+};
+
+const handleToReview = async (event: TimeEvent, durationMs: number): Promise<void> => {
+  await animateMove(() => moveStoryFromThreadsTo(event.userStoryId, backlogStories), durationMs);
 };
 
 const handleDone = async (event: TimeEvent, durationMs: number): Promise<void> => {
-  await animateMove(() => {
-    let firstMoved = false;
-    for (const thread of threads) {
-      const story = thread.userStories.find((s) => s.id === event.userStoryId);
-      if (story) {
-        thread.userStories.splice(thread.userStories.indexOf(story), 1);
-        if (!firstMoved) {
-          story.testId = `user-story-${event.userStoryId}`;
-          doneStories.push(story);
-          firstMoved = true;
-        }
-      }
-    }
-  }, durationMs);
+  await animateMove(() => moveStoryFromThreadsTo(event.userStoryId, doneStories), durationMs);
 };
 
 const updateStats = (time: number): void => {
