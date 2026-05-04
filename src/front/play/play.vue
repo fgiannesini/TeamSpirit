@@ -14,14 +14,14 @@ export type ThreadVue = {
   name: string;
   state: ThreadState;
   presence: string;
-  userStories: UserStoryVue[];
+  inProgressStories: UserStoryVue[];
+  reviewStories: UserStoryVue[];
 };
 
 type UserStoryVue = {
   id: number;
   name: string;
   priority: number | null;
-  testId: string;
 };
 
 const threads = reactive<ThreadVue[]>(
@@ -34,7 +34,8 @@ const threads = reactive<ThreadVue[]>(
       name,
       state: 'Wait' as ThreadState,
       presence: '',
-      userStories: [],
+      inProgressStories: [],
+      reviewStories: [],
     })),
 );
 
@@ -89,8 +90,10 @@ const findStoryById = (id: number): UserStoryVue | undefined => {
   const inBacklog = backlogStories.find((s) => s.id === id);
   if (inBacklog) return inBacklog;
   for (const thread of threads) {
-    const inThread = thread.userStories.find((s) => s.id === id);
+    const inThread = thread.inProgressStories.find((s) => s.id === id);
     if (inThread) return inThread;
+    const inReview = thread.reviewStories.find((s) => s.id === id);
+    if (inReview) return inReview;
   }
   return undefined;
 };
@@ -102,9 +105,14 @@ const removeStoryFromItsLocation = (story: UserStoryVue): void => {
     return;
   }
   for (const thread of threads) {
-    const idx = thread.userStories.indexOf(story);
+    const idx = thread.inProgressStories.indexOf(story);
     if (idx !== -1) {
-      thread.userStories.splice(idx, 1);
+      thread.inProgressStories.splice(idx, 1);
+      return;
+    }
+    const reviewIdx = thread.reviewStories.indexOf(story);
+    if (reviewIdx !== -1) {
+      thread.reviewStories.splice(reviewIdx, 1);
       return;
     }
   }
@@ -117,7 +125,10 @@ const setThreadState = (threadId: number, state: ThreadState): void => {
 
 const handleIdleThread = (threadId: number): void => {
   const thread = threads.find((t) => t.id === threadId);
-  if (thread) thread.userStories.splice(0);
+  if (thread) {
+    thread.inProgressStories.splice(0);
+    thread.reviewStories.splice(0);
+  }
   setThreadState(threadId, 'Wait');
 };
 
@@ -128,7 +139,6 @@ const buildUserStories = (time: number): void => {
         id: event.id,
         name: event.name,
         priority: null,
-        testId: `user-story-${event.id}`,
       });
     }
     if (event.action === 'ChangePriority') {
@@ -149,9 +159,9 @@ const updateThreadPresence = (time: number): void => {
 
 const handleTodo = (event: TimeEvent): void => {
   for (const thread of threads) {
-    const idx = thread.userStories.findIndex((s) => s.id === event.userStoryId);
+    const idx = thread.inProgressStories.findIndex((s) => s.id === event.userStoryId);
     if (idx !== -1) {
-      const [story] = thread.userStories.splice(idx, 1);
+      const [story] = thread.inProgressStories.splice(idx, 1);
       backlogStories.push(story);
       return;
     }
@@ -160,21 +170,20 @@ const handleTodo = (event: TimeEvent): void => {
 
 const handleInProgress = async (event: TimeEvent, durationMs: number): Promise<void> => {
   await animateMove(() => {
-    const targetTestId = `user-story-${event.userStoryId}-${event.threadId}`;
     const thread = threads.find((t) => t.id === event.threadId);
     if (!thread) return;
 
-    const toMove = thread.userStories.filter((s) => s.testId !== targetTestId);
+    const toMove = thread.inProgressStories.filter((s) => s.id !== event.userStoryId);
     for (const story of toMove) {
-      thread.userStories.splice(thread.userStories.indexOf(story), 1);
+      thread.inProgressStories.splice(thread.inProgressStories.indexOf(story), 1);
       backlogStories.push(story);
     }
+    thread.reviewStories.splice(0);
 
     const story = findStoryById(event.userStoryId);
-    if (story && story.testId !== targetTestId) {
+    if (story && !thread.inProgressStories.some((s) => s.id === event.userStoryId)) {
       removeStoryFromItsLocation(story);
-      story.testId = targetTestId;
-      thread.userStories.push(story);
+      thread.inProgressStories.push(story);
     }
 
     setThreadState(event.threadId, 'Develop');
@@ -186,36 +195,32 @@ const handleReview = async (event: TimeEvent, durationMs: number): Promise<void>
     const thread = threads.find((t) => t.id === event.threadId);
     if (!thread) return;
 
-    thread.userStories.splice(0);
+    thread.inProgressStories.splice(0);
 
-    const original = findStoryById(event.userStoryId);
-    if (original) {
-      thread.userStories.push({
-        ...original,
-        testId: `user-story-${event.userStoryId}-${event.threadId}`,
-      });
+    const story = findStoryById(event.userStoryId);
+    if (story) {
+      const backlogIdx = backlogStories.indexOf(story);
+      if (backlogIdx !== -1) backlogStories.splice(backlogIdx, 1);
+      thread.reviewStories.push(story);
     }
-
-    const backlogIdx = backlogStories.findIndex((s) => s.id === event.userStoryId);
-    if (backlogIdx !== -1) backlogStories.splice(backlogIdx, 1);
 
     setThreadState(event.threadId, 'Review');
   }, durationMs);
 };
 
 const moveStoryFromThreadsTo = (storyId: number, destination: UserStoryVue[]): void => {
-  let firstMoved = false;
+  let story: UserStoryVue | undefined;
   for (const thread of threads) {
-    const story = thread.userStories.find((s) => s.id === storyId);
-    if (story) {
-      thread.userStories.splice(thread.userStories.indexOf(story), 1);
-      if (!firstMoved) {
-        story.testId = `user-story-${storyId}`;
-        destination.push(story);
-        firstMoved = true;
-      }
+    const userIdx = thread.inProgressStories.findIndex((s) => s.id === storyId);
+    if (userIdx !== -1) {
+      story = thread.inProgressStories.splice(userIdx, 1)[0];
+    }
+    const reviewIdx = thread.reviewStories.findIndex((s) => s.id === storyId);
+    if (reviewIdx !== -1) {
+      story = thread.reviewStories.splice(reviewIdx, 1)[0];
     }
   }
+  if (story) destination.push(story);
 };
 
 const handleToReview = async (event: TimeEvent, durationMs: number): Promise<void> => {
@@ -248,7 +253,7 @@ const processEvents = async (time: number, animationTime: number): Promise<void>
           break;
         case 'Review': {
           const thread = threads.find((t) => t.id === event.threadId);
-          if (thread?.userStories.some((s) => s.id === event.userStoryId)) {
+          if (thread?.reviewStories.some((s) => s.id === event.userStoryId)) {
             break;
           }
           await handleReview(event, animationTime);
@@ -323,7 +328,7 @@ updateThreadPresence(1);
     <div
       v-for="story in backlogStories"
       :key="story.id"
-      :data-testid="story.testId"
+      :data-testid="'user-story-' + story.id"
       :data-flip-id="'story-' + story.id"
       class="userStory"
     >
@@ -344,9 +349,19 @@ updateThreadPresence(1);
       </div>
       <div :id="`thread-user-story-${thread.id}`" :data-testid="`thread-user-story-${thread.id}`">
         <div
-          v-for="story in thread.userStories"
+          v-for="story in thread.inProgressStories"
           :key="story.id"
-          :data-testid="story.testId"
+          :data-testid="'user-story-' + story.id + '-' + thread.id"
+          :data-flip-id="'story-' + story.id"
+          class="userStory"
+        >
+          <span class="name">{{ story.name }}</span>
+          <span v-if="story.priority !== null" class="priority">({{ story.priority }})</span>
+        </div>
+        <div
+          v-for="story in thread.reviewStories"
+          :key="'review-' + story.id"
+          :data-testid="'user-story-' + story.id + '-' + thread.id"
           :data-flip-id="'story-' + story.id"
           class="userStory"
         >
@@ -364,7 +379,7 @@ updateThreadPresence(1);
     <div
       v-for="story in doneStories"
       :key="story.id"
-      :data-testid="story.testId"
+      :data-testid="'user-story-' + story.id"
       :data-flip-id="'story-' + story.id"
       class="userStory"
     >

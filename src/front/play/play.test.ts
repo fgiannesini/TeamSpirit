@@ -386,7 +386,7 @@ describe('Play', () => {
       await vi.runAllTimersAsync();
 
       const backlog = wrapper.get('[data-testid=backlog]');
-      expect(backlog.find('[data-testid=user-story-0-0]').exists()).toBe(true);
+      expect(backlog.find('[data-testid=user-story-0]').exists()).toBe(true);
     });
 
     test('Should move userStories with id >10 to thread when in progress, then done', async () => {
