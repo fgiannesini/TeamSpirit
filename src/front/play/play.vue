@@ -109,6 +109,12 @@ const setThreadState = (threadId: number, state: ThreadState): void => {
   if (thread) thread.state = state;
 };
 
+const handleIdleThread = (threadId: number): void => {
+  const thread = threads.find((t) => t.id === threadId);
+  if (thread) thread.userStories.splice(0);
+  setThreadState(threadId, 'Wait');
+};
+
 const buildUserStories = (time: number): void => {
   for (const event of data.structureEvents.filter((e) => e.time === time)) {
     if (event.action === 'CreateUserStory' && event.id !== -1) {
@@ -236,9 +242,7 @@ const processEvents = async (time: number, animationTime: number): Promise<void>
   const currentEvents = data.timeEvents.filter((e) => e.time === time);
   for (const event of currentEvents) {
     if (event.userStoryId === -1) {
-      const thread = threads.find((t) => t.id === event.threadId);
-      if (thread) thread.userStories.splice(0);
-      setThreadState(event.threadId, 'Wait');
+      handleIdleThread(event.threadId);
     } else {
       switch (event.state) {
         case 'Todo':
