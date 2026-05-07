@@ -211,18 +211,23 @@ export const useFormStore = defineStore('form', {
         },
       ];
     },
-    runSimulation(iterationCount: number, inputs?: SimulationInputs[]): void {
+    runSimulation(
+      iterationCount: number,
+      inputs?: SimulationInputs[],
+      simulateFn: typeof simulate = simulate,
+      computeStatEventsFn: typeof computeStatEvents = computeStatEvents,
+    ): void {
       this.simulationOutputs = Array.from({ length: iterationCount }).flatMap(() => {
         const resolvedInputs = inputs ?? this.toSimulationInputs();
         return resolvedInputs.map(({ backlog, team }) => {
-          const { timeEvents, structureEvents } = simulate(
+          const { timeEvents, structureEvents } = simulateFn(
             copy(backlog),
             team.copy(),
             noBugGenerator,
             noTeamModificator,
             noPriorityModificator,
           );
-          const statEvents = computeStatEvents(timeEvents);
+          const statEvents = computeStatEventsFn(timeEvents);
           return {
             timeEvents,
             statEvents,

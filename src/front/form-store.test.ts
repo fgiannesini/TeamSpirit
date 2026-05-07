@@ -17,17 +17,8 @@ import {
 } from './form-store.ts';
 import { developer, teamModification, userStory } from './front-factory-for-test.ts';
 
-const { simulateMock, computeStatEventsMock } = vi.hoisted(() => ({
-  simulateMock: vi.fn<typeof simulate>(),
-  computeStatEventsMock: vi.fn<typeof computeStatEvents>(),
-}));
-
-vi.mock('../simulate/simulation.ts', () => ({
-  simulate: simulateMock,
-}));
-vi.mock('../simulate/stats.ts', () => ({
-  computeStatEvents: computeStatEventsMock,
-}));
+const simulateMock = vi.fn<typeof simulate>();
+const computeStatEventsMock = vi.fn<typeof computeStatEvents>();
 
 describe('Form store', () => {
   beforeEach(() => {
@@ -416,12 +407,17 @@ describe('Form store', () => {
   describe('Simulation', () => {
     test('Should run simulation and store in state', () => {
       const store = useFormStore();
-      store.runSimulation(2, [
-        {
-          backlog: createBacklog(),
-          team: parallelTeam(),
-        },
-      ]);
+      store.runSimulation(
+        2,
+        [
+          {
+            backlog: createBacklog(),
+            team: parallelTeam(),
+          },
+        ],
+        simulateMock,
+        computeStatEventsMock,
+      );
       expect(store.$state.simulationOutputs[0]).toStrictEqual<SimulationOutputs>({
         teamType: 'Parallel',
         timeEvents: [{ time: 1, state: 'InProgress', threadId: 0, userStoryId: 0 }],
@@ -453,7 +449,7 @@ describe('Form store', () => {
     test('Should get new inputs on each iteration', () => {
       const store = useFormStore();
       store.toSimulationInputs = vi.fn<() => SimulationInputs[]>().mockReturnValue([]);
-      store.runSimulation(2);
+      store.runSimulation(2, undefined, simulateMock, computeStatEventsMock);
       expect(store.toSimulationInputs).toHaveBeenCalledTimes(2);
     });
   });
