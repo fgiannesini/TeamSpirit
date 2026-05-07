@@ -14,7 +14,7 @@ const activate = (tabName: TabName): void => {
 </script>
 <template>
   <main class="responsive">
-    <nav>
+    <nav class="scroll">
       <div class="center-align">
         <button
           data-testid="team-tab"
