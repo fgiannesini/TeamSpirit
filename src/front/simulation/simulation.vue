@@ -68,7 +68,7 @@ const toPlay = async (id: number) => {
       </tbody>
     </table>
   </main>
-  <nav class="right" data-testid="resume-panel">
+  <nav class="right" style="width: 15rem" data-testid="resume-panel">
     Configuration
     <resume />
     <div class="field label prefix border">

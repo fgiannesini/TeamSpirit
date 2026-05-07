@@ -22,7 +22,7 @@ const teamModeLabel = computed(() => {
       <span class="max">Équipe</span>
       <span class="chip" data-testid="team-mode">{{ teamModeLabel }}</span>
     </nav>
-    <div v-if="formStore.teamMode === 'custom'" class="wrap">
+    <div v-if="formStore.teamMode === 'custom'" class="row wrap">
       <button
         class="chip"
         v-for="developer in formStore.developers"
