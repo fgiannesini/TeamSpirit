@@ -87,4 +87,5 @@ Vitest, `globals:true`, env jsdom, setup `src/test-setup.ts`.
 - Lint: **Oxlint** plugins Vue+TS+Vitest (`.oxlintrc.json`).
 - TS strict: pas vars/params inutilisés, pas fallthrough switch.
 - Style: **BeerCSS** (Material Design 3) + Sass.
+- CSS: chercher classe BeerCSS en premier via docs `https://www.beercss.com` (WebFetch) avant tout style inline. Fallback inline seulement si aucune classe existante.
 - Commentaires+UI strings en français.
