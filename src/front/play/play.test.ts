@@ -413,18 +413,14 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
 
       const threadUserStory0 = wrapper.get('[data-testid=thread-user-story-0]');
-      expect(threadUserStory0.find('[data-testid=user-story-1-0]').exists()).toBe(true);
-
-      await vi.advanceTimersToNextTimerAsync();
       const threadUserStory1 = wrapper.get('[data-testid=thread-user-story-1]');
+      expect(threadUserStory0.find('[data-testid=user-story-1-0]').exists()).toBe(true);
       expect(threadUserStory1.find('[data-testid=user-story-10-1]').exists()).toBe(true);
 
       const done = wrapper.get('[data-testid=done]');
 
-      await vi.advanceTimersToNextTimerAsync();
+      await vi.runAllTimersAsync();
       expect(done.find('[data-testid=user-story-1]').exists()).toBe(true);
-
-      await vi.advanceTimersToNextTimerAsync();
       expect(done.find('[data-testid=user-story-10]').exists()).toBe(true);
     });
 

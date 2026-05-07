@@ -79,9 +79,10 @@ const animateFromPositions = (positions: Map<string, DOMRect>, durationMs: numbe
     });
   });
 
-const animateMove = async (mutate: () => void, durationMs: number): Promise<void> => {
+const animateBatch = async (mutations: (() => void)[], durationMs: number): Promise<void> => {
+  if (mutations.length === 0) return;
   const positions = captureFlipPositions();
-  mutate();
+  for (const mutate of mutations) mutate();
   await nextTick();
   await animateFromPositions(positions, durationMs);
 };
@@ -168,8 +169,9 @@ const handleTodo = (event: TimeEvent): void => {
   }
 };
 
-const handleInProgress = async (event: TimeEvent, durationMs: number): Promise<void> => {
-  await animateMove(() => {
+const handleInProgress =
+  (event: TimeEvent): (() => void) =>
+  () => {
     const thread = threads.find((t) => t.id === event.threadId);
     if (!thread) return;
 
@@ -187,11 +189,11 @@ const handleInProgress = async (event: TimeEvent, durationMs: number): Promise<v
     }
 
     setThreadState(event.threadId, 'Develop');
-  }, durationMs);
-};
+  };
 
-const handleReview = async (event: TimeEvent, durationMs: number): Promise<void> => {
-  await animateMove(() => {
+const handleReview =
+  (event: TimeEvent): (() => void) =>
+  () => {
     const thread = threads.find((t) => t.id === event.threadId);
     if (!thread) return;
 
@@ -205,8 +207,7 @@ const handleReview = async (event: TimeEvent, durationMs: number): Promise<void>
     }
 
     setThreadState(event.threadId, 'Review');
-  }, durationMs);
-};
+  };
 
 const moveStoryFromThreadsTo = (storyId: number, destination: UserStoryVue[]): void => {
   let story: UserStoryVue | undefined;
@@ -223,13 +224,15 @@ const moveStoryFromThreadsTo = (storyId: number, destination: UserStoryVue[]): v
   if (story) destination.push(story);
 };
 
-const handleToReview = async (event: TimeEvent, durationMs: number): Promise<void> => {
-  await animateMove(() => moveStoryFromThreadsTo(event.userStoryId, backlogStories), durationMs);
-};
+const handleToReview =
+  (event: TimeEvent): (() => void) =>
+  () =>
+    moveStoryFromThreadsTo(event.userStoryId, backlogStories);
 
-const handleDone = async (event: TimeEvent, durationMs: number): Promise<void> => {
-  await animateMove(() => moveStoryFromThreadsTo(event.userStoryId, doneStories), durationMs);
-};
+const handleDone =
+  (event: TimeEvent): (() => void) =>
+  () =>
+    moveStoryFromThreadsTo(event.userStoryId, doneStories);
 
 const updateStats = (time: number): void => {
   const events = data.statEvents.filter((e) => e.time === time);
@@ -238,37 +241,52 @@ const updateStats = (time: number): void => {
   timeDisplay.value = `${events[0].time}/${maxTime}`;
 };
 
+const conflicts = (a: TimeEvent, b: TimeEvent): boolean =>
+  a.threadId === b.threadId || (a.userStoryId !== -1 && a.userStoryId === b.userStoryId);
+
+const partitionParallel = (events: TimeEvent[]): TimeEvent[][] => {
+  const batches: TimeEvent[][] = [];
+  for (const event of events) {
+    const target = batches.find((batch) => !batch.some((e) => conflicts(e, event)));
+    if (target) target.push(event);
+    else batches.push([event]);
+  }
+  return batches;
+};
+
 const processEvents = async (time: number, animationTime: number): Promise<void> => {
   const currentEvents = data.timeEvents.filter((e) => e.time === time);
-  for (const event of currentEvents) {
-    if (event.userStoryId === -1) {
-      handleIdleThread(event.threadId);
-    } else {
-      switch (event.state) {
-        case 'Todo':
-          handleTodo(event);
-          break;
-        case 'InProgress':
-          await handleInProgress(event, animationTime);
-          break;
-        case 'Review': {
-          const thread = threads.find((t) => t.id === event.threadId);
-          if (thread?.reviewStories.some((s) => s.id === event.userStoryId)) {
+  for (const batch of partitionParallel(currentEvents)) {
+    const mutations: (() => void)[] = [];
+    for (const event of batch) {
+      if (event.userStoryId === -1) {
+        handleIdleThread(event.threadId);
+      } else {
+        switch (event.state) {
+          case 'Todo':
+            handleTodo(event);
+            break;
+          case 'InProgress':
+            mutations.push(handleInProgress(event));
+            break;
+          case 'Review': {
+            const thread = threads.find((t) => t.id === event.threadId);
+            if (thread?.reviewStories.some((s) => s.id === event.userStoryId)) break;
+            mutations.push(handleReview(event));
             break;
           }
-          await handleReview(event, animationTime);
-          break;
+          case 'ToReview':
+            mutations.push(handleToReview(event));
+            break;
+          case 'Done':
+            mutations.push(handleDone(event));
+            break;
+          default:
+            break;
         }
-        case 'ToReview':
-          await handleToReview(event, animationTime);
-          break;
-        case 'Done':
-          await handleDone(event, animationTime);
-          break;
-        default:
-          break;
       }
     }
+    await animateBatch(mutations, animationTime);
   }
 };
 
