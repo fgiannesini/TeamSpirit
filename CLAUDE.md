@@ -74,12 +74,51 @@ Vitest, `globals:true`, env jsdom, setup `src/test-setup.ts`.
 - `backlogStories: UserStoryVue[]`, `doneStories: UserStoryVue[]`
 - `UserStoryVue.testId` — `user-story-{id}` (backlog/done) ou `user-story-{id}-{threadId}` (thread)
 
-### Fichiers config IA
+### Process itératif
+
+Toute tâche multi-étapes ou bug suit ce cycle :
+
+1. **`thinker`** — explore code, identifie cause racine, écrit `.claude/plans/<nom>.md` avec tâches atomiques
+2. **Implémentation** (Claude) — code + tests ensemble, tâche par tâche selon plan
+3. **`reviewer`** — vérifie: code vs plan, couverture tests cas fonctionnels, style, archi
+4. **Correction** (Claude) — corrige les findings `BLOQUE` et `IMPORTANT`
+5. **`reviewer`** — re-vérifie jusqu'à RAS ou MINEUR uniquement
+6. Tâche suivante → retour étape 2
+
+### Agents
+
+| Agent | Modèle | Rôle |
+|---|---|---|
+| `thinker` | Opus | Planification, analyse bugs |
+| `reviewer` | Sonnet | Review code/tests/style/archi |
+| `cavecrew-investigator` | Haiku | Recherches fichiers/symboles |
+| `cavecrew-builder` | Sonnet | Édits code 1-2 fichiers |
+| `cavecrew-clerk` | Haiku | Édits markdown/plans/delete |
 
 `.claude/agents/*.md` → style **caveman** obligatoire :
 - Supprimer articles, auxiliaires, prépositions superflues
 - Listes > phrases complètes
 - Blocs code + chemins intacts
+
+### Craft
+
+**4 règles du design simple (Kent Beck — ordre priorité)**
+1. Tests passent
+2. Révèle intention — noms explicites, pas de commentaires explicatifs nécessaires
+3. Pas de duplication — DRY sur connaissance, pas sur syntaxe
+4. Éléments minimaux — YAGNI, supprimer tout ce qui ne sert pas
+
+**Boy Scout Rule** — laisser chaque fichier touché plus propre qu'à l'arrivée.
+
+**SOLID**
+- SRP: une seule raison de changer par fonction/classe/composant
+- OCP: étendre sans modifier (composition, pas héritage)
+- DIP: dépendre d'abstractions, injecter dépendances concrètes
+
+**Clean Code**
+- Fonction fait une seule chose, courte
+- Nommage révèle intention (variable, fonction, type)
+- Pas de code mort, pas de commentaires qui expliquent le quoi
 
 ### Style code
 
