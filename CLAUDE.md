@@ -73,6 +73,10 @@ expect(mock).toHaveBeenCalledWith(
 ```
 Préférer `toHaveBeenCalledWith` à `mock.calls[0][n]` — plus lisible, pas de cast.
 
+`new MyClass(args)` acceptable si objet simple à construire (vérifie le contenu, pas juste le type). `expect.any(MyClass)` réservé aux objets complexes ou non-déterministes.
+
+**Granularité** — un test par feature, même si setup identique à un autre test. Ne pas fusionner des tests de features différentes sous prétexte de DRY.
+
 **Timing play.test.ts:**
 - `trigger('click')` synchrone → vérifier état immédiatement.
 - Même time step → `advanceTimersToNextTimerAsync`.
