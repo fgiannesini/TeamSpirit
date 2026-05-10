@@ -5,6 +5,7 @@ import Resume from './resume/resume.vue';
 import Reviewers from './reviewers/reviewers.vue';
 import Team from './team/team.vue';
 import TeamModificator from './team-modificator/team-modificator.vue';
+import PriorityModificator from './priority-modificator/priority-modificator.vue';
 import UserStories from './user-stories/user-stories.vue';
 
 describe('Form', () => {
@@ -144,6 +145,47 @@ describe('Form', () => {
       const wrapper = createWrapper();
       await wrapper.get('[data-testid=team-modificator-tab]').trigger('click');
       expect(wrapper.getComponent(TeamModificator).isVisible()).toBe(true);
+    });
+  });
+
+  describe('Priority modificator', () => {
+    test('Should render a navigation priority modificator tab', () => {
+      const wrapper = createWrapper();
+      expect(wrapper.get('[data-testid=priority-modificator-tab]').isVisible()).toBe(true);
+    });
+
+    test('Should have the navigation tab priority modificator inactive by default', () => {
+      const wrapper = createWrapper();
+      expect(wrapper.get('[data-testid=priority-modificator-tab]').classes()).not.toContain(
+        'active',
+      );
+    });
+
+    test('Should set the navigation tab priority modificator active onclick', async () => {
+      const wrapper = createWrapper();
+
+      await wrapper.get('[data-testid=priority-modificator-tab]').trigger('click');
+      expect(wrapper.get('[data-testid=priority-modificator-tab]').classes()).toContain('active');
+
+      expect(wrapper.get('[data-testid=team-tab]').classes()).not.toContain('active');
+    });
+
+    test('Should set the priority modificator page active on priority modificator tab click', async () => {
+      const wrapper = createWrapper();
+      expect(wrapper.get('[data-testid=priority-modificator-container]').classes()).not.toContain(
+        'active',
+      );
+
+      await wrapper.get('[data-testid=priority-modificator-tab]').trigger('click');
+      expect(wrapper.get('[data-testid=priority-modificator-container]').classes()).toContain(
+        'active',
+      );
+    });
+
+    test('Should render a priority modificator component', async () => {
+      const wrapper = createWrapper();
+      await wrapper.get('[data-testid=priority-modificator-tab]').trigger('click');
+      expect(wrapper.getComponent(PriorityModificator).isVisible()).toBe(true);
     });
   });
 
