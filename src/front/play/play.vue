@@ -234,6 +234,12 @@ const handleDone =
   () =>
     moveStoryFromThreadsTo(event.userStoryId, doneStories);
 
+const threadStateClass = (state: ThreadState): string => {
+  if (state === 'Develop') return 'thread--develop';
+  if (state === 'Review') return 'thread--review';
+  return '';
+};
+
 const updateStats = (time: number): void => {
   const events = data.statEvents.filter((e) => e.time === time);
   if (events.length === 0) return;
@@ -319,17 +325,25 @@ updateThreadPresence(1);
 </script>
 
 <template>
-  <div class="meta">
-    <div data-testid="stats" class="stats">
-      <div>
-        Time: <span data-testid="time" id="time">{{ timeDisplay }}</span>
-      </div>
-      <div>
-        Lead Time: <span data-testid="lead-time" id="lead-time">{{ leadTime }}</span>
-      </div>
+  <nav>
+    <i>timer</i>
+    <div data-testid="stats" class="row middle-align">
+      <span data-testid="time" id="time">{{ timeDisplay }}</span>
+      <span class="small-margin">— Lead Time :</span>
+      <b
+        ><span data-testid="lead-time" id="lead-time">{{ leadTime }}</span></b
+      >
     </div>
-    <button id="compute" data-testid="compute" @click="runNext()" :disabled="computeDisabled">
-      Play next
+    <div class="max"></div>
+    <button
+      id="compute"
+      data-testid="compute"
+      class="border"
+      @click="runNext()"
+      :disabled="computeDisabled"
+    >
+      <i>play_arrow</i>
+      <span>Play next</span>
     </button>
     <button
       id="compute-all"
@@ -337,172 +351,186 @@ updateThreadPresence(1);
       @click="runAll()"
       :disabled="computeAllDisabled"
     >
-      Play All
+      <i>fast_forward</i>
+      <span>Play All</span>
     </button>
-  </div>
+  </nav>
 
-  <div data-testid="backlog" id="backlog" class="backlog">
-    <span class="title">Backlog</span>
-    <div
-      v-for="story in backlogStories"
-      :key="story.id"
-      :data-testid="'user-story-' + story.id"
-      :data-flip-id="'story-' + story.id"
-      class="userStory"
-    >
-      <span class="name">{{ story.name }}</span>
-      <span v-if="story.priority !== null" class="priority">({{ story.priority }})</span>
-    </div>
-  </div>
-  <div data-testid="threads" id="threads" class="threads">
-    <span class="title">Threads</span>
-    <div
-      v-for="thread in threads"
-      :id="`thread${thread.id}`"
-      :data-testid="`thread${thread.id}`"
-      :class="['thread', thread.presence]"
-    >
-      <div :id="`thread-title-${thread.id}`" :data-testid="`thread-title-${thread.id}`">
-        {{ thread.name }}
-      </div>
-      <div :id="`thread-user-story-${thread.id}`" :data-testid="`thread-user-story-${thread.id}`">
-        <div
-          v-for="story in thread.inProgressStories"
-          :key="story.id"
-          :data-testid="'user-story-' + story.id + '-' + thread.id"
-          :data-flip-id="'story-' + story.id"
-          class="userStory"
-        >
-          <span class="name">{{ story.name }}</span>
-          <span v-if="story.priority !== null" class="priority">({{ story.priority }})</span>
+  <div class="grid kanban">
+    <div class="s12 m4">
+      <article data-testid="backlog" id="backlog">
+        <nav>
+          <i>inbox</i>
+          <h6 class="max">Backlog</h6>
+          <span class="chip">{{ backlogStories.length }}</span>
+        </nav>
+        <div class="column-stories">
+          <div
+            v-for="story in backlogStories"
+            :key="story.id"
+            :data-testid="'user-story-' + story.id"
+            :data-flip-id="'story-' + story.id"
+            class="story-card"
+          >
+            <span class="max" data-testid="story-name">{{ story.name }}</span>
+            <span v-if="story.priority !== null" class="chip small">{{ story.priority }}</span>
+          </div>
         </div>
-        <div
-          v-for="story in thread.reviewStories"
-          :key="'review-' + story.id"
-          :data-testid="'user-story-' + story.id + '-' + thread.id"
-          :data-flip-id="'story-' + story.id"
-          class="userStory"
-        >
-          <span class="name">{{ story.name }}</span>
-          <span v-if="story.priority !== null" class="priority">({{ story.priority }})</span>
-        </div>
-      </div>
-      <div :id="`thread-state-${thread.id}`" :data-testid="`thread-state-${thread.id}`">
-        {{ thread.state }}
-      </div>
+      </article>
     </div>
-  </div>
-  <div data-testid="done" id="done" class="done">
-    <span class="title">Done</span>
-    <div
-      v-for="story in doneStories"
-      :key="story.id"
-      :data-testid="'user-story-' + story.id"
-      :data-flip-id="'story-' + story.id"
-      class="userStory"
-    >
-      <span class="name">{{ story.name }}</span>
-      <span v-if="story.priority !== null" class="priority">({{ story.priority }})</span>
+
+    <div class="s12 m4">
+      <article data-testid="threads" id="threads">
+        <nav>
+          <i>groups</i>
+          <h6 class="max">Threads</h6>
+        </nav>
+        <div
+          v-for="thread in threads"
+          :id="`thread${thread.id}`"
+          :data-testid="`thread${thread.id}`"
+          :class="['thread', thread.presence, threadStateClass(thread.state)]"
+        >
+          <div class="thread-header">
+            <span
+              :id="`thread-title-${thread.id}`"
+              :data-testid="`thread-title-${thread.id}`"
+              class="max"
+            >
+              {{ thread.name }}
+            </span>
+            <span
+              :id="`thread-state-${thread.id}`"
+              :data-testid="`thread-state-${thread.id}`"
+              class="chip small"
+              >{{ thread.state }}</span
+            >
+          </div>
+          <div
+            :id="`thread-user-story-${thread.id}`"
+            :data-testid="`thread-user-story-${thread.id}`"
+            class="thread-stories"
+          >
+            <div
+              v-for="story in thread.inProgressStories"
+              :key="story.id"
+              :data-testid="'user-story-' + story.id + '-' + thread.id"
+              :data-flip-id="'story-' + story.id"
+              class="story-card"
+            >
+              <span class="max" data-testid="story-name">{{ story.name }}</span>
+              <span v-if="story.priority !== null" class="chip small">{{ story.priority }}</span>
+            </div>
+            <div
+              v-for="story in thread.reviewStories"
+              :key="'review-' + story.id"
+              :data-testid="'user-story-' + story.id + '-' + thread.id"
+              :data-flip-id="'story-' + story.id"
+              class="story-card story-card--review"
+            >
+              <span class="max" data-testid="story-name">{{ story.name }}</span>
+              <span v-if="story.priority !== null" class="chip small">{{ story.priority }}</span>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="s12 m4">
+      <article data-testid="done" id="done">
+        <nav>
+          <i>task_alt</i>
+          <h6 class="max">Done</h6>
+          <span class="chip">{{ doneStories.length }}</span>
+        </nav>
+        <div class="column-stories">
+          <div
+            v-for="story in doneStories"
+            :key="story.id"
+            :data-testid="'user-story-' + story.id"
+            :data-flip-id="'story-' + story.id"
+            class="story-card story-card--done"
+          >
+            <i class="small">check_circle</i>
+            <span class="max" data-testid="story-name">{{ story.name }}</span>
+            <span v-if="story.priority !== null" class="chip small">{{ story.priority }}</span>
+          </div>
+        </div>
+      </article>
     </div>
   </div>
 </template>
+
 <style scoped>
-:root {
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+.kanban {
+  padding: 0 1rem 1rem;
+  align-items: stretch;
 }
 
-body {
+.column-stories {
   display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
   flex-direction: column;
-  justify-content: space-around;
+  gap: 0.5rem;
 }
 
-button {
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  cursor: pointer;
+.story-card {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--outline-variant);
+  background: var(--surface-variant);
 
-  &:hover {
-    border-color: #646cff;
+  &.story-card--review {
+    border-color: var(--secondary);
+    background: var(--secondary-container);
   }
 
-  &:focus,
-  &:focus-visible {
-    outline: 4px auto -webkit-focus-ring-color;
-  }
-}
+  &.story-card--done {
+    border-color: var(--primary);
+    background: var(--primary-container);
 
-.backlog,
-.done {
-  position: relative;
-  width: 100%;
-  height: 15vh;
-  display: flex;
-  align-items: first baseline;
-  flex-wrap: wrap;
-  border: aliceblue solid 1px;
-}
-
-.threads {
-  position: relative;
-  width: 100%;
-  height: 30vh;
-  display: flex;
-  align-items: first baseline;
-  flex-wrap: wrap;
-  border: aliceblue solid 1px;
-}
-
-.off {
-  opacity: 50%;
-}
-.title {
-  width: 100%;
-  margin: 0.375rem;
-}
-
-.stats {
-  width: 8rem;
-  border: aliceblue solid 1px;
-  padding: 0.375rem;
-}
-
-.userStory {
-  align-content: center;
-  text-align: center;
-  padding: 0.375rem;
-  min-width: 2rem;
-  height: 2rem;
-  border: aliceblue solid 1px;
-  margin: 0.375rem;
-  .priority {
-    margin-left: 0.1rem;
+    i {
+      color: var(--primary);
+    }
   }
 }
 
 .thread {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  text-align: center;
-  padding: 0.375rem;
-  min-width: 6rem;
-  min-height: 6rem;
-  border: aliceblue solid 1px;
-  margin: 0.375rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--outline-variant);
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  transition:
+    border-color 0.3s,
+    background-color 0.3s;
+
+  &.thread--develop {
+    border-color: var(--primary);
+    background: var(--primary-container);
+  }
+
+  &.thread--review {
+    border-color: var(--secondary);
+    background: var(--secondary-container);
+  }
+
+  &.off {
+    opacity: 0.5;
+  }
 }
 
-.meta {
+.thread-header {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  & > * {
-    margin: 0 1rem;
-  }
+  margin-bottom: 0.5rem;
+}
+
+.thread-stories {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-height: 1.5rem;
 }
 </style>

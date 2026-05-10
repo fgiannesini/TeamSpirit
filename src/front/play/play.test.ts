@@ -297,14 +297,14 @@ describe('Play', () => {
         ],
       });
       const userStory1 = wrapper.get('[data-testid=user-story-0]');
-      expect(userStory1.classes()).toContain('userStory');
-      expect(userStory1.get('.name').text()).toStrictEqual('US0');
-      expect(userStory1.get('.priority').text()).toStrictEqual('(1)');
+      expect(userStory1.classes()).toContain('story-card');
+      expect(userStory1.get('[data-testid=story-name]').text()).toStrictEqual('US0');
+      expect(userStory1.get('.chip').text()).toStrictEqual('1');
 
       const userStory2 = wrapper.get('[data-testid=user-story-1]');
-      expect(userStory2.classes()).toContain('userStory');
-      expect(userStory2.get('.name').text()).toStrictEqual('US1');
-      expect(userStory2.get('.priority').text()).toStrictEqual('(2)');
+      expect(userStory2.classes()).toContain('story-card');
+      expect(userStory2.get('[data-testid=story-name]').text()).toStrictEqual('US1');
+      expect(userStory2.get('.chip').text()).toStrictEqual('2');
     });
 
     test('Should add a user story on computation click', async () => {
@@ -701,7 +701,9 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.advanceTimersToNextTimerAsync();
 
-      expect(wrapper.get('[data-testid=user-story-0]').text()).toBe('US0(2)');
+      const story = wrapper.get('[data-testid=user-story-0]');
+      expect(story.get('[data-testid=story-name]').text()).toStrictEqual('US0');
+      expect(story.get('.chip').text()).toBe('2');
     });
   });
 
