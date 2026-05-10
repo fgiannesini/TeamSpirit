@@ -10,6 +10,11 @@ import {
 import type { simulate } from '../simulate/simulation.ts';
 import type { computeStatEvents } from '../simulate/stats.ts';
 import {
+  CustomPriorityModificator,
+  noPriorityModificator,
+  RandomPriorityModificator,
+} from '../simulate/priority-modificator.ts';
+import {
   CustomTeamModificator,
   noTeamModificator,
   RandomTeamModificator,
@@ -18,6 +23,7 @@ import {
   type SimulationInputs,
   type SimulationOutputs,
   type State,
+  toPriorityModificatorEvents,
   toTeamModificatorEvents,
   useFormStore,
 } from './form-store.ts';
@@ -571,6 +577,103 @@ describe('Form store', () => {
     });
   });
 
+  describe('toPriorityModificatorEvents', () => {
+    test('should return empty array when no modifications', () => {
+      expect(toPriorityModificatorEvents([], new Date())).toStrictEqual([]);
+    });
+
+    test('should return empty array when modification has no user stories', () => {
+      expect(
+        toPriorityModificatorEvents(
+          [priorityModification({ selectedUserStories: [] })],
+          new Date(),
+        ),
+      ).toStrictEqual([]);
+    });
+
+    test('should convert one modification with one user story to one event', () => {
+      expect(
+        toPriorityModificatorEvents(
+          [
+            priorityModification({
+              selectedUserStories: [userStory({ id: 0 })],
+              date: new Date('2025-12-28'),
+              priority: 5,
+            }),
+          ],
+          new Date('2025-12-25'),
+        ),
+      ).toStrictEqual([{ time: 4, id: 0, priority: 5 }]);
+    });
+
+    test('should produce one event per user story in modification', () => {
+      const events = toPriorityModificatorEvents(
+        [
+          priorityModification({
+            selectedUserStories: [userStory({ id: 0 }), userStory({ id: 1 })],
+            date: new Date('2025-12-28'),
+            priority: 5,
+          }),
+        ],
+        new Date('2025-12-25'),
+      );
+      expect(events).toStrictEqual([
+        { time: 4, id: 0, priority: 5 },
+        { time: 4, id: 1, priority: 5 },
+      ]);
+    });
+
+    test('should flatten events from multiple modifications', () => {
+      const events = toPriorityModificatorEvents(
+        [
+          priorityModification({
+            selectedUserStories: [userStory({ id: 0 })],
+            date: new Date('2025-12-28'),
+            priority: 5,
+          }),
+          priorityModification({
+            selectedUserStories: [userStory({ id: 1 })],
+            date: new Date('2025-12-29'),
+            priority: 3,
+          }),
+        ],
+        new Date('2025-12-25'),
+      );
+      expect(events).toStrictEqual([
+        { time: 4, id: 0, priority: 5 },
+        { time: 5, id: 1, priority: 3 },
+      ]);
+    });
+
+    test('should clamp time to 1 when date is before today', () => {
+      const events = toPriorityModificatorEvents(
+        [
+          priorityModification({
+            selectedUserStories: [userStory({ id: 0 })],
+            date: new Date('2025-12-24'),
+            priority: 5,
+          }),
+        ],
+        new Date('2025-12-25'),
+      );
+      expect(events[0].time).toBe(1);
+    });
+
+    test('should return time 1 when date equals today', () => {
+      const events = toPriorityModificatorEvents(
+        [
+          priorityModification({
+            selectedUserStories: [userStory({ id: 0 })],
+            date: new Date('2025-12-25'),
+            priority: 5,
+          }),
+        ],
+        new Date('2025-12-25'),
+      );
+      expect(events[0].time).toBe(1);
+    });
+  });
+
   describe('Simulation', () => {
     test('Should run simulation and store in state', () => {
       const store = useFormStore();
@@ -680,6 +783,70 @@ describe('Form store', () => {
         expect.anything(),
         new CustomTeamModificator([{ off: 4, in: 6, threadName: 'Developer 0' }]),
         expect.anything(),
+      );
+    });
+
+    test('Should pass noPriorityModificator when priorityModificatorMode is notSet', () => {
+      const store = useFormStore();
+      store.runSimulation(
+        1,
+        [{ backlog: createBacklog(), team: parallelTeam() }],
+        simulateMock,
+        computeStatEventsMock,
+      );
+      expect(simulateMock).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.anything(),
+        expect.anything(),
+        noPriorityModificator,
+      );
+    });
+
+    test('Should pass RandomPriorityModificator when priorityModificatorMode is random', () => {
+      const store = useFormStore();
+      store.$patch({ priorityModificatorMode: 'random' });
+      const randomProvider = vi.fn(() => 0.5);
+      store.runSimulation(
+        1,
+        [{ backlog: createBacklog(), team: parallelTeam() }],
+        simulateMock,
+        computeStatEventsMock,
+        randomProvider,
+      );
+      expect(simulateMock).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.anything(),
+        expect.anything(),
+        new RandomPriorityModificator(randomProvider),
+      );
+    });
+
+    test('Should pass CustomPriorityModificator with events when priorityModificatorMode is custom', () => {
+      const store = useFormStore();
+      store.$patch({
+        priorityModificatorMode: 'custom',
+        priorityModificators: [
+          priorityModification({
+            selectedUserStories: [userStory({ id: 0 })],
+            date: new Date('2025-12-28'),
+            priority: 5,
+          }),
+        ],
+      });
+      store.runSimulation(
+        1,
+        [{ backlog: createBacklog(), team: parallelTeam() }],
+        simulateMock,
+        computeStatEventsMock,
+      );
+      expect(simulateMock).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.anything(),
+        expect.anything(),
+        new CustomPriorityModificator([{ time: 4, id: 0, priority: 5 }]),
       );
     });
   });

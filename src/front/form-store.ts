@@ -9,7 +9,12 @@ import {
   parallelTeam,
   todo,
 } from '../simulate/factory.ts';
-import { noPriorityModificator } from '../simulate/priority-modificator.ts';
+import {
+  CustomPriorityModificator,
+  noPriorityModificator,
+  type PriorityModificatorEvent,
+  RandomPriorityModificator,
+} from '../simulate/priority-modificator.ts';
 import { simulate } from '../simulate/simulation.ts';
 import type { StructureEvent } from '../simulate/simulation-structure.ts';
 import { computeStatEvents, type StatEvent } from '../simulate/stats.ts';
@@ -248,6 +253,14 @@ export const useFormStore = defineStore('form', {
           : this.teamModificatorMode === 'custom'
             ? new CustomTeamModificator(toTeamModificatorEvents(this.teamModificators, new Date()))
             : noTeamModificator;
+      const priorityModificator =
+        this.priorityModificatorMode === 'random'
+          ? new RandomPriorityModificator(randomProvider)
+          : this.priorityModificatorMode === 'custom'
+            ? new CustomPriorityModificator(
+                toPriorityModificatorEvents(this.priorityModificators, new Date()),
+              )
+            : noPriorityModificator;
       this.simulationOutputs = Array.from({ length: iterationCount }).flatMap(() => {
         const resolvedInputs = inputs ?? this.toSimulationInputs();
         return resolvedInputs.map(({ backlog, team }) => {
@@ -256,7 +269,7 @@ export const useFormStore = defineStore('form', {
             team.copy(),
             noBugGenerator,
             teamModificator,
-            noPriorityModificator,
+            priorityModificator,
           );
           const statEvents = computeStatEventsFn(timeEvents);
           return {
@@ -292,5 +305,17 @@ export const toTeamModificatorEvents = (
       off: Math.max(1, daysBetween(today, period.start) + 1),
       in: Math.max(1, daysBetween(today, period.end) + 1),
       threadName: developerName(developer.id),
+    })),
+  );
+
+export const toPriorityModificatorEvents = (
+  modifications: PriorityModification[],
+  today: Date,
+): PriorityModificatorEvent[] =>
+  modifications.flatMap(({ date, selectedUserStories, priority }) =>
+    selectedUserStories.map((userStory) => ({
+      time: Math.max(1, daysBetween(today, date) + 1),
+      id: userStory.id,
+      priority,
     })),
   );
