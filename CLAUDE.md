@@ -89,6 +89,10 @@ Préférer `toHaveBeenCalledWith` à `mock.calls[0][n]` — plus lisible, pas de
 - `backlogStories: UserStoryVue[]`, `doneStories: UserStoryVue[]`
 - `UserStoryVue.testId` — `user-story-{id}` (backlog/done) ou `user-story-{id}-{threadId}` (thread)
 
+**data-testid dans une story card :**
+- `story-name` — span nom de la story (présent dans toutes les cartes : backlog, thread in-progress, thread review, done)
+- `[data-testid=user-story-{id}]` → `.get('[data-testid=story-name]')` pour accéder au nom
+
 ### Process itératif
 
 Toute tâche multi-étapes ou bug suit ce cycle :
