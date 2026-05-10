@@ -62,6 +62,17 @@ Vitest, `globals:true`, env jsdom, setup `src/test-setup.ts`.
 
 `flow.test.ts`: HTML réel dans jsdom → `document.querySelector` OK.
 
+**Vérifier args d'un mock** — `toHaveBeenCalledWith` avec matchers asymétriques:
+```ts
+expect(mock).toHaveBeenCalledWith(
+  expect.anything(),   // arg dont la valeur n'importe pas
+  expect.any(MyClass), // instance de classe
+  new MyClass(args),   // instance + contenu (égalité profonde)
+  noSingleton,         // singleton: identité référentielle
+);
+```
+Préférer `toHaveBeenCalledWith` à `mock.calls[0][n]` — plus lisible, pas de cast.
+
 **Timing play.test.ts:**
 - `trigger('click')` synchrone → vérifier état immédiatement.
 - Même time step → `advanceTimersToNextTimerAsync`.
@@ -80,10 +91,12 @@ Toute tâche multi-étapes ou bug suit ce cycle :
 
 1. **`thinker`** — explore code, identifie cause racine, écrit `.claude/plans/<nom>.md` avec tâches atomiques
 2. **Implémentation** (Claude) — code + tests ensemble, tâche par tâche selon plan
-3. **`reviewer`** — vérifie: code vs plan, couverture tests cas fonctionnels, style, archi
+3. **`reviewer`** (auto, sans attendre) — vérifie: code vs plan, couverture tests cas fonctionnels, style, archi
 4. **Correction** (Claude) — corrige les findings `BLOQUE` et `IMPORTANT`
 5. **`reviewer`** — re-vérifie jusqu'à RAS ou MINEUR uniquement
 6. Tâche suivante → retour étape 2
+
+> Pas de tâche dédiée vérification globale en fin de plan — les vérifs (`type-check`, `vitest`) sont faites à chaque étape.
 
 ### Agents
 
