@@ -14,7 +14,12 @@ import { simulate } from '../simulate/simulation.ts';
 import type { StructureEvent } from '../simulate/simulation-structure.ts';
 import { computeStatEvents, type StatEvent } from '../simulate/stats.ts';
 import type { Team, TeamType } from '../simulate/team.ts';
-import { noTeamModificator, type TeamModificatorEvent } from '../simulate/team-modificator.ts';
+import {
+  CustomTeamModificator,
+  noTeamModificator,
+  RandomTeamModificator,
+  type TeamModificatorEvent,
+} from '../simulate/team-modificator.ts';
 
 const developerName = (id: number): string => `Developer ${id}`;
 
@@ -223,7 +228,14 @@ export const useFormStore = defineStore('form', {
       inputs?: SimulationInputs[],
       simulateFn: typeof simulate = simulate,
       computeStatEventsFn: typeof computeStatEvents = computeStatEvents,
+      randomProvider: () => number = Math.random,
     ): void {
+      const teamModificator =
+        this.teamModificatorMode === 'random'
+          ? new RandomTeamModificator(randomProvider)
+          : this.teamModificatorMode === 'custom'
+            ? new CustomTeamModificator(toTeamModificatorEvents(this.teamModificators, new Date()))
+            : noTeamModificator;
       this.simulationOutputs = Array.from({ length: iterationCount }).flatMap(() => {
         const resolvedInputs = inputs ?? this.toSimulationInputs();
         return resolvedInputs.map(({ backlog, team }) => {
@@ -231,7 +243,7 @@ export const useFormStore = defineStore('form', {
             copy(backlog),
             team.copy(),
             noBugGenerator,
-            noTeamModificator,
+            teamModificator,
             noPriorityModificator,
           );
           const statEvents = computeStatEventsFn(timeEvents);

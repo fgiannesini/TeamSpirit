@@ -10,6 +10,11 @@ import {
 import type { simulate } from '../simulate/simulation.ts';
 import type { computeStatEvents } from '../simulate/stats.ts';
 import {
+  CustomTeamModificator,
+  noTeamModificator,
+  RandomTeamModificator,
+} from '../simulate/team-modificator.ts';
+import {
   type SimulationInputs,
   type SimulationOutputs,
   type State,
@@ -562,6 +567,69 @@ describe('Form store', () => {
       store.toSimulationInputs = vi.fn<() => SimulationInputs[]>().mockReturnValue([]);
       store.runSimulation(2, undefined, simulateMock, computeStatEventsMock);
       expect(store.toSimulationInputs).toHaveBeenCalledTimes(2);
+    });
+
+    test('Should pass noTeamModificator when mode is notSet', () => {
+      const store = useFormStore();
+      store.runSimulation(
+        1,
+        [{ backlog: createBacklog(), team: parallelTeam() }],
+        simulateMock,
+        computeStatEventsMock,
+      );
+      expect(simulateMock).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.anything(),
+        noTeamModificator,
+        expect.anything(),
+      );
+    });
+
+    test('Should pass RandomTeamModificator when mode is random', () => {
+      const store = useFormStore();
+      store.$patch({ teamModificatorMode: 'random' });
+      const randomProvider = vi.fn(() => 0.5);
+      store.runSimulation(
+        1,
+        [{ backlog: createBacklog(), team: parallelTeam() }],
+        simulateMock,
+        computeStatEventsMock,
+        randomProvider,
+      );
+      expect(simulateMock).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.anything(),
+        expect.any(RandomTeamModificator),
+        expect.anything(),
+      );
+    });
+
+    test('Should pass CustomTeamModificator with events when mode is custom', () => {
+      const store = useFormStore();
+      store.$patch({
+        teamModificatorMode: 'custom',
+        teamModificators: [
+          teamModification({
+            selectedDevelopers: [developer({ id: 0 })],
+            period: { start: new Date('2025-12-28'), end: new Date('2025-12-30') },
+          }),
+        ],
+      });
+      store.runSimulation(
+        1,
+        [{ backlog: createBacklog(), team: parallelTeam() }],
+        simulateMock,
+        computeStatEventsMock,
+      );
+      expect(simulateMock).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.anything(),
+        new CustomTeamModificator([{ off: 4, in: 6, threadName: 'Developer 0' }]),
+        expect.anything(),
+      );
     });
   });
 });
