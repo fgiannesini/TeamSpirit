@@ -32,9 +32,11 @@ const tomorrow = (): Date => {
 export type State = {
   teamMode: SelectorMode;
   teamModificatorMode: SelectorMode;
+  priorityModificatorMode: SelectorMode;
   userStoriesMode: SelectorMode;
   developers: Developer[];
   teamModificators: TeamModification[];
+  priorityModificators: PriorityModification[];
   reviewers: number;
   userStories: UserStory[];
   simulationOutputs: SimulationOutputs[];
@@ -64,6 +66,13 @@ export type UserStory = {
   priority: number;
 };
 
+export type PriorityModification = {
+  id: number;
+  date: Date;
+  selectedUserStories: UserStory[];
+  priority: number;
+};
+
 export type SimulationInputs = {
   team: Team;
   backlog: Backlog;
@@ -88,6 +97,9 @@ type TeamProvider = {
   experienceGenerator: () => number;
 };
 
+const nextId = (items: { id: number }[]): number =>
+  items.length > 0 ? Math.max(...items.map(({ id }) => id)) + 1 : 0;
+
 type ToSimulationInputsOptions = {
   providers?: Partial<SimulationProviders>;
   teamProvider?: Partial<TeamProvider>;
@@ -97,53 +109,53 @@ export const useFormStore = defineStore('form', {
   state: (): State => ({
     teamMode: 'notSet',
     teamModificatorMode: 'notSet',
+    priorityModificatorMode: 'notSet',
     userStoriesMode: 'notSet',
     developers: [],
     teamModificators: [],
+    priorityModificators: [],
     reviewers: 0,
     userStories: [],
     simulationOutputs: [],
   }),
   actions: {
     generateDeveloper(): void {
-      const max =
-        this.developers.length > 0 ? Math.max(...this.developers.map(({ id }) => id)) + 1 : 0;
-      this.developers = [...this.developers, { id: max, experience: 3 }];
+      this.developers = [...this.developers, { id: nextId(this.developers), experience: 3 }];
     },
     removeDeveloper(targetId: number): void {
       this.developers = this.developers.filter(({ id }) => id !== targetId);
     },
     generateTeamModification(): void {
-      const max =
-        this.teamModificators.length > 0
-          ? Math.max(...this.teamModificators.map(({ id }) => id)) + 1
-          : 0;
       this.teamModificators = [
         ...this.teamModificators,
         {
-          id: max,
+          id: nextId(this.teamModificators),
           selectedDevelopers: [],
-          period: {
-            start: new Date(),
-            end: tomorrow(),
-          },
+          period: { start: new Date(), end: tomorrow() },
         },
       ];
     },
     removeTeamModification(targetId: number): void {
       this.teamModificators = this.teamModificators.filter(({ id }) => id !== targetId);
     },
-    generateUserStory(): void {
-      const max =
-        this.userStories.length > 0 ? Math.max(...this.userStories.map(({ id }) => id)) + 1 : 0;
-      this.userStories = [
-        ...this.userStories,
+    generatePriorityModification(): void {
+      this.priorityModificators = [
+        ...this.priorityModificators,
         {
-          id: max,
-          complexity: 3,
-          reviewComplexity: 2,
+          id: nextId(this.priorityModificators),
+          date: new Date(),
+          selectedUserStories: [],
           priority: 1,
         },
+      ];
+    },
+    removePriorityModification(targetId: number): void {
+      this.priorityModificators = this.priorityModificators.filter(({ id }) => id !== targetId);
+    },
+    generateUserStory(): void {
+      this.userStories = [
+        ...this.userStories,
+        { id: nextId(this.userStories), complexity: 3, reviewComplexity: 2, priority: 1 },
       ];
     },
     removeUserStory(targetId: number): void {

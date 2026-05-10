@@ -21,7 +21,12 @@ import {
   toTeamModificatorEvents,
   useFormStore,
 } from './form-store.ts';
-import { developer, teamModification, userStory } from './front-factory-for-test.ts';
+import {
+  developer,
+  priorityModification,
+  teamModification,
+  userStory,
+} from './front-factory-for-test.ts';
 
 const simulateMock = vi.fn<typeof simulate>();
 const computeStatEventsMock = vi.fn<typeof computeStatEvents>();
@@ -230,6 +235,51 @@ describe('Form store', () => {
     });
   });
 
+  describe('Priority Modifications', () => {
+    test('should generate a priority modification', () => {
+      const store = useFormStore();
+      store.generatePriorityModification();
+      expect(store.$state).toMatchObject<Partial<State>>({
+        priorityModificators: [priorityModification({ id: 0 })],
+      });
+    });
+
+    test('should generate two priority modifications with ids 0 and 1', () => {
+      const store = useFormStore();
+      store.generatePriorityModification();
+      store.generatePriorityModification();
+      expect(store.$state).toMatchObject<Partial<State>>({
+        priorityModificators: [priorityModification({ id: 0 }), priorityModification({ id: 1 })],
+      });
+    });
+
+    test('should remove the targeted priority modification', () => {
+      const store = useFormStore();
+      store.$patch({
+        priorityModificators: [
+          priorityModification({ id: 0 }),
+          priorityModification({ id: 1 }),
+          priorityModification({ id: 2 }),
+        ],
+      });
+      store.removePriorityModification(1);
+      expect(store.$state).toMatchObject<Partial<State>>({
+        priorityModificators: [priorityModification({ id: 0 }), priorityModification({ id: 2 })],
+      });
+    });
+
+    test('Should add a priority modification after the last one', () => {
+      const store = useFormStore();
+      store.$patch({
+        priorityModificators: [priorityModification({ id: 3 })],
+      });
+      store.generatePriorityModification();
+      expect(store.$state).toMatchObject<Partial<State>>({
+        priorityModificators: [priorityModification({ id: 3 }), priorityModification({ id: 4 })],
+      });
+    });
+  });
+
   describe('User stories', () => {
     test('should generate a user story', () => {
       const store = useFormStore();
@@ -419,6 +469,7 @@ describe('Form store', () => {
       );
     });
   });
+
   describe('toTeamModificatorEvents', () => {
     test('should return empty array when no modifications', () => {
       expect(toTeamModificatorEvents([], new Date())).toStrictEqual([]);
