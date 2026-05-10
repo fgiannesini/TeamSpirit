@@ -13,6 +13,7 @@ import {
   type SimulationInputs,
   type SimulationOutputs,
   type State,
+  toTeamModificatorEvents,
   useFormStore,
 } from './form-store.ts';
 import { developer, teamModification, userStory } from './front-factory-for-test.ts';
@@ -315,7 +316,7 @@ describe('Form store', () => {
       const simulationInputs = store.toSimulationInputs();
       expect(simulationInputs).toStrictEqual<SimulationInputs[]>([
         {
-          team: parallelTeam([createThread({ id: 0, power: 3 })], 0),
+          team: parallelTeam([createThread({ id: 0, name: 'Developer 0', power: 3 })], 0),
           backlog: createBacklog({
             userStoriesRemaining: [
               todo({
@@ -327,7 +328,7 @@ describe('Form store', () => {
           }),
         },
         {
-          team: ensembleTeam([createThread({ id: 0, power: 3 })]),
+          team: ensembleTeam([createThread({ id: 0, name: 'Developer 0', power: 3 })]),
           backlog: createBacklog({
             userStoriesRemaining: [
               todo({
@@ -397,13 +398,123 @@ describe('Form store', () => {
         },
       });
       expect(simulationInputs[0].team).toStrictEqual(
-        parallelTeam([createThread({ id: 0, power: 1 }), createThread({ id: 1, power: 2 })], 0),
+        parallelTeam(
+          [
+            createThread({ id: 0, name: 'Developer 0', power: 1 }),
+            createThread({ id: 1, name: 'Developer 1', power: 2 }),
+          ],
+          0,
+        ),
       );
       expect(simulationInputs[1].team).toStrictEqual(
-        ensembleTeam([createThread({ id: 0, power: 1 }), createThread({ id: 1, power: 2 })]),
+        ensembleTeam([
+          createThread({ id: 0, name: 'Developer 0', power: 1 }),
+          createThread({ id: 1, name: 'Developer 1', power: 2 }),
+        ]),
       );
     });
   });
+  describe('toTeamModificatorEvents', () => {
+    test('should return empty array when no modifications', () => {
+      expect(toTeamModificatorEvents([], new Date())).toStrictEqual([]);
+    });
+
+    test('should return empty array when modification has no developers', () => {
+      expect(
+        toTeamModificatorEvents([teamModification({ selectedDevelopers: [] })], new Date()),
+      ).toStrictEqual([]);
+    });
+
+    test('should convert one modification with one developer to one event', () => {
+      expect(
+        toTeamModificatorEvents(
+          [
+            teamModification({
+              selectedDevelopers: [developer({ id: 0 })],
+              period: { start: new Date('2025-12-28'), end: new Date('2025-12-30') },
+            }),
+          ],
+          new Date('2025-12-25'),
+        ),
+      ).toStrictEqual([{ off: 4, in: 6, threadName: 'Developer 0' }]);
+    });
+
+    test('should produce one event per developer in modification', () => {
+      const events = toTeamModificatorEvents(
+        [
+          teamModification({
+            selectedDevelopers: [developer({ id: 0 }), developer({ id: 1 })],
+            period: { start: new Date('2025-12-28'), end: new Date('2025-12-30') },
+          }),
+        ],
+        new Date('2025-12-25'),
+      );
+      expect(events).toStrictEqual([
+        { off: 4, in: 6, threadName: 'Developer 0' },
+        { off: 4, in: 6, threadName: 'Developer 1' },
+      ]);
+    });
+
+    test('should flatten events from multiple modifications', () => {
+      const events = toTeamModificatorEvents(
+        [
+          teamModification({
+            selectedDevelopers: [developer({ id: 0 })],
+            period: { start: new Date('2025-12-28'), end: new Date('2025-12-30') },
+          }),
+          teamModification({
+            selectedDevelopers: [developer({ id: 1 })],
+            period: { start: new Date('2025-12-29'), end: new Date('2025-12-31') },
+          }),
+        ],
+        new Date('2025-12-25'),
+      );
+      expect(events).toStrictEqual([
+        { off: 4, in: 6, threadName: 'Developer 0' },
+        { off: 5, in: 7, threadName: 'Developer 1' },
+      ]);
+    });
+
+    test('should clamp off to 1 when period start is before today', () => {
+      const events = toTeamModificatorEvents(
+        [
+          teamModification({
+            selectedDevelopers: [developer({ id: 0 })],
+            period: { start: new Date('2025-12-24'), end: new Date('2025-12-30') },
+          }),
+        ],
+        new Date('2025-12-25'),
+      );
+      expect(events[0].off).toBe(1);
+    });
+
+    test('should clamp in to 1 when period end is before today', () => {
+      const events = toTeamModificatorEvents(
+        [
+          teamModification({
+            selectedDevelopers: [developer({ id: 0 })],
+            period: { start: new Date('2025-12-28'), end: new Date('2025-12-24') },
+          }),
+        ],
+        new Date('2025-12-25'),
+      );
+      expect(events[0].in).toBe(1);
+    });
+
+    test('should return off 1 when period start equals today', () => {
+      const events = toTeamModificatorEvents(
+        [
+          teamModification({
+            selectedDevelopers: [developer({ id: 0 })],
+            period: { start: new Date('2025-12-25'), end: new Date('2025-12-30') },
+          }),
+        ],
+        new Date('2025-12-25'),
+      );
+      expect(events[0].off).toBe(1);
+    });
+  });
+
   describe('Simulation', () => {
     test('Should run simulation and store in state', () => {
       const store = useFormStore();

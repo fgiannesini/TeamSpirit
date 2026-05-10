@@ -14,7 +14,9 @@ import { simulate } from '../simulate/simulation.ts';
 import type { StructureEvent } from '../simulate/simulation-structure.ts';
 import { computeStatEvents, type StatEvent } from '../simulate/stats.ts';
 import type { Team, TeamType } from '../simulate/team.ts';
-import { noTeamModificator } from '../simulate/team-modificator.ts';
+import { noTeamModificator, type TeamModificatorEvent } from '../simulate/team-modificator.ts';
+
+const developerName = (id: number): string => `Developer ${id}`;
 
 const tomorrow = (): Date => {
   const date = new Date();
@@ -192,12 +194,17 @@ export const useFormStore = defineStore('form', {
         threads = Array.from({ length: teamProvider.teamCount }, (_, index) =>
           createThread({
             id: index,
+            name: developerName(index),
             power: teamProvider.experienceGenerator(),
           }),
         );
       } else {
         threads = this.developers.map((developer) =>
-          createThread({ id: developer.id, power: developer.experience }),
+          createThread({
+            id: developer.id,
+            name: developerName(developer.id),
+            power: developer.experience,
+          }),
         );
       }
       return [
@@ -242,3 +249,24 @@ export const useFormStore = defineStore('form', {
 
 const randomInt = (randomProvider: () => number, max: number): number =>
   Math.floor(randomProvider() * max) + 1;
+
+const toMidnight = (date: Date): number => {
+  const normalized = new Date(date);
+  normalized.setHours(0, 0, 0, 0);
+  return normalized.getTime();
+};
+
+const daysBetween = (a: Date, b: Date): number =>
+  Math.floor((toMidnight(b) - toMidnight(a)) / 86400000);
+
+export const toTeamModificatorEvents = (
+  modifications: TeamModification[],
+  today: Date,
+): TeamModificatorEvent[] =>
+  modifications.flatMap(({ selectedDevelopers, period }) =>
+    selectedDevelopers.map((developer) => ({
+      off: Math.max(1, daysBetween(today, period.start) + 1),
+      in: Math.max(1, daysBetween(today, period.end) + 1),
+      threadName: developerName(developer.id),
+    })),
+  );
