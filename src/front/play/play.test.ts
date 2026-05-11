@@ -1,6 +1,8 @@
 import { createTestingPinia } from '@pinia/testing';
 import { shallowMount, type VueWrapper } from '@vue/test-utils';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
+import type { Router } from 'vue-router';
+import { useRouter } from 'vue-router';
 
 vi.mock('gsap', () => ({
   gsap: {
@@ -9,6 +11,10 @@ vi.mock('gsap', () => ({
       return { fromTo: () => {} };
     },
   },
+}));
+
+vi.mock('vue-router', () => ({
+  useRouter: vi.fn(() => ({ push: vi.fn() })),
 }));
 import {
   createChangePriority,
@@ -1037,6 +1043,34 @@ describe('Play', () => {
       });
 
       expect(wrapper.get('[data-testid=team-type]').text()).toContain('Ensemble');
+    });
+  });
+
+  describe('Back button', () => {
+    test('Should render back button with correct aria-label', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          { timeEvents: [], statEvents: [], structureEvents: [], teamType: 'Parallel' },
+        ],
+      });
+
+      const btn = wrapper.get('[data-testid=back-button]');
+      expect(btn.attributes('aria-label')).toEqual('Back to simulations');
+    });
+
+    test('Should navigate to /simulate on back button click', async () => {
+      const mockPush = vi.fn();
+      vi.mocked(useRouter).mockReturnValueOnce({ push: mockPush } as unknown as Router);
+
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          { timeEvents: [], statEvents: [], structureEvents: [], teamType: 'Parallel' },
+        ],
+      });
+
+      await wrapper.get('[data-testid=back-button]').trigger('click');
+
+      expect(mockPush).toHaveBeenCalledWith('/simulate');
     });
   });
 });

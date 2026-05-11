@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { gsap } from 'gsap';
 import { computed, nextTick, reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import type { TimeEvent } from '../../simulate/events.ts';
 import type { StructureEvent } from '../../simulate/simulation-structure.ts';
 import { useFormStore } from '../form-store.ts';
 
 const props = defineProps<{ id: number }>();
 const data = useFormStore().simulationOutputs[props.id];
+const router = useRouter();
 
 export type ThreadState = 'Wait' | 'Develop' | 'Review';
 export type ThreadVue = {
@@ -336,8 +338,16 @@ updateThreadPresence(1);
 
 <template>
   <nav class="top surface-container">
-    <i>timer</i>
-    <progress class="max" :value="currentTime" :max="maxTime" data-testid="progress"></progress>
+    <button
+      class="transparent circle"
+      data-testid="back-button"
+      aria-label="Back to simulations"
+      @click="router.push('/simulate')"
+    >
+      <i aria-hidden="true">arrow_back</i>
+    </button>
+    <progress :value="currentTime" :max="maxTime" data-testid="progress"></progress>
+    <i aria-hidden="true">timer</i>
     <div data-testid="stats" class="row middle-align" aria-live="polite">
       <span data-testid="time" id="time">{{ timeDisplay }}</span>
       <span class="small-margin">— Lead Time :</span>
@@ -488,6 +498,10 @@ updateThreadPresence(1);
 </template>
 
 <style scoped>
+nav > progress {
+  min-width: 0;
+}
+
 .kanban {
   padding: 0 1rem 1rem;
   align-items: stretch;
