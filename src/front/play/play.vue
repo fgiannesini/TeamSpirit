@@ -56,6 +56,9 @@ const timeDisplay = computed(() =>
   currentTime.value === 0 ? '' : `${currentTime.value}/${maxTime}`,
 );
 
+const teamType = data.teamType;
+const teamTypeIcon = teamType === 'Parallel' ? 'groups' : 'hub';
+
 const computeDisabled = ref(false);
 const computeAllDisabled = ref(false);
 
@@ -342,6 +345,10 @@ updateThreadPresence(1);
         ><span data-testid="lead-time" id="lead-time">{{ leadTimeDisplay }}</span></b
       >
     </div>
+    <span class="chip" data-testid="team-type">
+      <i aria-hidden="true">{{ teamTypeIcon }}</i>
+      {{ teamType }}
+    </span>
     <button
       id="compute"
       data-testid="compute"

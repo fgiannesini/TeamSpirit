@@ -1017,4 +1017,26 @@ describe('Play', () => {
       expect(wrapper.find('[data-testid=done-empty]').exists()).toBe(false);
     });
   });
+
+  describe('Team type', () => {
+    test('Should show Parallel team type', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          { timeEvents: [], statEvents: [], structureEvents: [], teamType: 'Parallel' },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=team-type]').text()).toContain('Parallel');
+    });
+
+    test('Should show Ensemble team type', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          { timeEvents: [], statEvents: [], structureEvents: [], teamType: 'Ensemble' },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=team-type]').text()).toContain('Ensemble');
+    });
+  });
 });
