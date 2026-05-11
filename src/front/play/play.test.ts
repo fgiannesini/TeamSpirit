@@ -809,7 +809,7 @@ describe('Play', () => {
 
       const leadTime = wrapper.find('[data-testid=lead-time]');
       expect(leadTime.exists()).toBe(true);
-      expect(leadTime.text()).toEqual('');
+      expect(leadTime.text()).toEqual('—');
 
       const time = wrapper.find('[data-testid=time]');
       expect(time.exists()).toBe(true);
@@ -818,7 +818,7 @@ describe('Play', () => {
 
     test.each([
       [1 / 3, '0.33'],
-      [Number.NaN, 'NaN'],
+      [Number.NaN, '—'],
     ])('Should render the page with a stat event', async (leadTimeProvided, leadTimeDisplayed) => {
       const wrapper = createWrapper({
         simulationOutputs: [

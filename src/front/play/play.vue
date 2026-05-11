@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { gsap } from 'gsap';
-import { nextTick, reactive, ref } from 'vue';
+import { computed, nextTick, reactive, ref } from 'vue';
 import type { TimeEvent } from '../../simulate/events.ts';
 import type { StructureEvent } from '../../simulate/simulation-structure.ts';
 import { useFormStore } from '../form-store.ts';
@@ -42,8 +42,13 @@ const threads = reactive<ThreadVue[]>(
 const backlogStories = reactive<UserStoryVue[]>([]);
 const doneStories = reactive<UserStoryVue[]>([]);
 
-const leadTime = ref('');
+const leadTime = ref<number | null>(null);
 const timeDisplay = ref('');
+
+const leadTimeDisplay = computed(() => {
+  if (leadTime.value === null || Number.isNaN(leadTime.value)) return '—';
+  return leadTime.value.toFixed(2);
+});
 
 const maxTime = Math.max(...data.timeEvents.map((e) => e.time));
 let currentTime = 0;
@@ -243,7 +248,7 @@ const threadStateClass = (state: ThreadState): string => {
 const updateStats = (time: number): void => {
   const events = data.statEvents.filter((e) => e.time === time);
   if (events.length === 0) return;
-  leadTime.value = events[0].leadTime?.toFixed(2) ?? String(Number.NaN);
+  leadTime.value = events[0].leadTime;
   timeDisplay.value = `${events[0].time}/${maxTime}`;
 };
 
@@ -331,7 +336,7 @@ updateThreadPresence(1);
       <span data-testid="time" id="time">{{ timeDisplay }}</span>
       <span class="small-margin">— Lead Time :</span>
       <b
-        ><span data-testid="lead-time" id="lead-time">{{ leadTime }}</span></b
+        ><span data-testid="lead-time" id="lead-time">{{ leadTimeDisplay }}</span></b
       >
     </div>
     <div class="max"></div>
