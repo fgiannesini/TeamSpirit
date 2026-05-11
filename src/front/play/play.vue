@@ -43,15 +43,19 @@ const backlogStories = reactive<UserStoryVue[]>([]);
 const doneStories = reactive<UserStoryVue[]>([]);
 
 const leadTime = ref<number | null>(null);
-const timeDisplay = ref('');
 
 const leadTimeDisplay = computed(() => {
   if (leadTime.value === null || Number.isNaN(leadTime.value)) return '—';
   return leadTime.value.toFixed(2);
 });
 
-const maxTime = Math.max(...data.timeEvents.map((e) => e.time));
-let currentTime = 0;
+const maxTime =
+  data.timeEvents.length > 0 ? Math.max(...data.timeEvents.map((e) => e.time)) : 0;
+const currentTime = ref(0);
+
+const timeDisplay = computed(() =>
+  currentTime.value === 0 ? '' : `${currentTime.value}/${maxTime}`,
+);
 
 const computeDisabled = ref(false);
 const computeAllDisabled = ref(false);
@@ -249,7 +253,6 @@ const updateStats = (time: number): void => {
   const events = data.statEvents.filter((e) => e.time === time);
   if (events.length === 0) return;
   leadTime.value = events[0].leadTime;
-  timeDisplay.value = `${events[0].time}/${maxTime}`;
 };
 
 const conflicts = (a: TimeEvent, b: TimeEvent): boolean =>
@@ -310,17 +313,17 @@ const advanceStep = async (time: number, animationMs: number): Promise<void> => 
 
 const runNext = async (): Promise<void> => {
   computeDisabled.value = true;
-  currentTime++;
-  await advanceStep(currentTime, 600);
-  if (maxTime !== currentTime) {
+  currentTime.value++;
+  await advanceStep(currentTime.value, 600);
+  if (maxTime !== currentTime.value) {
     computeDisabled.value = false;
   }
 };
 
 const runAll = async (): Promise<void> => {
-  while (maxTime !== currentTime) {
-    currentTime++;
-    await advanceStep(currentTime, 300);
+  while (maxTime !== currentTime.value) {
+    currentTime.value++;
+    await advanceStep(currentTime.value, 300);
   }
   computeAllDisabled.value = true;
 };
@@ -330,16 +333,16 @@ updateThreadPresence(1);
 </script>
 
 <template>
-  <nav>
+  <nav class="top surface-container">
     <i>timer</i>
-    <div data-testid="stats" class="row middle-align">
+    <progress class="max" :value="currentTime" :max="maxTime" data-testid="progress"></progress>
+    <div data-testid="stats" class="row middle-align" aria-live="polite">
       <span data-testid="time" id="time">{{ timeDisplay }}</span>
       <span class="small-margin">— Lead Time :</span>
       <b
         ><span data-testid="lead-time" id="lead-time">{{ leadTimeDisplay }}</span></b
       >
     </div>
-    <div class="max"></div>
     <button
       id="compute"
       data-testid="compute"

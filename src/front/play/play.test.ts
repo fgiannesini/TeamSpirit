@@ -794,6 +794,115 @@ describe('Play', () => {
     });
   });
 
+  describe('Progress bar', () => {
+    test('Should render progress bar with correct max and initial value', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [
+              {
+                time: 1,
+                userStoryId: 1,
+                threadId: 1,
+                state: 'InProgress',
+              },
+            ],
+            statEvents: [],
+            structureEvents: [],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      const progress = wrapper.get('[data-testid=progress]');
+      expect(progress.attributes('max')).toEqual('1');
+      expect(progress.attributes('value')).toEqual('0');
+    });
+
+    test('Should update progress bar value after compute', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [
+              {
+                time: 1,
+                userStoryId: 1,
+                threadId: 1,
+                state: 'InProgress',
+              },
+            ],
+            statEvents: [],
+            structureEvents: [],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute]').trigger('click');
+      await vi.runAllTimersAsync();
+
+      const progress = wrapper.get('[data-testid=progress]');
+      expect(progress.attributes('value')).toEqual('1');
+    });
+
+    test('Should have aria-live on stats container', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [
+              {
+                time: 1,
+                userStoryId: 1,
+                threadId: 1,
+                state: 'InProgress',
+              },
+            ],
+            statEvents: [],
+            structureEvents: [],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=stats]').attributes('aria-live')).toEqual('polite');
+    });
+  });
+
+  describe('Time display', () => {
+    test('Should show empty time before first step', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [{ time: 2, userStoryId: 1, threadId: 1, state: 'InProgress' }],
+            statEvents: [],
+            structureEvents: [],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=time]').text()).toEqual('');
+    });
+
+    test('Should update time display after compute even without stat event', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [{ time: 2, userStoryId: 1, threadId: 1, state: 'InProgress' }],
+            statEvents: [],
+            structureEvents: [],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute]').trigger('click');
+      await vi.runAllTimersAsync();
+
+      expect(wrapper.get('[data-testid=time]').text()).toEqual('1/2');
+    });
+  });
+
   describe('Stats', () => {
     test('Should render the page without stat events', async () => {
       const wrapper = createWrapper({
