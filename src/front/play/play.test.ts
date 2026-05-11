@@ -962,4 +962,59 @@ describe('Play', () => {
       expect(time.text()).toEqual('1/1');
     });
   });
+
+  describe('Empty states', () => {
+    test('Should show backlog-empty when backlog has no stories', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          { timeEvents: [], statEvents: [], structureEvents: [], teamType: 'Parallel' },
+        ],
+      });
+
+      expect(wrapper.find('[data-testid=backlog-empty]').exists()).toBe(true);
+    });
+
+    test('Should hide backlog-empty when backlog has stories', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [createUserStory({ id: 0, time: 1 })],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.find('[data-testid=backlog-empty]').exists()).toBe(false);
+    });
+
+    test('Should show done-empty when no story is completed', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          { timeEvents: [], statEvents: [], structureEvents: [], teamType: 'Parallel' },
+        ],
+      });
+
+      expect(wrapper.find('[data-testid=done-empty]').exists()).toBe(true);
+    });
+
+    test('Should hide done-empty when a story is completed', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [inProgressEvent(), doneEvent()],
+            statEvents: [],
+            structureEvents: [createThread0(), createUserStory({ id: 0 })],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute-all]').trigger('click');
+      await vi.runAllTimersAsync();
+
+      expect(wrapper.find('[data-testid=done-empty]').exists()).toBe(false);
+    });
+  });
 });

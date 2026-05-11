@@ -49,8 +49,7 @@ const leadTimeDisplay = computed(() => {
   return leadTime.value.toFixed(2);
 });
 
-const maxTime =
-  data.timeEvents.length > 0 ? Math.max(...data.timeEvents.map((e) => e.time)) : 0;
+const maxTime = data.timeEvents.length > 0 ? Math.max(...data.timeEvents.map((e) => e.time)) : 0;
 const currentTime = ref(0);
 
 const timeDisplay = computed(() =>
@@ -372,7 +371,11 @@ updateThreadPresence(1);
           <h6 class="max">Backlog</h6>
           <span class="chip">{{ backlogStories.length }}</span>
         </nav>
-        <div class="column-stories">
+        <div v-if="backlogStories.length === 0" data-testid="backlog-empty" class="center-align padding">
+          <i class="extra" aria-hidden="true">inbox</i>
+          <p>Backlog is empty</p>
+        </div>
+        <div v-else class="column-stories">
           <div
             v-for="story in backlogStories"
             :key="story.id"
@@ -451,7 +454,11 @@ updateThreadPresence(1);
           <h6 class="max">Done</h6>
           <span class="chip">{{ doneStories.length }}</span>
         </nav>
-        <div class="column-stories">
+        <div v-if="doneStories.length === 0" data-testid="done-empty" class="center-align padding">
+          <i class="extra" aria-hidden="true">hourglass_empty</i>
+          <p>No story completed yet</p>
+        </div>
+        <div v-else class="column-stories">
           <div
             v-for="story in doneStories"
             :key="story.id"
