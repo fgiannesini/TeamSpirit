@@ -371,8 +371,12 @@ updateThreadPresence(1);
           <h6 class="max">Backlog</h6>
           <span class="chip">{{ backlogStories.length }}</span>
         </nav>
-        <div v-if="backlogStories.length === 0" data-testid="backlog-empty" class="center-align padding">
-          <i class="extra" aria-hidden="true">inbox</i>
+        <div
+          v-if="backlogStories.length === 0"
+          data-testid="backlog-empty"
+          class="center-align padding"
+        >
+          <i class="extra" aria-hidden="true">done_all</i>
           <p>Backlog is empty</p>
         </div>
         <div v-else class="column-stories">
