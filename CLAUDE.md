@@ -82,6 +82,24 @@ Préférer `toHaveBeenCalledWith` à `mock.calls[0][n]` — plus lisible, pas de
 - Même time step → `advanceTimersToNextTimerAsync`.
 - État final → `runAllTimersAsync`.
 
+**Mocking modules (vi.mock) — ne pas utiliser `vi.hoisted`:**
+```ts
+// ✅ Pattern correct
+vi.mock('some-module', () => ({
+  useHook: vi.fn(() => ({ method: vi.fn() })),
+}));
+import { useHook } from 'some-module';
+
+// Dans le test qui contrôle le mock :
+const mockMethod = vi.fn();
+vi.mocked(useHook).mockReturnValueOnce({ method: mockMethod });
+const wrapper = createWrapper(...);
+expect(mockMethod).toHaveBeenCalledWith(...);
+```
+- `vi.fn()` dans le factory = default pour tous les tests qui ne contrôlent pas le mock.
+- `mockReturnValueOnce` = isolation structurelle (se réinitialise seul, pas d'effet de bord entre tests).
+- `vi.hoisted` interdit — a causé des problèmes de portée dans ce projet.
+
 ### Modèle réactif play.vue
 
 `play.vue` 100% réactif, pas `document.querySelector`:
