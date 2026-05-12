@@ -418,6 +418,7 @@ updateThreadPresence(1);
         <nav>
           <i>groups</i>
           <h6 class="max">Threads</h6>
+          <span class="chip" data-testid="threads-count">{{ threads.length }} threads</span>
         </nav>
         <div
           v-for="thread in threads"

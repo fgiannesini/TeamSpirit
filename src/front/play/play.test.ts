@@ -1046,6 +1046,23 @@ describe('Play', () => {
     });
   });
 
+  describe('Threads count and sort', () => {
+    test('Should show "2 threads" chip with two threads', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [createThread0(), createThread1()],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=threads-count]').text()).toEqual('2 threads');
+    });
+  });
+
   describe('Backlog count', () => {
     test('Should show "0 story" when backlog is empty', () => {
       const wrapper = createWrapper({
