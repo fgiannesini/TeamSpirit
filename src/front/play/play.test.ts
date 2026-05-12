@@ -1046,6 +1046,91 @@ describe('Play', () => {
     });
   });
 
+  describe('Backlog count', () => {
+    test('Should show "0 story" when backlog is empty', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          { timeEvents: [], statEvents: [], structureEvents: [], teamType: 'Parallel' },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=backlog-count]').text()).toEqual('0 story');
+    });
+
+    test('Should show "1 story" when backlog has one story', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [createUserStory({ id: 0, time: 1 })],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=backlog-count]').text()).toEqual('1 story');
+    });
+
+    test('Should show "2 stories" when backlog has two stories', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [
+              createUserStory({ id: 0, time: 1 }),
+              createUserStory({ id: 1, time: 1 }),
+            ],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=backlog-count]').text()).toEqual('2 stories');
+    });
+  });
+
+  describe('Done count', () => {
+    test('Should show "0 story" when no story is completed', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          { timeEvents: [], statEvents: [], structureEvents: [], teamType: 'Parallel' },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=done-count]').text()).toEqual('0 story');
+    });
+
+    test('Should show "2 stories" when two stories are completed', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [
+              inProgressEvent({ userStoryId: 0, threadId: 0 }),
+              inProgressEvent({ userStoryId: 1, threadId: 1 }),
+              doneEvent({ userStoryId: 0, threadId: 0 }),
+              doneEvent({ userStoryId: 1, threadId: 1 }),
+            ],
+            statEvents: [],
+            structureEvents: [
+              createThread0(),
+              createThread1(),
+              createUserStory({ id: 0 }),
+              createUserStory({ id: 1 }),
+            ],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute-all]').trigger('click');
+      await vi.runAllTimersAsync();
+
+      expect(wrapper.get('[data-testid=done-count]').text()).toEqual('2 stories');
+    });
+  });
+
   describe('Back button', () => {
     test('Should render back button with correct aria-label', () => {
       const wrapper = createWrapper({

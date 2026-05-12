@@ -386,14 +386,16 @@ updateThreadPresence(1);
         <nav>
           <i>inbox</i>
           <h6 class="max">Backlog</h6>
-          <span class="chip">{{ backlogStories.length }}</span>
+          <span class="chip" data-testid="backlog-count"
+            >{{ backlogStories.length }} {{ backlogStories.length > 1 ? 'stories' : 'story' }}</span
+          >
         </nav>
         <div
           v-if="backlogStories.length === 0"
           data-testid="backlog-empty"
           class="center-align padding"
         >
-          <i class="extra" aria-hidden="true">done_all</i>
+          <i class="extra" aria-hidden="true">inbox</i>
           <p>Backlog is empty</p>
         </div>
         <div v-else class="column-stories">
@@ -473,7 +475,9 @@ updateThreadPresence(1);
         <nav>
           <i>task_alt</i>
           <h6 class="max">Done</h6>
-          <span class="chip">{{ doneStories.length }}</span>
+          <span class="chip" data-testid="done-count"
+            >{{ doneStories.length }} {{ doneStories.length > 1 ? 'stories' : 'story' }}</span
+          >
         </nav>
         <div v-if="doneStories.length === 0" data-testid="done-empty" class="center-align padding">
           <i class="extra" aria-hidden="true">hourglass_empty</i>
