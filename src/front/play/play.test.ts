@@ -305,12 +305,12 @@ describe('Play', () => {
       const userStory1 = wrapper.get('[data-testid=user-story-0]');
       expect(userStory1.classes()).toContain('story-card');
       expect(userStory1.get('[data-testid=story-name]').text()).toStrictEqual('US0');
-      expect(userStory1.get('.chip').text()).toStrictEqual('1');
+      expect(userStory1.get('[data-testid=priority-0] span').text()).toStrictEqual('1');
 
       const userStory2 = wrapper.get('[data-testid=user-story-1]');
       expect(userStory2.classes()).toContain('story-card');
       expect(userStory2.get('[data-testid=story-name]').text()).toStrictEqual('US1');
-      expect(userStory2.get('.chip').text()).toStrictEqual('2');
+      expect(userStory2.get('[data-testid=priority-1] span').text()).toStrictEqual('2');
     });
 
     test('Should add a user story on computation click', async () => {
@@ -709,7 +709,119 @@ describe('Play', () => {
 
       const story = wrapper.get('[data-testid=user-story-0]');
       expect(story.get('[data-testid=story-name]').text()).toStrictEqual('US0');
-      expect(story.get('.chip').text()).toBe('2');
+      expect(story.get('[data-testid=priority-0] span').text()).toBe('2');
+    });
+  });
+
+  describe('Priority chip', () => {
+    test('Should have aria-label "Priority 1" when priority is 1', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [
+              createUserStory({ id: 0, name: 'US0' }),
+              createChangePriority({ id: 0, value: 1 }),
+            ],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=priority-0]').attributes('aria-label')).toEqual(
+        'Priority 1',
+      );
+    });
+
+    test('Should display flag icon inside priority chip', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [
+              createUserStory({ id: 0, name: 'US0' }),
+              createChangePriority({ id: 0, value: 1 }),
+            ],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.find('[data-testid=priority-0] i').exists()).toBe(true);
+    });
+
+    test('Should show priority chip on in-progress story', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [inProgressEvent({ userStoryId: 0, threadId: 0 })],
+            statEvents: [],
+            structureEvents: [
+              createThread0(),
+              createUserStory({ id: 0 }),
+              createChangePriority({ id: 0, value: 3 }),
+            ],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute]').trigger('click');
+      await vi.runAllTimersAsync();
+
+      const card = wrapper.get('[data-testid=user-story-0-0]');
+      expect(card.get('[data-testid=priority-0]').attributes('aria-label')).toEqual('Priority 3');
+    });
+
+    test('Should show priority chip on review story', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [reviewEvent({ userStoryId: 0, threadId: 0 })],
+            statEvents: [],
+            structureEvents: [
+              createThread0(),
+              createUserStory({ id: 0 }),
+              createChangePriority({ id: 0, value: 5 }),
+            ],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute]').trigger('click');
+      await vi.runAllTimersAsync();
+
+      const card = wrapper.get('[data-testid=user-story-0-0]');
+      expect(card.get('[data-testid=priority-0]').attributes('aria-label')).toEqual('Priority 5');
+    });
+
+    test('Should show priority chip on done story', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [
+              inProgressEvent({ userStoryId: 0, threadId: 0 }),
+              doneEvent({ userStoryId: 0, threadId: 0 }),
+            ],
+            statEvents: [],
+            structureEvents: [
+              createThread0(),
+              createUserStory({ id: 0 }),
+              createChangePriority({ id: 0, value: 2 }),
+            ],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute-all]').trigger('click');
+      await vi.runAllTimersAsync();
+
+      const card = wrapper.get('[data-testid=user-story-0]');
+      expect(card.get('[data-testid=priority-0]').attributes('aria-label')).toEqual('Priority 2');
     });
   });
 

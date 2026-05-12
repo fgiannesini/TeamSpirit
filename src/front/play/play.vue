@@ -407,7 +407,15 @@ updateThreadPresence(1);
             class="story-card"
           >
             <span class="max" data-testid="story-name">{{ story.name }}</span>
-            <span v-if="story.priority !== null" class="chip small">{{ story.priority }}</span>
+            <span
+              v-if="story.priority !== null"
+              class="chip small"
+              :data-testid="`priority-${story.id}`"
+              :aria-label="`Priority ${story.priority}`"
+            >
+              <i aria-hidden="true">flag</i>
+              <span>{{ story.priority }}</span>
+            </span>
           </div>
         </div>
       </article>
@@ -454,7 +462,15 @@ updateThreadPresence(1);
               class="story-card"
             >
               <span class="max" data-testid="story-name">{{ story.name }}</span>
-              <span v-if="story.priority !== null" class="chip small">{{ story.priority }}</span>
+              <span
+                v-if="story.priority !== null"
+                class="chip small"
+                :data-testid="`priority-${story.id}`"
+                :aria-label="`Priority ${story.priority}`"
+              >
+                <i aria-hidden="true">flag</i>
+                <span>{{ story.priority }}</span>
+              </span>
             </div>
             <div
               v-for="story in thread.reviewStories"
@@ -464,7 +480,15 @@ updateThreadPresence(1);
               class="story-card story-card--review"
             >
               <span class="max" data-testid="story-name">{{ story.name }}</span>
-              <span v-if="story.priority !== null" class="chip small">{{ story.priority }}</span>
+              <span
+                v-if="story.priority !== null"
+                class="chip small"
+                :data-testid="`priority-${story.id}`"
+                :aria-label="`Priority ${story.priority}`"
+              >
+                <i aria-hidden="true">flag</i>
+                <span>{{ story.priority }}</span>
+              </span>
             </div>
           </div>
         </div>
@@ -494,7 +518,15 @@ updateThreadPresence(1);
           >
             <i class="small">check_circle</i>
             <span class="max" data-testid="story-name">{{ story.name }}</span>
-            <span v-if="story.priority !== null" class="chip small">{{ story.priority }}</span>
+            <span
+              v-if="story.priority !== null"
+              class="chip small"
+              :data-testid="`priority-${story.id}`"
+              :aria-label="`Priority ${story.priority}`"
+            >
+              <i aria-hidden="true">flag</i>
+              <span>{{ story.priority }}</span>
+            </span>
           </div>
         </div>
       </article>
