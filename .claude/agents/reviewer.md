@@ -24,6 +24,7 @@ Rôle : review code après chaque tâche. Pas d'implémentation, pas d'édition.
    - *Vue 3* : `<script setup>` obligatoire, `defineProps`/`defineEmits` typés génériquement (pas `withDefaults` superflu), `computed` pour valeurs dérivées complexes, pas de mutation directe de prop, `v-for` avec `:key` stable
    - *Pinia* : accès store via `useXxxStore()` — pas de store global partagé entre composants sans inject, actions pour toute mutation d'état
    - *Vitest* : `toHaveBeenCalledWith` avec matchers asymétriques, `expect.any(Class)` pour objets complexes/non-déterministes, `new Class(args)` pour objets simples à contenu vérifié, pas d'`any` dans les types de mock
+   - *@vue/test-utils* : `find()` pour `.exists()` — `get()` supprime `exists()` de son type (TS2339) ; `get()` uniquement pour `.text()`, `.attributes()`, `.classes()`, `.trigger()`, etc.
 7. **Types pour refactoring** :
    - Types trop larges masquant l'intention (`string` au lieu d'union littérale, `object` au lieu de type structuré)
    - Types inline répétés extractibles en alias nommé
