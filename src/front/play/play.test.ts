@@ -285,6 +285,60 @@ describe('Play', () => {
     });
   });
 
+  describe('Thread state chip color', () => {
+    test('Should have primary class when state is Develop', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [inProgressEvent(), doneEvent()],
+            statEvents: [],
+            structureEvents: [createThread0(), createUserStory({ id: 0 })],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute]').trigger('click');
+      await vi.runAllTimersAsync();
+
+      expect(wrapper.get('[data-testid=thread-state-0]').classes()).toContain('primary');
+    });
+
+    test('Should have secondary class when state is Review', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [reviewEvent(), doneEvent()],
+            statEvents: [],
+            structureEvents: [createThread0(), createUserStory({ id: 0 })],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute]').trigger('click');
+      await vi.runAllTimersAsync();
+
+      expect(wrapper.get('[data-testid=thread-state-0]').classes()).toContain('secondary');
+    });
+
+    test('Should have neither primary nor secondary class when state is Wait', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [createThread0()],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=thread-state-0]').classes()).not.toContain('primary');
+      expect(wrapper.get('[data-testid=thread-state-0]').classes()).not.toContain('secondary');
+    });
+  });
+
   describe('User story', () => {
     test('Should initialize 2 userStories elements', async () => {
       const wrapper = createWrapper({

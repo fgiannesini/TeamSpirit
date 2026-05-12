@@ -253,6 +253,12 @@ const threadStateClass = (state: ThreadState): string => {
   return '';
 };
 
+const THREAD_STATE_CHIP_COLOR: Record<ThreadState, string> = {
+  Develop: 'primary',
+  Review: 'secondary',
+  Wait: '',
+};
+
 const updateStats = (time: number): void => {
   const events = data.statEvents.filter((e) => e.time === time);
   if (events.length === 0) return;
@@ -445,7 +451,7 @@ updateThreadPresence(1);
             <span
               :id="`thread-state-${thread.id}`"
               :data-testid="`thread-state-${thread.id}`"
-              class="chip small"
+              :class="['chip', 'small', THREAD_STATE_CHIP_COLOR[thread.state]]"
               >{{ thread.state }}</span
             >
           </div>
