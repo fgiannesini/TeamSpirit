@@ -43,6 +43,7 @@ const threads = reactive<ThreadVue[]>(
 
 const backlogStories = reactive<UserStoryVue[]>([]);
 const doneStories = reactive<UserStoryVue[]>([]);
+const flashingStoryIds = reactive(new Set<number>());
 
 const leadTime = ref<number | null>(null);
 
@@ -159,6 +160,8 @@ const buildUserStories = (time: number): void => {
     if (event.action === 'ChangePriority') {
       const story = findStoryById(event.id);
       if (story) story.priority = event.value;
+      flashingStoryIds.add(event.id);
+      setTimeout(() => flashingStoryIds.delete(event.id), 800);
     }
   }
 };
@@ -421,7 +424,7 @@ updateThreadPresence(1);
             :key="story.id"
             :data-testid="'user-story-' + story.id"
             :data-flip-id="'story-' + story.id"
-            class="story-card"
+            :class="['story-card', { 'priority-flash': flashingStoryIds.has(story.id) }]"
           >
             <span class="max" data-testid="story-name">{{ story.name }}</span>
             <span
@@ -476,7 +479,7 @@ updateThreadPresence(1);
               :key="story.id"
               :data-testid="'user-story-' + story.id + '-' + thread.id"
               :data-flip-id="'story-' + story.id"
-              class="story-card"
+              :class="['story-card', { 'priority-flash': flashingStoryIds.has(story.id) }]"
             >
               <span class="max" data-testid="story-name">{{ story.name }}</span>
               <span
@@ -494,7 +497,11 @@ updateThreadPresence(1);
               :key="'review-' + story.id"
               :data-testid="'user-story-' + story.id + '-' + thread.id"
               :data-flip-id="'story-' + story.id"
-              class="story-card story-card--review"
+              :class="[
+                'story-card',
+                'story-card--review',
+                { 'priority-flash': flashingStoryIds.has(story.id) },
+              ]"
             >
               <span class="max" data-testid="story-name">{{ story.name }}</span>
               <span
@@ -531,7 +538,11 @@ updateThreadPresence(1);
             :key="story.id"
             :data-testid="'user-story-' + story.id"
             :data-flip-id="'story-' + story.id"
-            class="story-card story-card--done"
+            :class="[
+              'story-card',
+              'story-card--done',
+              { 'priority-flash': flashingStoryIds.has(story.id) },
+            ]"
           >
             <i class="small">check_circle</i>
             <span class="max" data-testid="story-name">{{ story.name }}</span>
@@ -651,5 +662,19 @@ nav > progress {
   flex-direction: column;
   gap: 0.25rem;
   min-height: 1.5rem;
+}
+
+@keyframes priority-flash {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+  40% {
+    box-shadow: 0 0 0 3px var(--primary);
+  }
+}
+
+.priority-flash {
+  animation: priority-flash 0.8s ease-in-out;
 }
 </style>

@@ -1414,6 +1414,117 @@ describe('Play', () => {
     });
   });
 
+  describe('Priority flash', () => {
+    test('Should add priority-flash class to story card after ChangePriority event', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [
+              createUserStory({ id: 0, name: 'US0' }),
+              createChangePriority({ id: 0, value: 1 }),
+            ],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=user-story-0]').classes()).toContain('priority-flash');
+    });
+
+    test('Should remove priority-flash class after 800ms', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [
+              createUserStory({ id: 0, name: 'US0' }),
+              createChangePriority({ id: 0, value: 1 }),
+            ],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await vi.advanceTimersByTimeAsync(801);
+
+      expect(wrapper.get('[data-testid=user-story-0]').classes()).not.toContain('priority-flash');
+    });
+
+    test('Should add priority-flash class to in-progress story after ChangePriority event', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [inProgressEvent({ userStoryId: 0, threadId: 0, time: 1 })],
+            statEvents: [],
+            structureEvents: [
+              createThread0(),
+              createUserStory({ id: 0, name: 'US0' }),
+              createChangePriority({ id: 0, value: 1, time: 2 }),
+            ],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute]').trigger('click');
+      await vi.advanceTimersToNextTimerAsync();
+
+      expect(wrapper.get('[data-testid=user-story-0-0]').classes()).toContain('priority-flash');
+    });
+
+    test('Should add priority-flash class to review story after ChangePriority event', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [reviewEvent({ userStoryId: 0, threadId: 0, time: 1 })],
+            statEvents: [],
+            structureEvents: [
+              createThread0(),
+              createUserStory({ id: 0, name: 'US0' }),
+              createChangePriority({ id: 0, value: 1, time: 2 }),
+            ],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute]').trigger('click');
+      await vi.advanceTimersToNextTimerAsync();
+
+      expect(wrapper.get('[data-testid=user-story-0-0]').classes()).toContain('priority-flash');
+    });
+
+    test('Should add priority-flash class to done story after ChangePriority event', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [
+              inProgressEvent({ userStoryId: 0, threadId: 0, time: 1 }),
+              doneEvent({ userStoryId: 0, threadId: 0, time: 2 }),
+            ],
+            statEvents: [],
+            structureEvents: [
+              createThread0(),
+              createUserStory({ id: 0, name: 'US0' }),
+              createChangePriority({ id: 0, value: 1, time: 3 }),
+            ],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute]').trigger('click');
+      await vi.advanceTimersToNextTimerAsync();
+      await wrapper.get('[data-testid=compute]').trigger('click');
+      await vi.advanceTimersToNextTimerAsync();
+
+      expect(wrapper.get('[data-testid=user-story-0]').classes()).toContain('priority-flash');
+    });
+  });
+
   describe('Back button', () => {
     test('Should render back button with correct aria-label', () => {
       const wrapper = createWrapper({
