@@ -1314,6 +1314,106 @@ describe('Play', () => {
     });
   });
 
+  describe('Loader spinner', () => {
+    test('Should not show loader at mount', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          { timeEvents: [], statEvents: [], structureEvents: [], teamType: 'Parallel' },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=loader]').classes()).toContain('loader-hidden');
+    });
+
+    test('Should show loader after compute click while animation runs', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [doneEvent({ time: 1 }), doneEvent({ time: 2 })],
+            statEvents: [],
+            structureEvents: [],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute]').trigger('click');
+
+      expect(wrapper.get('[data-testid=loader]').classes()).not.toContain('loader-hidden');
+    });
+
+    test('Should hide loader after compute animation completes', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [doneEvent({ time: 1 }), doneEvent({ time: 2 })],
+            statEvents: [],
+            structureEvents: [],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute]').trigger('click');
+      await vi.runAllTimersAsync();
+
+      expect(wrapper.get('[data-testid=loader]').classes()).toContain('loader-hidden');
+    });
+
+    test('Should hide loader after last compute step', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [doneEvent({ time: 1 })],
+            statEvents: [],
+            structureEvents: [],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute]').trigger('click');
+      await vi.runAllTimersAsync();
+
+      expect(wrapper.get('[data-testid=loader]').classes()).toContain('loader-hidden');
+    });
+
+    test('Should show loader after compute-all click while animation runs', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [doneEvent({ time: 1 }), doneEvent({ time: 2 })],
+            statEvents: [],
+            structureEvents: [],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute-all]').trigger('click');
+
+      expect(wrapper.get('[data-testid=loader]').classes()).not.toContain('loader-hidden');
+    });
+
+    test('Should hide loader after compute-all animation completes', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [doneEvent({ time: 1 }), doneEvent({ time: 2 })],
+            statEvents: [],
+            structureEvents: [],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute-all]').trigger('click');
+      await vi.runAllTimersAsync();
+
+      expect(wrapper.get('[data-testid=loader]').classes()).toContain('loader-hidden');
+    });
+  });
+
   describe('Back button', () => {
     test('Should render back button with correct aria-label', () => {
       const wrapper = createWrapper({

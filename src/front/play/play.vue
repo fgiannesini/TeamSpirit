@@ -63,6 +63,7 @@ const teamTypeIcon = teamType === 'Parallel' ? 'groups' : 'hub';
 
 const computeDisabled = ref(false);
 const computeAllDisabled = ref(false);
+const isAnimating = ref(false);
 
 const captureFlipPositions = (): Map<string, DOMRect> => {
   const positions = new Map<string, DOMRect>();
@@ -323,18 +324,22 @@ const advanceStep = async (time: number, animationMs: number): Promise<void> => 
 
 const runNext = async (): Promise<void> => {
   computeDisabled.value = true;
+  isAnimating.value = true;
   currentTime.value++;
   await advanceStep(currentTime.value, 600);
+  isAnimating.value = false;
   if (maxTime !== currentTime.value) {
     computeDisabled.value = false;
   }
 };
 
 const runAll = async (): Promise<void> => {
+  isAnimating.value = true;
   while (maxTime !== currentTime.value) {
     currentTime.value++;
     await advanceStep(currentTime.value, 300);
   }
+  isAnimating.value = false;
   computeAllDisabled.value = true;
 };
 
@@ -365,6 +370,12 @@ updateThreadPresence(1);
       <i aria-hidden="true">{{ teamTypeIcon }}</i>
       {{ teamType }}
     </span>
+    <span
+      class="loader-spinner"
+      :class="{ 'loader-hidden': !isAnimating }"
+      data-testid="loader"
+      aria-hidden="true"
+    ></span>
     <button
       id="compute"
       data-testid="compute"
@@ -543,6 +554,28 @@ updateThreadPresence(1);
 <style scoped>
 nav > progress {
   min-width: 0;
+}
+
+.loader-spinner {
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid var(--outline-variant);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: loader-spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+.loader-hidden {
+  opacity: 0;
+  animation: none;
+}
+
+@keyframes loader-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .kanban {
