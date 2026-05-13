@@ -122,7 +122,14 @@ Toute tâche multi-étapes ou bug suit ce cycle :
 5. **`reviewer`** — re-vérifie jusqu'à RAS ou MINEUR uniquement
 6. Tâche suivante → retour étape 2
 
-> Pas de tâche dédiée vérification globale en fin de plan — les vérifs (`type-check`, `vitest`) sont faites à chaque étape.
+> Pas de tâche dédiée vérification globale en fin de plan — les vérifs (`type-check`, `vitest`, `format`) sont faites à chaque étape.
+
+**Vérification systématique après chaque implémentation :**
+```bash
+npm run type-check
+npx vitest run <fichier.test.ts>
+npm run format
+```
 
 ### Agents
 
