@@ -597,6 +597,9 @@ nav > progress {
   border-radius: 0.5rem;
   border: 1px solid var(--outline-variant);
   background: var(--surface-variant);
+  transition:
+    border-color 0.3s,
+    background-color 0.3s;
 
   &.story-card--review {
     border-color: var(--secondary);
