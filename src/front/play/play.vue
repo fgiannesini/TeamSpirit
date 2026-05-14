@@ -362,7 +362,12 @@ updateThreadPresence(1);
     </button>
     <progress :value="currentTime" :max="maxTime" data-testid="progress"></progress>
     <i aria-hidden="true">timer</i>
-    <div data-testid="stats" class="row middle-align" aria-live="polite">
+    <div
+      data-testid="stats"
+      class="row middle-align"
+      aria-live="polite"
+      aria-label="Simulation statistics"
+    >
       <span data-testid="time" id="time">{{ timeDisplay }}</span>
       <span class="small-margin">— Lead Time :</span>
       <b
@@ -383,19 +388,21 @@ updateThreadPresence(1);
       id="compute"
       data-testid="compute"
       class="border"
+      aria-label="Advance one step"
       @click="runNext()"
       :disabled="computeDisabled"
     >
-      <i>play_arrow</i>
+      <i aria-hidden="true">play_arrow</i>
       <span>Play next</span>
     </button>
     <button
       id="compute-all"
       data-testid="compute-all"
+      aria-label="Run full simulation"
       @click="runAll()"
       :disabled="computeAllDisabled"
     >
-      <i>fast_forward</i>
+      <i aria-hidden="true">fast_forward</i>
       <span>Play All</span>
     </button>
   </nav>
@@ -404,7 +411,7 @@ updateThreadPresence(1);
     <div class="s12 m4">
       <article data-testid="backlog" id="backlog">
         <nav>
-          <i>inbox</i>
+          <i aria-hidden="true">inbox</i>
           <h6 class="max">Backlog</h6>
           <span class="chip" data-testid="backlog-count"
             >{{ backlogStories.length }} {{ backlogStories.length > 1 ? 'stories' : 'story' }}</span
@@ -444,7 +451,7 @@ updateThreadPresence(1);
     <div class="s12 m4">
       <article data-testid="threads" id="threads">
         <nav>
-          <i>groups</i>
+          <i aria-hidden="true">groups</i>
           <h6 class="max">Threads</h6>
           <span class="chip" data-testid="threads-count">{{ threads.length }} threads</span>
         </nav>
@@ -522,7 +529,7 @@ updateThreadPresence(1);
     <div class="s12 m4">
       <article data-testid="done" id="done">
         <nav>
-          <i>task_alt</i>
+          <i aria-hidden="true">task_alt</i>
           <h6 class="max">Done</h6>
           <span class="chip" data-testid="done-count"
             >{{ doneStories.length }} {{ doneStories.length > 1 ? 'stories' : 'story' }}</span
@@ -544,7 +551,7 @@ updateThreadPresence(1);
               { 'priority-flash': flashingStoryIds.has(story.id) },
             ]"
           >
-            <i class="small">check_circle</i>
+            <i class="small" aria-hidden="true">check_circle</i>
             <span class="max" data-testid="story-name">{{ story.name }}</span>
             <span
               v-if="story.priority !== null"

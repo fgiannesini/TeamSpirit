@@ -964,6 +964,40 @@ describe('Play', () => {
 
       expect(computeAll.attributes().disabled).toBeDefined();
     });
+
+    test('Should have aria-label "Advance one step" on compute button', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=compute]').attributes('aria-label')).toEqual(
+        'Advance one step',
+      );
+    });
+
+    test('Should have aria-label "Run full simulation" on compute-all button', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=compute-all]').attributes('aria-label')).toEqual(
+        'Run full simulation',
+      );
+    });
   });
 
   describe('Progress bar', () => {
@@ -1037,6 +1071,56 @@ describe('Play', () => {
       });
 
       expect(wrapper.get('[data-testid=stats]').attributes('aria-live')).toEqual('polite');
+    });
+
+    test('Should have aria-label on stats container', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=stats]').attributes('aria-label')).toEqual(
+        'Simulation statistics',
+      );
+    });
+
+    test('Should have aria-hidden on timer icon', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      const timerIcon = wrapper.findAll('i').find((i) => i.text() === 'timer');
+      expect(timerIcon).toBeDefined();
+      expect(timerIcon!.attributes('aria-hidden')).toEqual('true');
+    });
+
+    test('Should have aria-hidden on inbox icon in backlog nav', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      const inboxIcons = wrapper.findAll('i').filter((i) => i.text() === 'inbox');
+      expect(inboxIcons.every((i) => i.attributes('aria-hidden') === 'true')).toBe(true);
     });
   });
 
