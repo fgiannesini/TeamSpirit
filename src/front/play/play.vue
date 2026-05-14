@@ -431,7 +431,16 @@ updateThreadPresence(1);
             :key="story.id"
             :data-testid="'user-story-' + story.id"
             :data-flip-id="'story-' + story.id"
-            :class="['story-card', { 'priority-flash': flashingStoryIds.has(story.id) }]"
+            :class="[
+              'story-card',
+              'row',
+              'middle-align',
+              'small-padding',
+              'round',
+              'border',
+              'surface-variant',
+              { 'priority-flash': flashingStoryIds.has(story.id) },
+            ]"
           >
             <span class="max" data-testid="story-name">{{ story.name }}</span>
             <span
@@ -459,9 +468,10 @@ updateThreadPresence(1);
           v-for="thread in threads"
           :id="`thread${thread.id}`"
           :data-testid="`thread${thread.id}`"
-          :class="['thread', thread.presence, threadStateClass(thread.state)]"
+          class="thread round border"
+          :class="[thread.presence, threadStateClass(thread.state)]"
         >
-          <div class="thread-header">
+          <nav class="no-padding">
             <span
               :id="`thread-title-${thread.id}`"
               :data-testid="`thread-title-${thread.id}`"
@@ -475,7 +485,7 @@ updateThreadPresence(1);
               :class="['chip', 'small', THREAD_STATE_CHIP_COLOR[thread.state]]"
               >{{ thread.state }}</span
             >
-          </div>
+          </nav>
           <div
             :id="`thread-user-story-${thread.id}`"
             :data-testid="`thread-user-story-${thread.id}`"
@@ -486,7 +496,16 @@ updateThreadPresence(1);
               :key="story.id"
               :data-testid="'user-story-' + story.id + '-' + thread.id"
               :data-flip-id="'story-' + story.id"
-              :class="['story-card', { 'priority-flash': flashingStoryIds.has(story.id) }]"
+              :class="[
+                'story-card',
+                'row',
+                'middle-align',
+                'small-padding',
+                'round',
+                'border',
+                'surface-variant',
+                { 'priority-flash': flashingStoryIds.has(story.id) },
+              ]"
             >
               <span class="max" data-testid="story-name">{{ story.name }}</span>
               <span
@@ -507,6 +526,12 @@ updateThreadPresence(1);
               :class="[
                 'story-card',
                 'story-card--review',
+                'row',
+                'middle-align',
+                'small-padding',
+                'round',
+                'border',
+                'secondary-container',
                 { 'priority-flash': flashingStoryIds.has(story.id) },
               ]"
             >
@@ -548,6 +573,12 @@ updateThreadPresence(1);
             :class="[
               'story-card',
               'story-card--done',
+              'row',
+              'middle-align',
+              'small-padding',
+              'round',
+              'border',
+              'primary-container',
               { 'priority-flash': flashingStoryIds.has(story.id) },
             ]"
           >
@@ -608,25 +639,16 @@ nav > progress {
 }
 
 .story-card {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.5rem;
-  border: 1px solid var(--outline-variant);
-  background: var(--surface-variant);
   transition:
     border-color 0.3s,
     background-color 0.3s;
 
   &.story-card--review {
     border-color: var(--secondary);
-    background: var(--secondary-container);
   }
 
   &.story-card--done {
     border-color: var(--primary);
-    background: var(--primary-container);
 
     i {
       color: var(--primary);
@@ -635,8 +657,6 @@ nav > progress {
 }
 
 .thread {
-  border-radius: 0.75rem;
-  border: 1px solid var(--outline-variant);
   padding: 0.75rem;
   margin-bottom: 0.5rem;
   transition:
@@ -656,12 +676,6 @@ nav > progress {
   &.off {
     opacity: 0.5;
   }
-}
-
-.thread-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 0.5rem;
 }
 
 .thread-stories {
