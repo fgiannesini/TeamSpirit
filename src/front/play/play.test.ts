@@ -1639,6 +1639,30 @@ describe('Play', () => {
     });
   });
 
+  describe('Compute buttons accessibility', () => {
+    test('Should have aria-label "Advance one step" on compute button', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          { timeEvents: [], statEvents: [], structureEvents: [], teamType: 'Parallel' },
+        ],
+      });
+      expect(wrapper.get('[data-testid=compute]').attributes('aria-label')).toEqual(
+        'Advance one step',
+      );
+    });
+
+    test('Should have aria-label "Run full simulation" on compute-all button', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          { timeEvents: [], statEvents: [], structureEvents: [], teamType: 'Parallel' },
+        ],
+      });
+      expect(wrapper.get('[data-testid=compute-all]').attributes('aria-label')).toEqual(
+        'Run full simulation',
+      );
+    });
+  });
+
   describe('Back button', () => {
     test('Should render back button with correct aria-label', () => {
       const wrapper = createWrapper({
