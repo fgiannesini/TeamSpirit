@@ -251,10 +251,10 @@ const handleDone =
   () =>
     moveStoryFromThreadsTo(event.userStoryId, doneStories);
 
-const threadStateClass = (state: ThreadState): string => {
-  if (state === 'Develop') return 'thread--develop';
-  if (state === 'Review') return 'thread--review';
-  return '';
+const THREAD_STATE_CLASSES: Record<ThreadState, { state: string; container: string }> = {
+  Develop: { state: 'thread--develop', container: 'primary-container' },
+  Review: { state: 'thread--review', container: 'secondary-container' },
+  Wait: { state: '', container: '' },
 };
 
 const THREAD_STATE_CHIP_COLOR: Record<ThreadState, string> = {
@@ -468,10 +468,17 @@ updateThreadPresence(1);
           v-for="thread in threads"
           :id="`thread${thread.id}`"
           :data-testid="`thread${thread.id}`"
-          class="thread round border"
-          :class="[thread.presence, threadStateClass(thread.state)]"
+          :class="[
+            'thread',
+            'border',
+            'round',
+            'small-padding',
+            thread.presence,
+            THREAD_STATE_CLASSES[thread.state].state,
+            THREAD_STATE_CLASSES[thread.state].container,
+          ]"
         >
-          <nav class="no-padding">
+          <div class="row middle-align">
             <span
               :id="`thread-title-${thread.id}`"
               :data-testid="`thread-title-${thread.id}`"
@@ -485,7 +492,7 @@ updateThreadPresence(1);
               :class="['chip', 'small', THREAD_STATE_CHIP_COLOR[thread.state]]"
               >{{ thread.state }}</span
             >
-          </nav>
+          </div>
           <div
             :id="`thread-user-story-${thread.id}`"
             :data-testid="`thread-user-story-${thread.id}`"
@@ -525,13 +532,13 @@ updateThreadPresence(1);
               :data-flip-id="'story-' + story.id"
               :class="[
                 'story-card',
-                'story-card--review',
                 'row',
                 'middle-align',
                 'small-padding',
                 'round',
                 'border',
-                'secondary-container',
+                'surface-variant',
+                'story-card--review',
                 { 'priority-flash': flashingStoryIds.has(story.id) },
               ]"
             >
@@ -572,12 +579,12 @@ updateThreadPresence(1);
             :data-flip-id="'story-' + story.id"
             :class="[
               'story-card',
-              'story-card--done',
               'row',
               'middle-align',
               'small-padding',
               'round',
               'border',
+              'story-card--done',
               'primary-container',
               { 'priority-flash': flashingStoryIds.has(story.id) },
             ]"
@@ -657,7 +664,6 @@ nav > progress {
 }
 
 .thread {
-  padding: 0.75rem;
   margin-bottom: 0.5rem;
   transition:
     border-color 0.3s,
@@ -665,12 +671,10 @@ nav > progress {
 
   &.thread--develop {
     border-color: var(--primary);
-    background: var(--primary-container);
   }
 
   &.thread--review {
     border-color: var(--secondary);
-    background: var(--secondary-container);
   }
 
   &.off {
