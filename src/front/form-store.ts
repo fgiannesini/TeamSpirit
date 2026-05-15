@@ -78,6 +78,14 @@ export type PriorityModification = {
   priority: number;
 };
 
+export type BugGeneration = {
+  id: number;
+  date: Date;
+  complexity: number;
+  reviewComplexity: number;
+  priority: number;
+};
+
 export type SimulationInputs = {
   team: Team;
   backlog: Backlog;

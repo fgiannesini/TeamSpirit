@@ -1,4 +1,10 @@
-import type { Developer, PriorityModification, TeamModification, UserStory } from './form-store.ts';
+import type {
+  BugGeneration,
+  Developer,
+  PriorityModification,
+  TeamModification,
+  UserStory,
+} from './form-store.ts';
 
 export const developer = (option: Partial<Developer> = {}): Developer => ({
   id: 0,
@@ -30,6 +36,15 @@ export const priorityModification = (
   id: 0,
   date: new Date('2025-12-25'),
   selectedUserStories: [],
+  priority: 1,
+  ...option,
+});
+
+export const bugGeneration = (option: Partial<BugGeneration> = {}): BugGeneration => ({
+  id: 0,
+  date: new Date('2025-12-25'),
+  complexity: 3,
+  reviewComplexity: 2,
   priority: 1,
   ...option,
 });
