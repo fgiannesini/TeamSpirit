@@ -1609,6 +1609,36 @@ describe('Play', () => {
     });
   });
 
+  describe('Accessibility', () => {
+    const makeWrapper = () =>
+      createWrapper({
+        simulationOutputs: [
+          { timeEvents: [], statEvents: [], structureEvents: [], teamType: 'Parallel' },
+        ],
+      });
+
+    test('Should have aria-hidden on timer icon', () => {
+      const wrapper = makeWrapper();
+      const timerIcon = wrapper.findAll('i').find((i) => i.text() === 'timer');
+      expect(timerIcon).toBeDefined();
+      expect(timerIcon!.attributes('aria-hidden')).toEqual('true');
+    });
+
+    test('Should have aria-hidden on inbox column header icon', () => {
+      const wrapper = makeWrapper();
+      const inboxIcons = wrapper.findAll('i').filter((i) => i.text() === 'inbox');
+      expect(inboxIcons.length).toBeGreaterThan(0);
+      expect(inboxIcons.every((i) => i.attributes('aria-hidden') === 'true')).toBe(true);
+    });
+
+    test('Should have aria-label "Simulation statistics" on stats container', () => {
+      const wrapper = makeWrapper();
+      expect(wrapper.get('[data-testid=stats]').attributes('aria-label')).toEqual(
+        'Simulation statistics',
+      );
+    });
+  });
+
   describe('Back button', () => {
     test('Should render back button with correct aria-label', () => {
       const wrapper = createWrapper({
