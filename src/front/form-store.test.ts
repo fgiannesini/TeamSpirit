@@ -381,6 +381,7 @@ describe('Form store', () => {
           backlog: createBacklog({
             userStoriesRemaining: [
               todo({
+                name: 'US-0',
                 complexity: 3,
                 priority: 1,
                 review: { reviewComplexity: 2, reviewers: new Map() },
@@ -393,6 +394,7 @@ describe('Form store', () => {
           backlog: createBacklog({
             userStoriesRemaining: [
               todo({
+                name: 'US-0',
                 complexity: 3,
                 priority: 1,
                 review: { reviewComplexity: 2, reviewers: new Map() },
@@ -425,6 +427,7 @@ describe('Form store', () => {
           userStoriesRemaining: [
             todo({
               id: 0,
+              name: 'US-0',
               complexity: 2,
               review: {
                 reviewers: new Map(),
@@ -434,6 +437,7 @@ describe('Form store', () => {
             }),
             todo({
               id: 1,
+              name: 'US-1',
               complexity: 3,
               review: {
                 reviewers: new Map(),
@@ -445,6 +449,28 @@ describe('Form store', () => {
         }),
       );
       expect(simulationInputs[0].backlog).toStrictEqual(simulationInputs[1].backlog);
+    });
+
+    test('should use story id (not position index) as name in selected mode', () => {
+      const store = useFormStore();
+      store.$patch({
+        developers: [developer({ id: 0 })],
+        userStories: [userStory({ id: 2 })],
+      });
+      const simulationInputs = store.toSimulationInputs();
+      expect(simulationInputs[0].backlog).toStrictEqual(
+        createBacklog({
+          userStoriesRemaining: [
+            todo({
+              id: 2,
+              name: 'US-2',
+              complexity: 3,
+              review: { reviewComplexity: 2, reviewers: new Map() },
+              priority: 1,
+            }),
+          ],
+        }),
+      );
     });
 
     test('Should generate random team', () => {

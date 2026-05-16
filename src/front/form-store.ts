@@ -188,6 +188,7 @@ export const useFormStore = defineStore('form', {
           userStoriesRemaining: Array.from({ length: providers.userStoriesCount }, (_, index) =>
             todo({
               id: index,
+              name: `US-${index}`,
               complexity: providers.complexityGenerator(),
               review: {
                 reviewers: new Map(),
@@ -203,6 +204,7 @@ export const useFormStore = defineStore('form', {
             ({ id, complexity, reviewComplexity, priority }) =>
               todo({
                 id,
+                name: `US-${id}`,
                 complexity,
                 review: {
                   reviewers: new Map(),
