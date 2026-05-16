@@ -87,8 +87,14 @@ const animateFromPositions = (positions: Map<string, DOMRect>, durationMs: numbe
       if (dx === 0 && dy === 0) return;
       tl.fromTo(
         el,
-        { x: dx, y: dy },
-        { x: 0, y: 0, duration: durationMs / 1000, ease: 'power1.inOut' },
+        { x: dx, y: dy, zIndex: 100, position: 'relative' },
+        {
+          x: 0,
+          y: 0,
+          duration: durationMs / 1000,
+          ease: 'power1.inOut',
+          clearProps: 'zIndex,position',
+        },
         0,
       );
     });
@@ -655,6 +661,7 @@ nav > progress {
 }
 
 .story-card {
+  position: relative;
   transition:
     border-color 0.3s,
     background-color 0.3s;
