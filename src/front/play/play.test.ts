@@ -718,6 +718,131 @@ describe('Play', () => {
       expect(wrapper.find('[data-testid=user-story-0]').exists()).toBe(false);
     });
 
+    test('Should not duplicate story when transitioning from in-progress to review by another thread', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [
+              inProgressEvent({ time: 1, threadId: 0, userStoryId: 0 }),
+              reviewEvent({ time: 2, threadId: 1, userStoryId: 0 }),
+            ],
+            statEvents: [],
+            structureEvents: [createThread0(), createThread1(), createUserStory({ id: 0 })],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute-all]').trigger('click');
+      await vi.runAllTimersAsync();
+
+      expect(
+        wrapper
+          .get('[data-testid=thread-user-story-0]')
+          .find('[data-testid=user-story-0-0]')
+          .exists(),
+      ).toBe(false);
+      expect(
+        wrapper
+          .get('[data-testid=thread-user-story-1]')
+          .find('[data-testid=user-story-0-1]')
+          .exists(),
+      ).toBe(true);
+      expect(wrapper.findAll('[data-flip-id="story-0"]').length).toStrictEqual(1);
+    });
+
+    test('Should not duplicate story across multi-turn review after in-progress', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [
+              inProgressEvent({ time: 1, threadId: 0, userStoryId: 0 }),
+              reviewEvent({ time: 2, threadId: 1, userStoryId: 0 }),
+              reviewEvent({ time: 3, threadId: 1, userStoryId: 0 }),
+              doneEvent({ time: 4, threadId: 1, userStoryId: 0 }),
+            ],
+            statEvents: [],
+            structureEvents: [createThread0(), createThread1(), createUserStory({ id: 0 })],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute]').trigger('click');
+      await vi.runAllTimersAsync();
+      expect(wrapper.findAll('[data-flip-id="story-0"]').length).toStrictEqual(1);
+      expect(
+        wrapper
+          .get('[data-testid=thread-user-story-0]')
+          .find('[data-testid=user-story-0-0]')
+          .exists(),
+      ).toBe(true);
+      expect(wrapper.get('[data-testid=backlog]').find('[data-testid=user-story-0]').exists()).toBe(
+        false,
+      );
+
+      await wrapper.get('[data-testid=compute]').trigger('click');
+      await vi.runAllTimersAsync();
+      expect(wrapper.findAll('[data-flip-id="story-0"]').length).toStrictEqual(1);
+      expect(
+        wrapper
+          .get('[data-testid=thread-user-story-1]')
+          .find('[data-testid=user-story-0-1]')
+          .exists(),
+      ).toBe(true);
+      expect(
+        wrapper
+          .get('[data-testid=thread-user-story-0]')
+          .find('[data-testid=user-story-0-0]')
+          .exists(),
+      ).toBe(false);
+
+      await wrapper.get('[data-testid=compute]').trigger('click');
+      await vi.runAllTimersAsync();
+      expect(wrapper.findAll('[data-flip-id="story-0"]').length).toStrictEqual(1);
+
+      await wrapper.get('[data-testid=compute]').trigger('click');
+      await vi.runAllTimersAsync();
+      expect(wrapper.findAll('[data-flip-id="story-0"]').length).toStrictEqual(1);
+      expect(wrapper.get('[data-testid=done]').find('[data-testid=user-story-0]').exists()).toBe(
+        true,
+      );
+      expect(
+        wrapper
+          .get('[data-testid=thread-user-story-1]')
+          .find('[data-testid=user-story-0-1]')
+          .exists(),
+      ).toBe(false);
+    });
+
+    test('Should move story to review when same thread transitions from in-progress to review', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [
+              inProgressEvent({ time: 1, threadId: 0, userStoryId: 0 }),
+              reviewEvent({ time: 2, threadId: 0, userStoryId: 0 }),
+            ],
+            statEvents: [],
+            structureEvents: [createThread0(), createUserStory({ id: 0 })],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute-all]').trigger('click');
+      await vi.runAllTimersAsync();
+
+      expect(wrapper.findAll('[data-flip-id="story-0"]').length).toStrictEqual(1);
+      expect(
+        wrapper
+          .get('[data-testid=thread-user-story-0]')
+          .find('[data-testid=user-story-0-0]')
+          .exists(),
+      ).toBe(true);
+      expect(wrapper.get('[data-testid=thread-state-0]').text()).toBe('Review');
+    });
+
     test('Should not display "idle" user story', async () => {
       const wrapper = createWrapper({
         simulationOutputs: [

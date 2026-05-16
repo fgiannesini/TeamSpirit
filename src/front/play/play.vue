@@ -214,12 +214,21 @@ const handleReview =
     const thread = threads.find((t) => t.id === event.threadId);
     if (!thread) return;
 
-    thread.inProgressStories.splice(0);
-
     const story = findStoryById(event.userStoryId);
-    if (story) {
-      const backlogIdx = backlogStories.indexOf(story);
-      if (backlogIdx !== -1) backlogStories.splice(backlogIdx, 1);
+    if (!story) {
+      setThreadState(event.threadId, 'Review');
+      return;
+    }
+
+    const backlogIdx = backlogStories.indexOf(story);
+    if (backlogIdx !== -1) backlogStories.splice(backlogIdx, 1);
+
+    for (const t of threads) {
+      const idx = t.inProgressStories.indexOf(story);
+      if (idx !== -1) t.inProgressStories.splice(idx, 1);
+    }
+
+    if (!thread.reviewStories.some((s) => s.id === event.userStoryId)) {
       thread.reviewStories.push(story);
     }
 
