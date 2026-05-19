@@ -615,11 +615,11 @@ describe('Play', () => {
       const threadUserStory0 = wrapper.get('[data-testid=thread-user-story-0]');
       const firstDiv = threadUserStory0.find('[data-testid=user-story-0-0]');
       expect(firstDiv.exists()).toBe(true);
-      expect(firstDiv.text()).toBe('US0');
+      expect(firstDiv.get('[data-testid=story-name]').text()).toBe('US0');
       const threadUserStory1 = wrapper.get('[data-testid=thread-user-story-1]');
       const secondDiv = threadUserStory1.find('[data-testid=user-story-0-1]');
       expect(secondDiv.exists()).toBe(true);
-      expect(secondDiv.text()).toBe('US0');
+      expect(secondDiv.get('[data-testid=story-name]').text()).toBe('US0');
 
       const backlog = wrapper.get('[data-testid=backlog]');
       expect(backlog.find('[data-testid=user-story-0]').exists()).toBe(false);
@@ -889,6 +889,103 @@ describe('Play', () => {
       const story = wrapper.get('[data-testid=user-story-0]');
       expect(story.get('[data-testid=story-name]').text()).toStrictEqual('US0');
       expect(story.get('[data-testid=priority-0] span').text()).toBe('2');
+    });
+  });
+
+  describe('Story id chip', () => {
+    test('Should render story id chip in backlog with correct text and aria-label', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [createUserStory({ id: 0, name: 'US0' })],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      const chip = wrapper.get('[data-testid=story-id-0]');
+      expect(chip.text()).toBe('#0');
+      expect(chip.attributes('aria-label')).toBe('Story 0');
+    });
+
+    test('Should render story id chip in thread in-progress', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [inProgressEvent({ userStoryId: 0, threadId: 0 })],
+            statEvents: [],
+            structureEvents: [createThread0(), createUserStory({ id: 0, name: 'US0' })],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute-all]').trigger('click');
+      await vi.runAllTimersAsync();
+
+      const storyCard = wrapper.get('[data-testid=user-story-0-0]');
+      const chip = storyCard.get('[data-testid=story-id-0]');
+      expect(chip.text()).toBe('#0');
+      expect(chip.attributes('aria-label')).toBe('Story 0');
+    });
+
+    test('Should render story id chip in done', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [doneEvent({ userStoryId: 0, threadId: 0 })],
+            statEvents: [],
+            structureEvents: [createThread0(), createUserStory({ id: 0, name: 'US0' })],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute-all]').trigger('click');
+      await vi.runAllTimersAsync();
+
+      const storyCard = wrapper.get('[data-testid=user-story-0]');
+      const chip = storyCard.get('[data-testid=story-id-0]');
+      expect(chip.text()).toBe('#0');
+      expect(chip.attributes('aria-label')).toBe('Story 0');
+    });
+
+    test('Should render story id chip in thread review', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [reviewEvent({ threadId: 0, userStoryId: 0 })],
+            statEvents: [],
+            structureEvents: [createThread0(), createUserStory({ id: 0, name: 'US0' })],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute-all]').trigger('click');
+      await vi.runAllTimersAsync();
+
+      const storyCard = wrapper.get('[data-testid=user-story-0-0]');
+      const chip = storyCard.get('[data-testid=story-id-0]');
+      expect(chip.text()).toBe('#0');
+      expect(chip.attributes('aria-label')).toBe('Story 0');
+    });
+
+    test('Should not alter story-name text', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [createUserStory({ id: 0, name: 'US0' })],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=story-name]').text()).toBe('US0');
     });
   });
 
