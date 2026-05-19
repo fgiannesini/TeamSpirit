@@ -174,33 +174,80 @@ npx vitest run src/front/play/play.test.ts
 
 ---
 
-### Task 3 — Show story id chip on every story card
+### Task 3 — Show story id chip on every story card ✓ DONE
 
-**Goal**: visual identifier visible on backlog, in-progress, review, done.
+Story id chip rendered in backlog, thread in-progress, thread review, done. Tests cover chip text + aria-label in each column. See `play.test.ts:895-989`.
 
-**Files**:
+---
+
+## Decisions before tasks 4–8
+
+Three questions raised before continuing. Conclusions drive task shape below.
+
+### Decision 1 — drop the id chip, surface id via title tooltip
+
+Question: `#0` chip redundant when name `US0` already unique?
+
+Reason chip useful:
+- Name slugs collide in real sims (two `bug-fix`)
+- id stable across renames
+- id correlates DOM to simulator logs
+
+Reason chip noisy:
+- 4 cards × 1 chip = visual repetition
+- Most cases name + id say same thing
+
+Verdict: keep id reachable, drop visual chip. Move id into `title` attribute on `story-name` span. One value visible (name), id surface via hover + screen reader. Less DOM, no test churn on `story-id-{id}` queries (drop those tests).
+
+Action: refactor task = task 4. Remove `story-id-{id}` chip from all four cards. Add `:title="\`#${story.id}\`"` on `story-name` span. Drop the four tests that query `story-id-0` chip text + aria-label. Keep `story-name` text tests untouched. Add one test: `story-name` span has `title="#0"`.
+
+### Decision 2 — no StoryCard.vue extraction
+
+Question: extract 4× duplicated card markup into child component?
+
+Cost: rewrite all tests that query inside cards (`story-name`, `priority-{id}`, future `done-order-{id}`). 91 tests use `shallowMount` → child stubs hide inner DOM. Migration to `mount` = test churn across many specs.
+
+Benefit: ~40 lines saved. Tasks 4–8 add no more card duplication (only done card touched by task 7 below).
+
+Verdict: skip extraction. Duplication acceptable, stable at 4 instances after this plan. Revisit only if a 5th card appears or card grows past ~20 lines.
+
+### Decision 3 — aria/title tests: keep behaviour-visible, drop pure markup
+
+Rule: test what user perceives.
+
+| Test target | Verdict | Reason |
+|---|---|---|
+| State chip visible text (`Wait`/`Develop`/`Off`) | Keep | User reads text |
+| State chip `title` tooltip (4 states) | Keep, minimal | Tooltip = accessibility contract, cheap to assert |
+| `story-id-{id}` chip aria-label | Drop | Chip removed per Decision 1 |
+| New `title="#0"` on story-name | One test only | Confirms id surface preserved |
+| `hide-on-small` class on toolbar labels | One test per label | Confirms responsive contract |
+| Existing priority `aria-label` | Keep as-is | Not in scope, already tested |
+
+---
+
+### Task 4 — Drop story-id chip, add id as title on story-name
+
+Goal: keep id reachable, remove visual repetition.
+
+Files:
 - `src/front/play/play.vue`
 - `src/front/play/play.test.ts`
 
-**Code**:
-- In each of the four story-card occurrences (backlog, thread in-progress, thread review, done), insert an id chip **before** the `story-name` span:
+Code:
+- Four cards (backlog, thread in-progress, thread review, done): delete the `<span class="chip small" :data-testid="story-id-{id}" :aria-label="Story {id}">#{{ story.id }}</span>` block.
+- On the `story-name` span in all four cards, add `:title="\`#${story.id}\`"`:
   ```html
-  <span class="chip tiny" :data-testid="`story-id-${story.id}`" :aria-label="`Story ${story.id}`">
-    #{{ story.id }}
-  </span>
-  <span class="max" data-testid="story-name">{{ story.name }}</span>
+  <span class="max" data-testid="story-name" :title="`#${story.id}`">{{ story.name }}</span>
   ```
-- Use BeerCSS `chip tiny` class; fallback `chip small` if `tiny` is not supported in the project's BeerCSS version (verify via WebFetch `https://www.beercss.com` if uncertain).
-- The id chip stays on a single line; on narrow viewports the `max` class on the name lets it shrink first.
 
-**Tests**:
-- `story-id-0` chip is rendered for backlog story id 0 with text containing `#0`.
-- `story-id-0` chip on `[data-testid=user-story-0-0]` in a thread when the story is in progress.
-- `story-id-0` chip in done when the story is completed.
-- `aria-label="Story 0"` present on the chip.
-- Existing `story-name` text assertions (`US0`, `US1`) still pass (no concatenation into `story-name`).
+Tests:
+- Drop the four tests in the `describe('Story id chip', …)` block that query `story-id-0` (the four columns + the chip aria-label assertion). Keep the `'Should not alter story-name text'` test.
+- Add one new test in same describe: backlog story id 0 + name `US0` → `wrapper.get('[data-testid=story-name]').attributes('title')` equals `'#0'`.
+- Rename the describe block to `Story id surface` (block keeps minimal coverage of id presence).
+- All other tests untouched — `story-name` text assertions still match (`US0`, `US1`).
 
-**Verification**:
+Verification:
 ```
 npm run type-check
 npx vitest run src/front/play/play.test.ts
@@ -208,28 +255,28 @@ npx vitest run src/front/play/play.test.ts
 
 ---
 
-### Task 4 — Show "Off" instead of "Wait" on a thread that is off
+### Task 5 — Show "Off" instead of "Wait" on a thread that is off
 
-**Goal**: disambiguate the thread state chip when the thread is unavailable.
+Goal: disambiguate state chip when thread unavailable.
 
-**Files**:
+Files:
 - `src/front/play/play.vue`
 - `src/front/play/play.test.ts`
 
-**Code**:
-- Add a computed helper:
+Code:
+- Add helper:
   ```ts
   const threadStateLabel = (thread: ThreadVue): string =>
     thread.presence === 'off' ? 'Off' : thread.state;
   ```
-- Replace `{{ thread.state }}` in the `thread-state-{id}` chip with `{{ threadStateLabel(thread) }}`.
-- Existing tests assert `Wait` / `Develop` / `Review` — none of them set `ThreadOff`, so they keep passing. Tests that set `ThreadOff` (e.g. lines 105–118) currently do not assert chip text; they assert class `off`. Both still hold.
+- Replace `{{ thread.state }}` inside `thread-state-{id}` chip with `{{ threadStateLabel(thread) }}`.
+- Existing `Wait`/`Develop`/`Review` assertions hold — no test sets `ThreadOff` and asserts `Wait` text.
 
-**Tests**:
-- New test: with `setThreadOff({id: 0, time: 1})`, `wrapper.get('[data-testid=thread-state-0]').text() === 'Off'`.
-- New test: a thread with no off event still reads `Wait`.
+Tests:
+- New test: `structureEvents: [createThread0(), setThreadOff({ id: 0, time: 1 })]` → `wrapper.get('[data-testid=thread-state-0]').text() === 'Off'`.
+- New test: thread with no off event → `text() === 'Wait'`.
 
-**Verification**:
+Verification:
 ```
 npm run type-check
 npx vitest run src/front/play/play.test.ts
@@ -237,16 +284,16 @@ npx vitest run src/front/play/play.test.ts
 
 ---
 
-### Task 5 — Sort backlog by priority descending (null last)
+### Task 6 — Sort backlog by priority descending (null last)
 
-**Goal**: visually highlight the next story the team will pick.
+Goal: surface next story team will pick.
 
-**Files**:
+Files:
 - `src/front/play/play.vue`
 - `src/front/play/play.test.ts`
 
-**Code**:
-- Add a computed:
+Code:
+- Add computed:
   ```ts
   const sortedBacklog = computed(() =>
     [...backlogStories].sort((a, b) => {
@@ -257,14 +304,14 @@ npx vitest run src/front/play/play.test.ts
     }),
   );
   ```
-- Replace `v-for="story in backlogStories"` in the backlog column with `v-for="story in sortedBacklog"`.
-- Other consumers of `backlogStories` (length checks, find/indexOf) remain on the raw `backlogStories` reactive array — sorting only affects the rendered list. The reactive priority pulse keeps working because the `flashingStoryIds` lookup is by id, not by index.
+- Backlog column template: replace `v-for="story in backlogStories"` with `v-for="story in sortedBacklog"`.
+- All other reads of `backlogStories` (length, indexOf, mutations) stay on the raw reactive array. `flashingStoryIds` looks up by id, sort does not break the pulse.
 
-**Tests**:
-- Two stories with priorities 1 and 5: the rendered DOM order has `user-story-{id-of-priority-5}` before `user-story-{id-of-priority-1}`.
-- A story without priority (`null`) renders after stories with a priority.
+Tests:
+- Two backlog stories with priorities 1 and 5: in DOM, `user-story-{id-of-5}` appears before `user-story-{id-of-1}` (assert via `wrapper.findAll('[data-testid^=user-story-]')` order or via direct sibling `nextElementSibling`).
+- One story with priority + one with null priority → priority story renders first.
 
-**Verification**:
+Verification:
 ```
 npm run type-check
 npx vitest run src/front/play/play.test.ts
@@ -272,28 +319,28 @@ npx vitest run src/front/play/play.test.ts
 
 ---
 
-### Task 6 — Done sequence chip
+### Task 7 — Done sequence chip
 
-**Goal**: show the order in which stories were completed.
+Goal: show completion order.
 
-**Files**:
+Files:
 - `src/front/play/play.vue`
 - `src/front/play/play.test.ts`
 
-**Code**:
-- The done column already iterates `doneStories` in push order (chronological). Add a sequence chip rendered alongside the id chip:
+Code:
+- Done card only — insert chip before `story-name`:
   ```html
-  <span class="chip tiny" :data-testid="`done-order-${story.id}`">
+  <span class="chip small" :data-testid="`done-order-${story.id}`">
     #{{ doneStories.indexOf(story) + 1 }}
   </span>
   ```
-- Position: inside the done story card, before `story-name`. (If Task 3 added the id chip, the layout becomes `#3 (done order) | #7 (story id) | name | priority`. Acceptable; alternative: combine into a tooltip — kept as a single chip for clarity.)
-- Tip: render only inside the done column (not in backlog / thread cards).
+- Position: between `check_circle` icon and `story-name`.
+- Backlog/thread cards unchanged — chip lives only in done column.
 
-**Tests**:
-- After completing two stories sequentially, the first done card has `done-order-{firstId}` text `#1`, the second has `done-order-{secondId}` text `#2`.
+Tests:
+- Complete two stories in sequence (two `doneEvent` calls): first done card `done-order-{firstId}` text equals `#1`, second card `done-order-{secondId}` text equals `#2`.
 
-**Verification**:
+Verification:
 ```
 npm run type-check
 npx vitest run src/front/play/play.test.ts
@@ -301,25 +348,25 @@ npx vitest run src/front/play/play.test.ts
 
 ---
 
-### Task 7 — Hide verbose labels on narrow screens
+### Task 8 — Hide verbose labels on narrow screens
 
-**Goal**: keep the toolbar usable below the `s` breakpoint.
+Goal: keep toolbar usable below `s` breakpoint.
 
-**Files**:
+Files:
 - `src/front/play/play.vue`
 - `src/front/play/play.test.ts`
 
-**Code**:
-- Move the inline label `— Lead Time :` into a wrapping span with BeerCSS `hide-on-small` class.
-- Move the compute button labels `Play next` and `Play All` into a span with `hide-on-small`. The aria-label already carries the long form for screen readers.
-- The progress bar already has `min-width: 0`; no change.
+Code:
+- Wrap `— Lead Time :` in a span with class `hide-on-small`.
+- Wrap `Play next` and `Play All` button labels in spans with class `hide-on-small`. Long form lives in existing `aria-label`.
+- Progress bar already has `min-width: 0` — no change.
 
-**Tests**:
-- `wrapper.find('[data-testid=compute]').get('span').classes()` contains `hide-on-small`.
-- `wrapper.find('[data-testid=compute-all]').get('span').classes()` contains `hide-on-small`.
-- `lead-time` span text unchanged; only its sibling label gets the class.
+Tests:
+- `wrapper.get('[data-testid=compute]')` contains a span with class `hide-on-small` and text `Play next`.
+- `wrapper.get('[data-testid=compute-all]')` contains a span with class `hide-on-small` and text `Play All`.
+- `lead-time` value unchanged: existing `lead-time` text test still passes.
 
-**Verification**:
+Verification:
 ```
 npm run type-check
 npx vitest run src/front/play/play.test.ts
@@ -327,16 +374,16 @@ npx vitest run src/front/play/play.test.ts
 
 ---
 
-### Task 8 — Tooltip on thread state chip
+### Task 9 — Tooltip on thread state chip
 
-**Goal**: explain `Wait` / `Develop` / `Review` / `Off` to non-domain users.
+Goal: explain `Wait`/`Develop`/`Review`/`Off` to non-domain users.
 
-**Files**:
+Files:
 - `src/front/play/play.vue`
 - `src/front/play/play.test.ts`
 
-**Code**:
-- Add a `title` attribute on the `thread-state-{id}` chip:
+Code:
+- Add map:
   ```ts
   const THREAD_STATE_TOOLTIP: Record<ThreadState | 'Off', string> = {
     Wait: 'Waiting for work',
@@ -345,21 +392,22 @@ npx vitest run src/front/play/play.test.ts
     Off: 'Thread is unavailable',
   };
   ```
-- Template:
+- Template chip:
   ```html
   <span
     …
     :title="THREAD_STATE_TOOLTIP[threadStateLabel(thread) as keyof typeof THREAD_STATE_TOOLTIP]"
     >{{ threadStateLabel(thread) }}</span>
   ```
+- Depends on task 5 (uses `threadStateLabel`).
 
-**Tests**:
-- With a thread in default state, `thread-state-0` element has `title="Waiting for work"`.
-- After an InProgress event, `title="Developing a user story"`.
-- After a Review event, `title="Reviewing a user story"`.
-- After ThreadOff, `title="Thread is unavailable"`.
+Tests (4 — one per state, minimal):
+- Default thread → `title="Waiting for work"`.
+- After `inProgressEvent` → `title="Developing a user story"`.
+- After `reviewEvent` → `title="Reviewing a user story"`.
+- After `setThreadOff` → `title="Thread is unavailable"`.
 
-**Verification**:
+Verification:
 ```
 npm run type-check
 npx vitest run src/front/play/play.test.ts
@@ -369,31 +417,29 @@ npx vitest run src/front/play/play.test.ts
 
 ## Recommended order
 
-1. **Task 1** — write the multi-reviewer regression test first; it locks the current invariant.
-2. **Task 2** — move the guard into `handleReview`; Task 1 + all existing tests must stay green.
-3. **Task 3** — story id chip; smallest user-visible improvement, paves the way for Tasks 4–8.
-4. **Task 4** — thread "Off" label.
-5. **Task 5** — sort backlog by priority.
-6. **Task 6** — done order chip.
-7. **Task 7** — narrow-screen labels.
-8. **Task 8** — state chip tooltip.
+Tasks 1–3 done. Remaining tasks order driven by dependency + user impact.
 
-Tasks 3–8 are independent; their order is suggested by user-visible impact (information first, polish last) but they can be reordered if a BeerCSS class proves missing for one of them.
+1. **Task 4** — id chip cleanup. First because: removes dead surface before adding more, simplifies later cards.
+2. **Task 5** — `Off` state label. Independent. Prereq for task 9 (`threadStateLabel` helper).
+3. **Task 6** — backlog sort by priority. Independent, high user value.
+4. **Task 7** — done-order chip. Independent.
+5. **Task 8** — narrow-screen labels. Independent, polish.
+6. **Task 9** — state chip tooltip. Must follow task 5 (reuses `threadStateLabel`).
+
+Tasks 4, 6, 7, 8 fully independent — reorder freely if BeerCSS gap appears. Task 9 strictly after task 5.
 
 ## Per-task verification
 
 After each task:
-
 ```
 npm run type-check
 npx vitest run src/front/play/play.test.ts
 ```
 
-After the **last** task only:
-
+After last task only:
 ```
 npm run lint
 npm run format
 ```
 
-> Spinner / FLIP / GSAP behaviour from the previous plan is untouched; no animation tweak is required.
+> Spinner / FLIP / GSAP behaviour untouched; no animation tweak required.
