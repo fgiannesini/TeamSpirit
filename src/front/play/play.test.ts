@@ -892,8 +892,8 @@ describe('Play', () => {
     });
   });
 
-  describe('Story id chip', () => {
-    test('Should render story id chip in backlog with correct text and aria-label', () => {
+  describe('Story id surface', () => {
+    test('Should show story name unchanged', () => {
       const wrapper = createWrapper({
         simulationOutputs: [
           {
@@ -905,12 +905,25 @@ describe('Play', () => {
         ],
       });
 
-      const chip = wrapper.get('[data-testid=story-id-0]');
-      expect(chip.text()).toBe('#0');
-      expect(chip.attributes('aria-label')).toBe('Story 0');
+      expect(wrapper.get('[data-testid=story-name]').text()).toBe('US0');
     });
 
-    test('Should render story id chip in thread in-progress', async () => {
+    test('Should surface story id as title on story-name in backlog', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [createUserStory({ id: 0, name: 'US0' })],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=story-name]').attributes('title')).toBe('#0');
+    });
+
+    test('Should surface story id as title on story-name in thread in-progress', async () => {
       const wrapper = createWrapper({
         simulationOutputs: [
           {
@@ -925,34 +938,15 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute-all]').trigger('click');
       await vi.runAllTimersAsync();
 
-      const storyCard = wrapper.get('[data-testid=user-story-0-0]');
-      const chip = storyCard.get('[data-testid=story-id-0]');
-      expect(chip.text()).toBe('#0');
-      expect(chip.attributes('aria-label')).toBe('Story 0');
+      expect(
+        wrapper
+          .get('[data-testid=user-story-0-0]')
+          .get('[data-testid=story-name]')
+          .attributes('title'),
+      ).toBe('#0');
     });
 
-    test('Should render story id chip in done', async () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [doneEvent({ userStoryId: 0, threadId: 0 })],
-            statEvents: [],
-            structureEvents: [createThread0(), createUserStory({ id: 0, name: 'US0' })],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      await wrapper.get('[data-testid=compute-all]').trigger('click');
-      await vi.runAllTimersAsync();
-
-      const storyCard = wrapper.get('[data-testid=user-story-0]');
-      const chip = storyCard.get('[data-testid=story-id-0]');
-      expect(chip.text()).toBe('#0');
-      expect(chip.attributes('aria-label')).toBe('Story 0');
-    });
-
-    test('Should render story id chip in thread review', async () => {
+    test('Should surface story id as title on story-name in thread review', async () => {
       const wrapper = createWrapper({
         simulationOutputs: [
           {
@@ -967,25 +961,35 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute-all]').trigger('click');
       await vi.runAllTimersAsync();
 
-      const storyCard = wrapper.get('[data-testid=user-story-0-0]');
-      const chip = storyCard.get('[data-testid=story-id-0]');
-      expect(chip.text()).toBe('#0');
-      expect(chip.attributes('aria-label')).toBe('Story 0');
+      expect(
+        wrapper
+          .get('[data-testid=user-story-0-0]')
+          .get('[data-testid=story-name]')
+          .attributes('title'),
+      ).toBe('#0');
     });
 
-    test('Should not alter story-name text', () => {
+    test('Should surface story id as title on story-name in done', async () => {
       const wrapper = createWrapper({
         simulationOutputs: [
           {
-            timeEvents: [],
+            timeEvents: [doneEvent({ userStoryId: 0, threadId: 0 })],
             statEvents: [],
-            structureEvents: [createUserStory({ id: 0, name: 'US0' })],
+            structureEvents: [createThread0(), createUserStory({ id: 0, name: 'US0' })],
             teamType: 'Parallel',
           },
         ],
       });
 
-      expect(wrapper.get('[data-testid=story-name]').text()).toBe('US0');
+      await wrapper.get('[data-testid=compute-all]').trigger('click');
+      await vi.runAllTimersAsync();
+
+      expect(
+        wrapper
+          .get('[data-testid=user-story-0]')
+          .get('[data-testid=story-name]')
+          .attributes('title'),
+      ).toBe('#0');
     });
   });
 

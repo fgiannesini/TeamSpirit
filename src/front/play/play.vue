@@ -457,13 +457,9 @@ updateThreadPresence(1);
               { 'priority-flash': flashingStoryIds.has(story.id) },
             ]"
           >
-            <span
-              class="chip small"
-              :data-testid="`story-id-${story.id}`"
-              :aria-label="`Story ${story.id}`"
-              >#{{ story.id }}</span
-            >
-            <span class="max" data-testid="story-name">{{ story.name }}</span>
+            <span class="max" data-testid="story-name" :title="`#${story.id}`">{{
+              story.name
+            }}</span>
             <span
               v-if="story.priority !== null"
               class="chip small"
@@ -535,13 +531,9 @@ updateThreadPresence(1);
                 { 'priority-flash': flashingStoryIds.has(story.id) },
               ]"
             >
-              <span
-                class="chip small"
-                :data-testid="`story-id-${story.id}`"
-                :aria-label="`Story ${story.id}`"
-                >#{{ story.id }}</span
-              >
-              <span class="max" data-testid="story-name">{{ story.name }}</span>
+              <span class="max" data-testid="story-name" :title="`#${story.id}`">{{
+                story.name
+              }}</span>
               <span
                 v-if="story.priority !== null"
                 class="chip small"
@@ -569,13 +561,9 @@ updateThreadPresence(1);
                 { 'priority-flash': flashingStoryIds.has(story.id) },
               ]"
             >
-              <span
-                class="chip small"
-                :data-testid="`story-id-${story.id}`"
-                :aria-label="`Story ${story.id}`"
-                >#{{ story.id }}</span
-              >
-              <span class="max" data-testid="story-name">{{ story.name }}</span>
+              <span class="max" data-testid="story-name" :title="`#${story.id}`">{{
+                story.name
+              }}</span>
               <span
                 v-if="story.priority !== null"
                 class="chip small"
@@ -623,13 +611,9 @@ updateThreadPresence(1);
             ]"
           >
             <i class="small" aria-hidden="true">check_circle</i>
-            <span
-              class="chip small"
-              :data-testid="`story-id-${story.id}`"
-              :aria-label="`Story ${story.id}`"
-              >#{{ story.id }}</span
-            >
-            <span class="max" data-testid="story-name">{{ story.name }}</span>
+            <span class="max" data-testid="story-name" :title="`#${story.id}`">{{
+              story.name
+            }}</span>
             <span
               v-if="story.priority !== null"
               class="chip small"
