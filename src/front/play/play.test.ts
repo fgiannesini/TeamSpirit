@@ -1616,6 +1616,51 @@ describe('Play', () => {
     });
   });
 
+  describe('Backlog sort by priority', () => {
+    test('Should render story with highest priority first', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [
+              createUserStory({ id: 0 }),
+              createChangePriority({ id: 0, value: 1 }),
+              createUserStory({ id: 1 }),
+              createChangePriority({ id: 1, value: 5 }),
+            ],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      const cards = wrapper.get('[data-testid=backlog]').findAll('[data-testid^=user-story-]');
+      expect(cards[0].attributes('data-testid')).toBe('user-story-1');
+      expect(cards[1].attributes('data-testid')).toBe('user-story-0');
+    });
+
+    test('Should render story with null priority after stories with a priority', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [
+              createUserStory({ id: 0 }),
+              createUserStory({ id: 1 }),
+              createChangePriority({ id: 1, value: 3 }),
+            ],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      const cards = wrapper.get('[data-testid=backlog]').findAll('[data-testid^=user-story-]');
+      expect(cards[0].attributes('data-testid')).toBe('user-story-1');
+      expect(cards[1].attributes('data-testid')).toBe('user-story-0');
+    });
+  });
+
   describe('Done count', () => {
     test('Should show "0 story" when no story is completed', () => {
       const wrapper = createWrapper({

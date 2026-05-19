@@ -45,6 +45,15 @@ const backlogStories = reactive<UserStoryVue[]>([]);
 const doneStories = reactive<UserStoryVue[]>([]);
 const flashingStoryIds = reactive(new Set<number>());
 
+const sortedBacklog = computed(() =>
+  [...backlogStories].sort((a, b) => {
+    if (a.priority === null && b.priority === null) return 0;
+    if (a.priority === null) return 1;
+    if (b.priority === null) return -1;
+    return b.priority - a.priority;
+  }),
+);
+
 const leadTime = ref<number | null>(null);
 
 const leadTimeDisplay = computed(() => {
@@ -445,7 +454,7 @@ updateThreadPresence(1);
         </div>
         <div v-else class="column-stories">
           <div
-            v-for="story in backlogStories"
+            v-for="story in sortedBacklog"
             :key="story.id"
             :data-testid="'user-story-' + story.id"
             :data-flip-id="'story-' + story.id"
