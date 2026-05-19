@@ -396,7 +396,7 @@ updateThreadPresence(1);
       aria-label="Simulation statistics"
     >
       <span data-testid="time" id="time">{{ timeDisplay }}</span>
-      <span class="small-margin">— Lead Time :</span>
+      <span class="small-margin hide-on-small">— Lead Time :</span>
       <b
         ><span data-testid="lead-time" id="lead-time">{{ leadTimeDisplay }}</span></b
       >
@@ -420,7 +420,7 @@ updateThreadPresence(1);
       :disabled="computeDisabled"
     >
       <i aria-hidden="true">play_arrow</i>
-      <span>Play next</span>
+      <span class="hide-on-small">Play next</span>
     </button>
     <button
       id="compute-all"
@@ -430,7 +430,7 @@ updateThreadPresence(1);
       :disabled="computeAllDisabled"
     >
       <i aria-hidden="true">fast_forward</i>
-      <span>Play All</span>
+      <span class="hide-on-small">Play All</span>
     </button>
   </nav>
 
