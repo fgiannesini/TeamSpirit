@@ -339,6 +339,38 @@ describe('Play', () => {
     });
   });
 
+  describe('Thread state label', () => {
+    test('Should show "Wait" when thread has no off event', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [createThread0()],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=thread-state-0]').text()).toBe('Wait');
+    });
+
+    test('Should show "Off" when thread is off', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [createThread0(), setThreadOff({ id: 0, time: 1 })],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=thread-state-0]').text()).toBe('Off');
+    });
+  });
+
   describe('User story', () => {
     test('Should initialize 2 userStories elements', async () => {
       const wrapper = createWrapper({
