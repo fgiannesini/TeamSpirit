@@ -371,6 +371,82 @@ describe('Play', () => {
     });
   });
 
+  describe('Thread state tooltip', () => {
+    test('Should show "Waiting for work" tooltip in Wait state', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [createThread0()],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=thread-state-0]').attributes('title')).toBe(
+        'Waiting for work',
+      );
+    });
+
+    test('Should show "Developing a user story" tooltip in Develop state', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [inProgressEvent(), doneEvent()],
+            statEvents: [],
+            structureEvents: [createThread0(), createUserStory({ id: 0 })],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute]').trigger('click');
+      await vi.advanceTimersToNextTimerAsync();
+
+      expect(wrapper.get('[data-testid=thread-state-0]').attributes('title')).toBe(
+        'Developing a user story',
+      );
+    });
+
+    test('Should show "Reviewing a user story" tooltip in Review state', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [reviewEvent(), doneEvent()],
+            statEvents: [],
+            structureEvents: [createThread0(), createUserStory({ id: 0 })],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute]').trigger('click');
+      await vi.advanceTimersToNextTimerAsync();
+
+      expect(wrapper.get('[data-testid=thread-state-0]').attributes('title')).toBe(
+        'Reviewing a user story',
+      );
+    });
+
+    test('Should show "Thread is unavailable" tooltip when thread is off', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [createThread0(), setThreadOff({ id: 0, time: 1 })],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=thread-state-0]').attributes('title')).toBe(
+        'Thread is unavailable',
+      );
+    });
+  });
+
   describe('User story', () => {
     test('Should initialize 2 userStories elements', async () => {
       const wrapper = createWrapper({

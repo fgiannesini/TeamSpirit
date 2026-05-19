@@ -287,8 +287,15 @@ const THREAD_STATE_CHIP_COLOR: Record<ThreadState, string> = {
   Wait: '',
 };
 
-const threadStateLabel = (thread: ThreadVue): string =>
+const threadStateLabel = (thread: ThreadVue): ThreadState | 'Off' =>
   thread.presence === 'off' ? 'Off' : thread.state;
+
+const THREAD_STATE_TOOLTIP: Record<ThreadState | 'Off', string> = {
+  Wait: 'Waiting for work',
+  Develop: 'Developing a user story',
+  Review: 'Reviewing a user story',
+  Off: 'Thread is unavailable',
+};
 
 const updateStats = (time: number): void => {
   const events = data.statEvents.filter((e) => e.time === time);
@@ -519,6 +526,7 @@ updateThreadPresence(1);
               :id="`thread-state-${thread.id}`"
               :data-testid="`thread-state-${thread.id}`"
               :class="['chip', 'small', THREAD_STATE_CHIP_COLOR[thread.state]]"
+              :title="THREAD_STATE_TOOLTIP[threadStateLabel(thread)]"
               >{{ threadStateLabel(thread) }}</span
             >
           </div>
