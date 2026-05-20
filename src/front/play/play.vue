@@ -386,59 +386,65 @@ updateThreadPresence(1);
 
 <template>
   <nav class="top surface-container">
-    <button
-      class="transparent circle"
-      data-testid="back-button"
-      aria-label="Back to simulations"
-      @click="router.push('/simulate')"
-    >
-      <i aria-hidden="true">arrow_back</i>
-    </button>
-    <progress :value="currentTime" :max="maxTime" data-testid="progress"></progress>
-    <i aria-hidden="true">timer</i>
-    <div
-      data-testid="stats"
-      class="row middle-align"
-      aria-live="polite"
-      aria-label="Simulation statistics"
-    >
-      <span data-testid="time" id="time">{{ timeDisplay }}</span>
-      <span class="small-margin hide-on-small">— Lead Time :</span>
-      <b
-        ><span data-testid="lead-time" id="lead-time">{{ leadTimeDisplay }}</span></b
+    <div class="row middle-align no-padding">
+      <button
+        class="transparent circle"
+        data-testid="back-button"
+        aria-label="Back to simulations"
+        @click="router.push('/simulate')"
       >
+        <i aria-hidden="true">arrow_back</i>
+      </button>
+      <progress :value="currentTime" :max="maxTime" data-testid="progress"></progress>
     </div>
-    <span class="chip" data-testid="team-type">
-      <i aria-hidden="true">{{ teamTypeIcon }}</i>
-      {{ teamType }}
-    </span>
-    <span
-      class="loader-spinner"
-      :class="{ 'loader-hidden': !isAnimating }"
-      data-testid="loader"
-      aria-hidden="true"
-    ></span>
-    <button
-      id="compute"
-      data-testid="compute"
-      class="border"
-      aria-label="Advance one step"
-      @click="runNext()"
-      :disabled="computeDisabled"
-    >
-      <i aria-hidden="true">play_arrow</i>
-      <span class="hide-on-small">Play next</span>
-    </button>
-    <button
-      id="compute-all"
-      data-testid="compute-all"
-      aria-label="Run full simulation"
-      @click="runAll()"
-      :disabled="computeAllDisabled"
-    >
-      <i aria-hidden="true">fast_forward</i>
-      <span class="hide-on-small">Play All</span>
-    </button>
+    <div class="row middle-align max no-padding">
+      <i aria-hidden="true">timer</i>
+      <div
+        data-testid="stats"
+        class="row middle-align"
+        aria-live="polite"
+        aria-label="Simulation statistics"
+      >
+        <span data-testid="time" id="time">{{ timeDisplay }}</span>
+        <span class="small-margin hide-on-small">— Lead Time :</span>
+        <b
+          ><span data-testid="lead-time" id="lead-time">{{ leadTimeDisplay }}</span></b
+        >
+      </div>
+      <span class="chip" data-testid="team-type">
+        <i aria-hidden="true">{{ teamTypeIcon }}</i>
+        {{ teamType }}
+      </span>
+    </div>
+    <div class="row middle-align no-padding">
+      <span
+        class="loader-spinner"
+        :class="{ 'loader-hidden': !isAnimating }"
+        data-testid="loader"
+        aria-hidden="true"
+      ></span>
+      <button
+        id="compute"
+        data-testid="compute"
+        class="border"
+        aria-label="Advance one step"
+        @click="runNext()"
+        :disabled="computeDisabled"
+      >
+        <i aria-hidden="true">play_arrow</i>
+        <span class="hide-on-small">Play next</span>
+      </button>
+      <button
+        id="compute-all"
+        data-testid="compute-all"
+        aria-label="Run full simulation"
+        @click="runAll()"
+        :disabled="computeAllDisabled"
+      >
+        <i aria-hidden="true">fast_forward</i>
+        <span class="hide-on-small">Play All</span>
+      </button>
+    </div>
   </nav>
 
   <div class="grid kanban">
