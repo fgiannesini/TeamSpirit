@@ -442,7 +442,7 @@ updateThreadPresence(1);
   </nav>
 
   <div class="grid kanban">
-    <div class="s12 m4">
+    <div class="s12 m3">
       <article data-testid="backlog" id="backlog">
         <nav>
           <i aria-hidden="true">inbox</i>
@@ -493,7 +493,7 @@ updateThreadPresence(1);
       </article>
     </div>
 
-    <div class="s12 m4">
+    <div class="s12 m6">
       <article data-testid="threads" id="threads">
         <nav>
           <i aria-hidden="true">groups</i>
@@ -599,7 +599,7 @@ updateThreadPresence(1);
       </article>
     </div>
 
-    <div class="s12 m4">
+    <div class="s12 m3">
       <article data-testid="done" id="done">
         <nav>
           <i aria-hidden="true">task_alt</i>
