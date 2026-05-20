@@ -60,6 +60,69 @@ Page `src/front/play/play.vue` — kanban 3 colonnes (Backlog / Threads / Done).
   - `Should apply surface-container-high to done nav`
 - **Note** : si BeerCSS n'a pas la classe utile, fallback `<style scoped>` complet (background + border-bottom + margin-bottom).
 
+#### 2.a [ ] Arrondir le coin haut du header — CSS scoped
+
+- **Problème** : header `<nav>` à coins droits dans un `article` arrondi → ne suit pas la forme du conteneur, paraît plaqué.
+- **Décision technique** :
+  - **BeerCSS n'offre pas de classe utilitaire adéquate** :
+    - `.round` = `border-radius: 2rem` (trop, header devient ovale).
+    - `.small-round` = `border-radius: 0.5rem` (acceptable comme valeur, mais s'applique aux 4 coins → casse l'alignement avec le `border-bottom`).
+    - `.top-round` applique `border-start-start-radius/border-start-end-radius: var(--_round, 2rem)` → 2rem par défaut, trop. Pas combinable avec `.small-round` (qui ne définit `--_round` que sur l'élément lui-même via `.round, [class*=-round]`).
+  - **Solution retenue** : CSS scoped sur la règle existante `.kanban article > nav`.
+- **Changement** : étendre la règle scoped existante :
+  ```css
+  .kanban article > nav {
+    border-bottom: 1px solid var(--outline-variant);
+    margin-bottom: 0.75rem;
+    border-radius: 0.5rem 0.5rem 0 0;
+  }
+  ```
+  - Valeur `0.5rem` aligne avec `.small-round` BeerCSS (cohérence).
+  - Top-left + top-right uniquement → préserve la séparation visuelle créée par `border-bottom`.
+- **Tests à ajouter** : aucun (style scoped, cosmétique).
+- **Vérification** : visuel uniquement.
+- **Risque** : si l'`article` parent a un `border-radius` plus grand, léger décalage visuel — acceptable car header reste à l'intérieur.
+
+#### 2.b [ ] Compteur de colonne : badge non-cliquable au lieu de chip — `play.vue`
+
+- **Problème** : `<span class="chip" data-testid="backlog-count">` ressemble à un bouton :
+  - `.chip` (beer.css L1407) applique `border: 0.0625rem solid var(--outline-variant)` + `border-radius: 0.5rem` → apparence pill avec bordure visible.
+  - `.chip` (beer.css L1040/L1059) partage le ripple wave hover/focus avec `.button` → effet visuel "cliquable" au survol.
+  - Affordance trompeuse : utilisateur peut croire qu'on filtre/trie au clic.
+- **Décision technique** :
+  - **`<span class="badge">` (beer.css L1105) inadapté** : `position: absolute`, couleurs `var(--error)` (rouge), conçu comme badge de notification flottant sur une icône — pas comme compteur standalone.
+  - **`<span class="chip fill">` insuffisant** : `.chip.fill` (L1441) ne retire que la bordure. Le ripple hover persiste (même règle L1040).
+  - **Solution retenue** : retirer la classe `chip` et créer une classe locale `.column-count` dans `<style scoped>` qui rend un pill plat, sans hover effect.
+- **Changement** :
+  - HTML : remplacer `<span class="chip" data-testid="backlog-count">…</span>` par `<span class="column-count" data-testid="backlog-count" aria-label="…">…</span>` pour les 3 compteurs (`backlog-count`, `threads-count`, `done-count`).
+  - Ajouter `aria-label` explicite pour clarifier sémantique de compteur statique (ex: `aria-label="Backlog story count"`).
+  - CSS scoped :
+    ```css
+    .column-count {
+      display: inline-flex;
+      align-items: center;
+      padding: 0 0.625rem;
+      block-size: 1.5rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--on-surface-variant);
+      background-color: var(--surface-container-highest);
+      border-radius: 0.75rem;
+      user-select: none;
+    }
+    ```
+  - Pas de bordure, pas de hover, fond doux (`surface-container-highest`), taille plus petite que `.chip` (1.5rem vs 2rem) → signale clairement "métadonnée statique".
+- **Tests à ajouter** dans `describe('Column counter badge')` :
+  - `Should not have chip class on backlog-count` (assert `wrapper.get('[data-testid=backlog-count]').classes()` ne contient pas `'chip'`).
+  - `Should not have chip class on threads-count`.
+  - `Should not have chip class on done-count`.
+  - `Should have column-count class on backlog-count` (vérifie nouvelle classe).
+- **Préserver** :
+  - `data-testid="backlog-count"`, `data-testid="threads-count"`, `data-testid="done-count"` — assertions existantes sur `.text()` (L1646, L1658, L1673, L1691, L1748, L1776 de play.test.ts) restent OK.
+  - Texte affiché identique (`{{ count }} stories/story`, `{{ count }} threads`).
+  - Aucun handler ajouté (`@click` interdit).
+- **Risque** : aucun fonctionnel (tests `.text()` seulement). Visuel : pill plus discret, à valider visuellement contre les chips internes (priorité, état thread) qui restent en `.chip` — la distinction renforce la sémantique (chips = info contextuelle sur card ; column-count = métadonnée header).
+
 ### 3. [ ] Chip d'état thread : badge non-cliquable + icône + couleur Wait — `play.vue`
 
 - **Problèmes** : Wait pas de couleur → indistinct ; chip `border round` → ressemble à un bouton.
