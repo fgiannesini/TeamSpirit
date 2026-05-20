@@ -395,10 +395,10 @@ updateThreadPresence(1);
       >
         <i aria-hidden="true">arrow_back</i>
       </button>
-      <progress :value="currentTime" :max="maxTime" data-testid="progress"></progress>
     </div>
     <div class="row middle-align max no-padding">
       <i aria-hidden="true">timer</i>
+      <progress :value="currentTime" :max="maxTime" data-testid="progress"></progress>
       <div
         data-testid="stats"
         class="row middle-align"
@@ -450,7 +450,7 @@ updateThreadPresence(1);
   <div class="grid kanban">
     <div class="s12 m3">
       <article data-testid="backlog" id="backlog">
-        <nav class="surface-container-high">
+        <nav class="surface-container-high small-padding">
           <i aria-hidden="true">inbox</i>
           <h6 class="max">Backlog</h6>
           <span class="chip" data-testid="backlog-count"
@@ -501,7 +501,7 @@ updateThreadPresence(1);
 
     <div class="s12 m6">
       <article data-testid="threads" id="threads">
-        <nav class="surface-container-high">
+        <nav class="surface-container-high small-padding">
           <i aria-hidden="true">groups</i>
           <h6 class="max">Threads</h6>
           <span class="chip" data-testid="threads-count">{{ threads.length }} threads</span>
@@ -607,7 +607,7 @@ updateThreadPresence(1);
 
     <div class="s12 m3">
       <article data-testid="done" id="done">
-        <nav class="surface-container-high">
+        <nav class="surface-container-high small-padding">
           <i aria-hidden="true">task_alt</i>
           <h6 class="max">Done</h6>
           <span class="chip" data-testid="done-count"
@@ -657,7 +657,7 @@ updateThreadPresence(1);
 </template>
 
 <style scoped>
-nav > progress {
+nav progress {
   min-width: 0;
 }
 
@@ -690,7 +690,6 @@ nav > progress {
   article > nav {
     border-bottom: 1px solid var(--outline-variant);
     margin-bottom: 0.75rem;
-    padding-bottom: 0.5rem;
   }
 }
 
