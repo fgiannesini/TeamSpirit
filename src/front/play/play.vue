@@ -444,7 +444,7 @@ updateThreadPresence(1);
   <div class="grid kanban">
     <div class="s12 m3">
       <article data-testid="backlog" id="backlog">
-        <nav>
+        <nav class="surface-container-high">
           <i aria-hidden="true">inbox</i>
           <h6 class="max">Backlog</h6>
           <span class="chip" data-testid="backlog-count"
@@ -495,7 +495,7 @@ updateThreadPresence(1);
 
     <div class="s12 m6">
       <article data-testid="threads" id="threads">
-        <nav>
+        <nav class="surface-container-high">
           <i aria-hidden="true">groups</i>
           <h6 class="max">Threads</h6>
           <span class="chip" data-testid="threads-count">{{ threads.length }} threads</span>
@@ -601,7 +601,7 @@ updateThreadPresence(1);
 
     <div class="s12 m3">
       <article data-testid="done" id="done">
-        <nav>
+        <nav class="surface-container-high">
           <i aria-hidden="true">task_alt</i>
           <h6 class="max">Done</h6>
           <span class="chip" data-testid="done-count"
@@ -680,6 +680,12 @@ nav > progress {
 .kanban {
   padding: 0 1rem 1rem;
   align-items: stretch;
+
+  article > nav {
+    border-bottom: 1px solid var(--outline-variant);
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+  }
 }
 
 .column-stories {
