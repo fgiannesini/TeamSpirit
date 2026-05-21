@@ -94,12 +94,12 @@ describe('Play', () => {
       expect(wrapper.get(`[data-testid=thread0]`).classes()).toContain('thread');
       expect(wrapper.get(`[data-testid=thread-title-0]`).text()).toStrictEqual('dev0');
       expect(wrapper.find(`[data-testid=thread-user-story-0]`).exists()).toBe(true);
-      expect(wrapper.find(`[data-testid=thread-state-0]`).text()).toBe('Wait');
+      expect(wrapper.find(`[data-testid=thread-state-label-0]`).text()).toBe('Wait');
 
       expect(wrapper.get(`[data-testid=thread1]`).classes()).toContain('thread');
       expect(wrapper.get(`[data-testid=thread-title-1]`).text()).toStrictEqual('dev1');
       expect(wrapper.find(`[data-testid=thread-user-story-1]`).exists()).toBe(true);
-      expect(wrapper.find(`[data-testid=thread-state-1]`).text()).toBe('Wait');
+      expect(wrapper.find(`[data-testid=thread-state-label-1]`).text()).toBe('Wait');
     });
 
     test('Should set thread off by default', async () => {
@@ -215,10 +215,10 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
 
       await vi.advanceTimersToNextTimerAsync();
-      expect(wrapper.find(`[data-testid=thread-state-0]`).text()).toBe('Develop');
+      expect(wrapper.find(`[data-testid=thread-state-label-0]`).text()).toBe('Develop');
 
       await vi.advanceTimersToNextTimerAsync();
-      expect(wrapper.find(`[data-testid=thread-state-0]`).text()).toBe('Develop');
+      expect(wrapper.find(`[data-testid=thread-state-label-0]`).text()).toBe('Develop');
     });
 
     test('Should set thread state to "Review" when in review', async () => {
@@ -236,10 +236,10 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
 
       await vi.advanceTimersToNextTimerAsync();
-      expect(wrapper.find(`[data-testid=thread-state-0]`).text()).toBe('Review');
+      expect(wrapper.find(`[data-testid=thread-state-label-0]`).text()).toBe('Review');
 
       await vi.advanceTimersToNextTimerAsync();
-      expect(wrapper.find(`[data-testid=thread-state-0]`).text()).toBe('Review');
+      expect(wrapper.find(`[data-testid=thread-state-label-0]`).text()).toBe('Review');
     });
 
     test('Should set thread state to "Develop" when to review', async () => {
@@ -257,7 +257,7 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
 
-      expect(wrapper.find(`[data-testid=thread-state-0]`).text()).toBe('Develop');
+      expect(wrapper.find(`[data-testid=thread-state-label-0]`).text()).toBe('Develop');
     });
 
     test('Should set thread state to "Wait" when idle', async () => {
@@ -281,12 +281,12 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
 
-      expect(wrapper.find(`[data-testid=thread-state-0]`).text()).toBe('Wait');
+      expect(wrapper.find(`[data-testid=thread-state-label-0]`).text()).toBe('Wait');
     });
   });
 
-  describe('Thread state chip color', () => {
-    test('Should have primary class when state is Develop', async () => {
+  describe('Thread state badge variant', () => {
+    test('Should have develop badge variant when state is Develop', async () => {
       const wrapper = createWrapper({
         simulationOutputs: [
           {
@@ -301,10 +301,12 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
 
-      expect(wrapper.get('[data-testid=thread-state-0]').classes()).toContain('primary');
+      expect(wrapper.get('[data-testid=thread-state-0]').classes()).toContain(
+        'thread-state-badge--develop',
+      );
     });
 
-    test('Should have secondary class when state is Review', async () => {
+    test('Should have review badge variant when state is Review', async () => {
       const wrapper = createWrapper({
         simulationOutputs: [
           {
@@ -319,10 +321,12 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
 
-      expect(wrapper.get('[data-testid=thread-state-0]').classes()).toContain('secondary');
+      expect(wrapper.get('[data-testid=thread-state-0]').classes()).toContain(
+        'thread-state-badge--review',
+      );
     });
 
-    test('Should have tertiary class when state is Wait', () => {
+    test('Should have wait badge variant when state is Wait', () => {
       const wrapper = createWrapper({
         simulationOutputs: [
           {
@@ -334,7 +338,26 @@ describe('Play', () => {
         ],
       });
 
-      expect(wrapper.get('[data-testid=thread-state-0]').classes()).toContain('tertiary');
+      expect(wrapper.get('[data-testid=thread-state-0]').classes()).toContain(
+        'thread-state-badge--wait',
+      );
+    });
+
+    test('Should have off badge variant when thread is Off', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [createThread0(), setThreadOff({ id: 0, time: 1 })],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=thread-state-0]').classes()).toContain(
+        'thread-state-badge--off',
+      );
     });
   });
 
@@ -351,7 +374,7 @@ describe('Play', () => {
         ],
       });
 
-      expect(wrapper.get('[data-testid=thread-state-0]').text()).toBe('Wait');
+      expect(wrapper.get('[data-testid=thread-state-label-0]').text()).toBe('Wait');
     });
 
     test('Should show "Off" when thread is off', () => {
@@ -366,7 +389,7 @@ describe('Play', () => {
         ],
       });
 
-      expect(wrapper.get('[data-testid=thread-state-0]').text()).toBe('Off');
+      expect(wrapper.get('[data-testid=thread-state-label-0]').text()).toBe('Off');
     });
   });
 
@@ -1030,7 +1053,7 @@ describe('Play', () => {
           .find('[data-testid=user-story-0-0]')
           .exists(),
       ).toBe(true);
-      expect(wrapper.get('[data-testid=thread-state-0]').text()).toBe('Review');
+      expect(wrapper.get('[data-testid=thread-state-label-0]').text()).toBe('Review');
     });
 
     test('Should not display "idle" user story', async () => {

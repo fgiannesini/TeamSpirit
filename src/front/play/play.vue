@@ -281,10 +281,11 @@ const THREAD_STATE_CLASSES: Record<ThreadState, { state: string; container: stri
   Wait: { state: '', container: '' },
 };
 
-const THREAD_STATE_CHIP_COLOR: Record<ThreadState, string> = {
-  Develop: 'primary',
-  Review: 'secondary',
-  Wait: 'tertiary',
+const THREAD_STATE_BADGE_VARIANT: Record<ThreadState | 'Off', string> = {
+  Develop: 'thread-state-badge--develop',
+  Review: 'thread-state-badge--review',
+  Wait: 'thread-state-badge--wait',
+  Off: 'thread-state-badge--off',
 };
 
 const THREAD_STATE_ICON: Record<ThreadState | 'Off', string> = {
@@ -537,18 +538,21 @@ updateThreadPresence(1);
             >
               {{ thread.name }}
             </span>
-            <i aria-hidden="true" :data-testid="`thread-state-icon-${thread.id}`">{{
-              THREAD_STATE_ICON[threadStateLabel(thread)]
-            }}</i>
             <span
               :id="`thread-state-${thread.id}`"
               :data-testid="`thread-state-${thread.id}`"
-              :class="['chip', 'small', 'fill', THREAD_STATE_CHIP_COLOR[thread.state]]"
+              :class="['thread-state-badge', THREAD_STATE_BADGE_VARIANT[threadStateLabel(thread)]]"
               :title="THREAD_STATE_TOOLTIP[threadStateLabel(thread)]"
               role="status"
               aria-live="polite"
-              >{{ threadStateLabel(thread) }}</span
             >
+              <i aria-hidden="true" :data-testid="`thread-state-icon-${thread.id}`">{{
+                THREAD_STATE_ICON[threadStateLabel(thread)]
+              }}</i>
+              <span :data-testid="`thread-state-label-${thread.id}`">{{
+                threadStateLabel(thread)
+              }}</span>
+            </span>
           </div>
           <div
             :id="`thread-user-story-${thread.id}`"
@@ -621,8 +625,7 @@ updateThreadPresence(1);
                 thread.presence !== 'off'
               "
               :data-testid="`thread-idle-${thread.id}`"
-              class="small-text italic center-align"
-              style="opacity: 0.6"
+              class="small-text italic center-align thread-idle-hint"
             >
               No story assigned
             </p>
@@ -734,6 +737,40 @@ nav progress {
   user-select: none;
 }
 
+.thread-state-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0 0.625rem;
+  block-size: 1.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 0.75rem;
+  user-select: none;
+  background-color: var(--surface-container-highest);
+  color: var(--on-surface-variant);
+
+  > i {
+    font-size: 0.875rem;
+  }
+
+  &.thread-state-badge--develop {
+    background-color: var(--primary-container);
+    color: var(--on-primary-container);
+  }
+
+  &.thread-state-badge--review {
+    background-color: var(--secondary-container);
+    color: var(--on-secondary-container);
+  }
+
+  &.thread-state-badge--wait,
+  &.thread-state-badge--off {
+    background-color: var(--surface-container-highest);
+    color: var(--on-surface-variant);
+  }
+}
+
 .column-stories {
   display: flex;
   flex-direction: column;
@@ -779,10 +816,24 @@ nav progress {
 }
 
 .thread-stories {
+  --story-card-height: 2.5rem;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   gap: 0.25rem;
-  min-height: 2.5rem;
+  min-height: calc(2 * var(--story-card-height) + 0.25rem);
+
+  > p {
+    margin: 0;
+  }
+
+  &:has(> p[data-testid^='thread-idle-']) {
+    justify-content: center;
+  }
+}
+
+.thread-idle-hint {
+  opacity: 0.6;
 }
 
 @keyframes priority-flash {
