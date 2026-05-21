@@ -322,7 +322,7 @@ describe('Play', () => {
       expect(wrapper.get('[data-testid=thread-state-0]').classes()).toContain('secondary');
     });
 
-    test('Should have neither primary nor secondary class when state is Wait', () => {
+    test('Should have tertiary class when state is Wait', () => {
       const wrapper = createWrapper({
         simulationOutputs: [
           {
@@ -334,8 +334,7 @@ describe('Play', () => {
         ],
       });
 
-      expect(wrapper.get('[data-testid=thread-state-0]').classes()).not.toContain('primary');
-      expect(wrapper.get('[data-testid=thread-state-0]').classes()).not.toContain('secondary');
+      expect(wrapper.get('[data-testid=thread-state-0]').classes()).toContain('tertiary');
     });
   });
 
@@ -368,6 +367,89 @@ describe('Play', () => {
       });
 
       expect(wrapper.get('[data-testid=thread-state-0]').text()).toBe('Off');
+    });
+  });
+
+  describe('Thread state icon', () => {
+    test('Should display pause icon in Wait state', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [createThread0()],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=thread-state-icon-0]').text()).toBe('pause');
+    });
+
+    test('Should display code icon in Develop state', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [inProgressEvent(), doneEvent()],
+            statEvents: [],
+            structureEvents: [createThread0(), createUserStory({ id: 0 })],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute]').trigger('click');
+      await vi.runAllTimersAsync();
+
+      expect(wrapper.get('[data-testid=thread-state-icon-0]').text()).toBe('code');
+    });
+
+    test('Should display rate_review icon in Review state', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [reviewEvent(), doneEvent()],
+            statEvents: [],
+            structureEvents: [createThread0(), createUserStory({ id: 0 })],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute]').trigger('click');
+      await vi.runAllTimersAsync();
+
+      expect(wrapper.get('[data-testid=thread-state-icon-0]').text()).toBe('rate_review');
+    });
+
+    test('Should display power_settings_new icon in Off state', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [createThread0(), setThreadOff({ id: 0, time: 1 })],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=thread-state-icon-0]').text()).toBe('power_settings_new');
+    });
+
+    test('Should have role="status" on thread state badge', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [createThread0()],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=thread-state-0]').attributes('role')).toBe('status');
     });
   });
 

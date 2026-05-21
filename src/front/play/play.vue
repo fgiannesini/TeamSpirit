@@ -284,7 +284,14 @@ const THREAD_STATE_CLASSES: Record<ThreadState, { state: string; container: stri
 const THREAD_STATE_CHIP_COLOR: Record<ThreadState, string> = {
   Develop: 'primary',
   Review: 'secondary',
-  Wait: '',
+  Wait: 'tertiary',
+};
+
+const THREAD_STATE_ICON: Record<ThreadState | 'Off', string> = {
+  Wait: 'pause',
+  Develop: 'code',
+  Review: 'rate_review',
+  Off: 'power_settings_new',
 };
 
 const threadStateLabel = (thread: ThreadVue): ThreadState | 'Off' =>
@@ -530,11 +537,16 @@ updateThreadPresence(1);
             >
               {{ thread.name }}
             </span>
+            <i aria-hidden="true" :data-testid="`thread-state-icon-${thread.id}`">{{
+              THREAD_STATE_ICON[threadStateLabel(thread)]
+            }}</i>
             <span
               :id="`thread-state-${thread.id}`"
               :data-testid="`thread-state-${thread.id}`"
-              :class="['chip', 'small', THREAD_STATE_CHIP_COLOR[thread.state]]"
+              :class="['chip', 'small', 'fill', THREAD_STATE_CHIP_COLOR[thread.state]]"
               :title="THREAD_STATE_TOOLTIP[threadStateLabel(thread)]"
+              role="status"
+              aria-live="polite"
               >{{ threadStateLabel(thread) }}</span
             >
           </div>
