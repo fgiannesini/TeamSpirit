@@ -453,7 +453,7 @@ updateThreadPresence(1);
         <nav class="surface-container-high small-padding">
           <i aria-hidden="true">inbox</i>
           <h6 class="max">Backlog</h6>
-          <span class="chip" data-testid="backlog-count"
+          <span class="column-count" data-testid="backlog-count" aria-label="Backlog story count"
             >{{ backlogStories.length }} {{ backlogStories.length > 1 ? 'stories' : 'story' }}</span
           >
         </nav>
@@ -504,7 +504,9 @@ updateThreadPresence(1);
         <nav class="surface-container-high small-padding">
           <i aria-hidden="true">groups</i>
           <h6 class="max">Threads</h6>
-          <span class="chip" data-testid="threads-count">{{ threads.length }} threads</span>
+          <span class="column-count" data-testid="threads-count" aria-label="Threads count"
+            >{{ threads.length }} threads</span
+          >
         </nav>
         <div
           v-for="thread in threads"
@@ -610,7 +612,7 @@ updateThreadPresence(1);
         <nav class="surface-container-high small-padding">
           <i aria-hidden="true">task_alt</i>
           <h6 class="max">Done</h6>
-          <span class="chip" data-testid="done-count"
+          <span class="column-count" data-testid="done-count" aria-label="Done story count"
             >{{ doneStories.length }} {{ doneStories.length > 1 ? 'stories' : 'story' }}</span
           >
         </nav>
@@ -690,8 +692,22 @@ nav progress {
   article > nav {
     border-bottom: 1px solid var(--outline-variant);
     margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
     border-radius: 0.5rem 0.5rem 0 0;
   }
+}
+
+.column-count {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.625rem;
+  block-size: 1.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--on-surface-variant);
+  background-color: var(--surface-container-highest);
+  border-radius: 0.75rem;
+  user-select: none;
 }
 
 .column-stories {
