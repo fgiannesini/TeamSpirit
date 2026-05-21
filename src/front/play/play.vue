@@ -690,6 +690,7 @@ nav progress {
   article > nav {
     border-bottom: 1px solid var(--outline-variant);
     margin-bottom: 0.75rem;
+    border-radius: 0.5rem 0.5rem 0 0;
   }
 }
 
