@@ -614,6 +614,18 @@ updateThreadPresence(1);
                 <span>{{ story.priority }}</span>
               </span>
             </div>
+            <p
+              v-if="
+                thread.inProgressStories.length === 0 &&
+                thread.reviewStories.length === 0 &&
+                thread.presence !== 'off'
+              "
+              :data-testid="`thread-idle-${thread.id}`"
+              class="small-text italic center-align"
+              style="opacity: 0.6"
+            >
+              No story assigned
+            </p>
           </div>
         </div>
       </article>
@@ -770,7 +782,7 @@ nav progress {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  min-height: 1.5rem;
+  min-height: 2.5rem;
 }
 
 @keyframes priority-flash {

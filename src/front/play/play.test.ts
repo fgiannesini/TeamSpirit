@@ -2151,4 +2151,72 @@ describe('Play', () => {
       expect(mockPush).toHaveBeenCalledWith('/simulate');
     });
   });
+
+  describe('Thread idle hint', () => {
+    test('Should show "No story assigned" hint when thread is Wait and no stories', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [createThread0()],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.find('[data-testid=thread-idle-0]').exists()).toBe(true);
+    });
+
+    test('Should hide hint when thread has in-progress story', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [inProgressEvent(), doneEvent({ time: 2 })],
+            statEvents: [],
+            structureEvents: [createThread0(), createUserStory({ id: 0 })],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute]').trigger('click');
+      await vi.advanceTimersToNextTimerAsync();
+
+      expect(wrapper.find('[data-testid=thread-idle-0]').exists()).toBe(false);
+    });
+
+    test('Should hide hint when thread has review story', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [reviewEvent(), doneEvent({ time: 2 })],
+            statEvents: [],
+            structureEvents: [createThread0(), createUserStory({ id: 0 })],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute]').trigger('click');
+      await vi.advanceTimersToNextTimerAsync();
+
+      expect(wrapper.find('[data-testid=thread-idle-0]').exists()).toBe(false);
+    });
+
+    test('Should hide hint when thread is Off', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [createThread0(), setThreadOff({ id: 0, time: 1 })],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.find('[data-testid=thread-idle-0]').exists()).toBe(false);
+    });
+  });
 });
