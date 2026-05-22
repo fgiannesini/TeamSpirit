@@ -2175,6 +2175,108 @@ describe('Play', () => {
     });
   });
 
+  describe('Thread header structure', () => {
+    test('Should wrap thread name and state in a header element', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [createThread0()],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      const thread = wrapper.get('[data-testid=thread0]');
+      expect(thread.find('.thread-header').exists()).toBe(true);
+      expect(thread.find('.thread-header [data-testid=thread-title-0]').exists()).toBe(true);
+      expect(thread.find('.thread-header [data-testid=thread-state-0]').exists()).toBe(true);
+    });
+  });
+
+  describe('Priority chip color', () => {
+    test('Should apply primary class to priority 5+', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [
+              createUserStory({ id: 0 }),
+              createChangePriority({ id: 0, value: 5 }),
+            ],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=priority-0]').classes()).toContain(
+        'priority-badge--primary',
+      );
+    });
+
+    test('Should apply secondary class to priority 2 (lower bound)', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [
+              createUserStory({ id: 0 }),
+              createChangePriority({ id: 0, value: 2 }),
+            ],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=priority-0]').classes()).toContain(
+        'priority-badge--secondary',
+      );
+    });
+
+    test('Should apply secondary class to priority 4 (upper bound)', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [
+              createUserStory({ id: 0 }),
+              createChangePriority({ id: 0, value: 4 }),
+            ],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=priority-0]').classes()).toContain(
+        'priority-badge--secondary',
+      );
+    });
+
+    test('Should apply tertiary class to priority 1', () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [],
+            statEvents: [],
+            structureEvents: [
+              createUserStory({ id: 0 }),
+              createChangePriority({ id: 0, value: 1 }),
+            ],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      expect(wrapper.get('[data-testid=priority-0]').classes()).toContain(
+        'priority-badge--tertiary',
+      );
+    });
+  });
+
   describe('Thread idle hint', () => {
     test('Should show "No story assigned" hint when thread is Wait and no stories', () => {
       const wrapper = createWrapper({

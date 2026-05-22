@@ -170,6 +170,55 @@ Page `src/front/play/play.vue` — kanban 3 colonnes (Backlog / Threads / Done).
   - `Should wrap thread name and state in a header element` (vérifier classe `thread-header` ou structure).
 - **Préserver** : testid `thread-title-{id}`, `thread-state-{id}`.
 
+#### 5.a [ ] Intégrer le header dans la carte thread (anti « boîte flottante ») — `play.vue`
+
+- **Problème** : le `small-padding` (0.5rem) de `.thread` ajoute 0.5rem tout autour de `.thread-header`. Le header n'atteint jamais le bord interne de la carte → effet « bloc posé à l'intérieur » au lieu d'un bandeau intégré. De plus le séparateur `border-bottom: color-mix(... currentColor 35% ...)` dépend de `currentColor` → peu lisible sur `primary-container`/`secondary-container` (texte clair) et faible contraste sur fond neutre Wait.
+- **Cause racine** :
+  1. Padding global du parent (`small-padding`) qui ne peut pas être annulé sans marge négative (rejetée par l'utilisateur).
+  2. Couleur de séparateur non maîtrisée (`currentColor` au lieu d'une couleur de surface/accent opaque).
+  3. `border-radius: 2rem` du parent → un header bord-à-bord déborderait des coins sans `overflow:hidden` (à éviter, cf. note FLIP).
+- **Contraintes** : pas de marge négative ; pas de nouveau composant ; pas d'`overflow:hidden` (l'animation FLIP pose `position:relative` + transforms sur les `.story-card`, une carte en translation peut sortir temporairement de la carte → risque de clip) ; séparateur droit (« sans arrondi ») et visible sur tous les fonds ; contenu en léger retrait des coins arrondis.
+- **Décision technique** :
+  - **Marges négatives** : rejetées par l'utilisateur.
+  - **`overflow:hidden` sur `.thread`** : rejeté (risque de clip FLIP).
+  - **`<hr>` / `<div class="divider">`** : ajoute du markup et le `divider` BeerCSS hérite des mêmes couleurs de surface peu contrastées → n'apporte rien vs `border-bottom`. Rejeté.
+  - **Solution retenue** : retirer `small-padding` de `.thread`, redistribuer le padding (header + zone stories gèrent chacun le leur), séparateur à couleur opaque déclinée par état.
+- **Changement HTML** : retirer `'small-padding'` de la liste de classes de `.thread` (lignes ~529-537). Structure interne (`.thread-header > .row > span + badge`, `.thread-stories`) **inchangée** → tests structurels conservés.
+  ```text
+  :class="[
+    'thread',
+    'border',
+    'round',
+    thread.presence,
+    THREAD_STATE_CLASSES[thread.state].state,
+    THREAD_STATE_CLASSES[thread.state].container,
+  ]"
+  ```
+- **Changement CSS scoped** :
+  - `.thread { padding: 0; }` (le `.round` reste, pas d'`overflow`).
+  - `.thread-header` : séparateur neutre par défaut + retrait latéral léger (contenu pas collé aux coins) :
+    ```css
+    .thread-header {
+      border-bottom: 1px solid var(--outline-variant);
+      padding: 0.5rem 0.75rem;
+      margin: 0;
+    }
+    .thread--develop > .thread-header {
+      border-bottom-color: var(--primary);
+    }
+    .thread--review > .thread-header {
+      border-bottom-color: var(--secondary);
+    }
+    ```
+  - `.thread-stories` : récupérer le padding porté auparavant par `small-padding` : ajouter `padding: 0.5rem 0.75rem;`.
+- **Couleur séparateur (visible sur tous fonds)** : remplacer `currentColor` par des variables opaques, cohérentes avec la bordure d'accent de la carte :
+  - Wait/Off (fond neutre) → `var(--outline-variant)` (déjà utilisé par `article > nav`, cohérence).
+  - Develop (`primary-container`) → `var(--primary)` (= `.thread--develop` border).
+  - Review (`secondary-container`) → `var(--secondary)` (= `.thread--review` border).
+  - Le `border-bottom` reste un trait horizontal rectiligne (pas affecté par le `border-radius: 2rem` du parent) → exigence « sans arrondi » satisfaite.
+- **Tests** : changement purement CSS/layout (swap de classes + règles de style, aucune logique). Selon mémoire projet « No tests for layout changes » → **aucun nouveau test ni modif**. Tests structurels existants (`play.test.ts` ~2192-2194 : `.thread-header` existe + contient `thread-title-{id}` et `thread-state-{id}`) restent verts car la structure DOM est inchangée.
+- **Vérification visuelle (`npm start`)** : header intégré sur les 4 états (Wait, Develop, Review, Off), séparateur visible sur chaque fond, contenu en retrait, trait droit. Si le header déborde des coins arrondis (peu probable car le header n'a pas de background propre, seul le `border-bottom` est visible) ou si le trait paraît trop court → variante : `.thread-header { padding-inline: 0; }` + reporter le retrait latéral sur le `.row` enfant (`padding-inline: 0.75rem;`) pour un trait plus large avec contenu toujours en retrait.
+
 - **Changement** : chip priorité prend classe couleur BeerCSS selon valeur :
   - `priority >= 5` → `primary` (haute)
   - `priority >= 2 && < 5` → `secondary` (moyenne)

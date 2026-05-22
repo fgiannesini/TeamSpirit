@@ -298,6 +298,12 @@ const THREAD_STATE_ICON: Record<ThreadState | 'Off', string> = {
 const threadStateLabel = (thread: ThreadVue): ThreadState | 'Off' =>
   thread.presence === 'off' ? 'Off' : thread.state;
 
+const priorityChipClass = (priority: number): string => {
+  if (priority >= 5) return 'priority-badge--primary';
+  if (priority >= 2) return 'priority-badge--secondary';
+  return 'priority-badge--tertiary';
+};
+
 const THREAD_STATE_TOOLTIP: Record<ThreadState | 'Off', string> = {
   Wait: 'Waiting for work',
   Develop: 'Developing a user story',
@@ -495,7 +501,7 @@ updateThreadPresence(1);
             }}</span>
             <span
               v-if="story.priority !== null"
-              class="chip small"
+              :class="['priority-badge', priorityChipClass(story.priority)]"
               :data-testid="`priority-${story.id}`"
               :aria-label="`Priority ${story.priority}`"
             >
@@ -524,35 +530,39 @@ updateThreadPresence(1);
             'thread',
             'border',
             'round',
-            'small-padding',
             thread.presence,
             THREAD_STATE_CLASSES[thread.state].state,
             THREAD_STATE_CLASSES[thread.state].container,
           ]"
         >
-          <div class="row middle-align">
-            <span
-              :id="`thread-title-${thread.id}`"
-              :data-testid="`thread-title-${thread.id}`"
-              class="max"
-            >
-              {{ thread.name }}
-            </span>
-            <span
-              :id="`thread-state-${thread.id}`"
-              :data-testid="`thread-state-${thread.id}`"
-              :class="['thread-state-badge', THREAD_STATE_BADGE_VARIANT[threadStateLabel(thread)]]"
-              :title="THREAD_STATE_TOOLTIP[threadStateLabel(thread)]"
-              role="status"
-              aria-live="polite"
-            >
-              <i aria-hidden="true" :data-testid="`thread-state-icon-${thread.id}`">{{
-                THREAD_STATE_ICON[threadStateLabel(thread)]
-              }}</i>
-              <span :data-testid="`thread-state-label-${thread.id}`">{{
-                threadStateLabel(thread)
-              }}</span>
-            </span>
+          <div class="thread-header">
+            <div class="row middle-align">
+              <span
+                :id="`thread-title-${thread.id}`"
+                :data-testid="`thread-title-${thread.id}`"
+                class="max"
+              >
+                {{ thread.name }}
+              </span>
+              <span
+                :id="`thread-state-${thread.id}`"
+                :data-testid="`thread-state-${thread.id}`"
+                :class="[
+                  'thread-state-badge',
+                  THREAD_STATE_BADGE_VARIANT[threadStateLabel(thread)],
+                ]"
+                :title="THREAD_STATE_TOOLTIP[threadStateLabel(thread)]"
+                role="status"
+                aria-live="polite"
+              >
+                <i aria-hidden="true" :data-testid="`thread-state-icon-${thread.id}`">{{
+                  THREAD_STATE_ICON[threadStateLabel(thread)]
+                }}</i>
+                <span :data-testid="`thread-state-label-${thread.id}`">{{
+                  threadStateLabel(thread)
+                }}</span>
+              </span>
+            </div>
           </div>
           <div
             :id="`thread-user-story-${thread.id}`"
@@ -580,7 +590,7 @@ updateThreadPresence(1);
               }}</span>
               <span
                 v-if="story.priority !== null"
-                class="chip small"
+                :class="['priority-badge', priorityChipClass(story.priority)]"
                 :data-testid="`priority-${story.id}`"
                 :aria-label="`Priority ${story.priority}`"
               >
@@ -610,7 +620,7 @@ updateThreadPresence(1);
               }}</span>
               <span
                 v-if="story.priority !== null"
-                class="chip small"
+                :class="['priority-badge', priorityChipClass(story.priority)]"
                 :data-testid="`priority-${story.id}`"
                 :aria-label="`Priority ${story.priority}`"
               >
@@ -671,7 +681,7 @@ updateThreadPresence(1);
             }}</span>
             <span
               v-if="story.priority !== null"
-              class="chip small"
+              :class="['priority-badge', priorityChipClass(story.priority)]"
               :data-testid="`priority-${story.id}`"
               :aria-label="`Priority ${story.priority}`"
             >
@@ -771,6 +781,39 @@ nav progress {
   }
 }
 
+.priority-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0 0.5rem;
+  block-size: 1.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 0.75rem;
+  user-select: none;
+  background-color: var(--surface-container-highest);
+  color: var(--on-surface-variant);
+
+  > i {
+    font-size: 0.875rem;
+  }
+
+  &.priority-badge--primary {
+    background-color: var(--primary-container);
+    color: var(--on-primary-container);
+  }
+
+  &.priority-badge--secondary {
+    background-color: var(--secondary-container);
+    color: var(--on-secondary-container);
+  }
+
+  &.priority-badge--tertiary {
+    background-color: var(--tertiary-container);
+    color: var(--on-tertiary-container);
+  }
+}
+
 .column-stories {
   display: flex;
   flex-direction: column;
@@ -815,6 +858,19 @@ nav progress {
   }
 }
 
+.thread-header {
+  border-bottom: 1px solid var(--outline-variant);
+  padding: 0.5rem 0.75rem;
+
+  .thread--develop & {
+    border-bottom-color: var(--primary);
+  }
+
+  .thread--review & {
+    border-bottom-color: var(--secondary);
+  }
+}
+
 .thread-stories {
   --story-card-height: 2.5rem;
   display: flex;
@@ -822,6 +878,7 @@ nav progress {
   justify-content: flex-start;
   gap: 0.25rem;
   min-height: calc(2 * var(--story-card-height) + 0.25rem);
+  padding: 0.5rem;
 
   > p {
     margin: 0;
