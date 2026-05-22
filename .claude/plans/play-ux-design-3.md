@@ -226,6 +226,15 @@ Page `src/front/play/play.vue` — kanban 3 colonnes (Backlog / Threads / Done).
 - Alternative : conserver primary container, mais ajouter classe `tertiary-text` BeerCSS sur l'icône (vérifier existence).
 - **Tests à ajouter** : aucun (cosmétique, mais on peut tester présence classe couleur sur icône).
 
+### 11. [ ] Story card : icône d'état — `play.vue`
+
+- **Idée** : similaire à l'icône `check_circle` sur les cards Done, ajouter une icône visuelle sur les cards in-progress et review pour renforcer la lecture de l'état.
+- **Proposition** :
+  - In-progress (thread) : icône `code` (petit, `class="small"`) à gauche du nom
+  - Review (thread) : icône `rate_review` à gauche du nom
+- **Préserver** : `data-testid=story-name`, `data-flip-id`, classes existantes.
+- **Tests à ajouter** : vérifier présence icône sur card in-progress et review.
+
 ## Ordre d'implémentation
 
 Tâches **indépendantes** (peuvent être faites dans n'importe quel ordre) :
