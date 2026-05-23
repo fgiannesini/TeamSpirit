@@ -409,10 +409,10 @@ updateThreadPresence(1);
       >
         <i aria-hidden="true">arrow_back</i>
       </button>
+      <progress :value="currentTime" :max="maxTime" data-testid="progress"></progress>
     </div>
     <div class="row middle-align max no-padding">
       <i aria-hidden="true">timer</i>
-      <progress :value="currentTime" :max="maxTime" data-testid="progress"></progress>
       <div
         data-testid="stats"
         class="row middle-align"

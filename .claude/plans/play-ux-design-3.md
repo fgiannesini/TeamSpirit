@@ -253,7 +253,7 @@ Page `src/front/play/play.vue` — kanban 3 colonnes (Backlog / Threads / Done).
   - `Should display story id "#0" inline in done card`
 - **Préserver** : `data-testid=story-name`, `title` attribut (tests `Story id surface` toujours OK).
 
-### 8. [ ] Top nav : groupement logique (back | stats | actions) — `play.vue`
+### 8. [x] Top nav : groupement logique (back | stats | actions) — `play.vue`
 
 - **Changement** : structurer le `<nav class="top">` en 3 groupes séparés par `<div class="max">` :
   - Groupe gauche : back button + progress bar.
