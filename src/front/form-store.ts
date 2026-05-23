@@ -38,10 +38,12 @@ export type State = {
   teamMode: SelectorMode;
   teamModificatorMode: SelectorMode;
   priorityModificatorMode: SelectorMode;
+  bugGeneratorMode: SelectorMode;
   userStoriesMode: SelectorMode;
   developers: Developer[];
   teamModificators: TeamModification[];
   priorityModificators: PriorityModification[];
+  bugGenerations: BugGeneration[];
   reviewers: number;
   userStories: UserStory[];
   simulationOutputs: SimulationOutputs[];
@@ -123,10 +125,12 @@ export const useFormStore = defineStore('form', {
     teamMode: 'notSet',
     teamModificatorMode: 'notSet',
     priorityModificatorMode: 'notSet',
+    bugGeneratorMode: 'notSet',
     userStoriesMode: 'notSet',
     developers: [],
     teamModificators: [],
     priorityModificators: [],
+    bugGenerations: [],
     reviewers: 0,
     userStories: [],
     simulationOutputs: [],
@@ -164,6 +168,21 @@ export const useFormStore = defineStore('form', {
     },
     removePriorityModification(targetId: number): void {
       this.priorityModificators = this.priorityModificators.filter(({ id }) => id !== targetId);
+    },
+    generateBugGeneration(): void {
+      this.bugGenerations = [
+        ...this.bugGenerations,
+        {
+          id: nextId(this.bugGenerations),
+          date: new Date(),
+          complexity: 3,
+          reviewComplexity: 2,
+          priority: 1,
+        },
+      ];
+    },
+    removeBugGeneration(targetId: number): void {
+      this.bugGenerations = this.bugGenerations.filter(({ id }) => id !== targetId);
     },
     generateUserStory(): void {
       this.userStories = [

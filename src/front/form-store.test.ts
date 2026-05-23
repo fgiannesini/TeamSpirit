@@ -28,6 +28,7 @@ import {
   useFormStore,
 } from './form-store.ts';
 import {
+  bugGeneration,
   developer,
   priorityModification,
   teamModification,
@@ -282,6 +283,51 @@ describe('Form store', () => {
       store.generatePriorityModification();
       expect(store.$state).toMatchObject<Partial<State>>({
         priorityModificators: [priorityModification({ id: 3 }), priorityModification({ id: 4 })],
+      });
+    });
+  });
+
+  describe('Bug Generations', () => {
+    test('should generate a bug generation', () => {
+      const store = useFormStore();
+      store.generateBugGeneration();
+      expect(store.$state).toMatchObject<Partial<State>>({
+        bugGenerations: [bugGeneration({ id: 0 })],
+      });
+    });
+
+    test('should generate two bug generations with ids 0 and 1', () => {
+      const store = useFormStore();
+      store.generateBugGeneration();
+      store.generateBugGeneration();
+      expect(store.$state).toMatchObject<Partial<State>>({
+        bugGenerations: [bugGeneration({ id: 0 }), bugGeneration({ id: 1 })],
+      });
+    });
+
+    test('should remove the targeted bug generation', () => {
+      const store = useFormStore();
+      store.$patch({
+        bugGenerations: [
+          bugGeneration({ id: 0 }),
+          bugGeneration({ id: 1 }),
+          bugGeneration({ id: 2 }),
+        ],
+      });
+      store.removeBugGeneration(1);
+      expect(store.$state).toMatchObject<Partial<State>>({
+        bugGenerations: [bugGeneration({ id: 0 }), bugGeneration({ id: 2 })],
+      });
+    });
+
+    test('should add a bug generation after the last one', () => {
+      const store = useFormStore();
+      store.$patch({
+        bugGenerations: [bugGeneration({ id: 3 })],
+      });
+      store.generateBugGeneration();
+      expect(store.$state).toMatchObject<Partial<State>>({
+        bugGenerations: [bugGeneration({ id: 3 }), bugGeneration({ id: 4 })],
       });
     });
   });
