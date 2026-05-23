@@ -263,7 +263,7 @@ Page `src/front/play/play.vue` — kanban 3 colonnes (Backlog / Threads / Done).
 - **Tests à ajouter** : non strictement nécessaire (visuel uniquement), mais ajouter `Should render top nav groups` qui vérifie présence des éléments groupés.
 - **Préserver** : tous les `data-testid` et `aria-label` existants.
 
-### 9. [ ] Card story : taper l'écart vertical entre cards — `play.vue` (style scoped)
+### 9. [x] Card story : taper l'écart vertical entre cards — `play.vue` (style scoped)
 
 - **Changement** : `column-stories { gap: 0.5rem }` → `gap: 0.375rem`. `thread-stories { gap: 0.25rem }` → conserver. Réduit espace vertical de 25% sans toucher au padding interne.
 - **Vérification** : visuel uniquement.
