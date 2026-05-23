@@ -585,6 +585,7 @@ updateThreadPresence(1);
                 { 'priority-flash': flashingStoryIds.has(story.id) },
               ]"
             >
+              <i class="small" aria-hidden="true" data-testid="story-state-icon">code</i>
               <span class="max" data-testid="story-name" :title="`#${story.id}`">{{
                 story.name
               }}</span>
@@ -615,6 +616,7 @@ updateThreadPresence(1);
                 { 'priority-flash': flashingStoryIds.has(story.id) },
               ]"
             >
+              <i class="small" aria-hidden="true" data-testid="story-state-icon">rate_review</i>
               <span class="max" data-testid="story-name" :title="`#${story.id}`">{{
                 story.name
               }}</span>

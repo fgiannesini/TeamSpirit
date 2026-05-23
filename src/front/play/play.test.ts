@@ -1206,6 +1206,44 @@ describe('Play', () => {
     });
   });
 
+  describe('Story card state icon', () => {
+    test('Should display code icon on in-progress story card', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [inProgressEvent()],
+            statEvents: [],
+            structureEvents: [createThread0(), createUserStory({ id: 0 })],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute]').trigger('click');
+
+      const storyCard = wrapper.get('[data-testid=user-story-0-0]');
+      expect(storyCard.get('[data-testid=story-state-icon]').text()).toBe('code');
+    });
+
+    test('Should display rate_review icon on review story card', async () => {
+      const wrapper = createWrapper({
+        simulationOutputs: [
+          {
+            timeEvents: [reviewEvent()],
+            statEvents: [],
+            structureEvents: [createThread0(), createUserStory({ id: 0 })],
+            teamType: 'Parallel',
+          },
+        ],
+      });
+
+      await wrapper.get('[data-testid=compute]').trigger('click');
+
+      const storyCard = wrapper.get('[data-testid=user-story-0-0]');
+      expect(storyCard.get('[data-testid=story-state-icon]').text()).toBe('rate_review');
+    });
+  });
+
   describe('Priority chip', () => {
     test('Should have aria-label "Priority 1" when priority is 1', () => {
       const wrapper = createWrapper({
