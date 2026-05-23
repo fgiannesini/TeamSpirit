@@ -834,7 +834,7 @@ nav progress {
     border-color: var(--primary);
 
     i {
-      color: var(--primary);
+      color: var(--tertiary);
     }
   }
 }

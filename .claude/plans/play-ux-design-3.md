@@ -269,7 +269,7 @@ Page `src/front/play/play.vue` — kanban 3 colonnes (Backlog / Threads / Done).
 - **Vérification** : visuel uniquement.
 - **Tests à ajouter** : aucun (style scoped).
 
-### 10. [ ] Done card : check icon vert tertiary au lieu de primary — `play.vue`
+### 10. [x] Done card : check icon vert tertiary au lieu de primary — `play.vue`
 
 - **Changement** : sur la card done (`.story-card--done i`), `color: var(--tertiary)` au lieu de `var(--primary)`. Préfère réutiliser `primary-container` mais avec accent tertiary sur l'icône pour différencier de Develop (qui est primary).
 - Alternative : conserver primary container, mais ajouter classe `tertiary-text` BeerCSS sur l'icône (vérifier existence).
