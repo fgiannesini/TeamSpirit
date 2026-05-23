@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router';
 import type { TimeEvent } from '../../simulate/events.ts';
 import type { StructureEvent } from '../../simulate/simulation-structure.ts';
 import { useFormStore } from '../form-store.ts';
+import PriorityBadge from './priority-badge.vue';
 
 const props = defineProps<{ id: number }>();
 const data = useFormStore().simulationOutputs[props.id];
@@ -298,12 +299,6 @@ const THREAD_STATE_ICON: Record<ThreadState | 'Off', string> = {
 const threadStateLabel = (thread: ThreadVue): ThreadState | 'Off' =>
   thread.presence === 'off' ? 'Off' : thread.state;
 
-const priorityChipClass = (priority: number): string => {
-  if (priority >= 5) return 'priority-badge--primary';
-  if (priority >= 2) return 'priority-badge--secondary';
-  return 'priority-badge--tertiary';
-};
-
 const THREAD_STATE_TOOLTIP: Record<ThreadState | 'Off', string> = {
   Wait: 'Waiting for work',
   Develop: 'Developing a user story',
@@ -499,15 +494,11 @@ updateThreadPresence(1);
             <span class="max" data-testid="story-name" :title="`#${story.id}`">{{
               story.name
             }}</span>
-            <span
+            <priority-badge
               v-if="story.priority !== null"
-              :class="['priority-badge', priorityChipClass(story.priority)]"
-              :data-testid="`priority-${story.id}`"
-              :aria-label="`Priority ${story.priority}`"
-            >
-              <i aria-hidden="true">flag</i>
-              <span>{{ story.priority }}</span>
-            </span>
+              :priority="story.priority"
+              :story-id="story.id"
+            />
           </div>
         </div>
       </article>
@@ -589,15 +580,11 @@ updateThreadPresence(1);
               <span class="max" data-testid="story-name" :title="`#${story.id}`">{{
                 story.name
               }}</span>
-              <span
+              <priority-badge
                 v-if="story.priority !== null"
-                :class="['priority-badge', priorityChipClass(story.priority)]"
-                :data-testid="`priority-${story.id}`"
-                :aria-label="`Priority ${story.priority}`"
-              >
-                <i aria-hidden="true">flag</i>
-                <span>{{ story.priority }}</span>
-              </span>
+                :priority="story.priority"
+                :story-id="story.id"
+              />
             </div>
             <div
               v-for="story in thread.reviewStories"
@@ -620,15 +607,11 @@ updateThreadPresence(1);
               <span class="max" data-testid="story-name" :title="`#${story.id}`">{{
                 story.name
               }}</span>
-              <span
+              <priority-badge
                 v-if="story.priority !== null"
-                :class="['priority-badge', priorityChipClass(story.priority)]"
-                :data-testid="`priority-${story.id}`"
-                :aria-label="`Priority ${story.priority}`"
-              >
-                <i aria-hidden="true">flag</i>
-                <span>{{ story.priority }}</span>
-              </span>
+                :priority="story.priority"
+                :story-id="story.id"
+              />
             </div>
             <p
               v-if="
@@ -681,15 +664,11 @@ updateThreadPresence(1);
             <span class="max" data-testid="story-name" :title="`#${story.id}`">{{
               story.name
             }}</span>
-            <span
+            <priority-badge
               v-if="story.priority !== null"
-              :class="['priority-badge', priorityChipClass(story.priority)]"
-              :data-testid="`priority-${story.id}`"
-              :aria-label="`Priority ${story.priority}`"
-            >
-              <i aria-hidden="true">flag</i>
-              <span>{{ story.priority }}</span>
-            </span>
+              :priority="story.priority"
+              :story-id="story.id"
+            />
           </div>
         </div>
       </article>
@@ -780,39 +759,6 @@ nav progress {
   &.thread-state-badge--off {
     background-color: var(--surface-container-highest);
     color: var(--on-surface-variant);
-  }
-}
-
-.priority-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0 0.5rem;
-  block-size: 1.5rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  border-radius: 0.75rem;
-  user-select: none;
-  background-color: var(--surface-container-highest);
-  color: var(--on-surface-variant);
-
-  > i {
-    font-size: 0.875rem;
-  }
-
-  &.priority-badge--primary {
-    background-color: var(--primary-container);
-    color: var(--on-primary-container);
-  }
-
-  &.priority-badge--secondary {
-    background-color: var(--secondary-container);
-    color: var(--on-secondary-container);
-  }
-
-  &.priority-badge--tertiary {
-    background-color: var(--tertiary-container);
-    color: var(--on-tertiary-container);
   }
 }
 

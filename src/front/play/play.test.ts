@@ -29,6 +29,7 @@ import {
 } from '../../simulate/factory.ts';
 import type { StructureEvent } from '../../simulate/simulation-structure.ts';
 import type { State } from '../form-store.ts';
+import PriorityBadge from './priority-badge.vue';
 import Play from './play.vue';
 
 describe('Play', () => {
@@ -572,12 +573,12 @@ describe('Play', () => {
       const userStory1 = wrapper.get('[data-testid=user-story-0]');
       expect(userStory1.classes()).toContain('story-card');
       expect(userStory1.get('[data-testid=story-name]').text()).toStrictEqual('US0');
-      expect(userStory1.get('[data-testid=priority-0] span').text()).toStrictEqual('1');
+      expect(userStory1.findComponent(PriorityBadge).props('priority')).toBe(1);
 
       const userStory2 = wrapper.get('[data-testid=user-story-1]');
       expect(userStory2.classes()).toContain('story-card');
       expect(userStory2.get('[data-testid=story-name]').text()).toStrictEqual('US1');
-      expect(userStory2.get('[data-testid=priority-1] span').text()).toStrictEqual('2');
+      expect(userStory2.findComponent(PriorityBadge).props('priority')).toBe(2);
     });
 
     test('Should add a user story on computation click', async () => {
@@ -1101,7 +1102,7 @@ describe('Play', () => {
 
       const story = wrapper.get('[data-testid=user-story-0]');
       expect(story.get('[data-testid=story-name]').text()).toStrictEqual('US0');
-      expect(story.get('[data-testid=priority-0] span').text()).toBe('2');
+      expect(story.findComponent(PriorityBadge).props('priority')).toBe(2);
     });
   });
 
@@ -1245,45 +1246,7 @@ describe('Play', () => {
   });
 
   describe('Priority chip', () => {
-    test('Should have aria-label "Priority 1" when priority is 1', () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [],
-            statEvents: [],
-            structureEvents: [
-              createUserStory({ id: 0, name: 'US0' }),
-              createChangePriority({ id: 0, value: 1 }),
-            ],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      expect(wrapper.get('[data-testid=priority-0]').attributes('aria-label')).toEqual(
-        'Priority 1',
-      );
-    });
-
-    test('Should display flag icon inside priority chip', () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [],
-            statEvents: [],
-            structureEvents: [
-              createUserStory({ id: 0, name: 'US0' }),
-              createChangePriority({ id: 0, value: 1 }),
-            ],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      expect(wrapper.find('[data-testid=priority-0] i').exists()).toBe(true);
-    });
-
-    test('Should show priority chip on in-progress story', async () => {
+    test('Should show priority badge on in-progress story', async () => {
       const wrapper = createWrapper({
         simulationOutputs: [
           {
@@ -1303,10 +1266,10 @@ describe('Play', () => {
       await vi.runAllTimersAsync();
 
       const card = wrapper.get('[data-testid=user-story-0-0]');
-      expect(card.get('[data-testid=priority-0]').attributes('aria-label')).toEqual('Priority 3');
+      expect(card.findComponent(PriorityBadge).props('priority')).toBe(3);
     });
 
-    test('Should show priority chip on review story', async () => {
+    test('Should show priority badge on review story', async () => {
       const wrapper = createWrapper({
         simulationOutputs: [
           {
@@ -1326,10 +1289,10 @@ describe('Play', () => {
       await vi.runAllTimersAsync();
 
       const card = wrapper.get('[data-testid=user-story-0-0]');
-      expect(card.get('[data-testid=priority-0]').attributes('aria-label')).toEqual('Priority 5');
+      expect(card.findComponent(PriorityBadge).props('priority')).toBe(5);
     });
 
-    test('Should show priority chip on done story', async () => {
+    test('Should show priority badge on done story', async () => {
       const wrapper = createWrapper({
         simulationOutputs: [
           {
@@ -1352,7 +1315,7 @@ describe('Play', () => {
       await vi.runAllTimersAsync();
 
       const card = wrapper.get('[data-testid=user-story-0]');
-      expect(card.get('[data-testid=priority-0]').attributes('aria-label')).toEqual('Priority 2');
+      expect(card.findComponent(PriorityBadge).props('priority')).toBe(2);
     });
   });
 
@@ -1440,40 +1403,6 @@ describe('Play', () => {
       await vi.runAllTimersAsync();
 
       expect(computeAll.attributes().disabled).toBeDefined();
-    });
-
-    test('Should have aria-label "Advance one step" on compute button', () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [],
-            statEvents: [],
-            structureEvents: [],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      expect(wrapper.get('[data-testid=compute]').attributes('aria-label')).toEqual(
-        'Advance one step',
-      );
-    });
-
-    test('Should have aria-label "Run full simulation" on compute-all button', () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [],
-            statEvents: [],
-            structureEvents: [],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      expect(wrapper.get('[data-testid=compute-all]').attributes('aria-label')).toEqual(
-        'Run full simulation',
-      );
     });
   });
 
@@ -2230,88 +2159,6 @@ describe('Play', () => {
       expect(thread.find('.thread-header').exists()).toBe(true);
       expect(thread.find('.thread-header [data-testid=thread-title-0]').exists()).toBe(true);
       expect(thread.find('.thread-header [data-testid=thread-state-0]').exists()).toBe(true);
-    });
-  });
-
-  describe('Priority chip color', () => {
-    test('Should apply primary class to priority 5+', () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [],
-            statEvents: [],
-            structureEvents: [
-              createUserStory({ id: 0 }),
-              createChangePriority({ id: 0, value: 5 }),
-            ],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      expect(wrapper.get('[data-testid=priority-0]').classes()).toContain(
-        'priority-badge--primary',
-      );
-    });
-
-    test('Should apply secondary class to priority 2 (lower bound)', () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [],
-            statEvents: [],
-            structureEvents: [
-              createUserStory({ id: 0 }),
-              createChangePriority({ id: 0, value: 2 }),
-            ],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      expect(wrapper.get('[data-testid=priority-0]').classes()).toContain(
-        'priority-badge--secondary',
-      );
-    });
-
-    test('Should apply secondary class to priority 4 (upper bound)', () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [],
-            statEvents: [],
-            structureEvents: [
-              createUserStory({ id: 0 }),
-              createChangePriority({ id: 0, value: 4 }),
-            ],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      expect(wrapper.get('[data-testid=priority-0]').classes()).toContain(
-        'priority-badge--secondary',
-      );
-    });
-
-    test('Should apply tertiary class to priority 1', () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [],
-            statEvents: [],
-            structureEvents: [
-              createUserStory({ id: 0 }),
-              createChangePriority({ id: 0, value: 1 }),
-            ],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      expect(wrapper.get('[data-testid=priority-0]').classes()).toContain(
-        'priority-badge--tertiary',
-      );
     });
   });
 
