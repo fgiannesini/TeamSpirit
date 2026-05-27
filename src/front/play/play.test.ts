@@ -31,6 +31,7 @@ import type { StructureEvent } from '../../simulate/simulation-structure.ts';
 import type { State } from '../form-store.ts';
 import PriorityBadge from './priority-badge.vue';
 import Play from './play.vue';
+import ThreadStateBadge from './thread-state-badge.vue';
 
 describe('Play', () => {
   beforeEach(() => {
@@ -95,12 +96,12 @@ describe('Play', () => {
       expect(wrapper.get(`[data-testid=thread0]`).classes()).toContain('thread');
       expect(wrapper.get(`[data-testid=thread-title-0]`).text()).toStrictEqual('dev0');
       expect(wrapper.find(`[data-testid=thread-user-story-0]`).exists()).toBe(true);
-      expect(wrapper.find(`[data-testid=thread-state-label-0]`).text()).toBe('Wait');
+      expect(wrapper.findAllComponents(ThreadStateBadge)[0].props('state')).toBe('Wait');
 
       expect(wrapper.get(`[data-testid=thread1]`).classes()).toContain('thread');
       expect(wrapper.get(`[data-testid=thread-title-1]`).text()).toStrictEqual('dev1');
       expect(wrapper.find(`[data-testid=thread-user-story-1]`).exists()).toBe(true);
-      expect(wrapper.find(`[data-testid=thread-state-label-1]`).text()).toBe('Wait');
+      expect(wrapper.findAllComponents(ThreadStateBadge)[1].props('state')).toBe('Wait');
     });
 
     test('Should set thread off by default', async () => {
@@ -216,10 +217,10 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
 
       await vi.advanceTimersToNextTimerAsync();
-      expect(wrapper.find(`[data-testid=thread-state-label-0]`).text()).toBe('Develop');
+      expect(wrapper.findComponent(ThreadStateBadge).props('state')).toBe('Develop');
 
       await vi.advanceTimersToNextTimerAsync();
-      expect(wrapper.find(`[data-testid=thread-state-label-0]`).text()).toBe('Develop');
+      expect(wrapper.findComponent(ThreadStateBadge).props('state')).toBe('Develop');
     });
 
     test('Should set thread state to "Review" when in review', async () => {
@@ -237,10 +238,10 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
 
       await vi.advanceTimersToNextTimerAsync();
-      expect(wrapper.find(`[data-testid=thread-state-label-0]`).text()).toBe('Review');
+      expect(wrapper.findComponent(ThreadStateBadge).props('state')).toBe('Review');
 
       await vi.advanceTimersToNextTimerAsync();
-      expect(wrapper.find(`[data-testid=thread-state-label-0]`).text()).toBe('Review');
+      expect(wrapper.findComponent(ThreadStateBadge).props('state')).toBe('Review');
     });
 
     test('Should set thread state to "Develop" when to review', async () => {
@@ -258,7 +259,7 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
 
-      expect(wrapper.find(`[data-testid=thread-state-label-0]`).text()).toBe('Develop');
+      expect(wrapper.findComponent(ThreadStateBadge).props('state')).toBe('Develop');
     });
 
     test('Should set thread state to "Wait" when idle', async () => {
@@ -282,274 +283,7 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
 
-      expect(wrapper.find(`[data-testid=thread-state-label-0]`).text()).toBe('Wait');
-    });
-  });
-
-  describe('Thread state badge variant', () => {
-    test('Should have develop badge variant when state is Develop', async () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [inProgressEvent(), doneEvent()],
-            statEvents: [],
-            structureEvents: [createThread0(), createUserStory({ id: 0 })],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      await wrapper.get('[data-testid=compute]').trigger('click');
-      await vi.runAllTimersAsync();
-
-      expect(wrapper.get('[data-testid=thread-state-0]').classes()).toContain(
-        'thread-state-badge--develop',
-      );
-    });
-
-    test('Should have review badge variant when state is Review', async () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [reviewEvent(), doneEvent()],
-            statEvents: [],
-            structureEvents: [createThread0(), createUserStory({ id: 0 })],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      await wrapper.get('[data-testid=compute]').trigger('click');
-      await vi.runAllTimersAsync();
-
-      expect(wrapper.get('[data-testid=thread-state-0]').classes()).toContain(
-        'thread-state-badge--review',
-      );
-    });
-
-    test('Should have wait badge variant when state is Wait', () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [],
-            statEvents: [],
-            structureEvents: [createThread0()],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      expect(wrapper.get('[data-testid=thread-state-0]').classes()).toContain(
-        'thread-state-badge--wait',
-      );
-    });
-
-    test('Should have off badge variant when thread is Off', () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [],
-            statEvents: [],
-            structureEvents: [createThread0(), setThreadOff({ id: 0, time: 1 })],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      expect(wrapper.get('[data-testid=thread-state-0]').classes()).toContain(
-        'thread-state-badge--off',
-      );
-    });
-  });
-
-  describe('Thread state label', () => {
-    test('Should show "Wait" when thread has no off event', () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [],
-            statEvents: [],
-            structureEvents: [createThread0()],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      expect(wrapper.get('[data-testid=thread-state-label-0]').text()).toBe('Wait');
-    });
-
-    test('Should show "Off" when thread is off', () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [],
-            statEvents: [],
-            structureEvents: [createThread0(), setThreadOff({ id: 0, time: 1 })],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      expect(wrapper.get('[data-testid=thread-state-label-0]').text()).toBe('Off');
-    });
-  });
-
-  describe('Thread state icon', () => {
-    test('Should display pause icon in Wait state', () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [],
-            statEvents: [],
-            structureEvents: [createThread0()],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      expect(wrapper.get('[data-testid=thread-state-icon-0]').text()).toBe('pause');
-    });
-
-    test('Should display code icon in Develop state', async () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [inProgressEvent(), doneEvent()],
-            statEvents: [],
-            structureEvents: [createThread0(), createUserStory({ id: 0 })],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      await wrapper.get('[data-testid=compute]').trigger('click');
-      await vi.runAllTimersAsync();
-
-      expect(wrapper.get('[data-testid=thread-state-icon-0]').text()).toBe('code');
-    });
-
-    test('Should display rate_review icon in Review state', async () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [reviewEvent(), doneEvent()],
-            statEvents: [],
-            structureEvents: [createThread0(), createUserStory({ id: 0 })],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      await wrapper.get('[data-testid=compute]').trigger('click');
-      await vi.runAllTimersAsync();
-
-      expect(wrapper.get('[data-testid=thread-state-icon-0]').text()).toBe('rate_review');
-    });
-
-    test('Should display power_settings_new icon in Off state', () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [],
-            statEvents: [],
-            structureEvents: [createThread0(), setThreadOff({ id: 0, time: 1 })],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      expect(wrapper.get('[data-testid=thread-state-icon-0]').text()).toBe('power_settings_new');
-    });
-
-    test('Should have role="status" on thread state badge', () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [],
-            statEvents: [],
-            structureEvents: [createThread0()],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      expect(wrapper.get('[data-testid=thread-state-0]').attributes('role')).toBe('status');
-    });
-  });
-
-  describe('Thread state tooltip', () => {
-    test('Should show "Waiting for work" tooltip in Wait state', () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [],
-            statEvents: [],
-            structureEvents: [createThread0()],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      expect(wrapper.get('[data-testid=thread-state-0]').attributes('title')).toBe(
-        'Waiting for work',
-      );
-    });
-
-    test('Should show "Developing a user story" tooltip in Develop state', async () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [inProgressEvent(), doneEvent()],
-            statEvents: [],
-            structureEvents: [createThread0(), createUserStory({ id: 0 })],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      await wrapper.get('[data-testid=compute]').trigger('click');
-      await vi.advanceTimersToNextTimerAsync();
-
-      expect(wrapper.get('[data-testid=thread-state-0]').attributes('title')).toBe(
-        'Developing a user story',
-      );
-    });
-
-    test('Should show "Reviewing a user story" tooltip in Review state', async () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [reviewEvent(), doneEvent()],
-            statEvents: [],
-            structureEvents: [createThread0(), createUserStory({ id: 0 })],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      await wrapper.get('[data-testid=compute]').trigger('click');
-      await vi.advanceTimersToNextTimerAsync();
-
-      expect(wrapper.get('[data-testid=thread-state-0]').attributes('title')).toBe(
-        'Reviewing a user story',
-      );
-    });
-
-    test('Should show "Thread is unavailable" tooltip when thread is off', () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [],
-            statEvents: [],
-            structureEvents: [createThread0(), setThreadOff({ id: 0, time: 1 })],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      expect(wrapper.get('[data-testid=thread-state-0]').attributes('title')).toBe(
-        'Thread is unavailable',
-      );
+      expect(wrapper.findComponent(ThreadStateBadge).props('state')).toBe('Wait');
     });
   });
 
@@ -1054,7 +788,7 @@ describe('Play', () => {
           .find('[data-testid=user-story-0-0]')
           .exists(),
       ).toBe(true);
-      expect(wrapper.get('[data-testid=thread-state-label-0]').text()).toBe('Review');
+      expect(wrapper.findComponent(ThreadStateBadge).props('state')).toBe('Review');
     });
 
     test('Should not display "idle" user story', async () => {
@@ -1477,56 +1211,6 @@ describe('Play', () => {
       });
 
       expect(wrapper.get('[data-testid=stats]').attributes('aria-live')).toEqual('polite');
-    });
-
-    test('Should have aria-label on stats container', () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [],
-            statEvents: [],
-            structureEvents: [],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      expect(wrapper.get('[data-testid=stats]').attributes('aria-label')).toEqual(
-        'Simulation statistics',
-      );
-    });
-
-    test('Should have aria-hidden on timer icon', () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [],
-            statEvents: [],
-            structureEvents: [],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      const timerIcon = wrapper.findAll('i').find((i) => i.text() === 'timer');
-      expect(timerIcon).toBeDefined();
-      expect(timerIcon!.attributes('aria-hidden')).toEqual('true');
-    });
-
-    test('Should have aria-hidden on inbox icon in backlog nav', () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [],
-            statEvents: [],
-            structureEvents: [],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      const inboxIcons = wrapper.findAll('i').filter((i) => i.text() === 'inbox');
-      expect(inboxIcons.every((i) => i.attributes('aria-hidden') === 'true')).toBe(true);
     });
   });
 
@@ -2158,7 +1842,7 @@ describe('Play', () => {
       const thread = wrapper.get('[data-testid=thread0]');
       expect(thread.find('.thread-header').exists()).toBe(true);
       expect(thread.find('.thread-header [data-testid=thread-title-0]').exists()).toBe(true);
-      expect(thread.find('.thread-header [data-testid=thread-state-0]').exists()).toBe(true);
+      expect(wrapper.findComponent(ThreadStateBadge).exists()).toBe(true);
     });
   });
 

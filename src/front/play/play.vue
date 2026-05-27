@@ -6,17 +6,18 @@ import type { TimeEvent } from '../../simulate/events.ts';
 import type { StructureEvent } from '../../simulate/simulation-structure.ts';
 import { useFormStore } from '../form-store.ts';
 import PriorityBadge from './priority-badge.vue';
+import type { ThreadPresence, ThreadState } from './thread.ts';
+import ThreadStateBadge from './thread-state-badge.vue';
 
 const props = defineProps<{ id: number }>();
 const data = useFormStore().simulationOutputs[props.id];
 const router = useRouter();
 
-export type ThreadState = 'Wait' | 'Develop' | 'Review';
 export type ThreadVue = {
   id: number;
   name: string;
   state: ThreadState;
-  presence: string;
+  presence: ThreadPresence;
   inProgressStories: UserStoryVue[];
   reviewStories: UserStoryVue[];
 };
@@ -282,30 +283,6 @@ const THREAD_STATE_CLASSES: Record<ThreadState, { state: string; container: stri
   Wait: { state: '', container: '' },
 };
 
-const THREAD_STATE_BADGE_VARIANT: Record<ThreadState | 'Off', string> = {
-  Develop: 'thread-state-badge--develop',
-  Review: 'thread-state-badge--review',
-  Wait: 'thread-state-badge--wait',
-  Off: 'thread-state-badge--off',
-};
-
-const THREAD_STATE_ICON: Record<ThreadState | 'Off', string> = {
-  Wait: 'pause',
-  Develop: 'code',
-  Review: 'rate_review',
-  Off: 'power_settings_new',
-};
-
-const threadStateLabel = (thread: ThreadVue): ThreadState | 'Off' =>
-  thread.presence === 'off' ? 'Off' : thread.state;
-
-const THREAD_STATE_TOOLTIP: Record<ThreadState | 'Off', string> = {
-  Wait: 'Waiting for work',
-  Develop: 'Developing a user story',
-  Review: 'Reviewing a user story',
-  Off: 'Thread is unavailable',
-};
-
 const updateStats = (time: number): void => {
   const events = data.statEvents.filter((e) => e.time === time);
   if (events.length === 0) return;
@@ -535,24 +512,11 @@ updateThreadPresence(1);
               >
                 {{ thread.name }}
               </span>
-              <span
-                :id="`thread-state-${thread.id}`"
-                :data-testid="`thread-state-${thread.id}`"
-                :class="[
-                  'thread-state-badge',
-                  THREAD_STATE_BADGE_VARIANT[threadStateLabel(thread)],
-                ]"
-                :title="THREAD_STATE_TOOLTIP[threadStateLabel(thread)]"
-                role="status"
-                aria-live="polite"
-              >
-                <i aria-hidden="true" :data-testid="`thread-state-icon-${thread.id}`">{{
-                  THREAD_STATE_ICON[threadStateLabel(thread)]
-                }}</i>
-                <span :data-testid="`thread-state-label-${thread.id}`">{{
-                  threadStateLabel(thread)
-                }}</span>
-              </span>
+              <ThreadStateBadge
+                :thread-id="thread.id"
+                :state="thread.state"
+                :presence="thread.presence"
+              />
             </div>
           </div>
           <div
@@ -726,40 +690,6 @@ nav progress {
   background-color: var(--surface-container-highest);
   border-radius: 0.75rem;
   user-select: none;
-}
-
-.thread-state-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0 0.625rem;
-  block-size: 1.5rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  border-radius: 0.75rem;
-  user-select: none;
-  background-color: var(--surface-container-highest);
-  color: var(--on-surface-variant);
-
-  > i {
-    font-size: 0.875rem;
-  }
-
-  &.thread-state-badge--develop {
-    background-color: var(--primary-container);
-    color: var(--on-primary-container);
-  }
-
-  &.thread-state-badge--review {
-    background-color: var(--secondary-container);
-    color: var(--on-secondary-container);
-  }
-
-  &.thread-state-badge--wait,
-  &.thread-state-badge--off {
-    background-color: var(--surface-container-highest);
-    color: var(--on-surface-variant);
-  }
 }
 
 .column-stories {

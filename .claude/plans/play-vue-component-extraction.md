@@ -46,7 +46,7 @@
 - **Risque** : aucun (présentation pure, aucune dépendance à la logique de simulation).
 
 ### Tâche 2 — Extraire `ThreadStateBadge`
-- [ ] **Fichier cible** : `src/front/play/thread-state-badge.vue` (+ `src/front/play/thread-state-badge.test.ts`)
+- [x] **Fichier cible** : `src/front/play/thread-state-badge.vue` (+ `src/front/play/thread-state-badge.test.ts`)
 - **Ce qui bouge** :
   - Le `<span class="thread-state-badge ...">` (lignes 551-568) → composant.
   - Les maps `THREAD_STATE_BADGE_VARIANT` (288-293), `THREAD_STATE_ICON` (295-300), `THREAD_STATE_TOOLTIP` (311-316) déménagent dans le composant. `threadStateLabel` (302-303) y déménage aussi (calcul de `'Off' | ThreadState` à partir de `presence`/`state`).
