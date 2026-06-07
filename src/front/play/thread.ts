@@ -6,3 +6,12 @@ export type UserStoryVue = {
   name: string;
   priority: number | null;
 };
+
+export type ThreadVue = {
+  id: number;
+  name: string;
+  state: ThreadState;
+  presence: ThreadPresence;
+  inProgressStories: UserStoryVue[];
+  reviewStories: UserStoryVue[];
+};

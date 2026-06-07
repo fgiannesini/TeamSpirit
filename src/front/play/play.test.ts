@@ -18,7 +18,7 @@ import type { StructureEvent } from '../../simulate/simulation-structure.ts';
 import type { State } from '../form-store.ts';
 import Play from './play.vue';
 import StoryCard from './story-card.vue';
-import ThreadStateBadge from './thread-state-badge.vue';
+import ThreadCard from './thread-card.vue';
 
 vi.mock('gsap', () => ({
   gsap: {
@@ -50,6 +50,12 @@ describe('Play', () => {
         ],
       },
     });
+  };
+
+  const getThread = (wrapper: VueWrapper, id: number) => {
+    const thread = wrapper.findAllComponents(ThreadCard).find((c) => c.props('thread').id === id);
+    expect(thread, `Thread ${id} not found`).toBeDefined();
+    return thread!;
   };
 
   test('Should render the page without time events', async () => {
@@ -93,15 +99,13 @@ describe('Play', () => {
           },
         ],
       });
-      expect(wrapper.get(`[data-testid=thread0]`).classes()).toContain('thread');
-      expect(wrapper.get(`[data-testid=thread-title-0]`).text()).toStrictEqual('dev0');
-      expect(wrapper.find(`[data-testid=thread-user-story-0]`).exists()).toBe(true);
-      expect(wrapper.findAllComponents(ThreadStateBadge)[0].props('state')).toBe('Wait');
+      const thread0 = getThread(wrapper, 0);
+      expect(thread0.props('thread').name).toStrictEqual('dev0');
+      expect(thread0.props('thread').state).toBe('Wait');
 
-      expect(wrapper.get(`[data-testid=thread1]`).classes()).toContain('thread');
-      expect(wrapper.get(`[data-testid=thread-title-1]`).text()).toStrictEqual('dev1');
-      expect(wrapper.find(`[data-testid=thread-user-story-1]`).exists()).toBe(true);
-      expect(wrapper.findAllComponents(ThreadStateBadge)[1].props('state')).toBe('Wait');
+      const thread1 = getThread(wrapper, 1);
+      expect(thread1.props('thread').name).toStrictEqual('dev1');
+      expect(thread1.props('thread').state).toBe('Wait');
     });
 
     test('Should set thread off by default', async () => {
@@ -116,7 +120,7 @@ describe('Play', () => {
         ],
       });
 
-      expect(wrapper.get(`[data-testid=thread0]`).classes()).toContain('off');
+      expect(getThread(wrapper, 0).props('thread').presence).toBe('off');
     });
 
     test('Should set thread off on computation click', async () => {
@@ -131,12 +135,12 @@ describe('Play', () => {
         ],
       });
 
-      expect(wrapper.get(`[data-testid=thread0]`).classes()).not.toContain('off');
+      expect(getThread(wrapper, 0).props('thread').presence).not.toBe('off');
 
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.advanceTimersToNextTimerAsync();
 
-      expect(wrapper.get(`[data-testid=thread0]`).classes()).toContain('off');
+      expect(getThread(wrapper, 0).props('thread').presence).toBe('off');
     });
 
     test('Should set thread off on all computation click', async () => {
@@ -151,12 +155,12 @@ describe('Play', () => {
         ],
       });
 
-      expect(wrapper.get(`[data-testid=thread0]`).classes()).not.toContain('off');
+      expect(getThread(wrapper, 0).props('thread').presence).not.toBe('off');
 
       await wrapper.get('[data-testid=compute-all]').trigger('click');
       await vi.runAllTimersAsync();
 
-      expect(wrapper.get(`[data-testid=thread0]`).classes()).toContain('off');
+      expect(getThread(wrapper, 0).props('thread').presence).toBe('off');
     });
 
     test('Should set thread in on computation click', async () => {
@@ -177,7 +181,7 @@ describe('Play', () => {
 
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.advanceTimersToNextTimerAsync();
-      expect(wrapper.get(`[data-testid=thread0]`).classes()).not.toContain('off');
+      expect(getThread(wrapper, 0).props('thread').presence).not.toBe('off');
     });
 
     test('Should set thread in on all computation click', async () => {
@@ -199,7 +203,7 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute-all]').trigger('click');
       await vi.runAllTimersAsync();
 
-      expect(wrapper.get(`[data-testid=thread0]`).classes()).not.toContain('off');
+      expect(getThread(wrapper, 0).props('thread').presence).not.toBe('off');
     });
 
     test('Should set thread state to "Develop" when in progress', async () => {
@@ -217,10 +221,10 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
 
       await vi.advanceTimersToNextTimerAsync();
-      expect(wrapper.findComponent(ThreadStateBadge).props('state')).toBe('Develop');
+      expect(getThread(wrapper, 0).props('thread').state).toBe('Develop');
 
       await vi.advanceTimersToNextTimerAsync();
-      expect(wrapper.findComponent(ThreadStateBadge).props('state')).toBe('Develop');
+      expect(getThread(wrapper, 0).props('thread').state).toBe('Develop');
     });
 
     test('Should set thread state to "Review" when in review', async () => {
@@ -238,10 +242,10 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
 
       await vi.advanceTimersToNextTimerAsync();
-      expect(wrapper.findComponent(ThreadStateBadge).props('state')).toBe('Review');
+      expect(getThread(wrapper, 0).props('thread').state).toBe('Review');
 
       await vi.advanceTimersToNextTimerAsync();
-      expect(wrapper.findComponent(ThreadStateBadge).props('state')).toBe('Review');
+      expect(getThread(wrapper, 0).props('thread').state).toBe('Review');
     });
 
     test('Should set thread state to "Develop" when to review', async () => {
@@ -259,7 +263,7 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
 
-      expect(wrapper.findComponent(ThreadStateBadge).props('state')).toBe('Develop');
+      expect(getThread(wrapper, 0).props('thread').state).toBe('Develop');
     });
 
     test('Should set thread state to "Wait" when idle', async () => {
@@ -283,7 +287,7 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
 
-      expect(wrapper.findComponent(ThreadStateBadge).props('state')).toBe('Wait');
+      expect(getThread(wrapper, 0).props('thread').state).toBe('Wait');
     });
   });
 
@@ -366,8 +370,11 @@ describe('Play', () => {
       });
 
       await wrapper.get('[data-testid=compute]').trigger('click');
-      const threadUserStory = wrapper.get('[data-testid=thread-user-story-0]');
-      expect(threadUserStory.find('[data-testid=user-story-0-0]').exists()).toBe(true);
+      expect(
+        getThread(wrapper, 0)
+          .props('thread')
+          .inProgressStories.some((s) => s.id === 0),
+      ).toBe(true);
 
       await vi.runAllTimersAsync();
       const done = wrapper.get('[data-testid=done]');
@@ -420,10 +427,16 @@ describe('Play', () => {
       });
       await wrapper.get('[data-testid=compute]').trigger('click');
 
-      const threadUserStory0 = wrapper.get('[data-testid=thread-user-story-0]');
-      const threadUserStory1 = wrapper.get('[data-testid=thread-user-story-1]');
-      expect(threadUserStory0.find('[data-testid=user-story-1-0]').exists()).toBe(true);
-      expect(threadUserStory1.find('[data-testid=user-story-10-1]').exists()).toBe(true);
+      expect(
+        getThread(wrapper, 0)
+          .props('thread')
+          .inProgressStories.some((s) => s.id === 1),
+      ).toBe(true);
+      expect(
+        getThread(wrapper, 1)
+          .props('thread')
+          .inProgressStories.some((s) => s.id === 10),
+      ).toBe(true);
 
       const done = wrapper.get('[data-testid=done]');
 
@@ -445,8 +458,11 @@ describe('Play', () => {
       });
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
-      const threadUserStory0 = wrapper.get('[data-testid=thread-user-story-0]');
-      expect(threadUserStory0.find('[data-testid=user-story-0-0]').exists()).toBe(true);
+      expect(
+        getThread(wrapper, 0)
+          .props('thread')
+          .inProgressStories.some((s) => s.id === 0),
+      ).toBe(true);
     });
 
     test('Should move userStories to thread when in review, then done', async () => {
@@ -462,8 +478,11 @@ describe('Play', () => {
       });
 
       await wrapper.get('[data-testid=compute]').trigger('click');
-      const threadUserStory1 = wrapper.get('[data-testid=thread-user-story-1]');
-      expect(threadUserStory1.find('[data-testid=user-story-0-1]').exists()).toBe(true);
+      expect(
+        getThread(wrapper, 1)
+          .props('thread')
+          .reviewStories.some((s) => s.id === 0),
+      ).toBe(true);
 
       await vi.runAllTimersAsync();
 
@@ -489,10 +508,16 @@ describe('Play', () => {
 
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
-      const threadUserStory1 = wrapper.get('[data-testid=thread-user-story-1]');
-      expect(threadUserStory1.find('[data-testid=user-story-2-1]').exists()).toBe(false);
-      const threadUserStory0 = wrapper.get('[data-testid=thread-user-story-0]');
-      expect(threadUserStory0.find('[data-testid=user-story-2-0]').exists()).toBe(false);
+      expect(
+        getThread(wrapper, 0)
+          .props('thread')
+          .reviewStories.some((s) => s.id === 2),
+      ).toBe(false);
+      expect(
+        getThread(wrapper, 1)
+          .props('thread')
+          .reviewStories.some((s) => s.id === 2),
+      ).toBe(false);
       const done = wrapper.get('[data-testid=done]');
       expect(done.find('[data-testid=user-story-2]').exists()).toBe(true);
     });
@@ -515,10 +540,16 @@ describe('Play', () => {
 
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
-      const threadUserStory1 = wrapper.get('[data-testid=thread-user-story-1]');
-      expect(threadUserStory1.find('[data-testid=user-story-2-1]').exists()).toBe(false);
-      const threadUserStory0 = wrapper.get('[data-testid=thread-user-story-0]');
-      expect(threadUserStory0.find('[data-testid=user-story-2-0]').exists()).toBe(false);
+      expect(
+        getThread(wrapper, 0)
+          .props('thread')
+          .reviewStories.some((s) => s.id === 2),
+      ).toBe(false);
+      expect(
+        getThread(wrapper, 1)
+          .props('thread')
+          .reviewStories.some((s) => s.id === 2),
+      ).toBe(false);
       const backlog = wrapper.get('[data-testid=backlog]');
       expect(backlog.find('[data-testid=user-story-2]').exists()).toBe(true);
     });
@@ -560,10 +591,16 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
 
-      const threadUserStory0 = wrapper.get('[data-testid=thread-user-story-0]');
-      expect(threadUserStory0.find('[data-testid=user-story-0-0]').exists()).toBe(true);
-      const threadUserStory1 = wrapper.get('[data-testid=thread-user-story-1]');
-      expect(threadUserStory1.find('[data-testid=user-story-0-1]').exists()).toBe(true);
+      expect(
+        getThread(wrapper, 0)
+          .props('thread')
+          .reviewStories.some((s) => s.id === 0),
+      ).toBe(true);
+      expect(
+        getThread(wrapper, 1)
+          .props('thread')
+          .reviewStories.some((s) => s.id === 0),
+      ).toBe(true);
 
       const backlog = wrapper.get('[data-testid=backlog]');
       expect(backlog.find('[data-testid=user-story-0]').exists()).toBe(false);
@@ -592,10 +629,16 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
 
-      const threadUserStory1 = wrapper.get('[data-testid=thread-user-story-1]');
-      expect(threadUserStory1.find('[data-testid=user-story-0-1]').exists()).toBe(true);
-      const threadUserStory0 = wrapper.get('[data-testid=thread-user-story-0]');
-      expect(threadUserStory0.find('[data-testid=user-story-0-0]').exists()).toBe(false);
+      expect(
+        getThread(wrapper, 1)
+          .props('thread')
+          .reviewStories.some((s) => s.id === 0),
+      ).toBe(true);
+      expect(
+        getThread(wrapper, 0)
+          .props('thread')
+          .reviewStories.some((s) => s.id === 0),
+      ).toBe(false);
     });
 
     test('Should remove ended review when a in progress task starts', async () => {
@@ -626,10 +669,16 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
 
-      const threadUserStory1 = wrapper.get('[data-testid=thread-user-story-1]');
-      expect(threadUserStory1.find('[data-testid=user-story-0-1]').exists()).toBe(true);
-      const threadUserStory0 = wrapper.get('[data-testid=thread-user-story-0]');
-      expect(threadUserStory0.find('[data-testid=user-story-0-0]').exists()).toBe(false);
+      expect(
+        getThread(wrapper, 1)
+          .props('thread')
+          .reviewStories.some((s) => s.id === 0),
+      ).toBe(true);
+      expect(
+        getThread(wrapper, 0)
+          .props('thread')
+          .reviewStories.some((s) => s.id === 0),
+      ).toBe(false);
     });
 
     test('Should keep two reviews when reviews last', async () => {
@@ -655,11 +704,19 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
 
-      const threadUserStory0 = wrapper.get('[data-testid=thread-user-story-0]');
-      expect(threadUserStory0.findAll('[data-testid=user-story-0-0]').length).toStrictEqual(1);
-      const threadUserStory1 = wrapper.get('[data-testid=thread-user-story-1]');
-      expect(threadUserStory1.findAll('[data-testid=user-story-0-1]').length).toStrictEqual(1);
-      expect(wrapper.find('[data-testid=user-story-0]').exists()).toBe(false);
+      expect(
+        getThread(wrapper, 0)
+          .props('thread')
+          .reviewStories.filter((s) => s.id === 0).length,
+      ).toStrictEqual(1);
+      expect(
+        getThread(wrapper, 1)
+          .props('thread')
+          .reviewStories.filter((s) => s.id === 0).length,
+      ).toStrictEqual(1);
+      expect(wrapper.get('[data-testid=backlog]').find('[data-testid=user-story-0]').exists()).toBe(
+        false,
+      );
     });
 
     test('Should not duplicate story when transitioning from in-progress to review by another thread', async () => {
@@ -680,19 +737,19 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute-all]').trigger('click');
       await vi.runAllTimersAsync();
 
+      const allStories0 = [
+        ...getThread(wrapper, 0).props('thread').inProgressStories,
+        ...getThread(wrapper, 0).props('thread').reviewStories,
+      ];
+      expect(allStories0.some((s) => s.id === 0)).toBe(false);
       expect(
-        wrapper
-          .get('[data-testid=thread-user-story-0]')
-          .find('[data-testid=user-story-0-0]')
-          .exists(),
-      ).toBe(false);
-      expect(
-        wrapper
-          .get('[data-testid=thread-user-story-1]')
-          .find('[data-testid=user-story-0-1]')
-          .exists(),
+        getThread(wrapper, 1)
+          .props('thread')
+          .reviewStories.some((s) => s.id === 0),
       ).toBe(true);
-      expect(wrapper.findAll('[data-flip-id="story-0"]').length).toStrictEqual(1);
+      expect(wrapper.get('[data-testid=backlog]').find('[data-testid=user-story-0]').exists()).toBe(
+        false,
+      );
     });
 
     test('Should not duplicate story across multi-turn review after in-progress', async () => {
@@ -712,14 +769,21 @@ describe('Play', () => {
         ],
       });
 
+      const storyInAllThreads = () => {
+        const threads = wrapper.findAllComponents(ThreadCard);
+        return threads.flatMap((tc) => [
+          ...tc.props('thread').inProgressStories,
+          ...tc.props('thread').reviewStories,
+        ]);
+      };
+
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
-      expect(wrapper.findAll('[data-flip-id="story-0"]').length).toStrictEqual(1);
+      expect(storyInAllThreads().filter((s) => s.id === 0).length).toBe(1);
       expect(
-        wrapper
-          .get('[data-testid=thread-user-story-0]')
-          .find('[data-testid=user-story-0-0]')
-          .exists(),
+        getThread(wrapper, 0)
+          .props('thread')
+          .inProgressStories.some((s) => s.id === 0),
       ).toBe(true);
       expect(wrapper.get('[data-testid=backlog]').find('[data-testid=user-story-0]').exists()).toBe(
         false,
@@ -727,35 +791,32 @@ describe('Play', () => {
 
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
-      expect(wrapper.findAll('[data-flip-id="story-0"]').length).toStrictEqual(1);
+      expect(storyInAllThreads().filter((s) => s.id === 0).length).toBe(1);
       expect(
-        wrapper
-          .get('[data-testid=thread-user-story-1]')
-          .find('[data-testid=user-story-0-1]')
-          .exists(),
+        getThread(wrapper, 1)
+          .props('thread')
+          .reviewStories.some((s) => s.id === 0),
       ).toBe(true);
       expect(
-        wrapper
-          .get('[data-testid=thread-user-story-0]')
-          .find('[data-testid=user-story-0-0]')
-          .exists(),
+        getThread(wrapper, 0)
+          .props('thread')
+          .inProgressStories.some((s) => s.id === 0),
       ).toBe(false);
 
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
-      expect(wrapper.findAll('[data-flip-id="story-0"]').length).toStrictEqual(1);
+      expect(storyInAllThreads().filter((s) => s.id === 0).length).toBe(1);
 
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
-      expect(wrapper.findAll('[data-flip-id="story-0"]').length).toStrictEqual(1);
+      expect(storyInAllThreads().filter((s) => s.id === 0).length).toBe(0);
       expect(wrapper.get('[data-testid=done]').find('[data-testid=user-story-0]').exists()).toBe(
         true,
       );
       expect(
-        wrapper
-          .get('[data-testid=thread-user-story-1]')
-          .find('[data-testid=user-story-0-1]')
-          .exists(),
+        getThread(wrapper, 1)
+          .props('thread')
+          .reviewStories.some((s) => s.id === 0),
       ).toBe(false);
     });
 
@@ -777,14 +838,13 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute-all]').trigger('click');
       await vi.runAllTimersAsync();
 
-      expect(wrapper.findAll('[data-flip-id="story-0"]').length).toStrictEqual(1);
-      expect(
-        wrapper
-          .get('[data-testid=thread-user-story-0]')
-          .find('[data-testid=user-story-0-0]')
-          .exists(),
-      ).toBe(true);
-      expect(wrapper.findComponent(ThreadStateBadge).props('state')).toBe('Review');
+      const thread0 = getThread(wrapper, 0);
+      const allStoriesInThread0 = [
+        ...thread0.props('thread').inProgressStories,
+        ...thread0.props('thread').reviewStories,
+      ];
+      expect(allStoriesInThread0.filter((s) => s.id === 0).length).toBe(1);
+      expect(thread0.props('thread').state).toBe('Review');
     });
 
     test('Should not display "idle" user story', async () => {
@@ -856,7 +916,11 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
 
-      expect(wrapper.findComponent(StoryCard).props('story').priority).toBe(3);
+      expect(
+        getThread(wrapper, 0)
+          .props('thread')
+          .inProgressStories.find((s) => s.id === 0)!.priority,
+      ).toBe(3);
     });
 
     test('Should show priority badge on review story', async () => {
@@ -878,7 +942,11 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
 
-      expect(wrapper.findComponent(StoryCard).props('story').priority).toBe(5);
+      expect(
+        getThread(wrapper, 0)
+          .props('thread')
+          .reviewStories.find((s) => s.id === 0)!.priority,
+      ).toBe(5);
     });
 
     test('Should show priority badge on done story', async () => {
@@ -1545,7 +1613,7 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.advanceTimersToNextTimerAsync();
 
-      expect(wrapper.findComponent(StoryCard).props('flashing')).toBe(true);
+      expect(getThread(wrapper, 0).props('flashingStoryIds').has(0)).toBe(true);
     });
 
     test('Should add priority-flash class to review story after ChangePriority event', async () => {
@@ -1567,7 +1635,7 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.advanceTimersToNextTimerAsync();
 
-      expect(wrapper.findComponent(StoryCard).props('flashing')).toBe(true);
+      expect(getThread(wrapper, 0).props('flashingStoryIds').has(0)).toBe(true);
     });
 
     test('Should add priority-flash class to done story after ChangePriority event', async () => {
@@ -1680,28 +1748,8 @@ describe('Play', () => {
     });
   });
 
-  describe('Thread header structure', () => {
-    test('Should wrap thread name and state in a header element', () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [],
-            statEvents: [],
-            structureEvents: [createThread0()],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      const thread = wrapper.get('[data-testid=thread0]');
-      expect(thread.find('.thread-header').exists()).toBe(true);
-      expect(thread.find('.thread-header [data-testid=thread-title-0]').exists()).toBe(true);
-      expect(wrapper.findComponent(ThreadStateBadge).exists()).toBe(true);
-    });
-  });
-
   describe('Thread idle hint', () => {
-    test('Should show "No story assigned" hint when thread is Wait and no stories', () => {
+    test('Should initialize thread in Wait state with no stories', () => {
       const wrapper = createWrapper({
         simulationOutputs: [
           {
@@ -1713,10 +1761,13 @@ describe('Play', () => {
         ],
       });
 
-      expect(wrapper.find('[data-testid=thread-idle-0]').exists()).toBe(true);
+      const thread0 = getThread(wrapper, 0);
+      expect(thread0.props('thread').inProgressStories).toHaveLength(0);
+      expect(thread0.props('thread').reviewStories).toHaveLength(0);
+      expect(thread0.props('thread').presence).not.toBe('off');
     });
 
-    test('Should hide hint when thread has in-progress story', async () => {
+    test('Should put story in inProgressStories when in progress', async () => {
       const wrapper = createWrapper({
         simulationOutputs: [
           {
@@ -1731,10 +1782,10 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.advanceTimersToNextTimerAsync();
 
-      expect(wrapper.find('[data-testid=thread-idle-0]').exists()).toBe(false);
+      expect(getThread(wrapper, 0).props('thread').inProgressStories).not.toHaveLength(0);
     });
 
-    test('Should hide hint when thread has review story', async () => {
+    test('Should put story in reviewStories when in review', async () => {
       const wrapper = createWrapper({
         simulationOutputs: [
           {
@@ -1749,10 +1800,10 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.advanceTimersToNextTimerAsync();
 
-      expect(wrapper.find('[data-testid=thread-idle-0]').exists()).toBe(false);
+      expect(getThread(wrapper, 0).props('thread').reviewStories).not.toHaveLength(0);
     });
 
-    test('Should hide hint when thread is Off', () => {
+    test('Should set presence to off when thread is Off', () => {
       const wrapper = createWrapper({
         simulationOutputs: [
           {
@@ -1764,7 +1815,7 @@ describe('Play', () => {
         ],
       });
 
-      expect(wrapper.find('[data-testid=thread-idle-0]').exists()).toBe(false);
+      expect(getThread(wrapper, 0).props('thread').presence).toBe('off');
     });
   });
 });

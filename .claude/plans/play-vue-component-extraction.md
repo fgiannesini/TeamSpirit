@@ -3,6 +3,7 @@
 ## Contexte
 
 ### Ce qui existe
+
 - `src/front/play/play.vue` — 914 lignes. Un seul SFC monolithique qui contient :
   - **Logique de simulation** (~330 lignes de script) : animation FLIP (`captureFlipPositions`, `animateFromPositions`, `animateBatch`), gestion d'événements (`handleTodo`, `handleInProgress`, `handleReview`, `handleToReview`, `handleDone`, `handleIdleThread`), partition parallèle (`conflicts`, `partitionParallel`), boucle temps (`processEvents`, `advanceStep`, `runNext`, `runAll`), build/présence (`buildUserStories`, `updateThreadPresence`, `updateStats`).
   - **Maps de présentation** : `THREAD_STATE_CLASSES`, `THREAD_STATE_BADGE_VARIANT`, `THREAD_STATE_ICON`, `THREAD_STATE_TOOLTIP`, `threadStateLabel`, `priorityChipClass`.
@@ -12,11 +13,14 @@
 - `ThreadVue` et `ThreadState` sont déjà `export`és depuis `play.vue` (importés par `src/flow/render-time.ts` — attention à ne pas casser cet import). `UserStoryVue` n'est PAS exporté.
 
 ### Ce qui manque
+
 - Aucune décomposition : le template a 4 copies quasi identiques de la carte de story (lignes 487-515, 576-604, 605-634, 666-696) → duplication de connaissance (règle 3 du design simple violée).
 - Les maps de présentation et `priorityChipClass`/`threadStateLabel` mélangent présentation et orchestration dans le même fichier (SRP violé).
 
 ### Contrainte critique sur les tests (à intégrer dans CHAQUE tâche)
+
 `play.test.ts` monte `play.vue` via **`shallowMount`** → **tous les composants enfants sont stubbés automatiquement**. Conséquences :
+
 - Tout `data-testid` déplacé dans un sous-composant **disparaît** du DOM rendu par `play.test.ts` (remplacé par `<mon-composant-stub ...>`). Les `wrapper.get('[data-testid=...]')` correspondants **échoueront**.
 - Deux stratégies de migration de test, à choisir par cas :
   1. **Migrer l'assertion UI vers le `.test.ts` du nouveau composant** (monté en isolation avec `mount`) — pour tout ce qui teste le RENDU d'une carte/badge (nom, titre `#id`, classe de priorité, icône, libellé, tooltip). C'est la stratégie par défaut, conforme à la convention `user-story-card.test.ts`.
@@ -33,6 +37,7 @@
 > Après CHAQUE tâche : `npm run type-check` + `npx vitest run src/front/play/play.test.ts` (+ le nouveau `.test.ts`) + `npm run format`. Ne jamais passer à la tâche suivante avec un test rouge.
 
 ### Tâche 1 — Extraire `PriorityBadge`
+
 - [x] **Fichier cible** : `src/front/play/priority-badge.vue` (+ `src/front/play/priority-badge.test.ts`)
 - **Ce qui bouge** :
   - Le `<span class="priority-badge ...">` répété 4× (ex. lignes 506-514) → composant unique.
@@ -46,12 +51,13 @@
 - **Risque** : aucun (présentation pure, aucune dépendance à la logique de simulation).
 
 ### Tâche 2 — Extraire `ThreadStateBadge`
+
 - [x] **Fichier cible** : `src/front/play/thread-state-badge.vue` (+ `src/front/play/thread-state-badge.test.ts`)
 - **Ce qui bouge** :
   - Le `<span class="thread-state-badge ...">` (lignes 551-568) → composant.
   - Les maps `THREAD_STATE_BADGE_VARIANT` (288-293), `THREAD_STATE_ICON` (295-300), `THREAD_STATE_TOOLTIP` (311-316) déménagent dans le composant. `threadStateLabel` (302-303) y déménage aussi (calcul de `'Off' | ThreadState` à partir de `presence`/`state`).
   - Props : `{ threadId: number; state: ThreadState; presence: string }`. Le composant calcule lui-même le label affiché.
-  - Conserver `:data-testid="`thread-state-${threadId}`"`, `:id`, `role="status"`, `aria-live`, `:title`, et les `data-testid` internes `thread-state-icon-${threadId}` / `thread-state-label-${threadId}`.
+  - Conserver `:data-testid="`thread-state-${threadId}`"`, `:id`, `role="status"`, `aria-live`, `:title`, et les `data-testid` internes `thread-state-icon-${threadId}`/`thread-state-label-${threadId}`.
   - Déplacer le CSS `.thread-state-badge { ... }` (755-787) vers le composant.
   - `ThreadState` : l'importer depuis `play.vue` (déjà exporté) ou déplacer la définition de type dans un module partagé `src/front/play/thread.ts` (voir Tâche 6). Pour cette tâche, importer depuis `play.vue` suffit.
 - **Impact test** :
@@ -61,6 +67,7 @@
 - **Risque** : faible. Le badge ne dépend que de props simples.
 
 ### Tâche 3 — Extraire `StoryCard`
+
 - [x] **Fichier cible** : `src/front/play/story-card.vue` (+ `src/front/play/story-card.test.ts`)
 - **Ce qui bouge** : la carte de story dupliquée 4× (backlog 487-515, thread in-progress 576-604, thread review 605-634, done 666-696). Unifier en un composant paramétré par variante.
   - Props : `{ story: UserStoryVue; testId: string; flashing: boolean; variant: 'default' | 'review' | 'done' }` (le `testId` est calculé par `play.vue` car il diffère : `user-story-{id}` vs `user-story-{id}-{threadId}`).
@@ -79,11 +86,12 @@
 - **Dépend de** : Tâche 1.
 
 ### Tâche 4 — Extraire `ThreadColumn` (ou `ThreadCard`)
-- [ ] **Fichier cible** : `src/front/play/thread-card.vue` (+ `src/front/play/thread-card.test.ts`)
+
+- [x] **Fichier cible** : `src/front/play/thread-card.vue` (+ `src/front/play/thread-card.test.ts`)
 - **Ce qui bouge** : le bloc `<div v-for="thread in threads">` complet (lignes 529-647) — header (titre + `ThreadStateBadge`), liste in-progress (`StoryCard` variant default), liste review (`StoryCard` variant review), idle hint (`thread-idle-{id}`).
   - Props : `{ thread: ThreadVue; flashingStoryIds: Set<number> }`. (Le set de flash est lu pour calculer `flashing` par story.)
   - Utilise `ThreadStateBadge` (Tâche 2) et `StoryCard` (Tâche 3).
-  - Conserver `:data-testid="`thread${thread.id}`"`, `thread-title-${id}`, `thread-user-story-${id}`, `thread-idle-${id}`, et les classes d'état via `THREAD_STATE_CLASSES` (cette map reste utilisée ici → la déplacer dans `thread-card.vue` ou un module `thread.ts`).
+  - Conserver `:data-testid="`thread${thread.id}`"`, `thread-title-${id}`, `thread-user-story-${id}`, `thread-idle-${id}`, et les classes d'état via `THREAD_STATE_CLASSES`(cette map reste utilisée ici → la déplacer dans`thread-card.vue`ou un module`thread.ts`).
   - Déplacer CSS `.thread`, `.thread-header`, `.thread-stories`, `.thread-idle-hint` (847-899) vers le composant.
 - **Impact test** :
   - Créer `thread-card.test.ts` couvrant : init (classe `thread`, titre, conteneur stories) ; idle hint visible en Wait sans story, caché si in-progress / review / off (reprendre `describe('Thread idle hint')` 2309-2375) ; classes d'état develop/review/off sur la racine (reprendre `describe('Thread')` 105-201 pour les classes `off`).
@@ -92,15 +100,18 @@
 - **Dépend de** : Tâches 2 et 3.
 
 ### Tâche 5 — Extraire `KanbanColumn` (Backlog / Done génériques)
+
 - [ ] **Fichier cible** : `src/front/play/kanban-column.vue` (+ `src/front/play/kanban-column.test.ts`)
 - **Ce qui bouge** : les colonnes Backlog (469-518) et Done (651-699) partagent la structure : `<article>` + `<nav>` header (icône + titre + compteur) + état vide + liste de `StoryCard`. Unifier.
   - Props : `{ title: string; icon: string; testIdPrefix: 'backlog' | 'done'; stories: UserStoryVue[]; emptyContent: slot; variant }`. Le compteur stories/story et les états vides diffèrent (backlog-empty vs done-empty avec total count) → utiliser un `<slot name="empty">` pour le contenu vide spécifique.
   - Conserver `data-testid` : `backlog`/`done`, `backlog-count`/`done-count`, `column-count` CSS.
-- **Impact test** : MÊME problème que Tâche 4 — sous `shallowMount`, l'intérieur de la colonne (cartes) disparaît. Les tests `done.find('[data-testid=user-story-0]')`, `backlog.find(...)` (très nombreux dans `describe('User story')`) ne trouveront plus rien. → Réécriture en inspection de props sur le stub `KanbanColumn` (`.props('stories')`).
+- \*\*Imp
+- act test\*\* : MÊME problème que Tâche 4 — sous `shallowMount`, l'intérieur de la colonne (cartes) disparaît. Les tests `done.find('[data-testid=user-story-0]')`, `backlog.find(...)` (très nombreux dans `describe('User story')`) ne trouveront plus rien. → Réécriture en inspection de props sur le stub `KanbanColumn` (`.props('stories')`).
 - **Risque** : TRÈS élevé (même nature que Tâche 4). **Décision recommandée** : optionnel / à éviter sauf besoin fort. La dé-duplication apportée est modérée (2 colonnes) au prix d'une grosse réécriture de tests. Ne faire qu'après Tâches 1-3 stabilisées.
 - **Dépend de** : Tâche 3.
 
 ### Tâche 6 — (Préparatoire, optionnelle) Externaliser types + maps partagés
+
 - [ ] **Fichier cible** : `src/front/play/thread.ts`
 - **Ce qui bouge** : `ThreadState`, `ThreadVue`, `UserStoryVue` (types) + éventuellement `THREAD_STATE_CLASSES`. Permet aux sous-composants d'importer les types sans dépendre de `play.vue` (qui importe gsap, etc.).
 - **Impact** : `src/flow/render-time.ts` importe `ThreadVue` depuis `play.vue` → mettre à jour cet import (ou re-exporter depuis `play.vue` pour compat). Vérifier `src/flow/render-time.ts` et `flow.test.ts`.
@@ -115,11 +126,13 @@
 - **Périmètre coûteux** : Tâches 4 et 5 masquent l'intérieur des conteneurs sous `shallowMount` et imposent de réécrire ~25-40 tests d'orchestration en inspection de props. À ne lancer que si la lisibilité du template l'exige et avec accord explicite.
 
 ## Garde-fou à exécuter AVANT la réécriture des tests (sous-tâche de la Tâche 1)
+
 - [ ] Écrire un micro-test jetable (ou vérifier dans le REPL vitest) : monter `play.vue` en `shallowMount` après extraction de `PriorityBadge`, et confirmer le comportement de `findComponent(PriorityBadge)`, ainsi que la persistance des attributs fallthrough (`data-testid`, `data-flip-id`) sur les stubs via `wrapper.find('[data-flip-id=...]')`. Cela valide/invalide la "stratégie 2" pour toutes les tâches suivantes. Si les attributs ne passent PAS au stub, basculer ces tests en `findComponent().props()` partout.
 
 ## Vérification par tâche
 
 Après chaque tâche :
+
 - `npm run type-check` — aucune erreur TS / vue-tsc
 - `npx vitest run src/front/play/play.test.ts` — tous tests passent
 - `npx vitest run src/front/play/<nouveau-composant>.test.ts` — tous tests passent
