@@ -3,19 +3,6 @@ import { shallowMount, type VueWrapper } from '@vue/test-utils';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import type { Router } from 'vue-router';
 import { useRouter } from 'vue-router';
-
-vi.mock('gsap', () => ({
-  gsap: {
-    timeline: (opts?: { onComplete?: () => void }) => {
-      setTimeout(() => opts?.onComplete?.(), 0);
-      return { fromTo: () => {} };
-    },
-  },
-}));
-
-vi.mock('vue-router', () => ({
-  useRouter: vi.fn(() => ({ push: vi.fn() })),
-}));
 import {
   createChangePriority,
   createUserStory,
@@ -29,9 +16,22 @@ import {
 } from '../../simulate/factory.ts';
 import type { StructureEvent } from '../../simulate/simulation-structure.ts';
 import type { State } from '../form-store.ts';
-import PriorityBadge from './priority-badge.vue';
 import Play from './play.vue';
+import StoryCard from './story-card.vue';
 import ThreadStateBadge from './thread-state-badge.vue';
+
+vi.mock('gsap', () => ({
+  gsap: {
+    timeline: (opts?: { onComplete?: () => void }) => {
+      setTimeout(() => opts?.onComplete?.(), 0);
+      return { fromTo: () => {} };
+    },
+  },
+}));
+
+vi.mock('vue-router', () => ({
+  useRouter: vi.fn(() => ({ push: vi.fn() })),
+}));
 
 describe('Play', () => {
   beforeEach(() => {
@@ -304,15 +304,14 @@ describe('Play', () => {
           },
         ],
       });
-      const userStory1 = wrapper.get('[data-testid=user-story-0]');
-      expect(userStory1.classes()).toContain('story-card');
-      expect(userStory1.get('[data-testid=story-name]').text()).toStrictEqual('US0');
-      expect(userStory1.findComponent(PriorityBadge).props('priority')).toBe(1);
+      const allCards = wrapper.findAllComponents(StoryCard);
+      const card0 = allCards.find((c) => c.attributes('data-testid') === 'user-story-0')!;
+      expect(card0.props('story').name).toStrictEqual('US0');
+      expect(card0.props('story').priority).toBe(1);
 
-      const userStory2 = wrapper.get('[data-testid=user-story-1]');
-      expect(userStory2.classes()).toContain('story-card');
-      expect(userStory2.get('[data-testid=story-name]').text()).toStrictEqual('US1');
-      expect(userStory2.findComponent(PriorityBadge).props('priority')).toBe(2);
+      const card1 = allCards.find((c) => c.attributes('data-testid') === 'user-story-1')!;
+      expect(card1.props('story').name).toStrictEqual('US1');
+      expect(card1.props('story').priority).toBe(2);
     });
 
     test('Should add a user story on computation click', async () => {
@@ -373,6 +372,7 @@ describe('Play', () => {
       await vi.runAllTimersAsync();
       const done = wrapper.get('[data-testid=done]');
       expect(done.find('[data-testid=user-story-0]').exists()).toBe(true);
+      expect(wrapper.findComponent(StoryCard).props('variant')).toBe('done');
     });
 
     test('Should move userStory to backlog when todo', async () => {
@@ -561,13 +561,9 @@ describe('Play', () => {
       await vi.runAllTimersAsync();
 
       const threadUserStory0 = wrapper.get('[data-testid=thread-user-story-0]');
-      const firstDiv = threadUserStory0.find('[data-testid=user-story-0-0]');
-      expect(firstDiv.exists()).toBe(true);
-      expect(firstDiv.get('[data-testid=story-name]').text()).toBe('US0');
+      expect(threadUserStory0.find('[data-testid=user-story-0-0]').exists()).toBe(true);
       const threadUserStory1 = wrapper.get('[data-testid=thread-user-story-1]');
-      const secondDiv = threadUserStory1.find('[data-testid=user-story-0-1]');
-      expect(secondDiv.exists()).toBe(true);
-      expect(secondDiv.get('[data-testid=story-name]').text()).toBe('US0');
+      expect(threadUserStory1.find('[data-testid=user-story-0-1]').exists()).toBe(true);
 
       const backlog = wrapper.get('[data-testid=backlog]');
       expect(backlog.find('[data-testid=user-story-0]').exists()).toBe(false);
@@ -834,148 +830,9 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.advanceTimersToNextTimerAsync();
 
-      const story = wrapper.get('[data-testid=user-story-0]');
-      expect(story.get('[data-testid=story-name]').text()).toStrictEqual('US0');
-      expect(story.findComponent(PriorityBadge).props('priority')).toBe(2);
-    });
-  });
-
-  describe('Story id surface', () => {
-    test('Should show story name unchanged', () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [],
-            statEvents: [],
-            structureEvents: [createUserStory({ id: 0, name: 'US0' })],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      expect(wrapper.get('[data-testid=story-name]').text()).toBe('US0');
-    });
-
-    test('Should surface story id as title on story-name in backlog', () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [],
-            statEvents: [],
-            structureEvents: [createUserStory({ id: 0, name: 'US0' })],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      expect(wrapper.get('[data-testid=story-name]').attributes('title')).toBe('#0');
-    });
-
-    test('Should surface story id as title on story-name in thread in-progress', async () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [inProgressEvent({ userStoryId: 0, threadId: 0 })],
-            statEvents: [],
-            structureEvents: [createThread0(), createUserStory({ id: 0, name: 'US0' })],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      await wrapper.get('[data-testid=compute-all]').trigger('click');
-      await vi.runAllTimersAsync();
-
-      expect(
-        wrapper
-          .get('[data-testid=user-story-0-0]')
-          .get('[data-testid=story-name]')
-          .attributes('title'),
-      ).toBe('#0');
-    });
-
-    test('Should surface story id as title on story-name in thread review', async () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [reviewEvent({ threadId: 0, userStoryId: 0 })],
-            statEvents: [],
-            structureEvents: [createThread0(), createUserStory({ id: 0, name: 'US0' })],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      await wrapper.get('[data-testid=compute-all]').trigger('click');
-      await vi.runAllTimersAsync();
-
-      expect(
-        wrapper
-          .get('[data-testid=user-story-0-0]')
-          .get('[data-testid=story-name]')
-          .attributes('title'),
-      ).toBe('#0');
-    });
-
-    test('Should surface story id as title on story-name in done', async () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [doneEvent({ userStoryId: 0, threadId: 0 })],
-            statEvents: [],
-            structureEvents: [createThread0(), createUserStory({ id: 0, name: 'US0' })],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      await wrapper.get('[data-testid=compute-all]').trigger('click');
-      await vi.runAllTimersAsync();
-
-      expect(
-        wrapper
-          .get('[data-testid=user-story-0]')
-          .get('[data-testid=story-name]')
-          .attributes('title'),
-      ).toBe('#0');
-    });
-  });
-
-  describe('Story card state icon', () => {
-    test('Should display code icon on in-progress story card', async () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [inProgressEvent()],
-            statEvents: [],
-            structureEvents: [createThread0(), createUserStory({ id: 0 })],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      await wrapper.get('[data-testid=compute]').trigger('click');
-
-      const storyCard = wrapper.get('[data-testid=user-story-0-0]');
-      expect(storyCard.get('[data-testid=story-state-icon]').text()).toBe('code');
-    });
-
-    test('Should display rate_review icon on review story card', async () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [reviewEvent()],
-            statEvents: [],
-            structureEvents: [createThread0(), createUserStory({ id: 0 })],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      await wrapper.get('[data-testid=compute]').trigger('click');
-
-      const storyCard = wrapper.get('[data-testid=user-story-0-0]');
-      expect(storyCard.get('[data-testid=story-state-icon]').text()).toBe('rate_review');
+      const storyCard = wrapper.findComponent(StoryCard);
+      expect(storyCard.props('story').name).toStrictEqual('US0');
+      expect(storyCard.props('story').priority).toBe(2);
     });
   });
 
@@ -999,8 +856,7 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
 
-      const card = wrapper.get('[data-testid=user-story-0-0]');
-      expect(card.findComponent(PriorityBadge).props('priority')).toBe(3);
+      expect(wrapper.findComponent(StoryCard).props('story').priority).toBe(3);
     });
 
     test('Should show priority badge on review story', async () => {
@@ -1022,8 +878,7 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
 
-      const card = wrapper.get('[data-testid=user-story-0-0]');
-      expect(card.findComponent(PriorityBadge).props('priority')).toBe(5);
+      expect(wrapper.findComponent(StoryCard).props('story').priority).toBe(5);
     });
 
     test('Should show priority badge on done story', async () => {
@@ -1048,8 +903,7 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute-all]').trigger('click');
       await vi.runAllTimersAsync();
 
-      const card = wrapper.get('[data-testid=user-story-0]');
-      expect(card.findComponent(PriorityBadge).props('priority')).toBe(2);
+      expect(wrapper.findComponent(StoryCard).props('story').priority).toBe(2);
     });
   });
 
@@ -1649,7 +1503,7 @@ describe('Play', () => {
         ],
       });
 
-      expect(wrapper.get('[data-testid=user-story-0]').classes()).toContain('priority-flash');
+      expect(wrapper.findComponent(StoryCard).props('flashing')).toBe(true);
     });
 
     test('Should remove priority-flash class after 800ms', async () => {
@@ -1669,7 +1523,7 @@ describe('Play', () => {
 
       await vi.advanceTimersByTimeAsync(801);
 
-      expect(wrapper.get('[data-testid=user-story-0]').classes()).not.toContain('priority-flash');
+      expect(wrapper.findComponent(StoryCard).props('flashing')).toBe(false);
     });
 
     test('Should add priority-flash class to in-progress story after ChangePriority event', async () => {
@@ -1691,7 +1545,7 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.advanceTimersToNextTimerAsync();
 
-      expect(wrapper.get('[data-testid=user-story-0-0]').classes()).toContain('priority-flash');
+      expect(wrapper.findComponent(StoryCard).props('flashing')).toBe(true);
     });
 
     test('Should add priority-flash class to review story after ChangePriority event', async () => {
@@ -1713,7 +1567,7 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.advanceTimersToNextTimerAsync();
 
-      expect(wrapper.get('[data-testid=user-story-0-0]').classes()).toContain('priority-flash');
+      expect(wrapper.findComponent(StoryCard).props('flashing')).toBe(true);
     });
 
     test('Should add priority-flash class to done story after ChangePriority event', async () => {
@@ -1740,7 +1594,7 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.advanceTimersToNextTimerAsync();
 
-      expect(wrapper.get('[data-testid=user-story-0]').classes()).toContain('priority-flash');
+      expect(wrapper.findComponent(StoryCard).props('flashing')).toBe(true);
     });
   });
 

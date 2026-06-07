@@ -61,7 +61,7 @@
 - **Risque** : faible. Le badge ne dépend que de props simples.
 
 ### Tâche 3 — Extraire `StoryCard`
-- [ ] **Fichier cible** : `src/front/play/story-card.vue` (+ `src/front/play/story-card.test.ts`)
+- [x] **Fichier cible** : `src/front/play/story-card.vue` (+ `src/front/play/story-card.test.ts`)
 - **Ce qui bouge** : la carte de story dupliquée 4× (backlog 487-515, thread in-progress 576-604, thread review 605-634, done 666-696). Unifier en un composant paramétré par variante.
   - Props : `{ story: UserStoryVue; testId: string; flashing: boolean; variant: 'default' | 'review' | 'done' }` (le `testId` est calculé par `play.vue` car il diffère : `user-story-{id}` vs `user-story-{id}-{threadId}`).
   - Le composant utilise `PriorityBadge` (Tâche 1) en interne.

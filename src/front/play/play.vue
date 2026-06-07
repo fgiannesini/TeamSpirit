@@ -5,8 +5,8 @@ import { useRouter } from 'vue-router';
 import type { TimeEvent } from '../../simulate/events.ts';
 import type { StructureEvent } from '../../simulate/simulation-structure.ts';
 import { useFormStore } from '../form-store.ts';
-import PriorityBadge from './priority-badge.vue';
-import type { ThreadPresence, ThreadState } from './thread.ts';
+import type { ThreadPresence, ThreadState, UserStoryVue } from './thread.ts';
+import StoryCard from './story-card.vue';
 import ThreadStateBadge from './thread-state-badge.vue';
 
 const props = defineProps<{ id: number }>();
@@ -20,12 +20,6 @@ export type ThreadVue = {
   presence: ThreadPresence;
   inProgressStories: UserStoryVue[];
   reviewStories: UserStoryVue[];
-};
-
-type UserStoryVue = {
-  id: number;
-  name: string;
-  priority: number | null;
 };
 
 const threads = reactive<ThreadVue[]>(
@@ -452,31 +446,15 @@ updateThreadPresence(1);
           <p>Backlog is empty</p>
         </div>
         <div v-else class="column-stories">
-          <div
+          <StoryCard
             v-for="story in sortedBacklog"
             :key="story.id"
             :data-testid="'user-story-' + story.id"
             :data-flip-id="'story-' + story.id"
-            :class="[
-              'story-card',
-              'row',
-              'middle-align',
-              'small-padding',
-              'round',
-              'border',
-              'surface-variant',
-              { 'priority-flash': flashingStoryIds.has(story.id) },
-            ]"
-          >
-            <span class="max" data-testid="story-name" :title="`#${story.id}`">{{
-              story.name
-            }}</span>
-            <priority-badge
-              v-if="story.priority !== null"
-              :priority="story.priority"
-              :story-id="story.id"
-            />
-          </div>
+            :story="story"
+            :flashing="flashingStoryIds.has(story.id)"
+            variant="default"
+          />
         </div>
       </article>
     </div>
@@ -524,59 +502,24 @@ updateThreadPresence(1);
             :data-testid="`thread-user-story-${thread.id}`"
             class="thread-stories"
           >
-            <div
+            <StoryCard
               v-for="story in thread.inProgressStories"
               :key="story.id"
               :data-testid="'user-story-' + story.id + '-' + thread.id"
               :data-flip-id="'story-' + story.id"
-              :class="[
-                'story-card',
-                'row',
-                'middle-align',
-                'small-padding',
-                'round',
-                'border',
-                'surface-variant',
-                { 'priority-flash': flashingStoryIds.has(story.id) },
-              ]"
-            >
-              <i class="small" aria-hidden="true" data-testid="story-state-icon">code</i>
-              <span class="max" data-testid="story-name" :title="`#${story.id}`">{{
-                story.name
-              }}</span>
-              <priority-badge
-                v-if="story.priority !== null"
-                :priority="story.priority"
-                :story-id="story.id"
-              />
-            </div>
-            <div
+              :story="story"
+              :flashing="flashingStoryIds.has(story.id)"
+              variant="in-progress"
+            />
+            <StoryCard
               v-for="story in thread.reviewStories"
               :key="'review-' + story.id"
               :data-testid="'user-story-' + story.id + '-' + thread.id"
               :data-flip-id="'story-' + story.id"
-              :class="[
-                'story-card',
-                'row',
-                'middle-align',
-                'small-padding',
-                'round',
-                'border',
-                'surface-variant',
-                'story-card--review',
-                { 'priority-flash': flashingStoryIds.has(story.id) },
-              ]"
-            >
-              <i class="small" aria-hidden="true" data-testid="story-state-icon">rate_review</i>
-              <span class="max" data-testid="story-name" :title="`#${story.id}`">{{
-                story.name
-              }}</span>
-              <priority-badge
-                v-if="story.priority !== null"
-                :priority="story.priority"
-                :story-id="story.id"
-              />
-            </div>
+              :story="story"
+              :flashing="flashingStoryIds.has(story.id)"
+              variant="review"
+            />
             <p
               v-if="
                 thread.inProgressStories.length === 0 &&
@@ -607,33 +550,15 @@ updateThreadPresence(1);
           <p>No story completed yet</p>
         </div>
         <div v-else class="column-stories">
-          <div
+          <StoryCard
             v-for="story in doneStories"
             :key="story.id"
             :data-testid="'user-story-' + story.id"
             :data-flip-id="'story-' + story.id"
-            :class="[
-              'story-card',
-              'row',
-              'middle-align',
-              'small-padding',
-              'round',
-              'border',
-              'story-card--done',
-              'primary-container',
-              { 'priority-flash': flashingStoryIds.has(story.id) },
-            ]"
-          >
-            <i class="small" aria-hidden="true">check_circle</i>
-            <span class="max" data-testid="story-name" :title="`#${story.id}`">{{
-              story.name
-            }}</span>
-            <priority-badge
-              v-if="story.priority !== null"
-              :priority="story.priority"
-              :story-id="story.id"
-            />
-          </div>
+            :story="story"
+            :flashing="flashingStoryIds.has(story.id)"
+            variant="done"
+          />
         </div>
       </article>
     </div>
@@ -698,25 +623,6 @@ nav progress {
   gap: 0.375rem;
 }
 
-.story-card {
-  position: relative;
-  transition:
-    border-color 0.3s,
-    background-color 0.3s;
-
-  &.story-card--review {
-    border-color: var(--secondary);
-  }
-
-  &.story-card--done {
-    border-color: var(--primary);
-
-    i {
-      color: var(--tertiary);
-    }
-  }
-}
-
 .thread {
   margin-bottom: 0.5rem;
   transition:
@@ -769,19 +675,5 @@ nav progress {
 
 .thread-idle-hint {
   opacity: 0.6;
-}
-
-@keyframes priority-flash {
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 transparent;
-  }
-  40% {
-    box-shadow: 0 0 0 3px var(--primary);
-  }
-}
-
-.priority-flash {
-  animation: priority-flash 0.8s ease-in-out;
 }
 </style>
