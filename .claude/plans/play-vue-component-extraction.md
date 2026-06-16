@@ -101,7 +101,7 @@
 
 ### Tâche 5 — Extraire `KanbanColumn` (Backlog / Done génériques)
 
-- [ ] **Fichier cible** : `src/front/play/kanban-column.vue` (+ `src/front/play/kanban-column.test.ts`)
+- [x] **Fichier cible** : `src/front/play/kanban-column.vue` (+ `src/front/play/kanban-column.test.ts`)
 - **Ce qui bouge** : les colonnes Backlog (469-518) et Done (651-699) partagent la structure : `<article>` + `<nav>` header (icône + titre + compteur) + état vide + liste de `StoryCard`. Unifier.
   - Props : `{ title: string; icon: string; testIdPrefix: 'backlog' | 'done'; stories: UserStoryVue[]; emptyContent: slot; variant }`. Le compteur stories/story et les états vides diffèrent (backlog-empty vs done-empty avec total count) → utiliser un `<slot name="empty">` pour le contenu vide spécifique.
   - Conserver `data-testid` : `backlog`/`done`, `backlog-count`/`done-count`, `column-count` CSS.

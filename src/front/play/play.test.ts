@@ -17,8 +17,9 @@ import {
 import type { StructureEvent } from '../../simulate/simulation-structure.ts';
 import type { State } from '../form-store.ts';
 import Play from './play.vue';
-import StoryCard from './story-card.vue';
+import KanbanColumn from './kanban-column.vue';
 import ThreadCard from './thread-card.vue';
+import type { UserStoryVue } from './thread.ts';
 
 vi.mock('gsap', () => ({
   gsap: {
@@ -57,6 +58,22 @@ describe('Play', () => {
     expect(thread, `Thread ${id} not found`).toBeDefined();
     return thread!;
   };
+
+  const getColumn = (wrapper: VueWrapper, testId: 'backlog' | 'done') => {
+    const col = wrapper
+      .findAllComponents(KanbanColumn)
+      .find((c) => c.attributes('data-testid') === testId);
+    expect(col, `Column ${testId} not found`).toBeDefined();
+    return col!;
+  };
+
+  const getColumnStories = (wrapper: VueWrapper, testId: 'backlog' | 'done') =>
+    getColumn(wrapper, testId).props('stories') as UserStoryVue[];
+
+  const storyInKanban = (wrapper: VueWrapper, id: number) =>
+    wrapper
+      .findAllComponents(KanbanColumn)
+      .some((c) => (c.props('stories') as UserStoryVue[]).some((s) => s.id === id));
 
   test('Should render the page without time events', async () => {
     const wrapper = createWrapper({
@@ -308,14 +325,14 @@ describe('Play', () => {
           },
         ],
       });
-      const allCards = wrapper.findAllComponents(StoryCard);
-      const card0 = allCards.find((c) => c.attributes('data-testid') === 'user-story-0')!;
-      expect(card0.props('story').name).toStrictEqual('US0');
-      expect(card0.props('story').priority).toBe(1);
+      const stories = getColumnStories(wrapper, 'backlog');
+      const story0 = stories.find((s) => s.id === 0)!;
+      expect(story0.name).toStrictEqual('US0');
+      expect(story0.priority).toBe(1);
 
-      const card1 = allCards.find((c) => c.attributes('data-testid') === 'user-story-1')!;
-      expect(card1.props('story').name).toStrictEqual('US1');
-      expect(card1.props('story').priority).toBe(2);
+      const story1 = stories.find((s) => s.id === 1)!;
+      expect(story1.name).toStrictEqual('US1');
+      expect(story1.priority).toBe(2);
     });
 
     test('Should add a user story on computation click', async () => {
@@ -329,12 +346,12 @@ describe('Play', () => {
           },
         ],
       });
-      expect(wrapper.find('[data-testid=user-story-0]').exists()).toBe(false);
+      expect(storyInKanban(wrapper, 0)).toBe(false);
 
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.advanceTimersToNextTimerAsync();
 
-      expect(wrapper.find('[data-testid=user-story-0]').exists()).toBe(true);
+      expect(storyInKanban(wrapper, 0)).toBe(true);
     });
 
     test('Should add a user story on all computation click', async () => {
@@ -349,12 +366,12 @@ describe('Play', () => {
         ],
       });
 
-      expect(wrapper.find('[data-testid=user-story-0]').exists()).toBe(false);
+      expect(storyInKanban(wrapper, 0)).toBe(false);
 
       await wrapper.get('[data-testid=compute-all]').trigger('click');
       await vi.runAllTimersAsync();
 
-      expect(wrapper.find('[data-testid=user-story-0]').exists()).toBe(true);
+      expect(storyInKanban(wrapper, 0)).toBe(true);
     });
 
     test('Should move userStories to thread when in progress, then done', async () => {
@@ -377,9 +394,11 @@ describe('Play', () => {
       ).toBe(true);
 
       await vi.runAllTimersAsync();
-      const done = wrapper.get('[data-testid=done]');
-      expect(done.find('[data-testid=user-story-0]').exists()).toBe(true);
-      expect(wrapper.findComponent(StoryCard).props('variant')).toBe('done');
+      expect(
+        getColumn(wrapper, 'done')
+          .props('stories')
+          .some((s: UserStoryVue) => s.id === 0),
+      ).toBe(true);
     });
 
     test('Should move userStory to backlog when todo', async () => {
@@ -400,8 +419,11 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute-all]').trigger('click');
       await vi.runAllTimersAsync();
 
-      const backlog = wrapper.get('[data-testid=backlog]');
-      expect(backlog.find('[data-testid=user-story-0]').exists()).toBe(true);
+      expect(
+        getColumn(wrapper, 'backlog')
+          .props('stories')
+          .some((s: UserStoryVue) => s.id === 0),
+      ).toBe(true);
     });
 
     test('Should move userStories with id >10 to thread when in progress, then done', async () => {
@@ -438,11 +460,10 @@ describe('Play', () => {
           .inProgressStories.some((s) => s.id === 10),
       ).toBe(true);
 
-      const done = wrapper.get('[data-testid=done]');
-
       await vi.runAllTimersAsync();
-      expect(done.find('[data-testid=user-story-1]').exists()).toBe(true);
-      expect(done.find('[data-testid=user-story-10]').exists()).toBe(true);
+      const doneStories = getColumn(wrapper, 'done').props('stories') as UserStoryVue[];
+      expect(doneStories.some((s) => s.id === 1)).toBe(true);
+      expect(doneStories.some((s) => s.id === 10)).toBe(true);
     });
 
     test('Should keep userStories to thread when in progress', async () => {
@@ -486,8 +507,11 @@ describe('Play', () => {
 
       await vi.runAllTimersAsync();
 
-      const done = wrapper.get('[data-testid=done]');
-      expect(done.find('[data-testid=user-story-0]').exists()).toBe(true);
+      expect(
+        getColumn(wrapper, 'done')
+          .props('stories')
+          .some((s: UserStoryVue) => s.id === 0),
+      ).toBe(true);
     });
 
     test('Should remove userStories from thread that was in review when done', async () => {
@@ -518,8 +542,11 @@ describe('Play', () => {
           .props('thread')
           .reviewStories.some((s) => s.id === 2),
       ).toBe(false);
-      const done = wrapper.get('[data-testid=done]');
-      expect(done.find('[data-testid=user-story-2]').exists()).toBe(true);
+      expect(
+        getColumn(wrapper, 'done')
+          .props('stories')
+          .some((s: UserStoryVue) => s.id === 2),
+      ).toBe(true);
     });
 
     test('Should remove userStories from thread that was in review when to review', async () => {
@@ -550,8 +577,11 @@ describe('Play', () => {
           .props('thread')
           .reviewStories.some((s) => s.id === 2),
       ).toBe(false);
-      const backlog = wrapper.get('[data-testid=backlog]');
-      expect(backlog.find('[data-testid=user-story-2]').exists()).toBe(true);
+      expect(
+        getColumn(wrapper, 'backlog')
+          .props('stories')
+          .some((s: UserStoryVue) => s.id === 2),
+      ).toBe(true);
     });
 
     test('Should move userStories to the backlog area when to review', async () => {
@@ -568,8 +598,11 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
 
-      const backlog = wrapper.get('[data-testid=backlog]');
-      expect(backlog.find('[data-testid=user-story-0]').exists()).toBe(true);
+      expect(
+        getColumn(wrapper, 'backlog')
+          .props('stories')
+          .some((s: UserStoryVue) => s.id === 0),
+      ).toBe(true);
     });
 
     test('Should move userStories to the corresponding threads when reviewed by several threads', async () => {
@@ -602,8 +635,11 @@ describe('Play', () => {
           .reviewStories.some((s) => s.id === 0),
       ).toBe(true);
 
-      const backlog = wrapper.get('[data-testid=backlog]');
-      expect(backlog.find('[data-testid=user-story-0]').exists()).toBe(false);
+      expect(
+        getColumn(wrapper, 'backlog')
+          .props('stories')
+          .some((s: UserStoryVue) => s.id === 0),
+      ).toBe(false);
     });
 
     test('Should keep only one review when the other one is completed', async () => {
@@ -714,9 +750,11 @@ describe('Play', () => {
           .props('thread')
           .reviewStories.filter((s) => s.id === 0).length,
       ).toStrictEqual(1);
-      expect(wrapper.get('[data-testid=backlog]').find('[data-testid=user-story-0]').exists()).toBe(
-        false,
-      );
+      expect(
+        getColumn(wrapper, 'backlog')
+          .props('stories')
+          .some((s: UserStoryVue) => s.id === 0),
+      ).toBe(false);
     });
 
     test('Should not duplicate story when transitioning from in-progress to review by another thread', async () => {
@@ -747,9 +785,11 @@ describe('Play', () => {
           .props('thread')
           .reviewStories.some((s) => s.id === 0),
       ).toBe(true);
-      expect(wrapper.get('[data-testid=backlog]').find('[data-testid=user-story-0]').exists()).toBe(
-        false,
-      );
+      expect(
+        getColumn(wrapper, 'backlog')
+          .props('stories')
+          .some((s: UserStoryVue) => s.id === 0),
+      ).toBe(false);
     });
 
     test('Should not duplicate story across multi-turn review after in-progress', async () => {
@@ -785,9 +825,11 @@ describe('Play', () => {
           .props('thread')
           .inProgressStories.some((s) => s.id === 0),
       ).toBe(true);
-      expect(wrapper.get('[data-testid=backlog]').find('[data-testid=user-story-0]').exists()).toBe(
-        false,
-      );
+      expect(
+        getColumn(wrapper, 'backlog')
+          .props('stories')
+          .some((s: UserStoryVue) => s.id === 0),
+      ).toBe(false);
 
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
@@ -810,9 +852,11 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.runAllTimersAsync();
       expect(storyInAllThreads().filter((s) => s.id === 0).length).toBe(0);
-      expect(wrapper.get('[data-testid=done]').find('[data-testid=user-story-0]').exists()).toBe(
-        true,
-      );
+      expect(
+        getColumn(wrapper, 'done')
+          .props('stories')
+          .some((s: UserStoryVue) => s.id === 0),
+      ).toBe(true);
       expect(
         getThread(wrapper, 1)
           .props('thread')
@@ -890,9 +934,9 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.advanceTimersToNextTimerAsync();
 
-      const storyCard = wrapper.findComponent(StoryCard);
-      expect(storyCard.props('story').name).toStrictEqual('US0');
-      expect(storyCard.props('story').priority).toBe(2);
+      const story = getColumnStories(wrapper, 'backlog').find((s) => s.id === 0)!;
+      expect(story.name).toStrictEqual('US0');
+      expect(story.priority).toBe(2);
     });
   });
 
@@ -971,7 +1015,11 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute-all]').trigger('click');
       await vi.runAllTimersAsync();
 
-      expect(wrapper.findComponent(StoryCard).props('story').priority).toBe(2);
+      expect(
+        getColumn(wrapper, 'done')
+          .props('stories')
+          .find((s: UserStoryVue) => s.id === 0)?.priority,
+      ).toBe(2);
     });
   });
 
@@ -995,8 +1043,11 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute-all]').trigger('click');
       await vi.runAllTimersAsync();
 
-      const done = wrapper.get('[data-testid=done]');
-      expect(done.find('[data-testid=user-story-0]').exists()).toBe(true);
+      expect(
+        getColumn(wrapper, 'done')
+          .props('stories')
+          .some((s: UserStoryVue) => s.id === 0),
+      ).toBe(true);
     });
 
     test('Should disable "compute" button during display', async () => {
@@ -1231,61 +1282,6 @@ describe('Play', () => {
     });
   });
 
-  describe('Empty states', () => {
-    test('Should show backlog-empty when backlog has no stories', async () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          { timeEvents: [], statEvents: [], structureEvents: [], teamType: 'Parallel' },
-        ],
-      });
-
-      expect(wrapper.find('[data-testid=backlog-empty]').exists()).toBe(true);
-    });
-
-    test('Should hide backlog-empty when backlog has stories', async () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [],
-            statEvents: [],
-            structureEvents: [createUserStory({ id: 0, time: 1 })],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      expect(wrapper.find('[data-testid=backlog-empty]').exists()).toBe(false);
-    });
-
-    test('Should show done-empty when no story is completed', async () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          { timeEvents: [], statEvents: [], structureEvents: [], teamType: 'Parallel' },
-        ],
-      });
-
-      expect(wrapper.find('[data-testid=done-empty]').exists()).toBe(true);
-    });
-
-    test('Should hide done-empty when a story is completed', async () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [inProgressEvent(), doneEvent()],
-            statEvents: [],
-            structureEvents: [createThread0(), createUserStory({ id: 0 })],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      await wrapper.get('[data-testid=compute-all]').trigger('click');
-      await vi.runAllTimersAsync();
-
-      expect(wrapper.find('[data-testid=done-empty]').exists()).toBe(false);
-    });
-  });
-
   describe('Team type', () => {
     test('Should show Parallel team type', async () => {
       const wrapper = createWrapper({
@@ -1325,51 +1321,6 @@ describe('Play', () => {
     });
   });
 
-  describe('Backlog count', () => {
-    test('Should show "0 story" when backlog is empty', () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          { timeEvents: [], statEvents: [], structureEvents: [], teamType: 'Parallel' },
-        ],
-      });
-
-      expect(wrapper.get('[data-testid=backlog-count]').text()).toEqual('0 story');
-    });
-
-    test('Should show "1 story" when backlog has one story', () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [],
-            statEvents: [],
-            structureEvents: [createUserStory({ id: 0, time: 1 })],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      expect(wrapper.get('[data-testid=backlog-count]').text()).toEqual('1 story');
-    });
-
-    test('Should show "2 stories" when backlog has two stories', () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          {
-            timeEvents: [],
-            statEvents: [],
-            structureEvents: [
-              createUserStory({ id: 0, time: 1 }),
-              createUserStory({ id: 1, time: 1 }),
-            ],
-            teamType: 'Parallel',
-          },
-        ],
-      });
-
-      expect(wrapper.get('[data-testid=backlog-count]').text()).toEqual('2 stories');
-    });
-  });
-
   describe('Backlog sort by priority', () => {
     test('Should render story with highest priority first', () => {
       const wrapper = createWrapper({
@@ -1388,9 +1339,9 @@ describe('Play', () => {
         ],
       });
 
-      const cards = wrapper.get('[data-testid=backlog]').findAll('[data-testid^=user-story-]');
-      expect(cards[0].attributes('data-testid')).toBe('user-story-1');
-      expect(cards[1].attributes('data-testid')).toBe('user-story-0');
+      const stories = getColumn(wrapper, 'backlog').props('stories') as UserStoryVue[];
+      expect(stories[0].id).toBe(1);
+      expect(stories[1].id).toBe(0);
     });
 
     test('Should render story with null priority after stories with a priority', () => {
@@ -1409,24 +1360,14 @@ describe('Play', () => {
         ],
       });
 
-      const cards = wrapper.get('[data-testid=backlog]').findAll('[data-testid^=user-story-]');
-      expect(cards[0].attributes('data-testid')).toBe('user-story-1');
-      expect(cards[1].attributes('data-testid')).toBe('user-story-0');
+      const stories = getColumn(wrapper, 'backlog').props('stories') as UserStoryVue[];
+      expect(stories[0].id).toBe(1);
+      expect(stories[1].id).toBe(0);
     });
   });
 
   describe('Done count', () => {
-    test('Should show "0 story" when no story is completed', () => {
-      const wrapper = createWrapper({
-        simulationOutputs: [
-          { timeEvents: [], statEvents: [], structureEvents: [], teamType: 'Parallel' },
-        ],
-      });
-
-      expect(wrapper.get('[data-testid=done-count]').text()).toEqual('0 story');
-    });
-
-    test('Should show "2 stories" when two stories are completed', async () => {
+    test('Should have 2 stories in done when two stories are completed', async () => {
       const wrapper = createWrapper({
         simulationOutputs: [
           {
@@ -1451,7 +1392,7 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute-all]').trigger('click');
       await vi.runAllTimersAsync();
 
-      expect(wrapper.get('[data-testid=done-count]').text()).toEqual('2 stories');
+      expect(getColumn(wrapper, 'done').props('stories').length).toBe(2);
     });
   });
 
@@ -1571,7 +1512,7 @@ describe('Play', () => {
         ],
       });
 
-      expect(wrapper.findComponent(StoryCard).props('flashing')).toBe(true);
+      expect(getColumn(wrapper, 'backlog').props('flashingStoryIds').has(0)).toBe(true);
     });
 
     test('Should remove priority-flash class after 800ms', async () => {
@@ -1591,7 +1532,7 @@ describe('Play', () => {
 
       await vi.advanceTimersByTimeAsync(801);
 
-      expect(wrapper.findComponent(StoryCard).props('flashing')).toBe(false);
+      expect(getColumn(wrapper, 'backlog').props('flashingStoryIds').has(0)).toBe(false);
     });
 
     test('Should add priority-flash class to in-progress story after ChangePriority event', async () => {
@@ -1662,7 +1603,7 @@ describe('Play', () => {
       await wrapper.get('[data-testid=compute]').trigger('click');
       await vi.advanceTimersToNextTimerAsync();
 
-      expect(wrapper.findComponent(StoryCard).props('flashing')).toBe(true);
+      expect(getColumn(wrapper, 'done').props('flashingStoryIds').has(0)).toBe(true);
     });
   });
 
@@ -1679,13 +1620,6 @@ describe('Play', () => {
       const timerIcon = wrapper.findAll('i').find((i) => i.text() === 'timer');
       expect(timerIcon).toBeDefined();
       expect(timerIcon!.attributes('aria-hidden')).toEqual('true');
-    });
-
-    test('Should have aria-hidden on inbox column header icon', () => {
-      const wrapper = makeWrapper();
-      const inboxIcons = wrapper.findAll('i').filter((i) => i.text() === 'inbox');
-      expect(inboxIcons.length).toBeGreaterThan(0);
-      expect(inboxIcons.every((i) => i.attributes('aria-hidden') === 'true')).toBe(true);
     });
 
     test('Should have aria-label "Simulation statistics" on stats container', () => {

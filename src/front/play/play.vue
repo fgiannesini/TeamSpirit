@@ -6,7 +6,7 @@ import type { TimeEvent } from '../../simulate/events.ts';
 import type { StructureEvent } from '../../simulate/simulation-structure.ts';
 import { useFormStore } from '../form-store.ts';
 import type { ThreadState, ThreadVue, UserStoryVue } from './thread.ts';
-import StoryCard from './story-card.vue';
+import KanbanColumn from './kanban-column.vue';
 import ThreadCard from './thread-card.vue';
 
 const props = defineProps<{ id: number }>();
@@ -414,34 +414,19 @@ updateThreadPresence(1);
 
   <div class="grid kanban">
     <div class="s12 m3">
-      <article data-testid="backlog" id="backlog">
-        <nav class="surface-container-high small-padding">
-          <i aria-hidden="true">inbox</i>
-          <h6 class="max">Backlog</h6>
-          <span class="column-count" data-testid="backlog-count" aria-label="Backlog story count"
-            >{{ backlogStories.length }} {{ backlogStories.length > 1 ? 'stories' : 'story' }}</span
-          >
-        </nav>
-        <div
-          v-if="backlogStories.length === 0"
-          data-testid="backlog-empty"
-          class="center-align padding"
-        >
-          <i class="extra" aria-hidden="true">inbox</i>
-          <p>Backlog is empty</p>
-        </div>
-        <div v-else class="column-stories">
-          <StoryCard
-            v-for="story in sortedBacklog"
-            :key="story.id"
-            :data-testid="'user-story-' + story.id"
-            :data-flip-id="'story-' + story.id"
-            :story="story"
-            :flashing="flashingStoryIds.has(story.id)"
-            variant="default"
-          />
-        </div>
-      </article>
+      <KanbanColumn
+        data-testid="backlog"
+        id="backlog"
+        title="Backlog"
+        icon="inbox"
+        :stories="sortedBacklog"
+        :flashing-story-ids="flashingStoryIds"
+        variant="default"
+        count-test-id="backlog-count"
+        empty-test-id="backlog-empty"
+        empty-icon="inbox"
+        empty-text="Backlog is empty"
+      />
     </div>
 
     <div class="s12 m6">
@@ -463,30 +448,19 @@ updateThreadPresence(1);
     </div>
 
     <div class="s12 m3">
-      <article data-testid="done" id="done">
-        <nav class="surface-container-high small-padding">
-          <i aria-hidden="true">task_alt</i>
-          <h6 class="max">Done</h6>
-          <span class="column-count" data-testid="done-count" aria-label="Done story count"
-            >{{ doneStories.length }} {{ doneStories.length > 1 ? 'stories' : 'story' }}</span
-          >
-        </nav>
-        <div v-if="doneStories.length === 0" data-testid="done-empty" class="center-align padding">
-          <i class="extra" aria-hidden="true">hourglass_empty</i>
-          <p>No story completed yet</p>
-        </div>
-        <div v-else class="column-stories">
-          <StoryCard
-            v-for="story in doneStories"
-            :key="story.id"
-            :data-testid="'user-story-' + story.id"
-            :data-flip-id="'story-' + story.id"
-            :story="story"
-            :flashing="flashingStoryIds.has(story.id)"
-            variant="done"
-          />
-        </div>
-      </article>
+      <KanbanColumn
+        data-testid="done"
+        id="done"
+        title="Done"
+        icon="task_alt"
+        :stories="doneStories"
+        :flashing-story-ids="flashingStoryIds"
+        variant="done"
+        count-test-id="done-count"
+        empty-test-id="done-empty"
+        empty-icon="hourglass_empty"
+        empty-text="No story completed yet"
+      />
     </div>
   </div>
 </template>
@@ -528,24 +502,5 @@ nav progress {
     padding-bottom: 0.5rem;
     border-radius: 0.5rem 0.5rem 0 0;
   }
-}
-
-.column-count {
-  display: inline-flex;
-  align-items: center;
-  padding: 0 0.625rem;
-  block-size: 1.5rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--on-surface-variant);
-  background-color: var(--surface-container-highest);
-  border-radius: 0.75rem;
-  user-select: none;
-}
-
-.column-stories {
-  display: flex;
-  flex-direction: column;
-  gap: 0.375rem;
 }
 </style>
