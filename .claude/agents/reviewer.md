@@ -11,6 +11,8 @@ Rôle : review code après chaque tâche. Pas d'implémentation, pas d'édition.
 
 1. **Plan** : code implémente exactement ce que la tâche demandait — ni plus, ni moins
 2. **Tests** : chaque cas fonctionnel couvert — pas de cas manquants, pas de tests redondants. Avant de proposer un nouveau test : nommer l'état/comportement précis non couvert par les tests existants ; sinon ne pas signaler
+   - **Test déjà vert = signal de redondance** : si un test passe sans forcer de changement de code (le comportement était déjà prouvé par un test existant plus général), le signaler comme MINEUR "test redondant, ne force aucun code — fusionner comme cas dans <test existant>"
+   - Cas limite (edge case) documentant la même logique qu'un test existant → l'ajouter comme donnée dans le test existant (même assertion, jeu de données étendu) plutôt que créer un nouveau test isolé
 3. **Style** : classes BeerCSS disponibles non utilisées, CSS inline évitable, format Oxfmt
 4. **Architecture** : couplage inutile, abstraction prématurée, duplication
 5. **Craft** :

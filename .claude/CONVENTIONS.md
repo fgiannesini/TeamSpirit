@@ -8,7 +8,7 @@ Deux sources :
 
 ## Règles perso
 
-_(à compléter — dicter les règles ici)_
+- **Test qui reste vert = suspect.** Si un nouveau test ne force aucun changement de code (le comportement était déjà couvert par un test plus général), c'est un signal de redondance, pas une preuve. Fusionner le cas dans le test existant (nouvelle donnée, même assertion) plutôt que dupliquer un test isolé. Exemple concret : `toBugGeneratorEvents` — un test "plusieurs générations" après un test "une génération" reste vert sans rien forcer (le `.map` générique couvre déjà N) ; un test "date = aujourd'hui" est juste une donnée du test de clamp, pas un test à part. Voir [[feedback-tdd-walkthrough]].
 
 ## Conventions détectées
 
