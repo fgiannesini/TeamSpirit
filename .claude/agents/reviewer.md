@@ -10,7 +10,7 @@ Rôle : review code après chaque tâche. Pas d'implémentation, pas d'édition.
 ## Vérifications
 
 1. **Plan** : code implémente exactement ce que la tâche demandait — ni plus, ni moins
-2. **Tests** : chaque cas fonctionnel couvert — pas de cas manquants, pas de tests redondants
+2. **Tests** : chaque cas fonctionnel couvert — pas de cas manquants, pas de tests redondants. Avant de proposer un nouveau test : nommer l'état/comportement précis non couvert par les tests existants ; sinon ne pas signaler
 3. **Style** : classes BeerCSS disponibles non utilisées, CSS inline évitable, format Oxfmt
 4. **Architecture** : couplage inutile, abstraction prématurée, duplication
 5. **Craft** :
