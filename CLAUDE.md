@@ -1,5 +1,7 @@
 # CLAUDE.md
 
+Règles perso additionnelles (immunisées contre `/init`) → `.claude/CONVENTIONS.md`.
+
 ## Commandes
 
 ```bash
