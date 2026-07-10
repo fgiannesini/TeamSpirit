@@ -1,6 +1,11 @@
 import { createPinia, setActivePinia } from 'pinia';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import {
+  CustomBugGenerator,
+  noBugGenerator,
+  RandomBugGenerator,
+} from '../simulate/bug-generator.ts';
+import {
   createBacklog,
   createThread,
   ensembleTeam,
@@ -883,6 +888,71 @@ describe('Form store', () => {
         expect.anything(),
         expect.anything(),
         new CustomPriorityModificator([{ time: 4, id: 0, priority: 5 }]),
+      );
+    });
+
+    test('Should pass noBugGenerator when bugGeneratorMode is notSet', () => {
+      const store = useFormStore();
+      store.runSimulation(
+        1,
+        [{ backlog: createBacklog(), team: parallelTeam() }],
+        simulateMock,
+        computeStatEventsMock,
+      );
+      expect(simulateMock).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        noBugGenerator,
+        expect.anything(),
+        expect.anything(),
+      );
+    });
+
+    test('Should pass RandomBugGenerator when bugGeneratorMode is random', () => {
+      const store = useFormStore();
+      store.$patch({ bugGeneratorMode: 'random' });
+      const randomProvider = vi.fn(() => 0.5);
+      store.runSimulation(
+        1,
+        [{ backlog: createBacklog(), team: parallelTeam() }],
+        simulateMock,
+        computeStatEventsMock,
+        randomProvider,
+      );
+      expect(simulateMock).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        new RandomBugGenerator(randomProvider, randomProvider, randomProvider),
+        expect.anything(),
+        expect.anything(),
+      );
+    });
+
+    test('Should pass CustomBugGenerator with events when bugGeneratorMode is custom', () => {
+      const store = useFormStore();
+      store.$patch({
+        bugGeneratorMode: 'custom',
+        bugGenerations: [
+          bugGeneration({
+            date: new Date('2025-12-28'),
+            complexity: 5,
+            reviewComplexity: 3,
+            priority: 2,
+          }),
+        ],
+      });
+      store.runSimulation(
+        1,
+        [{ backlog: createBacklog(), team: parallelTeam() }],
+        simulateMock,
+        computeStatEventsMock,
+      );
+      expect(simulateMock).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        new CustomBugGenerator([{ time: 4, complexity: 5, reviewComplexity: 3, priority: 2 }]),
+        expect.anything(),
+        expect.anything(),
       );
     });
   });

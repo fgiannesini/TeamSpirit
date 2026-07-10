@@ -1,6 +1,11 @@
 import { defineStore } from 'pinia';
 import { type Backlog, copy } from '../simulate/backlog.ts';
-import { type BugGeneratorEvent, noBugGenerator } from '../simulate/bug-generator.ts';
+import {
+  type BugGeneratorEvent,
+  CustomBugGenerator,
+  noBugGenerator,
+  RandomBugGenerator,
+} from '../simulate/bug-generator.ts';
 import type { TimeEvent } from '../simulate/events.ts';
 import {
   createBacklog,
@@ -276,6 +281,12 @@ export const useFormStore = defineStore('form', {
       computeStatEventsFn: typeof computeStatEvents = computeStatEvents,
       randomProvider: () => number = Math.random,
     ): void {
+      const bugGenerator =
+        this.bugGeneratorMode === 'random'
+          ? new RandomBugGenerator(randomProvider, randomProvider, randomProvider)
+          : this.bugGeneratorMode === 'custom'
+            ? new CustomBugGenerator(toBugGeneratorEvents(this.bugGenerations, new Date()))
+            : noBugGenerator;
       const teamModificator =
         this.teamModificatorMode === 'random'
           ? new RandomTeamModificator(randomProvider)
@@ -296,7 +307,7 @@ export const useFormStore = defineStore('form', {
           const { timeEvents, structureEvents } = simulateFn(
             copy(backlog),
             team.copy(),
-            noBugGenerator,
+            bugGenerator,
             teamModificator,
             priorityModificator,
           );

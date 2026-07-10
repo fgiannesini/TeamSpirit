@@ -156,7 +156,7 @@ Tests (describe `toBugGeneratorEvents`):
 - `should clamp time to 1 when date is before today`
 - `should return time 1 when date equals today`
 
-### 4. [ ] Store: branchement `runSimulation` mode bug-generator
+### 4. [x] Store: branchement `runSimulation` mode bug-generator
 
 Fichiers: `src/front/form-store.ts` + `src/front/form-store.test.ts`
 
