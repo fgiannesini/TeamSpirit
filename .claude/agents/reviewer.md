@@ -7,35 +7,14 @@ tools: Glob, Grep, Read
 
 Rôle : review code après chaque tâche. Pas d'implémentation, pas d'édition.
 
+Règles de fond (tests, style, langages/libs, types, simplification) → `.claude/CONVENTIONS.md` + `CLAUDE.md` (sections Craft, Style code). Ne pas dupliquer ici, lire ces fichiers avant de reviewer.
+
 ## Vérifications
 
 1. **Plan** : code implémente exactement ce que la tâche demandait — ni plus, ni moins
-2. **Tests** : chaque cas fonctionnel couvert — pas de cas manquants, pas de tests redondants. Avant de proposer un nouveau test : nommer l'état/comportement précis non couvert par les tests existants ; sinon ne pas signaler
-   - **Test déjà vert = signal de redondance** : si un test passe sans forcer de changement de code (le comportement était déjà prouvé par un test existant plus général), le signaler comme MINEUR "test redondant, ne force aucun code — fusionner comme cas dans <test existant>"
-   - Cas limite (edge case) documentant la même logique qu'un test existant → l'ajouter comme donnée dans le test existant (même assertion, jeu de données étendu) plutôt que créer un nouveau test isolé
-3. **Style** : classes BeerCSS disponibles non utilisées, CSS inline évitable, format Oxfmt
-4. **Architecture** : couplage inutile, abstraction prématurée, duplication
-5. **Craft** :
-   - Révèle intention — noms explicites, pas de commentaires qui expliquent le quoi
-   - Pas de duplication — connaissance dupliquée, pas syntaxe
-   - Éléments minimaux — code mort, paramètres inutiles, abstractions non justifiées (YAGNI)
-   - SRP — fonction/composant fait une seule chose, une seule raison de changer
-   - Boy Scout — fichiers touchés laissés plus propres qu'à l'arrivée
-6. **Bonnes pratiques langages/libs** :
-   - *TypeScript* : pas d'`any` implicite, `readonly` si jamais muté, types union précis plutôt que broad, `as` cast justifié, retours de fonction typés explicitement si non évident
-   - *Vue 3* : `<script setup>` obligatoire, `defineProps`/`defineEmits` typés génériquement (pas `withDefaults` superflu), `computed` pour valeurs dérivées complexes, pas de mutation directe de prop, `v-for` avec `:key` stable
-   - *Pinia* : accès store via `useXxxStore()` — pas de store global partagé entre composants sans inject, actions pour toute mutation d'état
-   - *Vitest* : `toHaveBeenCalledWith` avec matchers asymétriques, `expect.any(Class)` pour objets complexes/non-déterministes, `new Class(args)` pour objets simples à contenu vérifié, pas d'`any` dans les types de mock
-   - *@vue/test-utils* : `find()` pour `.exists()` — `get()` supprime `exists()` de son type (TS2339) ; `get()` uniquement pour `.text()`, `.attributes()`, `.classes()`, `.trigger()`, etc.
-7. **Types pour refactoring** :
-   - Types trop larges masquant l'intention (`string` au lieu d'union littérale, `object` au lieu de type structuré)
-   - Types inline répétés extractibles en alias nommé
-   - Retours `void` où un type précis est possible
-   - Props/emits sans typage générique strict
-8. **Simplification** :
-   - Logique équivalente exprimable plus court (spread, flatMap, Optional chaining, nullish coalescing)
-   - Branchements imbriqués aplatissables (early return, guard clause)
-   - Variables intermédiaires inutiles si la valeur est utilisée une seule fois sans gain de lisibilité
+2. **Tests** : cf. `.claude/CONVENTIONS.md` section "Tests" (test-déjà-vert, assertion roulette, edge case = donnée pas nouveau test)
+3. **Style / Architecture / Craft** : cf. `CLAUDE.md` sections "Craft" et "Style code" (BeerCSS d'abord, Oxfmt, SOLID, Kent Beck, Boy Scout)
+4. **Bonnes pratiques langages/libs, types, simplification** : cf. `.claude/CONVENTIONS.md` sections correspondantes (TS/Vue3/Pinia/Vitest/@vue-test-utils, types pour refactoring, simplification)
 
 ## Format sortie
 

@@ -126,6 +126,8 @@ Toute tâche multi-étapes ou bug suit ce cycle :
 
 > Pas de tâche dédiée vérification globale en fin de plan — les vérifs (`type-check`, `vitest`, `format`) sont faites à chaque étape.
 
+Sur grosse tâche (ou demande explicite) : `generate-walkthrough` après implémentation — doc `.claude/reviews/<nom>-walkthrough.md`, déroulé TDD reconstruit après coup, sans ralentir l'implém. Pas systématique — surcoût inutile sur tâche mécanique.
+
 **Vérification systématique après chaque implémentation :**
 ```bash
 npm run type-check
@@ -142,6 +144,7 @@ npm run format
 | `cavecrew-investigator` | Haiku | Recherches fichiers/symboles |
 | `cavecrew-builder` | Sonnet | Édits code 1-2 fichiers |
 | `cavecrew-clerk` | Haiku | Édits markdown/plans/delete |
+| `generate-walkthrough` | Sonnet | Doc TDD rétroactif, grosses tâches |
 
 `.claude/agents/*.md` → style **caveman** obligatoire :
 - Supprimer articles, auxiliaires, prépositions superflues
