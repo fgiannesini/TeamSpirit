@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { type Backlog, copy } from '../simulate/backlog.ts';
-import { noBugGenerator } from '../simulate/bug-generator.ts';
+import { type BugGeneratorEvent, noBugGenerator } from '../simulate/bug-generator.ts';
 import type { TimeEvent } from '../simulate/events.ts';
 import {
   createBacklog,
@@ -348,3 +348,14 @@ export const toPriorityModificatorEvents = (
       priority,
     })),
   );
+
+export const toBugGeneratorEvents = (
+  generations: BugGeneration[],
+  today: Date,
+): BugGeneratorEvent[] =>
+  generations.map(({ date, complexity, reviewComplexity, priority }) => ({
+    time: Math.max(1, daysBetween(today, date) + 1),
+    complexity,
+    reviewComplexity,
+    priority,
+  }));

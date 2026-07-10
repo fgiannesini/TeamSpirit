@@ -23,6 +23,7 @@ import {
   type SimulationInputs,
   type SimulationOutputs,
   type State,
+  toBugGeneratorEvents,
   toPriorityModificatorEvents,
   toTeamModificatorEvents,
   useFormStore,
@@ -559,45 +560,15 @@ describe('Form store', () => {
       ).toStrictEqual([]);
     });
 
-    test('should convert one modification with one developer to one event', () => {
-      expect(
-        toTeamModificatorEvents(
-          [
-            teamModification({
-              selectedDevelopers: [developer({ id: 0 })],
-              period: { start: new Date('2025-12-28'), end: new Date('2025-12-30') },
-            }),
-          ],
-          new Date('2025-12-25'),
-        ),
-      ).toStrictEqual([{ off: 4, in: 6, threadName: 'Developer 0' }]);
-    });
-
-    test('should produce one event per developer in modification', () => {
+    test('should map each developer of each modification to an event with the right offsets', () => {
       const events = toTeamModificatorEvents(
         [
           teamModification({
             selectedDevelopers: [developer({ id: 0 }), developer({ id: 1 })],
             period: { start: new Date('2025-12-28'), end: new Date('2025-12-30') },
           }),
-        ],
-        new Date('2025-12-25'),
-      );
-      expect(events).toStrictEqual([
-        { off: 4, in: 6, threadName: 'Developer 0' },
-        { off: 4, in: 6, threadName: 'Developer 1' },
-      ]);
-    });
-
-    test('should flatten events from multiple modifications', () => {
-      const events = toTeamModificatorEvents(
-        [
           teamModification({
-            selectedDevelopers: [developer({ id: 0 })],
-            period: { start: new Date('2025-12-28'), end: new Date('2025-12-30') },
-          }),
-          teamModification({
-            selectedDevelopers: [developer({ id: 1 })],
+            selectedDevelopers: [developer({ id: 2 })],
             period: { start: new Date('2025-12-29'), end: new Date('2025-12-31') },
           }),
         ],
@@ -605,21 +576,26 @@ describe('Form store', () => {
       );
       expect(events).toStrictEqual([
         { off: 4, in: 6, threadName: 'Developer 0' },
-        { off: 5, in: 7, threadName: 'Developer 1' },
+        { off: 4, in: 6, threadName: 'Developer 1' },
+        { off: 5, in: 7, threadName: 'Developer 2' },
       ]);
     });
 
-    test('should clamp off to 1 when period start is before today', () => {
+    test('should clamp off to 1 for a past or today period start', () => {
       const events = toTeamModificatorEvents(
         [
           teamModification({
             selectedDevelopers: [developer({ id: 0 })],
             period: { start: new Date('2025-12-24'), end: new Date('2025-12-30') },
           }),
+          teamModification({
+            selectedDevelopers: [developer({ id: 1 })],
+            period: { start: new Date('2025-12-25'), end: new Date('2025-12-30') },
+          }),
         ],
         new Date('2025-12-25'),
       );
-      expect(events[0].off).toBe(1);
+      expect(events.map((e) => e.off)).toStrictEqual([1, 1]);
     });
 
     test('should clamp in to 1 when period end is before today', () => {
@@ -633,19 +609,6 @@ describe('Form store', () => {
         new Date('2025-12-25'),
       );
       expect(events[0].in).toBe(1);
-    });
-
-    test('should return off 1 when period start equals today', () => {
-      const events = toTeamModificatorEvents(
-        [
-          teamModification({
-            selectedDevelopers: [developer({ id: 0 })],
-            period: { start: new Date('2025-12-25'), end: new Date('2025-12-30') },
-          }),
-        ],
-        new Date('2025-12-25'),
-      );
-      expect(events[0].off).toBe(1);
     });
   });
 
@@ -663,22 +626,7 @@ describe('Form store', () => {
       ).toStrictEqual([]);
     });
 
-    test('should convert one modification with one user story to one event', () => {
-      expect(
-        toPriorityModificatorEvents(
-          [
-            priorityModification({
-              selectedUserStories: [userStory({ id: 0 })],
-              date: new Date('2025-12-28'),
-              priority: 5,
-            }),
-          ],
-          new Date('2025-12-25'),
-        ),
-      ).toStrictEqual([{ time: 4, id: 0, priority: 5 }]);
-    });
-
-    test('should produce one event per user story in modification', () => {
+    test('should map each user story of each modification to an event with the right offset', () => {
       const events = toPriorityModificatorEvents(
         [
           priorityModification({
@@ -686,25 +634,8 @@ describe('Form store', () => {
             date: new Date('2025-12-28'),
             priority: 5,
           }),
-        ],
-        new Date('2025-12-25'),
-      );
-      expect(events).toStrictEqual([
-        { time: 4, id: 0, priority: 5 },
-        { time: 4, id: 1, priority: 5 },
-      ]);
-    });
-
-    test('should flatten events from multiple modifications', () => {
-      const events = toPriorityModificatorEvents(
-        [
           priorityModification({
-            selectedUserStories: [userStory({ id: 0 })],
-            date: new Date('2025-12-28'),
-            priority: 5,
-          }),
-          priorityModification({
-            selectedUserStories: [userStory({ id: 1 })],
+            selectedUserStories: [userStory({ id: 2 })],
             date: new Date('2025-12-29'),
             priority: 3,
           }),
@@ -713,11 +644,12 @@ describe('Form store', () => {
       );
       expect(events).toStrictEqual([
         { time: 4, id: 0, priority: 5 },
-        { time: 5, id: 1, priority: 3 },
+        { time: 4, id: 1, priority: 5 },
+        { time: 5, id: 2, priority: 3 },
       ]);
     });
 
-    test('should clamp time to 1 when date is before today', () => {
+    test('should clamp time to 1 for a past or today date', () => {
       const events = toPriorityModificatorEvents(
         [
           priorityModification({
@@ -725,24 +657,56 @@ describe('Form store', () => {
             date: new Date('2025-12-24'),
             priority: 5,
           }),
-        ],
-        new Date('2025-12-25'),
-      );
-      expect(events[0].time).toBe(1);
-    });
-
-    test('should return time 1 when date equals today', () => {
-      const events = toPriorityModificatorEvents(
-        [
           priorityModification({
-            selectedUserStories: [userStory({ id: 0 })],
+            selectedUserStories: [userStory({ id: 1 })],
             date: new Date('2025-12-25'),
             priority: 5,
           }),
         ],
         new Date('2025-12-25'),
       );
-      expect(events[0].time).toBe(1);
+      expect(events.map((e) => e.time)).toStrictEqual([1, 1]);
+    });
+  });
+
+  describe('toBugGeneratorEvents', () => {
+    test('should return empty array when no generations', () => {
+      expect(toBugGeneratorEvents([], new Date())).toStrictEqual([]);
+    });
+
+    test('should map each generation to an event with the right offset', () => {
+      const events = toBugGeneratorEvents(
+        [
+          bugGeneration({
+            date: new Date('2025-12-28'),
+            complexity: 5,
+            reviewComplexity: 3,
+            priority: 2,
+          }),
+          bugGeneration({
+            date: new Date('2025-12-29'),
+            complexity: 4,
+            reviewComplexity: 1,
+            priority: 3,
+          }),
+        ],
+        new Date('2025-12-25'),
+      );
+      expect(events).toStrictEqual([
+        { time: 4, complexity: 5, reviewComplexity: 3, priority: 2 },
+        { time: 5, complexity: 4, reviewComplexity: 1, priority: 3 },
+      ]);
+    });
+
+    test('should clamp time to 1 for a past or today date', () => {
+      const events = toBugGeneratorEvents(
+        [
+          bugGeneration({ date: new Date('2025-12-24') }),
+          bugGeneration({ date: new Date('2025-12-25') }),
+        ],
+        new Date('2025-12-25'),
+      );
+      expect(events.map((e) => e.time)).toStrictEqual([1, 1]);
     });
   });
 

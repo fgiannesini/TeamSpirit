@@ -98,7 +98,7 @@ npx vitest run <fichier.test.ts>
 npm run format
 ```
 
-### 1. [ ] Factory test `bugGeneration`
+### 1. [x] Factory test `bugGeneration`
 
 Fichier: `src/front/front-factory-for-test.ts`
 
@@ -107,7 +107,7 @@ Fichier: `src/front/front-factory-for-test.ts`
 
 Pas de tests directs — utilise par taches suivantes.
 
-### 2. [ ] Store: types + state + actions bugGenerations
+### 2. [x] Store: types + state + actions bugGenerations
 
 Fichiers: `src/front/form-store.ts` + `src/front/form-store.test.ts`
 
@@ -129,7 +129,7 @@ Verif:
 npx vitest run src/front/form-store.test.ts
 ```
 
-### 3. [ ] Store: helper `toBugGeneratorEvents`
+### 3. [x] Store: helper `toBugGeneratorEvents`
 
 Fichiers: `src/front/form-store.ts` + `src/front/form-store.test.ts`
 
