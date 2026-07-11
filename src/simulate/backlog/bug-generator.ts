@@ -1,6 +1,6 @@
 import { type Backlog, getUserStories, shouldGenerateBug } from './backlog.ts';
-import type { Team } from './team.ts';
-import type { UserStory } from './user-story.ts';
+import type { Team } from '../team/team.ts';
+import type { UserStory } from '../team/user-story.ts';
 
 export const computeBugProbability = (
   complexity: number,

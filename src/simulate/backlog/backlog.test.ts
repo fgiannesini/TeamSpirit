@@ -19,8 +19,8 @@ import {
   inReview,
   todo,
   toReview,
-} from './factory.ts';
-import { idle, type UserStory } from './user-story.ts';
+} from '../factory.ts';
+import { idle, type UserStory } from '../team/user-story.ts';
 
 describe('Backlog', () => {
   test('Should get idle by default', () => {

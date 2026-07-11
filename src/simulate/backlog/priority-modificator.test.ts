@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from 'vitest';
-import { todo } from './factory.ts';
+import { todo } from '../factory.ts';
 import {
   CustomPriorityModificator,
   noPriorityModificator,

@@ -1,8 +1,8 @@
 import './time-sequence.scss';
 import { loadStructureEvents, loadTimeEvents } from './storage/session-storage.ts';
-import type { TimeEvent } from '../simulate/events.ts';
-import type { StructureEvent } from '../simulate/simulation-structure.ts';
-import type { State } from '../simulate/user-story.ts';
+import type { TimeEvent } from '../simulate/engine/events.ts';
+import type { StructureEvent } from '../simulate/engine/simulation-structure.ts';
+import type { State } from '../simulate/team/user-story.ts';
 
 const createUserStory = (userStoryId: number, name: string): HTMLDivElement => {
   const userStoryHtmlElement = document.createElement('div');

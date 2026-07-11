@@ -1,9 +1,9 @@
-import type { Backlog } from './backlog.ts';
-import type { TimeEvent } from './events.ts';
-import { noReview } from './review.ts';
-import type { StructureEvent } from './simulation-structure.ts';
-import { EnsembleTeam, ParallelTeam, type Thread } from './team.ts';
-import type { UserStory } from './user-story.ts';
+import type { Backlog } from './backlog/backlog.ts';
+import type { TimeEvent } from './engine/events.ts';
+import { noReview } from './team/review.ts';
+import type { StructureEvent } from './engine/simulation-structure.ts';
+import { EnsembleTeam, ParallelTeam, type Thread } from './team/team.ts';
+import type { UserStory } from './team/user-story.ts';
 
 export const todo = (options: Partial<UserStory> = {}): UserStory => {
   return {

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { getUserStoriesDone, getUserStoriesRemainings } from './backlog.ts';
+import { getUserStoriesDone, getUserStoriesRemainings } from '../backlog/backlog.ts';
 import {
   createBacklog,
   createThread,
@@ -16,10 +16,10 @@ import {
   todoEvent,
   toReview,
   toReviewEvent,
-} from './factory.ts';
-import { noReview } from './review.ts';
+} from '../factory.ts';
+import { noReview } from '../team/review.ts';
 import { simulateTimeEvents } from './simulation-time.ts';
-import { ParallelTeam } from './team.ts';
+import { ParallelTeam } from '../team/team.ts';
 
 describe('simulation time', () => {
   test('should have a thread idle', () => {

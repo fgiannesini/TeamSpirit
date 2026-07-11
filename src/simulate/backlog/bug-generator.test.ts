@@ -6,7 +6,7 @@ import {
   getBugPriority,
   RandomBugGenerator,
 } from './bug-generator.ts';
-import { createBacklog, done, ensembleTeam, parallelTeam, todo } from './factory.ts';
+import { createBacklog, done, ensembleTeam, parallelTeam, todo } from '../factory.ts';
 
 describe('Bug generator', () => {
   describe('Random Bug generator', () => {

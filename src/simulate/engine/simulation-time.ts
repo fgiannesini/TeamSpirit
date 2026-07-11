@@ -5,9 +5,9 @@ import {
   retrieveInProgressUserStories,
   retrieveInReviewUserStories,
   userStoriesWithSomeReviews,
-} from './backlog.ts';
+} from '../backlog/backlog.ts';
 import { createTimeEvent, type TimeEvent } from './events.ts';
-import type { Team, Thread } from './team.ts';
+import type { Team, Thread } from '../team/team.ts';
 import {
   idle,
   isDeveloped,
@@ -19,7 +19,7 @@ import {
   setTodo,
   setToReview,
   type UserStory,
-} from './user-story.ts';
+} from '../team/user-story.ts';
 
 export const simulateTimeEvents = (team: Team, backlog: Backlog, time: number): TimeEvent[] => {
   const events: TimeEvent[] = [];

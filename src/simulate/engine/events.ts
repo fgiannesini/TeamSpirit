@@ -1,4 +1,4 @@
-import type { State, UserStory } from './user-story.ts';
+import type { State, UserStory } from '../team/user-story.ts';
 
 export type TimeEvent = {
   time: number;

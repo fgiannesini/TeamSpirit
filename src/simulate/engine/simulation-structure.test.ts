@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
-import { createBacklog, createThread, todo } from './factory.ts';
+import { createBacklog, createThread, todo } from '../factory.ts';
 import { type StructureEvent, structureEventsOnInitialization } from './simulation-structure.ts';
-import { ParallelTeam } from './team.ts';
+import { ParallelTeam } from '../team/team.ts';
 
 describe('simulation-structure', () => {
   test('should create 2 user stories and 2 threads', () => {

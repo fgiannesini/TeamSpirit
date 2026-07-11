@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia';
-import { type Backlog, copy } from '../simulate/backlog.ts';
+import { type Backlog, copy } from '../simulate/backlog/backlog.ts';
 import {
   type BugGeneratorEvent,
   CustomBugGenerator,
   noBugGenerator,
   RandomBugGenerator,
-} from '../simulate/bug-generator.ts';
-import type { TimeEvent } from '../simulate/events.ts';
+} from '../simulate/backlog/bug-generator.ts';
+import type { TimeEvent } from '../simulate/engine/events.ts';
 import {
   createBacklog,
   createThread,
@@ -19,17 +19,17 @@ import {
   noPriorityModificator,
   type PriorityModificatorEvent,
   RandomPriorityModificator,
-} from '../simulate/priority-modificator.ts';
-import { simulate } from '../simulate/simulation.ts';
-import type { StructureEvent } from '../simulate/simulation-structure.ts';
-import { computeStatEvents, type StatEvent } from '../simulate/stats.ts';
-import type { Team, TeamType } from '../simulate/team.ts';
+} from '../simulate/backlog/priority-modificator.ts';
+import { simulate } from '../simulate/engine/simulation.ts';
+import type { StructureEvent } from '../simulate/engine/simulation-structure.ts';
+import { computeStatEvents, type StatEvent } from '../simulate/stats/stats.ts';
+import type { Team, TeamType } from '../simulate/team/team.ts';
 import {
   CustomTeamModificator,
   noTeamModificator,
   RandomTeamModificator,
   type TeamModificatorEvent,
-} from '../simulate/team-modificator.ts';
+} from '../simulate/team/team-modificator.ts';
 
 const developerName = (id: number): string => `Developer ${id}`;
 

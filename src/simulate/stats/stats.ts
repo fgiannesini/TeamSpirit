@@ -1,4 +1,4 @@
-import type { TimeEvent } from './events.ts';
+import type { TimeEvent } from '../engine/events.ts';
 
 const mean = (times: number[]): number => {
   const somme = times.reduce((acc, val) => acc + val, 0);

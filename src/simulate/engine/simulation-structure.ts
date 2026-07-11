@@ -1,5 +1,5 @@
-import { type Backlog, getUserStories } from './backlog.ts';
-import type { Team } from './team.ts';
+import { type Backlog, getUserStories } from '../backlog/backlog.ts';
+import type { Team } from '../team/team.ts';
 
 export type StructureEvent =
   | {

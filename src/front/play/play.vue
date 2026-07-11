@@ -2,8 +2,8 @@
 import { gsap } from 'gsap';
 import { computed, nextTick, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import type { TimeEvent } from '../../simulate/events.ts';
-import type { StructureEvent } from '../../simulate/simulation-structure.ts';
+import type { TimeEvent } from '../../simulate/engine/events.ts';
+import type { StructureEvent } from '../../simulate/engine/simulation-structure.ts';
 import { useFormStore } from '../form-store.ts';
 import type { ThreadState, ThreadVue, UserStoryVue } from './thread.ts';
 import KanbanColumn from './kanban-column.vue';

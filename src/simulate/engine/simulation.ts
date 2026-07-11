@@ -4,14 +4,14 @@ import {
   getUserStoriesRemainings,
   hasMoreUserStories,
   resetUserStoriesRemainings,
-} from './backlog.ts';
-import type { BugGenerator } from './bug-generator.ts';
+} from '../backlog/backlog.ts';
+import type { BugGenerator } from '../backlog/bug-generator.ts';
 import type { TimeEvent } from './events.ts';
-import type { PriorityModificator } from './priority-modificator.ts';
+import type { PriorityModificator } from '../backlog/priority-modificator.ts';
 import { type StructureEvent, structureEventsOnInitialization } from './simulation-structure.ts';
 import { simulateTimeEvents } from './simulation-time.ts';
-import type { Team } from './team.ts';
-import type { TeamModificator } from './team-modificator.ts';
+import type { Team } from '../team/team.ts';
+import type { TeamModificator } from '../team/team-modificator.ts';
 
 export const simulate = (
   originalBacklog: Backlog,

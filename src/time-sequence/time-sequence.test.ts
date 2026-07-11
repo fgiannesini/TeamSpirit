@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { saveStructureEvents, saveTimeEvents } from './storage/session-storage.ts';
 import { createUserStory } from '../simulate/factory.ts';
-import type { State } from '../simulate/user-story.ts';
+import type { State } from '../simulate/team/user-story.ts';
 
 describe('Time sequence', () => {
   beforeEach(() => {

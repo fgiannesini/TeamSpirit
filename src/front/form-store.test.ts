@@ -4,7 +4,7 @@ import {
   CustomBugGenerator,
   noBugGenerator,
   RandomBugGenerator,
-} from '../simulate/bug-generator.ts';
+} from '../simulate/backlog/bug-generator.ts';
 import {
   createBacklog,
   createThread,
@@ -12,18 +12,18 @@ import {
   parallelTeam,
   todo,
 } from '../simulate/factory.ts';
-import type { simulate } from '../simulate/simulation.ts';
-import type { computeStatEvents } from '../simulate/stats.ts';
+import type { simulate } from '../simulate/engine/simulation.ts';
+import type { computeStatEvents } from '../simulate/stats/stats.ts';
 import {
   CustomPriorityModificator,
   noPriorityModificator,
   RandomPriorityModificator,
-} from '../simulate/priority-modificator.ts';
+} from '../simulate/backlog/priority-modificator.ts';
 import {
   CustomTeamModificator,
   noTeamModificator,
   RandomTeamModificator,
-} from '../simulate/team-modificator.ts';
+} from '../simulate/team/team-modificator.ts';
 import {
   type SimulationInputs,
   type SimulationOutputs,

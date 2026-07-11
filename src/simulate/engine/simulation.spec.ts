@@ -1,16 +1,16 @@
 import { describe, expect, test, vi } from 'vitest';
-import { addUserStory, getUserStoriesDone, getUserStoriesRemainings } from './backlog.ts';
-import { type BugGenerator, CustomBugGenerator, noBugGenerator } from './bug-generator.ts';
-import { createBacklog, createThread, done, ensembleTeam, todo } from './factory.ts';
+import { addUserStory, getUserStoriesDone, getUserStoriesRemainings } from '../backlog/backlog.ts';
+import { type BugGenerator, CustomBugGenerator, noBugGenerator } from '../backlog/bug-generator.ts';
+import { createBacklog, createThread, done, ensembleTeam, todo } from '../factory.ts';
 import {
   CustomPriorityModificator,
   noPriorityModificator,
   type PriorityModificator,
-} from './priority-modificator.ts';
+} from '../backlog/priority-modificator.ts';
 import { simulate } from './simulation.ts';
 import type { StructureEvent } from './simulation-structure.ts';
-import type { Team, Thread } from './team.ts';
-import { noTeamModificator, type TeamModificator } from './team-modificator.ts';
+import type { Team, Thread } from '../team/team.ts';
+import { noTeamModificator, type TeamModificator } from '../team/team-modificator.ts';
 
 describe('Simulation', () => {
   test('Should have one thread developing a user story', () => {

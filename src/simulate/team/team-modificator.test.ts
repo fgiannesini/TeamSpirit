@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from 'vitest';
-import { createThread, ensembleTeam, parallelTeam } from './factory.ts';
+import { createThread, ensembleTeam, parallelTeam } from '../factory.ts';
 import {
   CustomTeamModificator,
   computeThreadsInProbabilities,

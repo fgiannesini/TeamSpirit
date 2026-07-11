@@ -1,4 +1,4 @@
-import type { UserStory } from './user-story.ts';
+import type { UserStory } from '../team/user-story.ts';
 
 const sampleTruncatedNormalInt = (
   mean: number,

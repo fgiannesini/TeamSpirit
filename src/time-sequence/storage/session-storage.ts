@@ -1,6 +1,6 @@
-import type { TimeEvent } from '../../simulate/events.ts';
-import type { StructureEvent } from '../../simulate/simulation-structure.ts';
-import type { StatEvent } from '../../simulate/stats.ts';
+import type { TimeEvent } from '../../simulate/engine/events.ts';
+import type { StructureEvent } from '../../simulate/engine/simulation-structure.ts';
+import type { StatEvent } from '../../simulate/stats/stats.ts';
 
 export const loadTimeEvents = (key: string): TimeEvent[] =>
   JSON.parse(sessionStorage.getItem(`computation-${key}`) ?? '[]') as TimeEvent[];

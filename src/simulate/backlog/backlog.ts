@@ -1,6 +1,6 @@
 import { computeBugProbability } from './bug-generator.ts';
-import { hasSomeReviews } from './review.ts';
-import type { Team, Thread } from './team.ts';
+import { hasSomeReviews } from '../team/review.ts';
+import type { Team, Thread } from '../team/team.ts';
 import {
   idle,
   isInProgressBy,
@@ -9,7 +9,7 @@ import {
   isToReviewBy,
   needReviewBy,
   type UserStory,
-} from './user-story.ts';
+} from '../team/user-story.ts';
 
 export type Backlog = {
   userStoriesRemaining: UserStory[];

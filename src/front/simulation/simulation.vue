@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import type { TeamType } from '../../simulate/team.ts';
+import type { TeamType } from '../../simulate/team/team.ts';
 import { useFormStore } from '../form-store.ts';
 import Resume from '../resume/resume.vue';
 

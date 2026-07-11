@@ -14,7 +14,7 @@ import {
   todoEvent,
   toReviewEvent,
 } from '../../simulate/factory.ts';
-import type { StructureEvent } from '../../simulate/simulation-structure.ts';
+import type { StructureEvent } from '../../simulate/engine/simulation-structure.ts';
 import type { State } from '../form-store.ts';
 import Play from './play.vue';
 import KanbanColumn from './kanban-column.vue';
