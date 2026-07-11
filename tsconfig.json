@@ -1,8 +1,5 @@
 {
-  "extends": [
-    "@tsconfig/node24/tsconfig.json",
-    "@vue/tsconfig/tsconfig.dom.json"
-  ],
+  "extends": ["@tsconfig/node26/tsconfig.json", "@vue/tsconfig/tsconfig.dom.json"],
   "compilerOptions": {
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "moduleResolution": "bundler",
@@ -12,7 +9,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
     "noUncheckedIndexedAccess": false,
-    "types": ["node","vite/client"]
+    "types": ["node", "vite/client"]
   },
   "include": ["src"]
 }
