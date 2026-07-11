@@ -1,5 +1,5 @@
 import './time-sequence.scss';
-import { loadStructureEvents, loadTimeEvents } from '../flow/storage/session-storage.ts';
+import { loadStructureEvents, loadTimeEvents } from './storage/session-storage.ts';
 import type { TimeEvent } from '../simulate/events.ts';
 import type { StructureEvent } from '../simulate/simulation-structure.ts';
 import type { State } from '../simulate/user-story.ts';

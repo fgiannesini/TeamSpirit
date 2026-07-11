@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { saveStructureEvents, saveTimeEvents } from '../flow/storage/session-storage.ts';
+import { saveStructureEvents, saveTimeEvents } from './storage/session-storage.ts';
 import { createUserStory } from '../simulate/factory.ts';
 import type { State } from '../simulate/user-story.ts';
 
