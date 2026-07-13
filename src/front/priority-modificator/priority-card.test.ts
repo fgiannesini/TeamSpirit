@@ -114,24 +114,13 @@ describe('Priority Card', () => {
   });
 
   describe('Priority slider', () => {
-    test('Should render a slider', () => {
+    test('Should bind slider properties', () => {
       const wrapper = createWrapper();
-      expect(wrapper.findComponent(Slider).exists()).toBe(true);
-    });
-
-    test('Should bind priority value', () => {
-      const wrapper = createWrapper();
-      expect(wrapper.getComponent(Slider).props('value')).toBe(3);
-    });
-
-    test('Should have min 1', () => {
-      const wrapper = createWrapper();
-      expect(wrapper.getComponent(Slider).props('min')).toBe(1);
-    });
-
-    test('Should have max 10', () => {
-      const wrapper = createWrapper();
-      expect(wrapper.getComponent(Slider).props('max')).toBe(10);
+      expect(wrapper.getComponent(Slider).props()).toStrictEqual({
+        min: 1,
+        max: 10,
+        value: 3,
+      });
     });
 
     test('Should send update:priority event on slider change', () => {

@@ -179,7 +179,7 @@ Tests (dans describe `Simulation`, calques sur tests priority):
 - `Should pass RandomBugGenerator when bugGeneratorMode is random` — patch mode random, passer randomProvider, verifier `expect.any(RandomBugGenerator)`
 - `Should pass CustomBugGenerator with events when bugGeneratorMode is custom` — patch mode custom + 1 bugGeneration, verifier `new CustomBugGenerator([{ time: 4, complexity: ..., reviewComplexity: ..., priority: ... }])`
 
-### 5. [ ] Composant `bug-card.vue`
+### 5. [x] Composant `bug-card.vue`
 
 Fichiers: `src/front/bug-generator/bug-card.vue` + `src/front/bug-generator/bug-card.test.ts`
 
