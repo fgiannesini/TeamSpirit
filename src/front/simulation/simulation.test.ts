@@ -3,7 +3,7 @@ import { flushPromises, shallowMount } from '@vue/test-utils';
 import { describe, expect, test } from 'vitest';
 import { type State, useFormStore } from '../form-store.ts';
 import Resume from '../resume/resume.vue';
-import { createTestRouter } from '../router-test.ts';
+import { createTestRouter } from '../router-for-test.ts';
 import Simulation from './simulation.vue';
 
 describe('Simulation', () => {

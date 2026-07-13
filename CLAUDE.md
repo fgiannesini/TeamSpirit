@@ -1,181 +1,38 @@
 # CLAUDE.md
 
-Règles perso additionnelles (immunisées contre `/init`) → `.claude/CONVENTIONS.md`.
-
 ## Commandes
 
 ```bash
 npm start            # Dev → /TeamSpirit/main
 npm run build        # Build → dist/
-npm test             # Vitest
+npm test             # Vitest tous fichiers
+npx vitest run src/simulate/engine/simulation.spec.ts  # Test unique
 npm run type-check   # vue-tsc
 npm run lint         # Oxlint
-npm run lint:fix     # Oxlint autofix
+npm run lint:fix     # Autofix
 npm run format       # Oxfmt
-npm run format:check # Vérif format
-```
-
-Test unique:
-```bash
-npx vitest run src/simulate/simulation.test.ts
-```
-
-Par nom:
-```bash
-npx vitest run --reporter=verbose -t "pattern"
 ```
 
 ## Architecture
 
-Simulation dynamiques équipe logicielle → timeline animée.
+Simulation équipe logicielle → timeline animée.
 
-### Couches
+**`src/simulate/`** — TS pur, unit-testable, découpé par module métier:
 
-**`src/simulate/`** — TS pur, sans Vue, unit-testable.
-- `simulation.ts` — boucle: temps+équipe+backlog+bugs+priorité
-- `team.ts` — `ParallelTeam` / `EnsembleTeam`
-- `user-story.ts` — machine état: todo→in-progress→review→done
-- `backlog.ts`, `review.ts`, `events.ts`, `stats.ts` — domaine
-- `factory.ts` — constructeurs test+prod
+- `team/` — `team.ts`, `user-story.ts`, `review.ts`, `team-modificator.ts`
+- `backlog/` — `backlog.ts`, `bug-generator.ts`, `priority-modificator.ts`
+- `engine/` — `simulation.ts` (orchestrateur), `simulation-time.ts`, `simulation-structure.ts`, `events.ts`
+- `stats/` — `stats.ts`
+- `factory.ts` (racine) — helpers construction, transverse (tests + `form-store.ts`)
 
-**`src/front/`** — Vue 3 SFCs par feature (form, play, simulation, resume, team, user-stories, reviewers, shared).
-- `router.ts` — routes: `/main`, `/simulate`, `/play/:id`
-- `form-store.ts` — Pinia: config + `SimulationOutputs[]`
+**`src/front/`** — Vue 3 SFCs (conventions test/composants → `src/front/CLAUDE.md`):
 
-**`src/flow/`** — DOM impératif legacy (`document.querySelector`); migration en cours.
+- `router.ts` → routes `/main`, `/simulate`, `/play/:id`
+- `form-store.ts` → Pinia state (config + SimulationOutputs)
+- `play/` → réactif Vue
 
-**`src/time-sequence/`** — 2e entry Vite, visu HTML standalone.
+**`src/time-sequence/`** — 2e entry Vite (standalone HTML viz), inclut `storage/session-storage.ts`
 
 ### Flux données
 
 `Form → form-store → simulate() → SimulationOutputs → sessionStorage → Play/Resume`
-
-`form-store.ts` stocke `timeEvents`+`structureEvents`+`statEvents`; Play anime depuis ces données.
-
-### Vite
-
-`vite.config.ts`: `root:'./src'`, chemins relatifs à `src/`. Inputs: `src/main.html` + `src/time-sequence/time-sequence.html`.
-
-### Tests
-
-Vitest, `globals:true`, env jsdom, setup `src/test-setup.ts`.
-
-`play.test.ts`: `shallowMount`+`createTestingPinia`. Composant détaché → **`document.querySelector` ne fonctionne pas** → queries via état réactif Vue + `wrapper.find('[data-testid=...]')`.
-
-`flow.test.ts`: HTML réel dans jsdom → `document.querySelector` OK.
-
-**Vérifier args d'un mock** — `toHaveBeenCalledWith` avec matchers asymétriques:
-```ts
-expect(mock).toHaveBeenCalledWith(
-  expect.anything(),   // arg dont la valeur n'importe pas
-  expect.any(MyClass), // instance de classe
-  new MyClass(args),   // instance + contenu (égalité profonde)
-  noSingleton,         // singleton: identité référentielle
-);
-```
-Préférer `toHaveBeenCalledWith` à `mock.calls[0][n]` — plus lisible, pas de cast.
-
-`new MyClass(args)` acceptable si objet simple à construire (vérifie le contenu, pas juste le type). `expect.any(MyClass)` réservé aux objets complexes ou non-déterministes.
-
-**Granularité** — un test par feature, même si setup identique à un autre test. Ne pas fusionner des tests de features différentes sous prétexte de DRY.
-
-**Timing play.test.ts:**
-- `trigger('click')` synchrone → vérifier état immédiatement.
-- Même time step → `advanceTimersToNextTimerAsync`.
-- État final → `runAllTimersAsync`.
-
-**Mocking modules (vi.mock) — ne pas utiliser `vi.hoisted`:**
-```ts
-// ✅ Pattern correct
-vi.mock('some-module', () => ({
-  useHook: vi.fn(() => ({ method: vi.fn() })),
-}));
-import { useHook } from 'some-module';
-
-// Dans le test qui contrôle le mock :
-const mockMethod = vi.fn();
-vi.mocked(useHook).mockReturnValueOnce({ method: mockMethod });
-const wrapper = createWrapper(...);
-expect(mockMethod).toHaveBeenCalledWith(...);
-```
-- `vi.fn()` dans le factory = default pour tous les tests qui ne contrôlent pas le mock.
-- `mockReturnValueOnce` = isolation structurelle (se réinitialise seul, pas d'effet de bord entre tests).
-- `vi.hoisted` interdit — a causé des problèmes de portée dans ce projet.
-
-### Modèle réactif play.vue
-
-`play.vue` 100% réactif, pas `document.querySelector`:
-- `threads: ThreadVue[]` → chacun a `userStories: UserStoryVue[]`
-- `backlogStories: UserStoryVue[]`, `doneStories: UserStoryVue[]`
-- `UserStoryVue.testId` — `user-story-{id}` (backlog/done) ou `user-story-{id}-{threadId}` (thread)
-
-**data-testid dans une story card :**
-- `story-name` — span nom de la story (présent dans toutes les cartes : backlog, thread in-progress, thread review, done)
-- `[data-testid=user-story-{id}]` → `.get('[data-testid=story-name]')` pour accéder au nom
-
-### Process itératif
-
-Toute tâche multi-étapes ou bug suit ce cycle :
-
-1. **`thinker`** — explore code, identifie cause racine, écrit `.claude/plans/<nom>.md` avec tâches atomiques
-2. **Implémentation** (Claude) — code + tests ensemble, tâche par tâche selon plan
-3. **`reviewer`** (auto, sans attendre) — vérifie: code vs plan, couverture tests cas fonctionnels, style, archi
-4. **Correction** (Claude) — corrige les findings `BLOQUE` et `IMPORTANT`
-5. **`reviewer`** — re-vérifie jusqu'à RAS ou MINEUR uniquement
-6. Tâche suivante → retour étape 2
-
-> Pas de tâche dédiée vérification globale en fin de plan — les vérifs (`type-check`, `vitest`, `format`) sont faites à chaque étape.
-
-Sur grosse tâche (ou demande explicite) : `generate-walkthrough` après implémentation — doc `.claude/reviews/<nom>-walkthrough.md`, déroulé TDD reconstruit après coup, sans ralentir l'implém. Pas systématique — surcoût inutile sur tâche mécanique.
-
-**Vérification systématique après chaque implémentation :**
-```bash
-npm run type-check
-npx vitest run <fichier.test.ts>
-npm run format
-```
-
-### Agents
-
-| Agent | Modèle | Rôle |
-|---|---|---|
-| `thinker` | Opus | Planification, analyse bugs |
-| `reviewer` | Sonnet | Review code/tests/style/archi |
-| `cavecrew-investigator` | Haiku | Recherches fichiers/symboles |
-| `cavecrew-builder` | Sonnet | Édits code 1-2 fichiers |
-| `cavecrew-clerk` | Haiku | Édits markdown/plans/delete |
-| `generate-walkthrough` | Sonnet | Doc TDD rétroactif, grosses tâches |
-
-`.claude/agents/*.md` → style **caveman** obligatoire :
-- Supprimer articles, auxiliaires, prépositions superflues
-- Listes > phrases complètes
-- Blocs code + chemins intacts
-
-### Craft
-
-**4 règles du design simple (Kent Beck — ordre priorité)**
-1. Tests passent
-2. Révèle intention — noms explicites, pas de commentaires explicatifs nécessaires
-3. Pas de duplication — DRY sur connaissance, pas sur syntaxe
-4. Éléments minimaux — YAGNI, supprimer tout ce qui ne sert pas
-
-**Boy Scout Rule** — laisser chaque fichier touché plus propre qu'à l'arrivée.
-
-**SOLID**
-- SRP: une seule raison de changer par fonction/classe/composant
-- OCP: étendre sans modifier (composition, pas héritage)
-- DIP: dépendre d'abstractions, injecter dépendances concrètes
-
-**Clean Code**
-- Fonction fait une seule chose, courte
-- Nommage révèle intention (variable, fonction, type)
-- Pas de code mort, pas de commentaires qui expliquent le quoi
-
-### Style code
-
-- Format: **Oxfmt** — quotes simples, indent 2 espaces.
-- Lint: **Oxlint** plugins Vue+TS+Vitest (`.oxlintrc.json`).
-- TS strict: pas vars/params inutilisés, pas fallthrough switch.
-- Style: **BeerCSS** (Material Design 3) + Sass.
-- CSS: chercher classe BeerCSS en premier via docs `https://www.beercss.com` (WebFetch) avant tout style inline. Fallback inline seulement si aucune classe existante.
-- Commentaires+UI strings en français.
