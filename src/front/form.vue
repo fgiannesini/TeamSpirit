@@ -5,9 +5,16 @@ import Reviewers from './reviewers/reviewers.vue';
 import Team from './team/team.vue';
 import TeamModificator from './team-modificator/team-modificator.vue';
 import PriorityModificator from './priority-modificator/priority-modificator.vue';
+import BugGenerator from './bug-generator/bug-generator.vue';
 import UserStories from './user-stories/user-stories.vue';
 
-type TabName = 'team' | 'reviewers' | 'team-modificator' | 'priority-modificator' | 'user-stories';
+type TabName =
+  | 'team'
+  | 'reviewers'
+  | 'team-modificator'
+  | 'priority-modificator'
+  | 'bug-generator'
+  | 'user-stories';
 const active: Ref<TabName> = ref('team');
 const activate = (tabName: TabName): void => {
   active.value = tabName;
@@ -62,6 +69,17 @@ const activate = (tabName: TabName): void => {
       <hr class="small-width" />
       <div class="center-align">
         <button
+          data-testid="bug-generator-tab"
+          @click="activate('bug-generator')"
+          :class="{ active: active === 'bug-generator' }"
+        >
+          <i>bug_report</i>
+        </button>
+        <div class="small-margin">Bug Generator</div>
+      </div>
+      <hr class="small-width" />
+      <div class="center-align">
+        <button
           data-testid="user-stories-tab"
           @click="activate('user-stories')"
           :class="{ active: active === 'user-stories' }"
@@ -91,6 +109,12 @@ const activate = (tabName: TabName): void => {
       :class="['page', 'padding', { active: active === 'priority-modificator' }]"
     >
       <PriorityModificator />
+    </div>
+    <div
+      data-testid="bug-generator-container"
+      :class="['page', 'padding', { active: active === 'bug-generator' }]"
+    >
+      <BugGenerator />
     </div>
     <div
       data-testid="user-stories-container"
