@@ -211,7 +211,7 @@ Verif:
 npx vitest run src/front/bug-generator/bug-card.test.ts
 ```
 
-### 6. [ ] Composant `custom-bug-generator.vue`
+### 6. [x] Composant `custom-bug-generator.vue`
 
 Fichiers: `src/front/bug-generator/custom-bug-generator.vue` + `src/front/bug-generator/custom-bug-generator.test.ts`
 

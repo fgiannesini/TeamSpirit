@@ -102,8 +102,9 @@ Pas de nom de fichier, pas de calque, pas de méta sur le processus ni sur la co
 
 ### <étape 1 — le besoin le plus simple>
 
-<Le test écrit. Ce qu'il reprochait au code (message d'échec réel).
-Le code minimal qui l'a fait passer. Pourquoi ce code et pas plus.>
+<Le test écrit — en entier, bloc ```ts. Ce qu'il reprochait au code (message d'échec réel).
+Le code minimal qui l'a fait passer — en entier, bloc ``` avec le langage et le chemin du fichier
+en légende (ex. `src/front/bug-generator/bug-card.vue`). Pourquoi ce code et pas plus.>
 
 ### <étape N — un comportement distinct par étape>
 
@@ -125,7 +126,10 @@ Règles d'écriture :
 - une étape par comportement distinct qui a **forcé** du code ; si une étape n'a rien forcé, elle n'existe pas dans le doc parce qu'elle n'aurait pas dû exister dans le code
 - chemins exacts (`src/front/form-store.ts:270`)
 - pas de jargon : décrire le test puis le code, sans dire « red/green/refactor »
-- snippet de code (bloc ```) quand l'étape porte une **règle fonctionnelle** (borne métier, conversion, calcul, condition) — pas pour du pur câblage (import, prop qui ne fait que traverser). Le snippet montre le code final de l'étape, pas un extrait à moitié écrit
+- **chaque étape montre le test généré et le code modifié, intégralement, en blocs de code** — pas un résumé en prose de ce que fait le code. La relecture doit pouvoir suivre le diff réel sans rouvrir les fichiers. Un extrait tronqué ou un « … » qui cache la partie qui prouve le comportement n'est pas acceptable ; si le fichier est long, montrer au minimum le test entier et la portion du composant/module réellement touchée par l'étape (pas le fichier entier à chaque fois si seules 3 lignes ont changé, mais jamais moins que la règle fonctionnelle elle-même)
+- légender chaque bloc avec le chemin du fichier (commentaire au-dessus du bloc, ou texte juste avant) pour que la relecture sache où on est sans deviner
+- le snippet de code de l'implémentation montre le code **final** de l'étape (après refactor éventuel de cette étape), pas un extrait à moitié écrit
+- objectif explicite : le doc doit être assez complet pour que la relecture se fasse **dans le walkthrough**, sans va-et-vient constant vers les fichiers — le lecteur s'approprie le code en le lisant une fois ici
 
 ## Fin
 
