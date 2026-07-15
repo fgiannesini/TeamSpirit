@@ -6,6 +6,7 @@
 1. **Factory de test**
 
    - Un `export const nomTypeCamelCase = (option(s): Partial<T> = {}): T => ({ ...defaults, ...option(s) })` par type, dans `front-factory-for-test.ts` et `simulate/factory.ts`.
+   - `createWrapper` (ou toute factory de test locale à un fichier) : au-delà de 2 paramètres, objet d'options nommées avec valeurs par défaut plutôt qu'une liste positionnelle (*Introduce Parameter Object*, corrige le smell *Long Parameter List*) — plus lisible aux points d'appel, extensible sans casser les appels existants.
 
 2. **Tests**
    - Test qui reste vert = suspect. Si un nouveau test ne force aucun changement de code (comportement déjà couvert par un test plus général) → fusionner comme donnée dans le test existant, pas de test isolé.
@@ -13,6 +14,8 @@
    - Assertion roulette (xUnit Test Patterns, Meszaros) : plusieurs `expect()` sur le même champ d'éléments différents → fusionner en assertion structurelle sur la collection projetée (`expect(a.map(e => e.x)).toStrictEqual([1, 1])`).
    - Avant de proposer un nouveau test : nommer l'état/comportement précis non couvert ; sinon ne pas signaler.
    - Edge case documentant la même logique qu'un test existant → donnée dans le test existant, pas nouveau test.
+   - Couverture par mutation : pour chaque condition combinée (`a || b`, `a && b`), s'assurer qu'il existe un test qui échouerait si un seul des deux termes était retiré ou inversé — pas seulement un test par branche du résultat final. En cas de doute sur une condition, la casser volontairement (ex. `mandatory || mode !== 'notSet'` → `mandatory`) et vérifier qu'un test rouge le détecte ; sinon combler le trou avant de continuer.
+   - Sélecteurs de test : préférer `data-testid` à un sélecteur de balise/CSS structurel (`wrapper.find('nav')`) — plus robuste aux changements de markup qui ne changent pas le comportement. Réutiliser un `data-testid` déjà présent plutôt que d'en ajouter un nouveau si un élément existant permet la même assertion.
 
 3. **Craft**
    - 4 règles design simple (Kent Beck, ordre priorité) : tests passent ; révèle intention (noms explicites, pas de commentaires explicatifs nécessaires) ; pas de duplication (DRY sur connaissance, pas sur syntaxe) ; éléments minimaux (YAGNI).
@@ -27,6 +30,7 @@
 
 5. **Bonnes pratiques langages/libs**
    - **TypeScript** : Toujours typer, `readonly` si jamais muté, types union précis plutôt que broad, `as` cast justifié, retours de fonction typés explicitement si non évident.
+   - Mapping exhaustif union → valeur (ex. libellés par mode) : préférer `Record<UnionType, ValueType>` à un `switch` exhaustif — le `switch` déclenche le warning oxlint `return-in-computed-property` (oxlint ne prouve pas l'exhaustivité d'une union TS) et le `Record` reste aussi concis tout en gardant l'exhaustivité vérifiée par le compilateur.
    - **Vue 3** : `<script setup>` obligatoire, `defineProps`/`defineEmits` typés génériquement, `computed` pour valeurs dérivées complexes, `v-for` avec `:key` stable.
    - **Pinia** : accès store via `useXxxStore()`, actions pour toute mutation d'état.
    - **Vitest** : `toHaveBeenCalledWith` avec matchers asymétriques, `expect.any(Class)` pour objets complexes/non-déterministes, `new Class(args)` pour objets simples à contenu vérifié.
